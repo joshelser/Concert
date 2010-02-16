@@ -5,8 +5,14 @@ import sys
 
 # Vars
 chunk = 1024
+
+# Where to start copying
 INDEX = 65
+
+# Length to copy 
 RECORD_SECONDS = INDEX + 15
+
+# The filename to output to
 OUTPUT_FILENAME = "test.wav"
 
 # Input source filename
