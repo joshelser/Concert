@@ -3,6 +3,8 @@
 import os
 import subprocess
 
+environ = {'PATH': str(os.getenv('PATH'))}
+
 ## Audio Class
 # @class audio
 #
@@ -106,23 +108,18 @@ class mp3(audio):
     #
     # @param inputFileName
     #
-    def __init__(self, inputFileName):
-        # Make sure file exists
-        if not os.path.isfile(inputFileName):
-            raise IOError
-        
-        ##  @public fileName  
-        self.fileName = inputFileName
-
+    def __init__(self):
+        pass
 
     ## Decode an MP3 file
     #
     # @param self
+    # @param inputFileName
     # @param outputFileName
     #
     # @return A subprocess object
-    def decode(self, outputFileName):
-        command = "lame --decode --mp3input '%s' '%(b)s' 2>&1 | awk -vRS='\\r' -F'[ /]+' '(NR>2){print $2/$3;fflush();}'" % {self.fileName, inputFileName}
+    def decode(self, inputFileName, outputFileName):
+        command = "lame --decode --mp3input '%s' '%s' 2>&1 | awk -vRS='\\r' -F'[ /]+' '(NR>2){print $2/$3;fflush();}'" % (inputFileName, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
@@ -130,12 +127,13 @@ class mp3(audio):
     ## Encode audio into MP3
     #
     # @param self
+    # @param inputFileName
     # @param outputFileName
     # @param quality
     #
     # @return A subprocess object
-    def encode(self, outputFileName, quality=192):
-        command = "lame -m auto --preset cbr %(a)i '%(b)s' '%(c)s' 2>&1 | awk -vRS='\\r' '(NR>3){gsub(/[()%%|]/,\" \");if($1 != \"\") print $2/100;fflush();}'" % {quality, self.fileName, outputFileName}
+    def encode(self, inputFileName, outputFileName, quality=192):
+        command = "lame -m auto --preset cbr %i '%s' '%s' 2>&1 | awk -vRS='\\r' '(NR>3){gsub(/[()%%|]/,\" \");if($1 != \"\") print $2/100;fflush();}'" % (quality, inputFileName, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
