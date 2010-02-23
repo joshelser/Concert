@@ -19,3 +19,8 @@ It should be noted, at this point, that using javascript and flash might be redu
 
 Hit me up if you've got questions...
 -Adam
+
+
+How to use the soundmanager library
+
+put the audio files in the audio folder (i think they have to be mP3 haven't tested with anything else yet), then edit the sound config xml file using the sample in there as a reference.  Basically you give it a file name and a variable name to reference that file by.  Then in your html, soundmanager will put the flash movie in the first div on the page, so you need to have an empty div - kind of stupid, we could fix that - and you need to call soundmanager_init or somethign (check my example for syntax).  After that there are a few soundmanager calls like soundmanager.play("variablenamefromXML") and stop, etc... check the library for more.  Thats it!
