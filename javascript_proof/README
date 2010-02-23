@@ -1,0 +1,21 @@
+so basically theres two things going on here.  I'll start with the simpler one first.
+
+
+
+Playhead.
+
+I wrote a small example of how we could get the playhead to move across an already rendered waveform (im thinking a jpeg or something).  Basically theres a small amount of html/css markup where theres a box (div) which will hold the waveform image with another div of width 1px ontop of it.  The div of one pixel is a red line on the screen, and when you push the start button the div moves to the right at a rate of 2px/second.  When you push the stop button it stops.  We can change the rate of this to match the sample rate of the waveform and things should work.
+
+
+
+
+Playing music.
+
+So, and this might have been obvious to you guys but it kind of slapped me in the face with a big fat DUH as I was looking into it, browsers can't play audio alone, and therefore javascript can't play audio.  So, i looked into some options and basically we have to use a 3rd party app to play the audio, either flash or some sort of assumed to be installed media player.  However, we can use javascript to control this 3rd party application, and thats what I've done.
+
+It should be noted, at this point, that using javascript and flash might be redundant, and we might be better off using flash since all the syncing would be done automatically, but regardless I worked on the javascript for now. I found a javascript library that controls an off screen flash player.  Right now the library is kind of primitive, only allowing for the control of play (from beggining), stop, and volume, but looking at the code it shouldn't be too terible to write functions for pause, and start-playing-at-a-specific-time.  If we can do that, then we're pretty much done with this part of the client side stuff.
+
+
+
+Hit me up if you've got questions...
+-Adam
