@@ -7,37 +7,50 @@
         <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         
         <script type="text/javascript">
+            var $audios = Array();
+
             $(document).ready(function(){
                 
+                /* Set loading notification */
+                $('h1').after('<span id="loading"><img src="../images/ajax-loader.gif" /> Loading</span>');
+                
+                /**
+                 *  Wait until all audio elements can be accessed
+                 **/
+                 /* Compile list of audio element names */
+                 $.each($('audio'), function(index, data){
+                     var $audioObj = new Object();
+                     $audioObj.id = data.id;
+                     $audioObj.status = 0;
+                     $audios.push($audioObj);
+                 });
+                 initialize_audio_durations($audios);
+                
+                 
                 /**
                  *  play button behavior.  Plays audio, and adds 'playing class.
                  **/
                 $('#play_button').click(function(){
-                   /* get player */
-                   var $player = $('#example_audio').get(0);
-                   /* change class to playing */
-                   $('#example_audio').addClass('playing');
-                   $('#waveform').addClass('playing');
-                   /* waveform image width in pixels */
-                   var $imgWidth = 1347;
-                   /* duration of audio file in seconds */
-                   var $clipDuration = $('#example_audio').attr('duration');                   
-                   /* Duration of audio file in millisec */
-                   var $clipDuration = $clipDuration*1000;
-                   /* speed to move waveform every 100 milliseconds */
-                   var $pixelsPerTenthSecond = (($imgWidth/$clipDuration)*100);
-                   $('#test p').append('Image width: '+$imgWidth);
-                   $('#test p').append('<br />Clip Duration (ms): '+$clipDuration);
-                   $('#test p').append('<br />Speed to move waveform left (pix/100ms): '+$pixelsPerTenthSecond);
+                    /* get player */
+                    var $player = $('#example_audio').get(0);
+                    
+                    /* change class of player, viewer, editor to playing */
+                    $('#example_audio, #waveform_viewer, #waveform_editor').addClass('playing');
+
+                    /* speed to move viewer playhead every 100 milliseconds */
+                    var $viewerSpeed = $('#waveform_viewer > #waveform_viewer_speed').val();
+                    /* speed to move editor waveform every 100 milliseconds */
+                    var $editorSpeed = $('#waveform_editor > #waveform_editor_speed').val();
+
+                    /* Move waveform in editor */
+                    var $editorIntervalHandle = setInterval('play_waveform("waveform_editor", '+$editorSpeed+')', 100);
+
+                    /* play audio */
+                    $player.play();
+
+                    /* Check every 100 seconds to see if waveform needs to be stopped */
+                    setTimeout('stop_waveform("waveform_editor", "example_audio", '+$editorIntervalHandle+')', 100);                   
                    
-                   /* play audio */
-                   $player.play();
-                   
-                   
-                   /* Move playhead */
-                   var $intervalId = setInterval('play_waveform("waveform", '+$pixelsPerTenthSecond+')', 100);
-                   /* Check every 100 seconds to see if waveform needs to be stopped */
-                   setTimeout('stop_waveform("waveform", '+$intervalId+')', 100);
                 });
                 
                 /**
@@ -47,8 +60,8 @@
                    /* get player */
                    var $player = $('#example_audio').get(0);
                    /* remove 'playing' class */
-                   $('#example_audio').removeClass('playing');
-                   $('#waveform').removeClass('playing');
+                   $('#example_audio, #waveform_viewer, #waveform_editor').removeClass('playing');
+
                    /* pause audio */
                    $player.pause();
                 });
@@ -60,14 +73,30 @@
              **/
             function play_waveform($waveform_div_id, $pixels_per_TenthSecond)
             {
-                /* get current background position (x value) */
-                var $background_position = $('#'+$waveform_div_id).css('background-position').match(/[-]*[\d]+[\.]*[\d]*/);
+                /* get current image position (left value) */
+                var $left = $('#'+$waveform_div_id+' > img.waveform_image').css('left').match(/[\-]?[\d]+[\.?[\d]+]?/);
+                
+                /* get new image position */
+                var $newLeft = $left-$pixels_per_TenthSecond;
+                
+                /* Evaluate error */
+                
+                
                 /* minus number of pixels per second */
-                $('#'+$waveform_div_id).css('background-position', $background_position-$pixels_per_TenthSecond+'px');    
+                $('#'+$waveform_div_id+' > img.waveform_image').css('left', $left-$pixels_per_TenthSecond+'px');
             }
             
-            function stop_waveform($waveform_div_id, $intervalId)
+            /**
+             *  stops waveform if pause button has been pressed, or if audio is done playing.
+             *  otherwise, just keeps checking.
+             *
+             *  @param          $waveform_div_id            id of the moving waveform div.
+             *  @param          $audio_id                   id of the audio element
+             *  @param          $intervalId                 the 'handle' to the setInterval function that is being called every 100ms
+             **/
+            function stop_waveform($waveform_div_id, $audio_id, $intervalId)
             {
+                var $aud = $('#'+$audio_id).get(0);
                 /* If the waveform is not playing */
                 if(!$('#'+$waveform_div_id).hasClass('playing'))
                 {
@@ -75,26 +104,137 @@
                     clearInterval($intervalId)
                     return;
                 }
+                /* if audio file got to the end */
+                else if($aud.currentTime == $aud.duration)
+                {
+                    /* stop movement */
+                    clearInterval($intervalId);
+                    /* remove 'playing' classes */
+                    $('#'+$audio_id+', #'+$waveform_div_id+', #waveform_viewer').removeClass('playing');
+                    return;
+                }
                 else
                 {
                     /* waveform is still playing, keep checking. */
-                    setTimeout('stop_waveform("waveform", '+$intervalId+')', 100);
+                    setTimeout('stop_waveform("'+$waveform_div_id+'", "'+$audio_id+'", '+$intervalId+')', 100);
                 }
             }
+                        
+            /**
+             *  Set up waveform objects by putting hidden input field denoting the width of the image, and the 
+             *  speed at which the waveform/playhead should move when audio plays.
+             **/
+             function initialize_waveform_speeds()
+             {
+                 
+                 /* foreach waveform */
+                 $.each($('.waveform'), function(index, value){
+                     /* Get size of waveform image if defined */
+                     var $width = $('#'+value.id+' > img.waveform_image').attr('width');
+                     /* if width was not defined, we are moving the actual waveform to the left */
+                     if($width == 0)
+                     {
+                         /* get width by name of file */
+                         $width = $('#'+value.id+' > img.waveform_image').attr('src').split('_')[1].match(/[\d]+/);
+                     }
+
+                     /* Now we have width of waveform or waveform container.  By getting duration of audio file we can 
+                        calculate the speed at which the element should move. */
+                    /* clip duration in seconds */
+                    var $clipDuration = $('#example_audio').attr('duration');
+                    /* clip duration in milliseconds */
+                    $clipDuration = $clipDuration*1000;
+                    /* Speed to move waveform every 100 milliseconds */
+                    var $pixelsPerTenthSecond = (($width/$clipDuration)*100);
+                    /* Put the speed in the hidden input field */
+                    $('#'+value.id).append('<input type="hidden" id="'+value.id+'_speed" name="'+value.id+'_speed" value="'+$pixelsPerTenthSecond+'" />');
+
+                 });
+                 
+                 remove_loading();
+             }                 
+             
+             /**
+              * check_audio_duration
+              * Given an id of an audio object, will return true if the duration attribute
+              * is accessable.
+              *
+              * @param          $audio_id           id of the audio object
+              **/
+             function check_audio_duration($audio_id)
+             {
+                 if($('#'+$audio_id).attr('duration'))
+                 {
+                     return true;
+                 }
+                 else
+                 {
+                     return false;
+                 }
+             }
+             
+             /**
+              * initialize_audio_durations
+              * Loops through the $audios array, checking to see if the element is accessable.
+              * If so, sets the status of the element and moves on.  If all were accessable, or previously
+              * marked as such, the initialize_waveform_speeds() is called.  If any were found inaccesable, the function
+              * is run again in 100ms.
+              *
+              * @param          $audios             the array of 'audio' objects which are defined above.
+              **/
+             function initialize_audio_durations($audios)
+             {
+                 var $all = 1;
+                 $.each($audios, function(index, value){
+                     /* if this audio element is not loaded yet */
+                     if(!value.status)
+                     {
+                         var $result = check_audio_duration(value.id);
+                         if($result == false)
+                         {
+                             setTimeout('initialize_audio_durations($audios)', 100);
+                             $all = 0;
+                         }
+                         else
+                         {
+                             $audios[index].status = 1;
+                         }                         
+                     }
+                 });
+                 
+                 if($all)
+                 {
+                     /* If all audio objects were able to be accessed, move on */
+                     initialize_waveform_speeds();                     
+                 }
+                 
+             }
+             
+             function remove_loading()
+             {
+                 $('#loading').remove();
+             }
+             
+            
         </script>
     </head>
     
     <body>
         <h1>HTML5 Audio Example</h1>
-        
-        <div id ="waveform" style = "width: 800px; height: 585px; border:1px #bbb dashed;background-image: url('media/Oddity.png'); background-color: #000000; background-position: 399px; background-repeat: no-repeat;">
-        	<div id = "tapehead"style = "margin-left:400px;width:0px;height:100%; border-left:1px #ff0000 solid;"></div>
+        <div id="waveform_viewer" class="waveform" style="width: 800px; height: 100px; border: 1px #bbb dashed outside;">
+            <img src="media/Oddity_1345.png" class="waveform_image" id="waveform_viewer_image" style="width: 100%; height: 100%;"/>
+        </div>
+        <br />
+        <div id ="waveform_editor" class="waveform" style="width: 800px; height: 585px; border:1px #bbb dashed; overflow: hidden; background-color: black;">
+        	<div id="playhead" style = "margin-left:400px;width:1px; background-color: #ff0000; height:inherit; position: absolute;z-index: 1;"></div>
+            <img src="media/Oddity_1345.png" class="waveform_image" id="waveform_editor_image" style="left: 400px; position: relative;"/>
         </div>
         <br /><br />
         <div id="test"><p></p></div>
-        <audio id="example_audio" src="media/Oddity.ogg">
+        <audio id="example_audio" src="media/Oddity.ogg" autobuffer>
             Your browser does not support the <code>audio</code> element.
         </audio>
+        <div id="debug"></div>
         
         <input type="button" value="Play" id="play_button" />
         <input type="button" value="Pause" id="pause_button" />
