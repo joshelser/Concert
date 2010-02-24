@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>
+            HTML5 Audio Example
+        </title>
+        
+        <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        
+        <script type="text/javascript">
+            $(document).ready(function(){
+                
+                /**
+                 *  play button behavior.  Plays audio, and adds 'playing class.
+                 **/
+                $('#play_button').click(function(){
+                   /* get player */
+                   var $player = $('#example_audio').get(0);
+                   /* change class to playing */
+                   $('#example_audio').addClass('playing');
+                   $('#waveform').addClass('playing');
+                   /* waveform image width in pixels */
+                   var $imgWidth = 1347;
+                   /* duration of audio file */
+                   var $clipDuration = $('#example_audio').attr('duration');
+                   /* speed to move waveform ever 100 milliseconds */
+                   var $pixelsPerTenthSecond = ($imgWidth/$clipDuration)/10;
+
+                   /* play audio */
+                   $player.play();
+                   
+                   
+                   /* Move playhead */
+                   var $intervalResult = setInterval('play_waveform("waveform", '+$pixelsPerTenthSecond+')', 100);
+                   /* Need to run a function to stop this interval function calling, or else will repeat forever */
+                });
+                
+                /**
+                 *  pause button behavior.  Pauses audio, and removes 'playing' class.
+                 **/
+                $('#pause_button').click(function(){
+                   /* get player */
+                   var $player = $('#example_audio').get(0);
+                   /* remove 'playing' class */
+                   $('#example_audio').removeClass('playing');
+                   $('#waveform').removeClass('playing');
+                   /* pause audio */
+                   $player.pause();
+                });
+                
+            });
+            
+            /**
+             *  animate waveform
+             **/
+            function play_waveform($waveform_div_id, $pixels_per_TenthSecond)
+            {
+                /* get current background position */
+                var $background_position = $('#'+$waveform_div_id).css('background-position').match(/[-]*[\d]+/);
+                /* minus number of pixels per second */
+                $('#'+$waveform_div_id).css('background-position', $background_position-$pixels_per_TenthSecond+'px');    
+            }
+        </script>
+    </head>
+    
+    <body>
+        <h1>HTML5 Audio Example</h1>
+        
+        <div id ="waveform" style = "width: 800px; height: 585px; border:1px #bbb dashed;background-image: url('media/Oddity.png'); background-color: #000000; background-position: 400px; background-repeat: no-repeat;">
+        	<div id = "tapehead"style = "margin-left:399px;width:0px;height:100%; border-left:1px #ff0000 solid;"></div>
+        </div>
+        <br /><br />
+        <audio id="example_audio" src="media/Oddity.ogg">
+            Your browser does not support the <code>audio</code> element.
+        </audio>
+        
+        <input type="button" value="Play" id="play_button" />
+        <input type="button" value="Pause" id="pause_button" />
+    </body>
+</html>
