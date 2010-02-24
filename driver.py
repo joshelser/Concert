@@ -7,3 +7,6 @@ wavObj.crop("out.wav", 126, 232)
 
 mp3Obj = mp3()
 mp3Obj.encode("out.wav", "out.mp3")
+
+oggObj = ogg()
+oggObj.encode("out.wav", "out.ogg")

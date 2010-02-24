@@ -106,7 +106,7 @@ class wav(audio):
 class mp3(audio):
     ## Constructor
     #
-    # @param inputFileName
+    # @param self
     #
     def __init__(self):
         pass
@@ -138,3 +138,43 @@ class mp3(audio):
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
 
+## Ogg
+# @class ogg
+#
+# @extends audio
+class ogg(audio):
+    ## Constructor
+    #
+    # @param self
+    #
+    def __init__(self):
+        pass
+
+    ## Decode an OGG file
+    #
+    # @param self
+    # @param inputFileName
+    # @param outputFileName
+    #
+    # @return A subprocess object
+    def decode(self, inputFileName, outputFileName):
+        command = "oggdec '%s' -o '%s' 2>&1 | awk -vRS='\\r' '(NR>1){gsub(/%%/,\" \");print $2/100;fflush();}'" % (inputFileName, outputFileName)
+
+        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+        return sub, command
+
+    ## Encode audio into OGG
+    #
+    # @param self
+    # @param inputFileName
+    # @param outputFileName
+    # @param quality
+    #
+    # @return A subprocess object
+    def encode(self, inputFileName, outputFileName, quality=192):
+        command = "oggenc -b %i '%s' -o '%s' 2>&1 | awk -vRS='\\r' '(NR>1){gsub(/%%/,\" \");print $2/100;fflush();}'" % (quality, inputFileName, outputFileName)
+
+        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+        return sub
