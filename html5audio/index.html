@@ -20,18 +20,24 @@
                    $('#waveform').addClass('playing');
                    /* waveform image width in pixels */
                    var $imgWidth = 1347;
-                   /* duration of audio file */
-                   var $clipDuration = $('#example_audio').attr('duration');
-                   /* speed to move waveform ever 100 milliseconds */
-                   var $pixelsPerTenthSecond = ($imgWidth/$clipDuration)/10;
-
+                   /* duration of audio file in seconds */
+                   var $clipDuration = $('#example_audio').attr('duration');                   
+                   /* Duration of audio file in millisec */
+                   var $clipDuration = $clipDuration*1000;
+                   /* speed to move waveform every 100 milliseconds */
+                   var $pixelsPerTenthSecond = (($imgWidth/$clipDuration)*100);
+                   $('#test p').append('Image width: '+$imgWidth);
+                   $('#test p').append('<br />Clip Duration (ms): '+$clipDuration);
+                   $('#test p').append('<br />Speed to move waveform left (pix/100ms): '+$pixelsPerTenthSecond);
+                   
                    /* play audio */
                    $player.play();
                    
                    
                    /* Move playhead */
-                   var $intervalResult = setInterval('play_waveform("waveform", '+$pixelsPerTenthSecond+')', 100);
-                   /* Need to run a function to stop this interval function calling, or else will repeat forever */
+                   var $intervalId = setInterval('play_waveform("waveform", '+$pixelsPerTenthSecond+')', 100);
+                   /* Check every 100 seconds to see if waveform needs to be stopped */
+                   setTimeout('stop_waveform("waveform", '+$intervalId+')', 100);
                 });
                 
                 /**
@@ -54,10 +60,26 @@
              **/
             function play_waveform($waveform_div_id, $pixels_per_TenthSecond)
             {
-                /* get current background position */
-                var $background_position = $('#'+$waveform_div_id).css('background-position').match(/[-]*[\d]+/);
+                /* get current background position (x value) */
+                var $background_position = $('#'+$waveform_div_id).css('background-position').match(/[-]*[\d]+[\.]*[\d]*/);
                 /* minus number of pixels per second */
                 $('#'+$waveform_div_id).css('background-position', $background_position-$pixels_per_TenthSecond+'px');    
+            }
+            
+            function stop_waveform($waveform_div_id, $intervalId)
+            {
+                /* If the waveform is not playing */
+                if(!$('#'+$waveform_div_id).hasClass('playing'))
+                {
+                    /* stop movement */
+                    clearInterval($intervalId)
+                    return;
+                }
+                else
+                {
+                    /* waveform is still playing, keep checking. */
+                    setTimeout('stop_waveform("waveform", '+$intervalId+')', 100);
+                }
             }
         </script>
     </head>
@@ -65,10 +87,11 @@
     <body>
         <h1>HTML5 Audio Example</h1>
         
-        <div id ="waveform" style = "width: 800px; height: 585px; border:1px #bbb dashed;background-image: url('media/Oddity.png'); background-color: #000000; background-position: 400px; background-repeat: no-repeat;">
-        	<div id = "tapehead"style = "margin-left:399px;width:0px;height:100%; border-left:1px #ff0000 solid;"></div>
+        <div id ="waveform" style = "width: 800px; height: 585px; border:1px #bbb dashed;background-image: url('media/Oddity.png'); background-color: #000000; background-position: 399px; background-repeat: no-repeat;">
+        	<div id = "tapehead"style = "margin-left:400px;width:0px;height:100%; border-left:1px #ff0000 solid;"></div>
         </div>
         <br /><br />
+        <div id="test"><p></p></div>
         <audio id="example_audio" src="media/Oddity.ogg">
             Your browser does not support the <code>audio</code> element.
         </audio>
