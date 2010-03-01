@@ -34,6 +34,8 @@
                     /* get player */
                     var $player = $('#example_audio').get(0);
                     
+                    $('#test p').append('Duration: '+$player.duration);
+                    
                     /* change class of player, viewer, editor to playing */
                     $('#example_audio, #waveform_viewer, #waveform_editor').addClass('playing');
 
