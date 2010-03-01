@@ -7,10 +7,10 @@ import wave
 
 from waveform import *
 
-# Environment variable for subprocesses
+## Environment variable for subprocesses
 environ = {'PATH': str(os.getenv('PATH'))}
 
-# A tuple containing known audio file formats
+## A tuple containing known audio file formats
 fileTypes = ('wav', 'ogg', 'mp3')
 
 ## Audio Class
@@ -45,17 +45,22 @@ class audio:
 #
 # @extends audio
 class wav(audio):
+    ## Constructor
+    #
+    # @param self wav object
+    # @param audioObj A parent audio class object
+    #
     def __init__(self, audioObj):
+        ## @public audioObj The parent audio class object
         self.audioObj = audioObj
 
     ## Gets the length, in seconds, of a wave file
     #
     # @param self Class object
-    # @param inputFileName The name of the wave file to get the length of
     #
     # @return Number of seconds
-    def getLength(self, inputFileName):
-        waveFile = wave.open(inputFileName, 'r')
+    def getLength(self):
+        waveFile = wave.open(self.audioObj.filePath, 'r')
         length = waveFile.getnframes() / waveFile.getframerate()
         waveFile.close()
 
@@ -150,13 +155,18 @@ class wav(audio):
 # 
 # @extends audio
 class mp3(audio):
+    ## Constructor
+    #
+    # @param self wav object
+    # @param audioObj A parent audio class object
+    #
     def __init__(self, audioObj):
+        ## @public audioObj The parent audio class object
         self.audioObj = audioObj
 
     ## Decode an MP3 file
     #
     # @param self
-    # @param inputFileName
     # @param outputFileName
     #
     # @return A subprocess object
@@ -169,7 +179,6 @@ class mp3(audio):
     ## Encode audio into MP3
     #
     # @param self
-    # @param inputFileName
     # @param outputFileName
     # @param quality
     #
@@ -185,13 +194,18 @@ class mp3(audio):
 #
 # @extends audio
 class ogg(audio):
+    ## Constructor
+    #
+    # @param self wav object
+    # @param audioObj A parent audio class object
+    #
     def __init__(self, audioObj):
+        ## @public audioObj The parent audio class object
         self.audioObj = audioObj
 
     ## Decode an OGG file
     #
     # @param self
-    # @param inputFileName
     # @param outputFileName
     #
     # @return A subprocess object
@@ -205,7 +219,6 @@ class ogg(audio):
     ## Encode audio into OGG
     #
     # @param self
-    # @param inputFileName
     # @param outputFileName
     # @param quality
     #
