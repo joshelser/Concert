@@ -282,8 +282,8 @@ class WaveformImage(object):
         self.image.save(filename)
  
  
-def create_png(input_filename, output_filename_w, image_width, image_height, fft_size, f_max, f_min, wavefile, palette):
-    print "processing file %s:\n\t" % input_file,
+def create_png(input_filename, output_filename_w, image_width, image_height, fft_size, f_max, f_min):
+    print "processing file %s:\n\t" % input_filename,
  
     audio_file = audiolab.sndfile(input_filename, 'read')
  
@@ -315,16 +315,14 @@ def create_png(input_filename, output_filename_w, image_width, image_height, fft
 if __name__ == '__main__':
     parser = optparse.OptionParser("usage: %prog [options] input-filename", conflict_handler="resolve")
     parser.add_option("-a", "--waveout", action="store", dest="output_filename_w", type="string", help="output waveform image (default input filename + _w.png)")
-    parser.add_option("-o", "--wavefile", action="store", dest="wavefile", type="int", help="draw waveform image (yes:1, no: 0; default: no)")
     parser.add_option("-w", "--width", action="store", dest="image_width", type="int", help="image width in pixels (default %default)")
     parser.add_option("-h", "--height", action="store", dest="image_height", type="int", help="image height in pixels (default %default)")
     parser.add_option("-f", "--fft", action="store", dest="fft_size", type="int", help="fft size, power of 2 for increased performance (default %default)")
     parser.add_option("-m", "--fmax", action="store", dest="f_max", type="int", help="Maximum freq to draw, in Hz (default %default)")
     parser.add_option("-i", "--fmin", action="store", dest="f_min", type="int", help="Minimum freq to draw, in Hz (default %default)")
-    parser.add_option("-p", "--palette", action="store", dest="palette", type="int", help="Which color palette to use to draw the spectrogram, 1 for color and 2 for black on white (default %default)")
     parser.add_option("-v", "--version", action="store_true", dest="version", help="display version information")
  
-    parser.set_defaults(output_filename_w=None, image_width=500, image_height=170, fft_size=2048, f_max=22050, f_min=10, wavefile=0, palette=1)
+    parser.set_defaults(output_filename_w=None, image_width=500, image_height=585, fft_size=2048, f_max=22050, f_min=10)
  
     (options, args) = parser.parse_args()
  
@@ -341,7 +339,7 @@ if __name__ == '__main__':
  
 	        output_file_w = options.output_filename_w or input_file + ".png"
  
-	        args = (input_file, output_file_w, options.image_width, options.image_height, options.fft_size, options.f_max, options.f_min, options.wavefile, options.palette)
+	        args = (input_file, output_file_w, options.image_width, options.image_height, options.fft_size, options.f_max, options.f_min)
  
  
 	    create_png(*args)

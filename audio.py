@@ -2,6 +2,10 @@
 
 import os
 import subprocess
+from chunk import *
+import wave
+
+from waveform import *
 
 environ = {'PATH': str(os.getenv('PATH'))}
 
@@ -29,6 +33,19 @@ class wav(audio):
         
         ##  @public fileName  
         self.fileName = inputFileName
+
+    ## Gets the length, in seconds, of a wave file
+    #
+    # @param self Class object
+    # @param inputFileName The name of the wave file to get the length of
+    #
+    # @return Number of seconds
+    def getLength(self, inputFileName):
+        waveFile = wave.open(inputFileName, 'r')
+        length = waveFile.getnframes() / waveFile.getframerate()
+        waveFile.close()
+
+        return length
 
     ## Decodes a WAV file
     #
@@ -98,6 +115,21 @@ class wav(audio):
 
         # Close the buffer
         wf.close()
+
+    ## Generates the waveform image from a WAV file
+    #
+    # @param self Wav object
+    # @param inputFileName The name of the WAV file
+    # @param imageName The name of the file to write to
+    # @param imageWidth Width of image in pixels
+    # @param imageHeight Height of image in pixels
+    # @param fft_size
+    # @param f_max
+    # @param f_min
+    #
+    def generateWaveform(self, inputFileName, imageName, imageWidth, imageHeight, fft_size, f_max, f_min):
+        create_png(inputFileName, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
+
 
 ## MP3
 # @class mp3
