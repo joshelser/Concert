@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+## @package audioFormats
+
 import os
 import subprocess
 from chunk import *
@@ -138,7 +140,6 @@ class wav(audio):
     ## Generates the waveform image from a WAV file
     #
     # @param self Wav object
-    # @param inputFileName The name of the WAV file
     # @param imageName The name of the file to write to
     # @param imageWidth Width of image in pixels
     # @param imageHeight Height of image in pixels
@@ -146,8 +147,8 @@ class wav(audio):
     # @param f_max
     # @param f_min
     #
-    def generateWaveform(self, inputFileName, imageName, imageWidth, imageHeight, fft_size, f_max, f_min):
-        create_png(inputFileName, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
+    def generateWaveform(self, imageName, imageWidth, imageHeight, fft_size, f_max, f_min):
+        create_png(self.audioObj.filePath, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
 
 
 ## MP3
