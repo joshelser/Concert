@@ -14,18 +14,10 @@ environ = {'PATH': str(os.getenv('PATH'))}
 #
 class audio:
     ## Constructor
-    def __init__():
-        pass
-
-## WAV class
-# @class wav
-#
-# @extends audio
-class wav(audio):
-    ## Constructor.
-    # 
+    #
+    # @param self Class Object
     # @param inputFileName The name of a WAV file
-    # 
+    #
     def __init__(self, inputFileName):
         # Make sure file exists
         if not os.path.isfile(inputFileName):
@@ -34,6 +26,11 @@ class wav(audio):
         ##  @public fileName  
         self.fileName = inputFileName
 
+## WAV class
+# @class wav
+#
+# @extends audio
+class wav(audio):
     ## Gets the length, in seconds, of a wave file
     #
     # @param self Class object
@@ -136,13 +133,6 @@ class wav(audio):
 # 
 # @extends audio
 class mp3(audio):
-    ## Constructor
-    #
-    # @param self
-    #
-    def __init__(self):
-        pass
-
     ## Decode an MP3 file
     #
     # @param self
@@ -175,13 +165,6 @@ class mp3(audio):
 #
 # @extends audio
 class ogg(audio):
-    ## Constructor
-    #
-    # @param self
-    #
-    def __init__(self):
-        pass
-
     ## Decode an OGG file
     #
     # @param self
