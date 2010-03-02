@@ -32,31 +32,9 @@
                  *  play button behavior.  Plays audio, and adds 'playing class.
                  **/
                 $('#play_button').click(function(){
-                    /* get player */
-                    var $player = $('#example_audio').get(0);
-                    
-                    $('#test p').append('Duration: '+$player.duration);
-                    
-                    /* change class of player, viewer, editor to playing */
-                    $('#example_audio, #waveform_viewer, #waveform_editor').addClass('playing');
-
-                    /* speed to move viewer playhead every 100 milliseconds */
-                    var $viewerSpeed = $('#waveform_viewer > #waveform_viewer_speed').val();
-                    /* speed to move editor waveform every 100 milliseconds */
-                    var $editorSpeed = $('#waveform_editor > #waveform_editor_speed').val();
-
-                    /* Move waveform in editor */
-                    var $editorIntervalHandle = setInterval('play_waveform("waveform_editor", "example_audio")', 100);
-                    /* move playhead in viewer */
-                    var $viewerIntervalHandle = setInterval('play_playhead("waveform_viewer", "example_audio", '+$viewerSpeed+')', 100);
-                    
-                    /* play audio */
-                    $player.play();
-
-                    /* Check every 100 seconds to see if waveform needs to be stopped */
-                    setTimeout('stop_waveform("waveform_editor", "example_audio", '+$editorIntervalHandle+')', 100);                   
-                    /* same for playhead on waveform_viewer */
-                    setTimeout('stop_playhead("waveform_viewer", "example_audio", '+$viewerIntervalHandle+')', 100);
+                    play_audio('example_audio');
+                    $waveformPlayers['waveform_viewer'].play();
+                    $waveformPlayers['waveform_editor'].play();
                     
                 });
                 
@@ -64,122 +42,42 @@
                  *  pause button behavior.  Pauses audio, and removes 'playing' class.
                  **/
                 $('#pause_button').click(function(){
-                   /* get player */
-                   var $player = $('#example_audio').get(0);
-                   /* remove 'playing' class */
-                   $('#example_audio, #waveform_viewer, #waveform_editor').removeClass('playing');
-
-                   /* pause audio */
-                   $player.pause();
+                    pause_audio('example_audio');
                 });
                 
             });            
             
-            /**
-             *  play_waveform
-             *  Moves waveform to the left based on the elapsed time of playing
-             *  audio file.  meant to be called every 100 ms.
-             *
-             *  @param          $waveform_div_id        The id of the waveform container
-             *  @param          $audio_id               The id of the <audio> element
-             **/
-            function play_waveform($waveform_div_id, $audio_id)
+            function play_audio($audio_id)
             {
-                /* Get actual time of audio */
-                $audio = $('#'+$audio_id).get(0);
-                $actualTime = $audio.currentTime;
-                /* Percentage of song we are currently on */
-                $actualPercent = $actualTime/$audio.duration;
-                /* Get size of waveform image */
-                $waveformLength = $('#'+$waveform_div_id+' > img.waveform_image').attr('src').split('_')[1].match(/[\d]+/);
-                /* new image position */
-                var $newPos = $actualPercent*$waveformLength;
-                /* new left value (because waveform actually moves backwards and starts at 400) */
-                var $newLeft = ($newPos-400)*-1;
+                var $player = $('#'+$audio_id).addClass('playing').get(0);
+                $player.play();
+                setTimeout('auto_pause_audio("'+$audio_id+'")', 100);
+            }
+            
+            function pause_audio($audio_id)
+            {
+                var $player = $('#'+$audio_id).removeClass('playing').get(0);
+                $player.pause();
+            }
+            
+            function auto_pause_audio($audio_id)
+            {
+                /* See if audio is at the end */
+                var $player = $('#'+$audio_id).get(0);
                 
-                /* Set new waveform position */
-                $('#'+$waveform_div_id+' > img.waveform_image').css('left', $newLeft+'px');
-            }
-            
-            /**
-             *  play_playhead
-             *  This function is to be run every 100ms, moving the playhead at the speed originally designated.
-             *
-             *  @param          $waveform_div_id        The id of the waveform container
-             *  @param          $audio_id               The id of the <audio> element associated with this player
-             *  @param          $pixels_per_tenthSecond The speed at which to move the playhead.
-             **/
-            function play_playhead($waveform_div_id, $audio_id, $pixels_per_TenthSecond)
-            {
-                /* Get current playhead position (margin-left value) */
-                var $marLeft = $('#'+$waveform_div_id+' > div.playhead').css('margin-left').match(/\-?[\d]+(\.[\d]+)?/)[0];
-                /* get new marginLeft */
-                var $newmarLeft = ($marLeft*1)+$pixels_per_TenthSecond;
-                /*set new margin left*/
-                $('#'+$waveform_div_id+' > div.playhead').css('margin-left', $newmarLeft+'px');
-            }
-            
-            /**
-             *  stops waveform if pause button has been pressed, or if audio is done playing.
-             *  otherwise, just keeps checking.
-             *
-             *  @param          $waveform_div_id            id of the moving waveform div.
-             *  @param          $audio_id                   id of the audio element
-             *  @param          $intervalId                 the 'handle' to the setInterval function that is being called every 100ms
-             **/
-            function stop_waveform($waveform_div_id, $audio_id, $intervalId)
-            {
-                var $aud = $('#'+$audio_id).get(0);
-                /* If the waveform is not playing */
-                if(!$('#'+$waveform_div_id).hasClass('playing'))
+                if($player.duration == $player.currentTime)
                 {
-                    /* stop movement */
-                    clearInterval($intervalId)
-                    return;
-                }
-                /* if audio file got to the end */
-                else if($aud.currentTime == $aud.duration)
-                {
-                    /* stop movement */
-                    clearInterval($intervalId);
-                    /* remove 'playing' classes */
-                    $('#'+$audio_id+', #'+$waveform_div_id).removeClass('playing');
-                    return;
+                    /* If so, remove 'playing' class */
+                    $('#'+$audio_id).removeClass('playing');
                 }
                 else
                 {
-                    /* waveform is still playing, keep checking. */
-                    setTimeout('stop_waveform("'+$waveform_div_id+'", "'+$audio_id+'", '+$intervalId+')', 100);
+                    /* If not, check again in 100 ms */
+                    setTimeout('auto_pause_audio("'+$audio_id+'")', 100);
                 }
             }
             
-            function stop_playhead($waveform_div_id, $audio_id, $intervalId)
-            {
-                var $aud = $('#'+$audio_id).get(0);
-                /* If the waveform is not playing */
-                if(!$('#'+$waveform_div_id).hasClass('playing'))
-                {
-                    /* stop movement */
-                    clearInterval($intervalId)
-                    return;
-                }
-                /* if audio file got to the end */
-                else if($aud.currentTime == $aud.duration)
-                {
-                    /* stop movement */
-                    clearInterval($intervalId);
-                    /* remove 'playing' class */
-                    $('#'+$audio_id+', #'+$waveform_div_id).removeClass('playing');
-                    return;
-                }
-                else
-                {
-                    /* waveform is still playing, keep checking. */
-                    setTimeout('stop_playhead("'+$waveform_div_id+'", "'+$audio_id+'", '+$intervalId+')', 100);
-                }
-            }
-                        
-             
+            
              /**
               * check_audio_duration
               * Given an id of an audio object, will return true if the duration attribute
@@ -247,9 +145,11 @@
                  $waveformPlayers['waveform_editor'] = new WaveformPlayer('editor', 'waveform_editor', 'example_audio');
                  $waveformPlayers['waveform_viewer'] = new WaveformPlayer('viewer', 'waveform_viewer', 'example_audio');
                  
+                 /*
                  for(var $i in $waveformPlayers) {
                      $('#test > p').append('<br />'+$waveformPlayers[$i].toString());
                  }
+                 */
 
                  remove_loading();
              }
