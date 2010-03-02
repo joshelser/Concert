@@ -19,11 +19,15 @@ function WaveformPlayer($type, $id, $audio_id)
 
     /* id */
     this.id = $id;
-
+    /* The waveform container (div) */
+    this.container = $('#'+$id).get(0);
+    
     if(this.type == 'editor')
     {
+        /* The object to animate is actual waveform image */
+        this.animate_object = $('#'+$id+' > img.waveform_image');
         /* waveform image width */
-        this.width = $('#'+$id+' > img.waveform_image').attr('src').split('_')[1].match(/[\d]+/)*1;
+        this.width = $(this.animate_object).attr('src').split('_')[1].match(/[\d]+/)*1;
         if(!this.width)
         {
             throw 'Could not get waveform image width.';
@@ -33,6 +37,8 @@ function WaveformPlayer($type, $id, $audio_id)
     {
         /* container width */
         this.width = 800;
+        /* object to animate is playhead */
+        this.animate_object = $('#'+$id+' > div.playhead');
     }
 
     /* audio element */
@@ -56,9 +62,9 @@ WaveformPlayer.prototype.toString = function()
 WaveformPlayer.prototype.play = function()
 {
     /* Set container class to 'playing' */
-    $('#'+this.id).addClass('playing');
+    $(this.container).addClass('playing');
     /* play animation */
-    setTimeout('play_animation("'+this.audio_id+'", "'+this.width+'", "'+this.id+'", "'+this.type+'")', 100);    
+    setTimeout(function(audio_element, width, container, animate_object, type){ return function(){ play_animation(audio_element, width, container, animate_object, type); }}(this.audio_element, this.width, this.container, this.animate_object, this.type), 100);
 
 }
 
@@ -67,19 +73,16 @@ WaveformPlayer.prototype.play = function()
  *  If the type is a editor, moves waveform to the left based on the elapsed time of playing
  *  audio file.  If viewer, moves the playhead to the right.  meant to be called every 100 ms.
  *
- *  @param          $audio_id               The id of the audio element associated with this waveform
+ *  @param          $audio                  The audio element associated with this waveform
  *  @param          $width                  The length in pixels of the waveform width/waveform container width
- *  @param          $waveform_div_id        The div id of the waveform container
+ *  @param          $waveform_container     The div of the waveform container
+ *  @param          $animate_object         The object to animate
  *  @param          $type                   The type of waveform container (viewer, editor)
  **/
-function play_animation($audio_id, $width, $waveform_div_id, $type)
+function play_animation($audio, $width, $waveform_container, $animate_object, $type)
 {
-    /* get audio element */
-    var $audio = $('#'+$audio_id).get(0);
-    /* Get actual time of audio */
-    var $actualTime = $audio.currentTime;
     /* Percentage of song we are currently on */
-    var $actualPercent = $actualTime/$audio.duration;
+    var $actualPercent = $audio.currentTime/$audio.duration;
     /* new position */
     var $newPos = $actualPercent*$width;
     
@@ -88,23 +91,23 @@ function play_animation($audio_id, $width, $waveform_div_id, $type)
         /* new left value (because waveform actually moves backwards and starts at 400) */
         var $newLeft = ($newPos-400)*-1;
         /* Set new waveform position */
-        $('#'+$waveform_div_id+' > img.waveform_image').css('left', $newLeft+'px');
+        $($animate_object).css('left', $newLeft+'px');
     }
     else if($type == 'viewer')
     {
-        $('#'+$waveform_div_id+' > div.playhead').css('margin-left', $newPos+'px');
+        $($animate_object).css('margin-left', $newPos+'px');
     }
 
     /* make sure audio element is still playing */
-    if($('#'+$audio_id).hasClass('playing'))
+    if($($audio).hasClass('playing'))
     {
         /* if so, go again in 100 ms */
-        setTimeout('play_animation("'+$audio_id+'", "'+$width+'", "'+$waveform_div_id+'", "'+$type+'")', 100);
+        setTimeout(function(audio_element, width, container, object, type){ return function(){ play_animation(audio_element, width, container, object, type); }}($audio, $width, $waveform_container, $animate_object, $type), 100);
     }
     else
     {
         /* Remove container 'playing' class */
-        $('#'+$waveform_div_id).removeClass('playing');
+        $($waveform_container).removeClass('playing');
     }
 }
 
