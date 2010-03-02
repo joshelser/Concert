@@ -5,9 +5,10 @@
         </title>
         
         <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        
+        <script type="text/javascript" src="waveformPlayer.js"></script>
         <script type="text/javascript">
             var $audios = Array();
+            var $waveformPlayers = Array();
 
             $(document).ready(function(){
                 
@@ -230,7 +231,7 @@
                  if($all)
                  {
                      /* If all audio objects were able to be accessed, move on */
-                     remove_loading();                    
+                     initialize_waveform_objects();                   
                  }
                  
              }
@@ -240,6 +241,18 @@
                  $('#loading').remove();
              }
              
+             function initialize_waveform_objects()
+             {
+                 /* For each waveform container, create associated object */
+                 $waveformPlayers['waveform_editor'] = new WaveformPlayer('editor', 'waveform_editor', 'example_audio');
+                 $waveformPlayers['waveform_viewer'] = new WaveformPlayer('viewer', 'waveform_viewer', 'example_audio');
+                 
+                 for(var $i in $waveformPlayers) {
+                     $('#test > p').append('<br />'+$waveformPlayers[$i].toString());
+                 }
+
+                 remove_loading();
+             }
             
         </script>
     </head>
