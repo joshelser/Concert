@@ -202,7 +202,7 @@ def interpolate_colors(colors, flat=False, num_colors=256):
  
 class WaveformImage(object):
     def __init__(self, image_width, image_height):
-        self.image = Image.new("RGB", (image_width, image_height))
+        self.image = Image.new("RGB", (image_width, image_height), '#dddddd')
  
         self.image_width = image_width
         self.image_height = image_height
