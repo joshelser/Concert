@@ -82,6 +82,7 @@ WaveformPlayer.prototype.play = function()
  *  @param          $waveform_container     The div of the waveform container
  *  @param          $animate_object         The object to animate
  *  @param          $type                   The type of waveform container (viewer, editor)
+ *  @param          $timecode_container     The container holding the timecode
  **/
 function play_animation($audio, $width, $waveform_container, $animate_object, $type, $timecode_container)
 {
@@ -121,6 +122,13 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     }
 }
 
+/**
+ *  sec_to_timecode
+ *  This function will convert between an amount of seconds, and a timecode value.
+ *
+ *  @param          $seconds            The amount of seconds to convert.
+ *  @return         hh:mm:ss            Formatted timecode string.
+ **/
 function sec_to_timecode($seconds)
 {
     var $hours = Math.floor($seconds/3600);
