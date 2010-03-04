@@ -86,6 +86,9 @@ WaveformPlayer.prototype.play = function()
  **/
 function play_animation($audio, $width, $waveform_container, $animate_object, $type, $timecode_container)
 {
+    /* Make jQuery object a local variable for quicker access */
+    var $ =  jQuery;
+    
     /* Percentage of song we are currently on */
     var $actualPercent = $audio.currentTime/$audio.duration;
     /* new position */
