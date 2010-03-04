@@ -32,10 +32,21 @@
                  *  play button behavior.  Plays audio, and adds 'playing class.
                  **/
                 $('#play_button').click(function(){
-                    play_audio('example_audio');
-                    $waveformPlayers['waveform_viewer'].play();
-                    $waveformPlayers['waveform_editor'].play();
-                    
+                    play_main();
+                });
+                $(document).keydown(function(event){
+                   if(event.keyCode == 32) 
+                   {
+                       event.preventDefault();
+                       if($('#example_audio').hasClass('playing'))
+                       {
+                           pause_audio('example_audio');
+                       }
+                       else
+                       {
+                           play_main();
+                       }
+                   }
                 });
                 
                 /**
@@ -46,6 +57,13 @@
                 });
                 
             });            
+            
+            function play_main()
+            {
+                play_audio('example_audio');
+                $waveformPlayers['waveform_viewer'].play();
+                $waveformPlayers['waveform_editor'].play();
+            }
             
             function play_audio($audio_id)
             {

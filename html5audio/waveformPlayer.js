@@ -19,6 +19,14 @@ function WaveformPlayer($type, $id, $audio_id)
         this.type = $type;    
     }
 
+    /* audio element */
+    this.audio_id = $audio_id;
+    this.audio_element = $('#'+$audio_id).get(0);
+    if(!this.audio_element)
+    {
+        throw 'Invalid audio_id.';
+    }
+
     /* id */
     this.id = $id;
     /* The waveform container (div) */
@@ -27,7 +35,7 @@ function WaveformPlayer($type, $id, $audio_id)
     if(this.type == 'editor')
     {
         /* The object to animate is actual waveform image */
-        this.animate_object = $('#'+$id+' > img.waveform_image');
+        this.animate_object = $('#'+$id+' > img.waveform_image').get(0);
         /* waveform image width */
         this.width = $(this.animate_object).attr('src').split('_')[1].match(/[\d]+/)*1;
         if(!this.width)
@@ -40,18 +48,41 @@ function WaveformPlayer($type, $id, $audio_id)
         /* container width */
         this.width = 800;
         /* object to animate is playhead */
-        this.animate_object = $('#'+$id+' > div.playhead');
+        this.animate_object = $('#'+$id+' > div.playhead').get(0);
         /* timecode object */
-        this.timecode_container = $('#'+$id+' > div.timecode');
+        this.timecode_container = $('#'+$id+' > div.timecode').get(0);
+        
+        /* behavior for clicking in viewer and changing time code */
+        $(this.container).click(function(waveformPlayerObject){ return function(event){
+            /* prevent default click behavior */
+            event.preventDefault();
+            /* make some vars local for quicker access */
+            var $ = jQuery;
+            var audio_element = waveformPlayerObject.audio_element;
+            
+            /* Get x coordinate of click relative to page */
+            var pageX = event.pageX;
+            /* x offset of element from page */
+            var elementLeftOffset = $(this).offset().left;
+            /* X coordinate of click relative to element */
+            var clickX = pageX-elementLeftOffset;
+            /* percent of width */
+            var clickPerc = clickX/$(this).css('width').match(/[\d]+/);
+            /* new time in audio file */
+            var newTime = (clickPerc*audio_element.duration);
+            /* move current time of audio file to clicked location */
+            audio_element.currentTime = newTime;
+            
+            /* if player was paused, manually move playhead and change time. If not, this will happen automatically in <=100ms because song is playing. */
+            if(!$(audio_element).hasClass('playing'))
+            {
+                $(waveformPlayerObject.container).children('div.playhead').css('margin-left', (clickX)+'px');                
+                $(waveformPlayerObject.container).children('div.timecode').html(sec_to_timecode(newTime))
+            }
+            
+        }}(this));
     }
 
-    /* audio element */
-    this.audio_id = $audio_id;
-    this.audio_element = $('#'+$audio_id).get(0);
-    if(!this.audio_element)
-    {
-        throw 'Invalid audio_id.';
-    }
 }
 
 /**
@@ -68,9 +99,14 @@ WaveformPlayer.prototype.play = function()
     /* Set container class to 'playing' */
     $(this.container).addClass('playing');
     /* play animation */
-    setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);
+    setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);        
 
 }
+WaveformPlayer.prototype.animateOnce = function()
+{
+    play_animation(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container);
+}
+
 
 /**
  *  play_animation
