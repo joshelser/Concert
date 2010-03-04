@@ -1,3 +1,5 @@
+var $animation_speed = 200;
+
 /**
 *  Constructor for a waveform player object.
 *
@@ -64,14 +66,14 @@ WaveformPlayer.prototype.play = function()
     /* Set container class to 'playing' */
     $(this.container).addClass('playing');
     /* play animation */
-    setTimeout(function(audio_element, width, container, animate_object, type){ return function(){ play_animation(audio_element, width, container, animate_object, type); }}(this.audio_element, this.width, this.container, this.animate_object, this.type), 100);
+    setTimeout(function(audio_element, width, container, animate_object, type){ return function(){ play_animation(audio_element, width, container, animate_object, type); }}(this.audio_element, this.width, this.container, this.animate_object, this.type), $animation_speed);
 
 }
 
 /**
  *  play_animation
  *  If the type is a editor, moves waveform to the left based on the elapsed time of playing
- *  audio file.  If viewer, moves the playhead to the right.  meant to be called every 100 ms.
+ *  audio file.  If viewer, moves the playhead to the right.  meant to be called every $animation_speed ms.
  *
  *  @param          $audio                  The audio element associated with this waveform
  *  @param          $width                  The length in pixels of the waveform width/waveform container width
@@ -101,8 +103,8 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     /* make sure audio element is still playing */
     if($($audio).hasClass('playing'))
     {
-        /* if so, go again in 100 ms */
-        setTimeout(function(audio_element, width, container, object, type){ return function(){ play_animation(audio_element, width, container, object, type); }}($audio, $width, $waveform_container, $animate_object, $type), 100);
+        /* if so, go again in $animation_speed ms */
+        setTimeout(function(audio_element, width, container, object, type){ return function(){ play_animation(audio_element, width, container, object, type); }}($audio, $width, $waveform_container, $animate_object, $type), $animation_speed);
     }
     else
     {
