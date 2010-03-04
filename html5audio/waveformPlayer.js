@@ -41,6 +41,8 @@ function WaveformPlayer($type, $id, $audio_id)
         this.width = 800;
         /* object to animate is playhead */
         this.animate_object = $('#'+$id+' > div.playhead');
+        /* timecode object */
+        this.timecode_container = $('#'+$id+' > div.timecode');
     }
 
     /* audio element */
@@ -66,7 +68,7 @@ WaveformPlayer.prototype.play = function()
     /* Set container class to 'playing' */
     $(this.container).addClass('playing');
     /* play animation */
-    setTimeout(function(audio_element, width, container, animate_object, type){ return function(){ play_animation(audio_element, width, container, animate_object, type); }}(this.audio_element, this.width, this.container, this.animate_object, this.type), $animation_speed);
+    setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);
 
 }
 
@@ -81,12 +83,18 @@ WaveformPlayer.prototype.play = function()
  *  @param          $animate_object         The object to animate
  *  @param          $type                   The type of waveform container (viewer, editor)
  **/
-function play_animation($audio, $width, $waveform_container, $animate_object, $type)
+function play_animation($audio, $width, $waveform_container, $animate_object, $type, $timecode_container)
 {
     /* Percentage of song we are currently on */
     var $actualPercent = $audio.currentTime/$audio.duration;
     /* new position */
     var $newPos = $actualPercent*$width;
+    
+    if($timecode_container)
+    {
+        var $timecode = sec_to_timecode($audio.currentTime);
+        $($timecode_container).html($timecode);        
+    }
     
     if($type == 'editor')
     {
@@ -104,7 +112,7 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     if($($audio).hasClass('playing'))
     {
         /* if so, go again in $animation_speed ms */
-        setTimeout(function(audio_element, width, container, object, type){ return function(){ play_animation(audio_element, width, container, object, type); }}($audio, $width, $waveform_container, $animate_object, $type), $animation_speed);
+        setTimeout(function(audio_element, width, container, object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, object, type, timecode_container); }}($audio, $width, $waveform_container, $animate_object, $type, $timecode_container), $animation_speed);
     }
     else
     {
@@ -113,3 +121,26 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     }
 }
 
+function sec_to_timecode($seconds)
+{
+    var $hours = Math.floor($seconds/3600);
+    var $rem = $seconds % 3600;
+    var $minutes = Math.floor($rem/60);
+    var $seconds = Math.floor($rem%60);
+    /* pad zeros */
+    if($hours < 10)
+    {
+        $hours = '0'+$hours;
+    }
+    if($minutes < 10)
+    {
+        $minutes = '0'+$minutes;
+    }
+    if($seconds < 10)
+    {
+        /* pad to beginning */
+        $seconds = '0'+$seconds;
+    }
+    
+    return $hours+':'+$minutes+':'+$seconds;
+}
