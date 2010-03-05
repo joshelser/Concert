@@ -80,7 +80,10 @@ class AudioProcessor(object):
         # convert to mono by selecting left channel only
         # add option to draw both channels
         if self.channels > 1:
-            samples = samples[:,0]
+            samples = numpy.array(samples).sum(1)
+
+            # Original code, drops the other channels
+            # samples = samples[:,0]
  
         if resize_if_less and (add_to_start > 0 or add_to_end > 0):
             if add_to_start > 0:
