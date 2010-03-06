@@ -143,9 +143,9 @@ class wav(audio):
     # @param imageName The name of the file to write to
     # @param imageWidth Width of image in pixels
     # @param imageHeight Height of image in pixels
-    # @param fft_size
-    # @param f_max
-    # @param f_min
+    # @param fft_size Optional
+    # @param f_max Optional 
+    # @param f_min Optional
     #
     def generateWaveform(self, imageName, imageWidth, imageHeight, fft_size=2048, f_max=22050, f_min=10):
         create_png(self.audioObj.filePath, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
