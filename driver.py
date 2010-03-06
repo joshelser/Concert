@@ -8,7 +8,7 @@ obj = audio("html5audio/media/Oddity.wav")
 # Create WAV object
 wavObj = wav(obj)
 length = wavObj.getLength()
-wavObj.generateWaveform('Oddity_'+str(5 * length)+'.png', 5 * length, 585, 2048, 22050, 10)
+wavObj.generateWaveform('Oddity_'+str(5 * length)+'.png', 5 * length, 585)
 wavObj.crop("out.wav", 126, 232)
 
 # Create MP3 object

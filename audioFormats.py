@@ -147,7 +147,7 @@ class wav(audio):
     # @param f_max
     # @param f_min
     #
-    def generateWaveform(self, imageName, imageWidth, imageHeight, fft_size, f_max, f_min):
+    def generateWaveform(self, imageName, imageWidth, imageHeight, fft_size=2048, f_max=22050, f_min=10):
         create_png(self.audioObj.filePath, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
 
 
