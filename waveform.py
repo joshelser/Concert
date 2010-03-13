@@ -42,7 +42,7 @@ class AudioProcessor(object):
         self.higher_log = math.log10(self.higher)
         self.clip = lambda val, low, high: min(high, max(low, val))
  
-    def read(self, start, size, resize_if_less=False):
+    def read(self, start, size, resize_if_less=False, channel=-1):
         """ read size samples starting at start, if resize_if_less is True and less than size
         samples are read, resize the array to size and fill with zeros """
  
@@ -79,8 +79,10 @@ class AudioProcessor(object):
  
         # convert to mono by selecting left channel only
         # add option to draw both channels
-        if self.channels > 1:
-            samples = numpy.array(samples).sum(1)
+        if channel != -1:
+            samples = samples[:,channel]
+            # Combine all channels into one channel
+            # samples = numpy.array(samples).sum(1)
 
             # Original code, drops the other channels
             # samples = samples[:,0]
@@ -96,10 +98,10 @@ class AudioProcessor(object):
         return samples
  
  
-    def spectral_centroid(self, seek_point, spec_range=120.0):
+    def spectral_centroid(self, seek_point, channel, spec_range=120.0):
         """ starting at seek_point read fft_size samples, and calculate the spectral centroid """
  
-        samples = self.read(seek_point - self.fft_size/2, self.fft_size, True)
+        samples = self.read(seek_point - self.fft_size/2, self.fft_size, True, channel)
  
         samples *= self.window
         fft = numpy.fft.fft(samples)
@@ -126,7 +128,7 @@ class AudioProcessor(object):
         return (spectral_centroid, db_spectrum)
  
  
-    def peaks(self, start_seek, end_seek):
+    def peaks(self, start_seek, end_seek, channel):
         """ read all samples between start_seek and end_seek, then find the minimum and maximum peak
         in that range. Returns that pair in the order they were found. So if min was found first,
         it returns (min, max) else the other way around. """
@@ -147,14 +149,14 @@ class AudioProcessor(object):
             block_size = end_seek - start_seek
  
         if block_size <= 1:
-            samples = self.read(start_seek, 1)
+            samples = self.read(start_seek, 1, False, channel)
             return samples[0], samples[0]
         elif block_size == 2:
-            samples = self.read(start_seek, True)
+            samples = self.read(start_seek, True, channel)
             return samples[0], samples[1]
  
         for i in range(start_seek, end_seek, block_size):
-            samples = self.read(i, block_size)
+            samples = self.read(i, block_size, False, channel)
  
             local_max_index = numpy.argmax(samples)
             local_max_value = samples[local_max_index]
@@ -286,31 +288,41 @@ class WaveformImage(object):
  
  
 def create_png(input_filename, output_filename_w, image_width, image_height, channels, fft_size, f_max, f_min):
-    print "processing file %s:\n\t" % input_filename,
+    print "processing file %s:\n\t" % input_filename
  
     audio_file = audiolab.sndfile(input_filename, 'read')
  
     samples_per_pixel = audio_file.get_nframes() / float(image_width)
     nyquist_freq = (audio_file.get_samplerate() / 2) + 0.0
     processor = AudioProcessor(audio_file, fft_size, numpy.hanning)
- 
-    waveform = WaveformImage(image_width, image_height)
- 
-    for x in range(image_width):
- 
-        if x % (image_width/10) == 0:
-            sys.stdout.write('.')
-            sys.stdout.flush()
- 
-        seek_point = int(x * samples_per_pixel)
-        next_seek_point = int((x + 1) * samples_per_pixel)
- 
-        (spectral_centroid, db_spectrum) = processor.spectral_centroid(seek_point)
- 
-        peaks = processor.peaks(seek_point, next_seek_point)
-        waveform.draw_peaks(x, peaks, spectral_centroid)
- 
-    waveform.save(output_filename_w)
+
+    for channel in range(channels):
+        waveform = WaveformImage(image_width, image_height)
+     
+        for x in range(image_width):
+     
+            if x % (image_width/10) == 0:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+     
+            seek_point = int(x * samples_per_pixel)
+            next_seek_point = int((x + 1) * samples_per_pixel)
+     
+            (spectral_centroid, db_spectrum) = processor.spectral_centroid(seek_point, channel)
+     
+            peaks = processor.peaks(seek_point, next_seek_point, channel)
+            waveform.draw_peaks(x, peaks, spectral_centroid)
+     
+        waveform.save(str(channel)+output_filename_w)
+        print " done"
+
+    if channels > 1:
+        combined = Image.new("RGB", (image_width, channels * image_height))
+        for channel in range(channels):
+            cur = Image.open(str(channel)+output_filename_w)
+            combined.paste(cur, (0, channel * image_height))
+
+        combined.save(output_filename_w)
  
     print " done"
  
