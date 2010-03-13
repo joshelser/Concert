@@ -143,12 +143,13 @@ class wav(audio):
     # @param imageName The name of the file to write to
     # @param imageWidth Width of image in pixels
     # @param imageHeight Height of image in pixels
+    # @param channels The number of channels to generate images for. 0 merges all channels
     # @param fft_size Optional
     # @param f_max Optional 
     # @param f_min Optional
     #
-    def generateWaveform(self, imageName, imageWidth, imageHeight, fft_size=2048, f_max=22050, f_min=10):
-        create_png(self.audioObj.filePath, imageName, imageWidth, imageHeight, fft_size, f_max, f_min);
+    def generateWaveform(self, imageName, imageWidth, imageHeight, channels=0, fft_size=2048, f_max=22050, f_min=10):
+        create_png(self.audioObj.filePath, imageName, imageWidth, imageHeight, channels, fft_size, f_max, f_min);
 
 
 ## MP3

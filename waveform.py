@@ -285,7 +285,7 @@ class WaveformImage(object):
         self.image.save(filename)
  
  
-def create_png(input_filename, output_filename_w, image_width, image_height, fft_size, f_max, f_min):
+def create_png(input_filename, output_filename_w, image_width, image_height, channels, fft_size, f_max, f_min):
     print "processing file %s:\n\t" % input_filename,
  
     audio_file = audiolab.sndfile(input_filename, 'read')
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     parser.add_option("-i", "--fmin", action="store", dest="f_min", type="int", help="Minimum freq to draw, in Hz (default %default)")
     parser.add_option("-v", "--version", action="store_true", dest="version", help="display version information")
  
-    parser.set_defaults(output_filename_w=None, image_width=500, image_height=585, fft_size=2048, f_max=22050, f_min=10)
+    parser.set_defaults(output_filename_w=None, image_width=500, image_height=585, channels=0, fft_size=2048, f_max=22050, f_min=10)
  
     (options, args) = parser.parse_args()
  
@@ -342,7 +342,7 @@ if __name__ == '__main__':
  
 	        output_file_w = options.output_filename_w or input_file + ".png"
  
-	        args = (input_file, output_file_w, options.image_width, options.image_height, options.fft_size, options.f_max, options.f_min)
+	        args = (input_file, output_file_w, options.image_width, options.image_height, channels, options.fft_size, options.f_max, options.f_min)
  
  
 	    create_png(*args)
