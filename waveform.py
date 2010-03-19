@@ -207,7 +207,7 @@ def interpolate_colors(colors, flat=False, num_colors=256):
  
 class WaveformImage(object):
     def __init__(self, image_width, image_height):
-        self.image = Image.new("RGB", (image_width, image_height), '#dddddd')
+        self.image = Image.new("RGB", (image_width, image_height),)
  
         self.image_width = image_width
         self.image_height = image_height
@@ -216,9 +216,8 @@ class WaveformImage(object):
         self.previous_x, self.previous_y = None, None
  
         colors = [
-                    (50,0,200),
-                    (0,220,80),
-                    (255,224,0),
+                    (255,102,102),
+                    (255,51,51),
                  ]
  
         # this line gets the old "screaming" colors back...
@@ -283,8 +282,15 @@ class WaveformImage(object):
         a = 25
         for x in range(self.image_width):
             self.pix[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pix[x, self.image_height/2]))
- 
-        self.image.save(filename)
+
+        alpha = self.image.split()[0]
+        self.image = self.image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
+        mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
+        self.image.paste(255, mask)
+
+
+
+        self.image.save(filename,transparency=255)
  
  
 def create_png(input_filename, output_filename_w, image_width, image_height, channels, fft_size, f_max, f_min):
