@@ -56,6 +56,12 @@
                     pause_audio('example_audio');
                 });
                 
+                /**
+                 *  highlight event handler.
+                 **/
+                $('#waveform_editor').bind('highlight', function(e, data){
+                    alert('highlighted: '+data.start+' to '+data.end);
+                });
             });            
             
             function play_main()
@@ -163,6 +169,9 @@
                  $waveformPlayers['waveform_editor'] = new WaveformPlayer('editor', 'waveform_editor', 'example_audio');
                  $waveformPlayers['waveform_viewer'] = new WaveformPlayer('viewer', 'waveform_viewer', 'example_audio');
                  
+                 
+                 
+                 
                  /*
                  for(var $i in $waveformPlayers) {
                      $('#test > p').append('<br />'+$waveformPlayers[$i].toString());
@@ -171,6 +180,8 @@
 
                  remove_loading();
              }
+             
+             
             
         </script>
     </head>
