@@ -323,10 +323,10 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
         print " done"
 
     if channels > 1:
-        combined = Image.new("RGB", (image_width, channels * image_height))
+        combined = Image.new("RGB", (image_width, image_height))
         for channel in range(channels):
             cur = Image.open(str(channel)+output_filename_w)
-            combined.paste(cur, (0, channel * image_height))
+            combined.paste(cur, (0, channel * (image_height/channels)))
 
         combined.save(output_filename_w)
  
