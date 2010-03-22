@@ -36,12 +36,76 @@ function WaveformPlayer($type, $id, $audio_id)
     {
         /* The object to animate is actual waveform image */
         this.animate_object = $('#'+$id+' > img.waveform_image').get(0);
+        
+        /* The highlight element on the page */
+        this.highlight_object = $('#'+$id+' > div#highlight').get(0);
+        /* A variable to set when highlight is occuring */
+        this.dragging = 0;
+        /* Variables for beginning and end of highlight */
+        this.highlightStart = -1;
+        this.hightlightEnd = -1;
+        
         /* waveform image width */
         this.width = $(this.animate_object).attr('src').split('_')[1].match(/[\d]+/)*1;
         if(!this.width)
         {
             throw 'Could not get waveform image width.';
-        }        
+        }
+        
+        /**
+         * Behavior for highlighting a section of the waveform
+         **/
+        $(this.container).mousedown(function(waveformPlayerObject){return function(event){
+            /* Prevent default click behavior */
+            event.preventDefault();
+            
+            /* Clear old highlight */
+            waveformPlayerObject.highlightStart = -1;
+            waveformPlayerObject.highlightEnd = -1;
+            waveformPlayerObject.highlight();
+                        
+            /* X coordinate of click relative to element */
+            var clickX = clickXElement(this, event);
+            /* percent of width */
+            var clickPerc = clickX/$(this).css('width').match(/[\d]+/);
+            
+            /* start */
+            waveformPlayerObject.highlightStart = (clickPerc*waveformPlayerObject.audio_element.duration);
+                        
+            /* Set variable to denote dragging is in progress */
+            waveformPlayerObject.dragging = 1;
+            
+            waveformPlayerObject.highlight();
+            
+            
+        }}(this));
+        
+        $(this.container).mousemove(function(waveformPlayerObject){return function(event){
+            /* if mouse is down */
+            if(waveformPlayerObject.dragging){
+                
+                /* Get x location of mouse relative to element */
+                var mouseX = clickXElement(this, event);
+                /* percent of width */
+                var mousePerc = mouseX/$(this).css('width').match(/[\d]+/);
+                
+                /* end */
+                waveformPlayerObject.highlightEnd = mousePerc*waveformPlayerObject.audio_element.duration;
+                
+                waveformPlayerObject.highlight();
+                
+            }
+        }}(this));
+        
+        $(this.container).mouseup(function(waveformPlayerObject){return function(event){
+            /* Prevent default mouseup behavior */
+            event.preventDefault();            
+            
+            /* Mark object as not being dragged anymore */
+            waveformPlayerObject.dragging = 0;
+            
+            
+        }}(this));
     }
     else if(this.type == 'viewer')
     {
@@ -60,12 +124,8 @@ function WaveformPlayer($type, $id, $audio_id)
             var $ = jQuery;
             var audio_element = waveformPlayerObject.audio_element;
             
-            /* Get x coordinate of click relative to page */
-            var pageX = event.pageX;
-            /* x offset of element from page */
-            var elementLeftOffset = $(this).offset().left;
             /* X coordinate of click relative to element */
-            var clickX = pageX-elementLeftOffset;
+            var clickX = clickXElement(this, event);
             /* percent of width */
             var clickPerc = clickX/$(this).css('width').match(/[\d]+/);
             /* new time in audio file */
@@ -85,6 +145,16 @@ function WaveformPlayer($type, $id, $audio_id)
 
 }
 
+function clickXElement($element, $e){
+    /* Get x coordinate of click relative to page */
+    var pageX = $e.pageX;
+    /* x offset of element from page */
+    var elementLeftOffset = $($element).offset().left;
+    /* X coordinate of click relative to element */
+    var clickX = pageX-elementLeftOffset;
+    return clickX;
+}
+
 /**
 *  toString function for a waveform player object
 *  helpful for debugging.
@@ -102,11 +172,54 @@ WaveformPlayer.prototype.play = function()
     setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);        
 
 }
+
 WaveformPlayer.prototype.animateOnce = function()
 {
     play_animation(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container);
 }
 
+/**
+ *  highlight member function uses the highlightStart and highlightEnd member variables to draw the 
+ *  appropriate highlight in the interface.
+ **/
+WaveformPlayer.prototype.highlight = function()
+{
+    if(this.type != 'editor'){
+        return null;
+    }
+    
+    if(this.highlightStart == -1 || this.highlightEnd == -1)
+    {
+        /* Clear highlight */
+        $('#'+this.id+' > div#highlight').css('margin-left', '0px').css('width', '0px');
+    }
+    else
+    {
+        /* Highlight waveform */
+        var audioDuration = this.audio_element.duration;
+        var elementWidth = $(this.container).css('width').match(/[\d]+/);
+        
+        /* Highlight section of waveform denoted by the highlightEnd and highlightStart member variables */
+        var highlightStartPerc = this.highlightStart/audioDuration;
+        var highlightEndPerc = this.highlightEnd/audioDuration;
+
+        var highlightStartPix = highlightStartPerc*elementWidth;
+        var highlightEndPix = highlightEndPerc*elementWidth;
+        
+        /* Forward highlight */
+        if(this.highlightStart < this.highlightEnd)
+        {
+            /* Set highlight */
+            $('#'+this.id+' > div#highlight').css('margin-left', highlightStartPix+'px').css('width', (highlightEndPix-highlightStartPix)+'px');
+        }
+        else
+        {
+            /* set backwards highlight */
+            $('#'+this.id+' > div#highlight').css('margin-left', highlightEndPix+'px').css('width', (highlightStartPix-highlightEndPix)+'px');            
+        }
+    }
+    
+}
 
 /**
  *  play_animation
