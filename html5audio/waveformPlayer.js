@@ -91,28 +91,45 @@ function WaveformPlayer($type, $id, $audio_id)
             /* Prevent default mouseup behavior */
             event.preventDefault();            
             
-            /* Get actual waveform left value to determine offset from beginning of song */
-            var left = $('#'+waveformPlayerObject.id+' > img#waveform_editor_image').css('left').match(/[\d]+/);
-            var timeOffsetPx = 400-left;
-            /* Mark object as not being dragged anymore */
-            waveformPlayerObject.dragging = 0;
+            var audioDuration = waveformPlayerObject.audio_element.duration;
             
+            /* get proper highlight values */
             if(waveformPlayerObject.highlightStart < waveformPlayerObject.highlightEnd)
             {
-                var highlightData = {
-                    start: waveformPlayerObject.highlightStart,
-                    end: waveformPlayerObject.highlightEnd
-                };
+                var highlightStartPx = waveformPlayerObject.highlightStart;
+                var highlightEndPx = waveformPlayerObject.highlightEnd;
             }
             else
             {
-                var highlightData = {
-                    start: waveformPlayerObject.highlightEnd,
-                    end: waveformPlayerObject.highlightStart
-                };
+                var highlightStartPx = waveformPlayerObject.highlightEnd;
+                var highlightEndPx = waveformPlayerObject.highlightStart;
             }
+            
+            if(highlightStartPx != -1 && highlightEndPx != -1)
+            {
+                /* Get actual waveform left value to determine offset from beginning of song */
+                var left = $('#'+waveformPlayerObject.id+' > img#waveform_editor_image').css('left').match(/[\d]+/)*1;
+                /* Get actual waveform image width */
+                var width = $('#'+waveformPlayerObject.id+' > img#waveform_editor_image').css('width').match(/[\d]+/);
 
-            //$('#'+this.id).trigger('highlight', highlightData);
+                var timeOffsetPx = 400-left;
+
+                var startTimePx = (timeOffsetPx+highlightStartPx)-400;
+                var endTimePx = (timeOffsetPx+highlightEndPx)-400;
+                var startTimePerc = startTimePx/width;
+                var endTimePerc = endTimePx/width;
+
+                var highlightData = {
+                    start: startTimePerc*audioDuration,
+                    end: endTimePerc*audioDuration  
+                };
+
+                $('#'+this.id).trigger('highlight', highlightData);
+            }
+            
+            
+            /* Mark object as not being dragged anymore */
+            waveformPlayerObject.dragging = 0;
         }}(this));
     }
     else if(this.type == 'viewer')
@@ -203,17 +220,6 @@ WaveformPlayer.prototype.highlight = function()
     }
     else
     {
-        /* Highlight waveform */
-        var audioDuration = this.audio_element.duration;
-        var elementWidth = $(this.container).css('width').match(/[\d]+/);
-        
-        /* Highlight section of waveform denoted by the highlightEnd and highlightStart member variables */
-        var highlightStartPerc = this.highlightStart/audioDuration;
-        var highlightEndPerc = this.highlightEnd/audioDuration;
-
-        var highlightStartPix = highlightStartPerc*elementWidth;
-        var highlightEndPix = highlightEndPerc*elementWidth;
-        
         /* Forward highlight */
         if(this.highlightStart < this.highlightEnd)
         {
