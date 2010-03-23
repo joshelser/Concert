@@ -3,7 +3,7 @@
 from audioFormats import *
 
 # Create generic audio object 
-obj = audio("html5audio/media/Oddity.wav")
+obj = audio("web/media/Oddity.wav")
 
 # Create WAV object
 wavObj = wav(obj)

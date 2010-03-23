@@ -123,7 +123,8 @@ function WaveformPlayer($type, $id, $audio_id)
                     start: startTimePerc*audioDuration,
                     end: endTimePerc*audioDuration  
                 };
-
+                
+                /* Trigger highlight event */
                 $('#'+this.id).trigger('highlight', highlightData);
             }
             
@@ -158,11 +159,15 @@ function WaveformPlayer($type, $id, $audio_id)
             /* move current time of audio file to clicked location */
             audio_element.currentTime = newTime;
             
-            /* if player was paused, manually move playhead and change time. If not, this will happen automatically in <=100ms because song is playing. */
+            /* If song is not playing */
             if(!$(audio_element).hasClass('playing'))
             {
+                /* manually move playhead and change timecode. */
                 $(waveformPlayerObject.container).children('div.playhead').css('margin-left', (clickX)+'px');                
-                $(waveformPlayerObject.container).children('div.timecode').html(sec_to_timecode(newTime))
+                $(waveformPlayerObject.container).children('div.timecode').html(sec_to_timecode(newTime));
+                
+                /* Manually update waveform_editor */
+                $waveformPlayers['waveform_editor'].animateOnce();
             }
             
         }}(this));
@@ -275,7 +280,7 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
         $($animate_object).css('margin-left', $newPos+'px');
     }
 
-    /* make sure audio element is still playing */
+    /* make sure audio element is still playing, and hasn't reached end */
     if($($audio).hasClass('playing'))
     {
         /* if so, go again in $animation_speed ms */
@@ -283,7 +288,6 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     }
     else
     {
-        /* Remove container 'playing' class */
         $($waveform_container).removeClass('playing');
     }
 }
