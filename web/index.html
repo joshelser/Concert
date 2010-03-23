@@ -11,7 +11,12 @@
             var $waveformPlayers = Array();
 
             $(document).ready(function(){
-                                
+                
+                /* Disable all click behavior on page */
+                $(document).mousedown(function(event){
+                    event.preventDefault();
+                });
+                
                 /* Set loading notification */
                 $('h1').after('<span id="loading"><img src="images/ajax-loader.gif" /> Loading</span>');
                 
@@ -38,7 +43,7 @@
                    if(event.keyCode == 32) 
                    {
                        event.preventDefault();
-                       if($('#example_audio').hasClass('playing'))
+                       if($('#waveform_viewer').hasClass('playing'))
                        {
                            pause_audio('example_audio');
                        }
@@ -75,7 +80,7 @@
             {
                 var $player = $('#'+$audio_id).addClass('playing').get(0);
                 $player.play();
-                setTimeout('auto_pause_audio("'+$audio_id+'")', 100);
+                auto_pause_audio($audio_id);
             }
             
             function pause_audio($audio_id)
@@ -83,25 +88,32 @@
                 var $player = $('#'+$audio_id).removeClass('playing').get(0);
                 $player.pause();
             }
-            
+                        
             function auto_pause_audio($audio_id)
             {
                 /* See if audio is at the end */
                 var $player = $('#'+$audio_id).get(0);
                 
+                /* If player has reached the end */
                 if($player.duration == $player.currentTime)
                 {
-                    /* If so, remove 'playing' class */
+                    /* remove 'playing' class */
                     $('#'+$audio_id).removeClass('playing');
+                    /* pause audio */
+                    $player.pause();
+                }
+                /* If player has already been paused */
+                else if(!$($player).hasClass('playing'))
+                {
+                    /* Do nothing */
+                    continue;
                 }
                 else
                 {
-                    /* If not, check again in 100 ms */
+                    /* If still playing, check again in 100 ms */
                     setTimeout('auto_pause_audio("'+$audio_id+'")', 100);
                 }
             }
-            
-            
              /**
               * check_audio_duration
               * Given an id of an audio object, will return true if the duration attribute
@@ -196,7 +208,7 @@
         <div id ="waveform_editor" class="waveform" style="width: 800px; height: 585px; border:1px #bbb dashed; overflow: hidden; background-color: black;">
             <div id="highlight" style="background-color: #009999; z-index: 2; height: inherit; opacity: .25; position: absolute; margin-left: 0px; width: 0px"></div>
         	<div id="playhead" style = "margin-left:400px;width:1px; background-color: #ff0000; height:inherit; position: absolute;z-index: 1;"></div>
-            <img src="media/Oddity_1660.png" class="waveform_image" id="waveform_editor_image" style="left: 400px; position: relative; height: inherit; width: 1660px;"/>
+            <img src="media/Oddity_1660.png" class="waveform_image" id="waveform_editor_image" style="left: 400px; position: relative; width: 1660px;"/>
         </div>
         <br /><br />
         <div id="test"><p></p></div>
