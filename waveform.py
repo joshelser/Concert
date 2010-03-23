@@ -303,7 +303,7 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
     processor = AudioProcessor(audio_file, fft_size, numpy.hanning)
 
     for channel in range(channels):
-        waveform = WaveformImage(image_width, image_height)
+        waveform = WaveformImage(image_width, image_height/channels)
      
         for x in range(image_width):
      
