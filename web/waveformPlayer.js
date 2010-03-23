@@ -194,13 +194,13 @@ WaveformPlayer.prototype.play = function()
     /* Set container class to 'playing' */
     $(this.container).addClass('playing');
     /* play animation */
-    setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);        
+    setTimeout(function(audio_element, width, container, animate_object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, animate_object, type, timecode_container, audio_element.currentTime); }}(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container), $animation_speed);        
 
 }
 
 WaveformPlayer.prototype.animateOnce = function()
 {
-    play_animation(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container);
+    play_animation(this.audio_element, this.width, this.container, this.animate_object, this.type, this.timecode_container, this.audio_element.currentTime);
 }
 
 /**
@@ -247,7 +247,7 @@ WaveformPlayer.prototype.highlight = function()
  *  @param          $type                   The type of waveform container (viewer, editor)
  *  @param          $timecode_container     The container holding the timecode
  **/
-function play_animation($audio, $width, $waveform_container, $animate_object, $type, $timecode_container)
+function play_animation($audio, $width, $waveform_container, $animate_object, $type, $timecode_container, previousTime)
 {
     /* Make jQuery object a local variable for quicker access */
     var $ =  jQuery;
@@ -276,15 +276,15 @@ function play_animation($audio, $width, $waveform_container, $animate_object, $t
     }
 
     /* make sure audio element is still playing */
-    if($($audio).hasClass('playing'))
+    if($audio.currentTime != previousTime)
     {
         /* if so, go again in $animation_speed ms */
-        setTimeout(function(audio_element, width, container, object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, object, type, timecode_container); }}($audio, $width, $waveform_container, $animate_object, $type, $timecode_container), $animation_speed);
+        setTimeout(function(audio_element, width, container, object, type, timecode_container){ return function(){ play_animation(audio_element, width, container, object, type, timecode_container, audio_element.currentTime); }}($audio, $width, $waveform_container, $animate_object, $type, $timecode_container), $animation_speed);
+        $('body > #debug').append('playing_animation, ');
     }
     else
     {
-        /* Remove container 'playing' class */
-        $($waveform_container).removeClass('playing');
+        /* Kill interval */
     }
 }
 
