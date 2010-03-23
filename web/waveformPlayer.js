@@ -123,7 +123,8 @@ function WaveformPlayer($type, $id, $audio_id)
                     start: startTimePerc*audioDuration,
                     end: endTimePerc*audioDuration  
                 };
-
+                
+                /* Trigger highlight event */
                 $('#'+this.id).trigger('highlight', highlightData);
             }
             
