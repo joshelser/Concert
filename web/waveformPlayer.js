@@ -163,7 +163,10 @@ function WaveformPlayer($type, $id, $audio_id)
             {
                 /* manually move playhead and change timecode. */
                 $(waveformPlayerObject.container).children('div.playhead').css('margin-left', (clickX)+'px');                
-                $(waveformPlayerObject.container).children('div.timecode').html(sec_to_timecode(newTime))                
+                $(waveformPlayerObject.container).children('div.timecode').html(sec_to_timecode(newTime));
+                
+                /* Manually update waveform_editor */
+                $waveformPlayers['waveform_editor'].animateOnce();
             }
             
         }}(this));
