@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block script %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+    function success_callback(i, val) {
+        $("<h3>").text(val.title).appendTo("#content");
+        $("<div>").text(val.content).appendTo("#content");
+        $("<h4>").text(val.created_on).appendTo("#content");
+    };
+    
+    $(function() {
+        var dict = {
+                url: "/api/django_auth/posts/?format=json",
+                beforeSend: function(request) {
+                        
+                },
+                success: function(json, textStatus) {
+                        $.each(json, success_callback);
+                },
+                dataType: "json"
+        };
+                
+        $.ajax(dict);
+    });
+    
+    function send_form() {
+            send_dict = {
+                    url: "/api/django_auth/posts/?format=json",
+                    beforeSend: function(request) {
+                                    $('ul.errorlist').fadeOut().remove();
+                    },
+                    type: "POST",
+                    data: $("#post_form").serialize(),
+                    processData: false,
+                    dataType: "json",
+                    success: function(json, textStatus) {
+                            console.log(json);
+                            $.each([json], success_callback);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            // typically only one of textStatus or errorThrown 
+                            // will have info
+                            response = XMLHttpRequest.responseText;
+                            // remove the first 12 character because they are
+                            // irrelevants
+                            if (response == "Conflict/Duplicate"){
+                                $('#post_form_error').append(
+                                            $('<ul>').addClass('errorlist').append($('<li>').text(response))
+                                );
+                                
+                            } else {
+                                response = response.substring(12, response.length);
+                                errors = eval("("+response+")");
+          
+                                $.each($(':input'), function(index, value) {
+                                    field =$(value).attr('id');
+                                    field = field.substring(3, field.length);
+                                    field_errors = errors[field];
+                                    if (field_errors) {
+                                        ul = "<ul class=\"errorlist\">\n";
+                                        $.each(field_errors, function(index, value){
+                                          ul += "<li>"+value+"</li>\n";
+                                        });
+                                        ul += "</ul>\n";
+                                        $(value).parent().prepend(ul);
+                                    };
+                                });
+                                
+
+                            }
+                          }
+            };
+            $.ajax(send_dict);
+            return false;
+    };
+    </script>
+{% endblock%}
+
+{% block content %}
+<h1>Ajaxy</h1>
+<div id="content"></div>
+<h2>Ajaxy form</h1>
+<form method="POST" action="{% url posts %}" id="post_form">
+    <div id="post_form_error"></div>
+    {{ form.as_p }}
+    <input type='submit' name='create' onclick="return send_form();" value='Create'></input>
+</form>
+{% endblock %}
