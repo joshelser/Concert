@@ -4,8 +4,8 @@ from piston.utils import rc, require_mime, require_extended
 from piston.utils import validate
 
 
-from concertapp.concert.models import Blogpost
-from concertapp.concert.forms import BlogpostForm
+from concertapp.concert.models import *
+from concertapp.concert.forms import *
 
 class BlogpostHandler(BaseHandler):
     """
@@ -84,3 +84,14 @@ class AnonymousBlogpostHandler(BlogpostHandler, AnonymousBaseHandler):
     Anonymous entrypoint for blogposts.
     """
     fields = ('title', 'content', 'created_on')
+
+class UserHandler(AnonymousBaseHandler):
+    model = User
+    fields = ('id', 'name', 'passwd', 'email')
+
+    def create(self, request):
+        print request
+        pass
+
+    def read(self, request, *args, **kwargs):
+        pass
