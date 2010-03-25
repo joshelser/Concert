@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Posts</h1>
+	{% for post in posts %}
+		<h3>{{ post.title }}</h3>
+		<div>
+			{{ post.content}}
+		</div>
+		<div>
+			Written on {{ post.created_on }} by {{ post.author.username }}.
+		</div>
+	{% endfor %}
+        <a href='{% url create_post %}'>Add</a> <a href='{% url create_ajaxy_post %}'>Ajaxy Add</a> 
+{% endblock %}
