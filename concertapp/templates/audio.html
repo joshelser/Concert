@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Audio</h1>
+    {% for track in audio %}
+    <h3>File Name: {{ track.file }}</h3>
+        <p>Owner: {{ track.source.name }}</p>
+    {% endfor %}
+        <a href='{% url upload_audio %}'>Upload New Audio</a> 
+{% endblock %}
