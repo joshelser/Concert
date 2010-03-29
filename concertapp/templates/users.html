@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Users</h1>
+    {% for user in users %}
+    <h3>Username: {{ user.name }}</h3>
+        <p>Password: {{ user.passwd }}</p>
+        <p>Email: {{ user.email }}</p>
+    {% endfor %}
+        <a href='{% url create_user %}'>Add User</a> 
+{% endblock %}

@@ -5,7 +5,12 @@
         </title>
         
         <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        <script type="text/javascript" src="waveformPlayer.js"></script>
+        
+        <script type="text/javascript" src="js/helpers.js"></script>
+        <script type="text/javascript" src="js/Waveform.js"></script>
+        <script type="text/javascript" src="js/WaveformEditor.js"></script>
+        <script type="text/javascript" src="js/WaveformViewer.js"></script>
+        <script type="text/javascript" src="js/Highlighter.js"></script>
         <script type="text/javascript">
             var $audios = Array();
             var $waveformPlayers = Array();
@@ -43,7 +48,7 @@
                    if(event.keyCode == 32) 
                    {
                        event.preventDefault();
-                       if($('#waveform_viewer').hasClass('playing'))
+                       if($('#waveform_viewer').hasClass('playing') || $('#waveform_editor').hasClass('playing'))
                        {
                            pause_audio('example_audio');
                        }
@@ -178,8 +183,8 @@
              function initialize_waveform_objects()
              {
                  /* For each waveform container, create associated object */
-                 $waveformPlayers['waveform_editor'] = new WaveformPlayer('editor', 'waveform_editor', 'example_audio');
-                 $waveformPlayers['waveform_viewer'] = new WaveformPlayer('viewer', 'waveform_viewer', 'example_audio');
+                 $waveformPlayers['waveform_editor'] = new WaveformEditor('waveform_editor', 'example_audio');
+                 $waveformPlayers['waveform_viewer'] = new WaveformViewer('waveform_viewer', 'example_audio');
                  
                  
                  
