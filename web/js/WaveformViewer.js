@@ -23,7 +23,10 @@ var WaveformViewer = function(containerID, audioID) {
     this.timecodeElement = $('#'+this.id+' > div.timecode').get(0);
     
     /* container width */
-    this.waveformWidth = 800;    
+    this.waveformWidth = 800;
+    
+    /* Behavior when container is clicked */
+    $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
 }
 /**
  *  WaveformViewer objects inherit from the Waveform class
@@ -65,4 +68,32 @@ WaveformViewer.prototype.animate = function() {
     else {
         thisLocal.set_paused();
     }               
+}
+
+WaveformViewer.prototype.clicked = function(event) {
+    
+    /* make some vars local for quicker access */
+    var $ = jQuery;
+    var audioElement = this.audioElement;
+    var container = this.container;
+    
+    /* X coordinate of click relative to element */
+    var clickX = get_event_x(container, event);
+    /* percent of width */
+    var clickPerc = clickX/$(container).css('width').match(/[\d]+/);
+    /* new time in audio file */
+    var newTime = (clickPerc*audioElement.duration);
+    /* move current time of audio file to clicked location */
+    audioElement.currentTime = newTime;
+    
+    /* If song is not playing */
+    if(!$(audioElement).hasClass('playing'))
+    {
+        /* manually move playhead and change timecode. */
+        $(container).children('div.playhead').css('margin-left', (clickX)+'px');                
+        $(container).children('div.timecode').html(sec_to_timecode(newTime));
+        
+        /* Manually update waveform_editor */
+        $waveformPlayers['waveform_editor'].animate({once: true});
+    }
 }

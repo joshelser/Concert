@@ -49,8 +49,11 @@ WaveformEditor.prototype = new Waveform();
  *  Begins the animation for a waveform editor object.  Should be called
  *  when animation is to start.
  **/
-WaveformEditor.prototype.animate = function() {
+WaveformEditor.prototype.animate = function(params) {
 
+    if(typeof(params) == 'undefined') {
+        params = {once: false};
+    }
     /* Percentage of song we are currently on */
     var actualPercent = this.audioElement.currentTime/this.audioElement.duration;
     
@@ -62,9 +65,9 @@ WaveformEditor.prototype.animate = function() {
     /* Set new waveform position */
     $(this.waveformElement).css('left', newLeft+'px');
     
-    /* make sure audio element is still playing */
-    if($(this.audioElement).hasClass('playing')) {
-        /* if so, go again in animation.speed ms */
+    /* make sure audio element is still playing, and we weren't just supposed to animate once */
+    if($(this.audioElement).hasClass('playing') && !params.once ) {
+        /* if so, go again in animation.speed ms  */
         setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
     }
     else {
