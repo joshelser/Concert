@@ -38,7 +38,14 @@ var WaveformEditor = function(containerID, audioID) {
     }
     
     /* The highlight object */
-    this.highlighter = new Highlighter(this);
+    this.highlighter = new Highlighter({
+        highlightElement: this.highlightElement, 
+        container: this.container, 
+        waveformElement: this.waveformElement,
+        waveformWidth: this.waveformWidth,
+        audioElementDuration: this.audioElement.duration
+    });
+    
     
     
     return this;

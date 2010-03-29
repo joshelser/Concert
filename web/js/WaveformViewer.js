@@ -25,6 +25,10 @@ var WaveformViewer = function(containerID, audioID) {
     
     /* container width */
     this.waveformWidth = 800;
+/*    
+    this.highlighter = new Highlighter({
+        
+    });
     
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
