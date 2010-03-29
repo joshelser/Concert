@@ -9,6 +9,7 @@
         <script type="text/javascript" src="js/helpers.js"></script>
         <script type="text/javascript" src="js/Waveform.js"></script>
         <script type="text/javascript" src="js/WaveformEditor.js"></script>
+        <script type="text/javascript" src="js/WaveformViewer.js"></script>
         <script type="text/javascript">
             var $audios = Array();
             var $waveformPlayers = Array();
@@ -75,7 +76,7 @@
             function play_main()
             {
                 play_audio('example_audio');
-                //$waveformPlayers['waveform_viewer'].play();
+                $waveformPlayers['waveform_viewer'].play();
                 $waveformPlayers['waveform_editor'].play();
             }
             
@@ -182,7 +183,7 @@
              {
                  /* For each waveform container, create associated object */
                  $waveformPlayers['waveform_editor'] = new WaveformEditor('waveform_editor', 'example_audio');
-//                 $waveformPlayers['waveform_viewer'] = new WaveformPlayer('viewer', 'waveform_viewer', 'example_audio');
+                 $waveformPlayers['waveform_viewer'] = new WaveformViewer('waveform_viewer', 'example_audio');
                  
                  
                  
