@@ -68,10 +68,10 @@
                 
                 /**
                  *  highlight event handler.
-                 **/
+                 *
                 $('#waveform_editor').bind('highlight', function(e, data){
                     alert('highlighted: '+data.start+' to '+data.end);
-                });
+                });*/
             });            
             
             function play_main()
@@ -99,8 +99,8 @@
                 /* See if audio is at the end */
                 var $player = $('#'+$audio_id).get(0);
                 
-                /* If player has reached the end */
-                if($player.duration == $player.currentTime)
+                /* If player has reached the end and nothing is highlighted */
+                if($player.duration == $player.currentTime && !$waveformPlayers['waveform_viewer'].loopInterval && !$waveformPlayers['waveform_editor'].loopInterval)
                 {
                     /* remove 'playing' class */
                     $('#'+$audio_id).removeClass('playing');
@@ -187,14 +187,6 @@
                  $waveformPlayers['waveform_viewer'] = new WaveformViewer('waveform_viewer', 'example_audio');
                  
                  
-                 
-                 
-                 /*
-                 for(var $i in $waveformPlayers) {
-                     $('#test > p').append('<br />'+$waveformPlayers[$i].toString());
-                 }
-                 */
-
                  remove_loading();
              }
              
@@ -205,6 +197,7 @@
     
     <body>
         <div id="waveform_viewer" class="waveform" style="width: 800px; height: 100px; border: 1px #bbb dashed outside;">
+            <div id="viewer_highlight" style="background-color: #00FFFF; z-index: 3; height: inherit; opacity: .25; position: absolute; margin-left: 0px; width: 0px; border-left: 1px solid #FFFAFA; border-right: 1px solid #FFFAFA;"></div>
         	<div id="viewer_playhead" class="playhead" style = "margin-left:0px;width:1px; background-color: #66FF99; height:inherit; position: absolute;z-index: 1;"></div>
         	<div id="viewer_timecode" class="timecode" style="margin-left: 755px; font-size: .75em; color: white; position: absolute; z-index: 2;">00:00:00</div>
             <img src="media/Oddity_1660.png" class="waveform_image" id="waveform_viewer_image" style="width: 100%; height: 100%;"/>

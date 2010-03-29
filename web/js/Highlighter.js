@@ -7,39 +7,39 @@
  *  Highlighter
  *  The constructor for a highlighter object.
  *
- *  @param          WaveformEditorObj           The WaveformEditor object from which this highlighter object was instantiated.
+ *  @param          params                      Params list. {highlightElement, container, waveformElement, waveformWidth, audioElementDuration}
  *  @return         this                        Constructor.
  **/
-var Highlighter = function(WaveformEditorObj) {
+var Highlighter = function(params) {
     
     /* Initialize members. */
     
     /* highlightElement is the element that is the actual highlight */
-    this.highlightElement = WaveformEditorObj.highlightElement;
+    this.highlightElement = params.highlightElement;
     if(typeof(this.highlightElement) == 'undefined') {
         throw new Error('Highlighter: Could not initialize highlightElement.');
     }
     
     /* Container of the entire waveform editor */
-    this.container = WaveformEditorObj.container;
+    this.container = params.container;
     if(typeof(this.container) == 'undefined') {
         throw new Error('Highlighter: Could not initialize container.');
     }
     
     /* waveform image element */
-    this.waveformElement = WaveformEditorObj.waveformElement;
+    this.waveformElement = params.waveformElement;
     if(typeof(this.waveformElement) == 'undefined') {
         throw new Error('Highlighter: Could not initialize waveformElement.');
     }
     
     /* waveform image width */
-    this.waveformWidth = WaveformEditorObj.waveformWidth;
+    this.waveformWidth = params.waveformWidth;
     if(typeof(this.waveformWidth) == 'undefined') {
         throw new Error('Highlighter: Could not initialize waveformWidth');
     }
     
     /* duration of associated audio */
-    this.audioElementDuration = WaveformEditorObj.audioElement.duration;
+    this.audioElementDuration = params.audioElementDuration;
     if(typeof(this.audioElementDuration) == 'undefined') {
         throw new Error('Highlighter: Could not initialize audioElementDuration.');
     }
@@ -48,8 +48,8 @@ var Highlighter = function(WaveformEditorObj) {
     this.initialize_highlight();
     
     /* initialize waveformLeft */
-    this.waveformLeft = this.set_waveform_left($(this.waveformElement).css('left').match(/[\d\.]+/));
-    
+    this.set_waveform_left($(this.waveformElement).css('left').match(/[\d\.]+/));
+
     /* Highlighting behavior */
     /* start highlight on mousedown */
     $(this.waveformElement).mousedown(function(obj){ return function(event) { obj.start_drag(event); } }(this));
@@ -74,7 +74,7 @@ Highlighter.prototype.start_drag = function(event) {
                 
     /* X coordinate of click relative to element */
     this.highlightStart = get_event_x(this.waveformElement, event);
-    
+
     /* Set variable to denote dragging is in progress */
     this.dragging = 1;
 }
@@ -115,7 +115,8 @@ Highlighter.prototype.end_drag = function(event) {
        var highlightStartPx = this.highlightEnd;
        var highlightEndPx = this.highlightStart;
     }
-
+    
+    /* if we just ended a highlight */
     if(highlightStartPx != -1 && highlightEndPx != -1) {
        var startTimePerc = highlightStartPx/this.waveformWidth;
        var endTimePerc = highlightEndPx/this.waveformWidth;
@@ -128,6 +129,11 @@ Highlighter.prototype.end_drag = function(event) {
        /* Trigger highlight event */
        $(this.container).trigger('highlight', highlightData);
     }
+    /* If we just cleared a highlight */
+    else {
+        /* Trigger clear highlight event */
+        $(this.container).trigger('clear_highlight');
+    } 
             
 }
 
@@ -149,7 +155,7 @@ Highlighter.prototype.initialize_highlight = function() {
  *  the highlight variables change.
  **/
 Highlighter.prototype.draw_highlight = function() {
-    
+
     if(this.highlightStart == -1 || this.highlightEnd == -1) {
         /* Clear highlight */
         $(this.highlightElement).css('margin-left', '0px').css('width', '0px');
@@ -176,3 +182,14 @@ Highlighter.prototype.set_waveform_left = function(left) {
     /* *1 just to make sure we are treating as number, not string */
     this.waveformLeft = left*1;
 }
+
+Highlighter.prototype.set_highlight_time = function(data) {
+    var startTimePerc = data.start/this.audioElementDuration;
+    var endTimePerc = data.end/this.audioElementDuration;
+    
+    this.highlightStart = startTimePerc*this.waveformWidth;
+    this.highlightEnd = endTimePerc*this.waveformWidth;
+    
+    this.draw_highlight();
+}
+

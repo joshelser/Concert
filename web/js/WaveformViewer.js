@@ -26,8 +26,28 @@ var WaveformViewer = function(containerID, audioID) {
     /* container width */
     this.waveformWidth = 800;
     
+    /* Highlighter on viewer */
+    this.highlighter = new Highlighter({
+        highlightElement: $(this.container).children('#viewer_highlight'), 
+        container: this.container, 
+        waveformElement: $(this.container).children('#waveform_viewer_image'),
+        waveformWidth: this.waveformWidth,
+        audioElementDuration: this.audioElement.duration
+    });
+    
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
+    
+    /* behavior if highlight is drawn on waveform editor */
+    $('#waveform_editor').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
+    /* behavior if waveform editor highlight is cleared */
+    $('#waveform_editor').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
+    /* behavior if highlight occurs on viewer */
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate({once: true}); } }(this));
+    /* behavior if highlight clear occurs on self */
+    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+    
+    
     
     return this;
 }
@@ -40,9 +60,18 @@ WaveformViewer.prototype = new Waveform();
  *  animate
  *  Begins the animation for a WaveformViewer object.  Should be called
  *  when animation is to start.
+ *
+ *  @param                  params              Parameters {once}
  **/
-WaveformViewer.prototype.animate = function() {
+WaveformViewer.prototype.animate = function(params) {
     
+    /* set default arguments */
+    if(typeof(params) == 'undefined') {
+        params = {
+            once: false
+        };
+    }
+        
     /* localize audioElement */
     var audioElement = this.audioElement;
     
@@ -64,7 +93,7 @@ WaveformViewer.prototype.animate = function() {
     $(thisLocal.playheadElement).css('margin-left', newPos+'px');
     
     /* make sure audio element is still playing */
-    if($(audioElement).hasClass('playing')) {
+    if($(audioElement).hasClass('playing') && !params.once) {
         /* if so, go again in animation.speed ms */
         setTimeout(function(obj){ return function(){ obj.animate(); } }(thisLocal), com.concertsoundorganizer.animation.speed);
     }
