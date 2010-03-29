@@ -46,7 +46,10 @@ var WaveformEditor = function(containerID, audioID) {
         audioElementDuration: this.audioElement.duration
     });
     
-    
+    /* behavior if highlight is drawn on waveform viewer */
+    $('#waveform_viewer').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));    
+    /* behavior if waveform viewer highlight is cleared */
+    $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); } }(this));
     
     return this;
     

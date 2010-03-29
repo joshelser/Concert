@@ -38,6 +38,12 @@ var WaveformViewer = function(containerID, audioID) {
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     
+    /* behavior if highlight is drawn on waveform editor */
+    $('#waveform_editor').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
+    /* behavior if waveform editor highlight is cleared */
+    $('#waveform_editor').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); } }(this));
+    
+    
     return this;
 }
 /**

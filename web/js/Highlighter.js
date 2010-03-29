@@ -115,7 +115,8 @@ Highlighter.prototype.end_drag = function(event) {
        var highlightStartPx = this.highlightEnd;
        var highlightEndPx = this.highlightStart;
     }
-
+    
+    /* if we just ended a highlight */
     if(highlightStartPx != -1 && highlightEndPx != -1) {
        var startTimePerc = highlightStartPx/this.waveformWidth;
        var endTimePerc = highlightEndPx/this.waveformWidth;
@@ -128,6 +129,11 @@ Highlighter.prototype.end_drag = function(event) {
        /* Trigger highlight event */
        $(this.container).trigger('highlight', highlightData);
     }
+    /* If we just cleared a highlight */
+    else {
+        /* Trigger clear highlight event */
+        $(this.container).trigger('clear_highlight');
+    } 
             
 }
 
@@ -176,3 +182,14 @@ Highlighter.prototype.set_waveform_left = function(left) {
     /* *1 just to make sure we are treating as number, not string */
     this.waveformLeft = left*1;
 }
+
+Highlighter.prototype.set_highlight_time = function(data) {
+    var startTimePerc = data.start/this.audioElementDuration;
+    var endTimePerc = data.end/this.audioElementDuration;
+    
+    this.highlightStart = startTimePerc*this.waveformWidth;
+    this.highlightEnd = endTimePerc*this.waveformWidth;
+    
+    this.draw_highlight();
+}
+
