@@ -42,6 +42,9 @@ var WaveformViewer = function(containerID, audioID) {
     $('#waveform_editor').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
     /* behavior if waveform editor highlight is cleared */
     $('#waveform_editor').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); } }(this));
+    /* behavior if highlight occurs on editor */
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.loop_audio(data); $waveformPlayers['waveform_editor'].animate({once: true}); } }(this));
+    
     
     
     return this;
@@ -55,9 +58,18 @@ WaveformViewer.prototype = new Waveform();
  *  animate
  *  Begins the animation for a WaveformViewer object.  Should be called
  *  when animation is to start.
+ *
+ *  @param                  params              Parameters {once}
  **/
-WaveformViewer.prototype.animate = function() {
+WaveformViewer.prototype.animate = function(params) {
     
+    /* set default arguments */
+    if(typeof(params) == 'undefined') {
+        params = {
+            once: false
+        };
+    }
+        
     /* localize audioElement */
     var audioElement = this.audioElement;
     
@@ -79,7 +91,7 @@ WaveformViewer.prototype.animate = function() {
     $(thisLocal.playheadElement).css('margin-left', newPos+'px');
     
     /* make sure audio element is still playing */
-    if($(audioElement).hasClass('playing')) {
+    if($(audioElement).hasClass('playing') && !params.once) {
         /* if so, go again in animation.speed ms */
         setTimeout(function(obj){ return function(){ obj.animate(); } }(thisLocal), com.concertsoundorganizer.animation.speed);
     }

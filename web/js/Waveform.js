@@ -74,3 +74,11 @@ Waveform.prototype.play = function() {
     
     this.animate();
 }
+
+Waveform.prototype.loop_audio = function(params) {
+    /* Move audio to start time */
+    this.audioElement.currentTime = params.start;
+    
+    /* animate once */
+    this.animate({once: true});
+}

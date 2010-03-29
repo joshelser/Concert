@@ -50,6 +50,8 @@ var WaveformEditor = function(containerID, audioID) {
     $('#waveform_viewer').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));    
     /* behavior if waveform viewer highlight is cleared */
     $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); } }(this));
+    /* behavior if highlight occurs on editor */
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.loop_audio(data); $waveformPlayers['waveform_viewer'].animate({once: true}); } }(this));
     
     return this;
     
@@ -85,6 +87,8 @@ WaveformEditor.prototype.animate = function(params) {
     $(this.waveformElement).css('left', newLeft+'px');
     /* update highlighter left value */
     this.highlighter.set_waveform_left(newLeft);
+    /* Move highlight to proper position */
+    this.highlighter.draw_highlight();
     
     /* make sure audio element is still playing, and we weren't just supposed to animate once */
     if($(this.audioElement).hasClass('playing') && !params.once ) {
