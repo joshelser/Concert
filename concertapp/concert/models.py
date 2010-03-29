@@ -23,41 +23,26 @@ class AudioSegment(models.Model):
 
 class Group(models.Model):
     gname = models.CharField(max_length = 50, unique = True)
-    admin = models.ForeignKey('User')
-
-class GroupAudio(models.Model):
-    gid = models.ForeignKey('Group')
-    cid = models.ForeignKey('Comment')
-    label = models.TextField()
+    admin = models.ForeignKey('User', {'related_name': 'admin'})
 
 class Tag(models.Model):
-    sid = models.ForeignKey('AudioSegment')
-    aid = models.ForeignKey('GroupAudio')
-    gid = models.ForeignKey('Group')
+    segment = models.ForeignKey('AudioSegment', {'related_name': 'segments'})
+    group = models.OneToOneField('Group', {'related_name': 'group'})
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
  
 class Comment(models.Model):
     comment = models.TextField()
-    uid = models.ForeignKey('User')
+    user = models.OneToOneField('User', {'related_name': 'user'})
     time = models.DateTimeField(auto_now_add = True)
-    aid = models.OneToOneField('AudioSegment', {'related_name': 'audiosegment'})
-    tid = models.OneToOneField('Tag', {'related_name': 'tag'})
+    segment = models.OneToOneField('AudioSegment', {'related_name': 'segment',
+        'null': True})
+    tag = models.OneToOneField('Tag', {'related_name': 'tag', 'null': True})
  
 class Audio(models.Model):
     file = models.CharField(max_length = 100, unique = True)
-    source = models.ForeignKey('User')
     wav = models.CharField(max_length = 100, unique = True)
-
+    user = models.ForeignKey('User', {'related_name': 'user'})
    
-class UserGroup(models.Model):
-    uid = models.ForeignKey('User')
-    gid = models.ForeignKey('Group')
-
-class AudioGroup(models.Model):
-    aid = models.ForeignKey('Audio')
-    gid = models.ForeignKey('Group')
-    
-
 admin.site.register(Blogpost)
