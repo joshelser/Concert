@@ -75,10 +75,46 @@ Waveform.prototype.play = function() {
     this.animate();
 }
 
-Waveform.prototype.loop_audio = function(params) {
+/**
+ *  start_loop
+ *  Begins the requested audio loop.  This means that the audio starts at the given start time,
+ *  and when it reaches the end time, it goes back to the start time.  This should
+ *  be called whenever a section of the waveform is highlighted.
+ *
+ *  @param          params              {start, end} (times in seconds)
+ **/
+Waveform.prototype.start_loop = function(params) {
     /* Move audio to start time */
     this.audioElement.currentTime = params.start;
     
-    /* animate once */
+    /* animate once to update interface */
     this.animate({once: true});
+    
+    /* Send interval out to keep checking on loop */
+    this.loopInterval = setInterval(function(obj, params){ return function(){ obj.continue_loop(params); } }(this, params), com.concertsoundorganizer.animation.speed);
+}
+
+/**
+ *  continue_loop
+ *  Continues the requested audio loop.  This will get called every animation.speed seconds, to make sure that the audio doesn't
+ *  go past the requested time.
+ *
+ *  @param          params              {start, end} (times in seconds)
+ **/
+Waveform.prototype.continue_loop = function(params) {
+    /* If we should restart the loop */
+    if(this.audioElement.currentTime >= params.end) {
+        /* restart */
+        this.audioElement.currentTime = params.start;
+    }
+}
+
+/**
+ *  clear_loop
+ *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
+ *  whenever the highlighted area is cleared.
+ **/
+Waveform.prototype.clear_loop = function() {
+    clearInterval(this.loopInterval);
+    this.loopInterval = null;
 }

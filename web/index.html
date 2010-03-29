@@ -99,8 +99,8 @@
                 /* See if audio is at the end */
                 var $player = $('#'+$audio_id).get(0);
                 
-                /* If player has reached the end */
-                if($player.duration == $player.currentTime)
+                /* If player has reached the end and nothing is highlighted */
+                if($player.duration == $player.currentTime && !$waveformPlayers['waveform_viewer'].loopInterval && !$waveformPlayers['waveform_editor'].loopInterval)
                 {
                     /* remove 'playing' class */
                     $('#'+$audio_id).removeClass('playing');

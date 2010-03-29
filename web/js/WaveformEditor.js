@@ -49,9 +49,11 @@ var WaveformEditor = function(containerID, audioID) {
     /* behavior if highlight is drawn on waveform viewer */
     $('#waveform_viewer').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));    
     /* behavior if waveform viewer highlight is cleared */
-    $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); } }(this));
+    $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
     /* behavior if highlight occurs on editor */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.loop_audio(data); $waveformPlayers['waveform_viewer'].animate({once: true}); } }(this));
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_viewer'].animate({once: true}); } }(this));
+    /* behavior if highlight clear occurs on self */
+    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
     
     return this;
     
