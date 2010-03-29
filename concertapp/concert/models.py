@@ -42,8 +42,8 @@ class Comment(models.Model):
     comment = models.TextField()
     uid = models.ForeignKey('User')
     time = models.DateTimeField(auto_now_add = True)
-    aid = models.ForeignKey('AudioSegment')
-    tid = models.ForeignKey('Tag')
+    aid = models.OneToOneField('AudioSegment', {'related_name': 'audiosegment'})
+    tid = models.OneToOneField('Tag', {'related_name': 'tag'})
  
 class Audio(models.Model):
     file = models.CharField(max_length = 100, unique = True)
