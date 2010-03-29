@@ -8,6 +8,7 @@
         
         <script type="text/javascript" src="js/helpers.js"></script>
         <script type="text/javascript" src="js/Waveform.js"></script>
+        <script type="text/javascript" src="js/WaveformEditor.js"></script>
         <script type="text/javascript">
             var $audios = Array();
             var $waveformPlayers = Array();
@@ -45,7 +46,7 @@
                    if(event.keyCode == 32) 
                    {
                        event.preventDefault();
-                       if($('#waveform_viewer').hasClass('playing'))
+                       if($('#waveform_viewer').hasClass('playing') || $('#waveform_editor').hasClass('playing'))
                        {
                            pause_audio('example_audio');
                        }
