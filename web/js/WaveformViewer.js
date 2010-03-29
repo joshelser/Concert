@@ -25,9 +25,14 @@ var WaveformViewer = function(containerID, audioID) {
     
     /* container width */
     this.waveformWidth = 800;
-/*    
+    
+    /* Highlighter on viewer */
     this.highlighter = new Highlighter({
-        
+        highlightElement: $(this.container).children('#viewer_highlight'), 
+        container: this.container, 
+        waveformElement: $(this.container).children('#waveform_viewer_image'),
+        waveformWidth: this.waveformWidth,
+        audioElementDuration: this.audioElement.duration
     });
     
     /* Behavior when container is clicked */
