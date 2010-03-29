@@ -29,16 +29,16 @@ var WaveformEditor = function(containerID, audioID) {
         throw new Error('WaveformEditor: Could not get highlightElement.');
     }
     
-    /* The highlight object */
-    this.highlighter = new Highlighter(this.highlightElement, this.container);
-    
-    
     /* get waveform image width from end of waveform image file name */
     this.waveformWidth = $(this.waveformElement).attr('src').split('_')[1].match(/[\d]+/)*1;
     if(!this.waveformWidth || typeof this.waveformWidth != 'number')
     {
         throw new Error('WaveformEditor: Could not get waveform image width.');
     }
+    
+    /* The highlight object */
+    this.highlighter = new Highlighter(this);
+    
     
     return this;
     
