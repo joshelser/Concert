@@ -9,6 +9,7 @@
  *
  *  @param          containerID         The ID of the container element on the DOM.
  *  @param          audioID             The id of the audio element on the DOM.
+ *  @return         this                Constructor.
  **/
 var WaveformEditor = function(containerID, audioID) {
     

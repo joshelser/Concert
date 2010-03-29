@@ -8,6 +8,7 @@
  *  
  *  @param              containerID             The id of the container element.
  *  @param              audioID                 The id of the associated audio element.
+ *  @return             this                    Constructor
  **/
 var WaveformViewer = function(containerID, audioID) {
     
@@ -27,6 +28,8 @@ var WaveformViewer = function(containerID, audioID) {
     
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
+    
+    return this;
 }
 /**
  *  WaveformViewer objects inherit from the Waveform class

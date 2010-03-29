@@ -2,26 +2,43 @@
  *  @file   Highlighter.js
  *  Highlighter.js contains all the functionality associated with the Highlighter class.
  **/
- 
+
+/**
+ *  Highlighter
+ *  The constructor for a highlighter object.
+ *
+ *  @param          WaveformEditorObj           The WaveformEditor object from which this highlighter object was instantiated.
+ *  @return         this                        Constructor.
+ **/
 var Highlighter = function(WaveformEditorObj) {
     
-    /* Set container element member and highlight element member.  */
+    /* Initialize members. */
+    
+    /* highlightElement is the element that is the actual highlight */
     this.highlightElement = WaveformEditorObj.highlightElement;
     if(typeof(this.highlightElement) == 'undefined') {
         throw new Error('Highlighter: Could not initialize highlightElement.');
     }
+    
+    /* Container of the entire waveform editor */
     this.container = WaveformEditorObj.container;
     if(typeof(this.container) == 'undefined') {
         throw new Error('Highlighter: Could not initialize container.');
     }
+    
+    /* waveform image element */
     this.waveformElement = WaveformEditorObj.waveformElement;
     if(typeof(this.waveformElement) == 'undefined') {
         throw new Error('Highlighter: Could not initialize waveformElement.');
     }
+    
+    /* waveform image width */
     this.waveformWidth = WaveformEditorObj.waveformWidth;
     if(typeof(this.waveformWidth) == 'undefined') {
         throw new Error('Highlighter: Could not initialize waveformWidth');
     }
+    
+    /* duration of associated audio */
     this.audioElementDuration = WaveformEditorObj.audioElement.duration;
     if(typeof(this.audioElementDuration) == 'undefined') {
         throw new Error('Highlighter: Could not initialize audioElementDuration.');
@@ -31,17 +48,26 @@ var Highlighter = function(WaveformEditorObj) {
     this.initialize_highlight();
     
     /* initialize waveformLeft */
-    this.waveformLeft = $(this.waveformElement).css('left').match(/[\d\.]+/)*1;
+    this.waveformLeft = this.set_waveform_left($(this.waveformElement).css('left').match(/[\d\.]+/));
     
     /* Highlighting behavior */
+    /* start highlight on mousedown */
     $(this.waveformElement).mousedown(function(obj){ return function(event) { obj.start_drag(event); } }(this));
+    /* continue highlight on mousemove */
     $(this.waveformElement).mousemove(function(obj){return function(event) { obj.continue_drag(event); } }(this));
+    /* end highlight on mouseup (use entire container for this incase they drag off the image) */
     $(this.container).mouseup(function(obj){return function(event) { obj.end_drag(event); } }(this));
     
     
     return this;    
 }
 
+/**
+ *  start_drag
+ *  Begins the dragging process.  Should be called on mousedown over the waveform to be highlighted.
+ *  
+ *  @param          event           The mousedown event.
+ **/
 Highlighter.prototype.start_drag = function(event) {    
     /* Clear old highlight */
     this.initialize_highlight();
@@ -53,6 +79,12 @@ Highlighter.prototype.start_drag = function(event) {
     this.dragging = 1;
 }
 
+/**
+ *  continue_drag
+ *  Continues the highlighting process.  Should be called on mousemove over the highlighted waveform.
+ *
+ *  @param          event           The mousemove event.
+ **/
 Highlighter.prototype.continue_drag = function(event) {
     /* if mouse is down */
     if(this.dragging){
@@ -63,6 +95,13 @@ Highlighter.prototype.continue_drag = function(event) {
     }    
 }
 
+/**
+ *  end_drag
+ *  Ends the highlighting process.  Should be called on mouseup over the highlighted waveform.
+ *
+ *  @param          event           The mouseup event.
+ *  @event          highlight       Thrown on successful highlight, from waveform editor container.
+ **/
 Highlighter.prototype.end_drag = function(event) {
     /* Dragging has stopped */
     this.dragging = 0;
@@ -91,13 +130,24 @@ Highlighter.prototype.end_drag = function(event) {
     }
             
 }
-    
+
+/**
+ *  initialize_highlight
+ *  Initializes the highlight variables, and removes any previously drawn highlight.  Should
+ *  be called whenever highlight is to go away.
+ **/
 Highlighter.prototype.initialize_highlight = function() {
     this.highlightStart = -1;
     this.highlightEnd = -1;
     this.draw_highlight();
 }
 
+/**
+ *  draw_highlight
+ *  Actually draws the highlight on the DOM based on the member highlight variables.  If the
+ *  member variables were set to -1, we remove the highlight.  This should be called whenever
+ *  the highlight variables change.
+ **/
 Highlighter.prototype.draw_highlight = function() {
     
     if(this.highlightStart == -1 || this.highlightEnd == -1) {
@@ -117,6 +167,12 @@ Highlighter.prototype.draw_highlight = function() {
     }
 }
 
+/**
+ *  set_waveform_left
+ *  A set function for the waveformLeft member variable.  This should be called whenver the waveform's position is 
+ *  changed.
+ **/
 Highlighter.prototype.set_waveform_left = function(left) {
-    this.waveformLeft = left;
+    /* *1 just to make sure we are treating as number, not string */
+    this.waveformLeft = left*1;
 }
