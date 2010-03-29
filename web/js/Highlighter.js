@@ -29,7 +29,10 @@ var Highlighter = function(WaveformEditorObj) {
     
     /* initialize highlight start and highlight end members */
     this.initialize_highlight();
-
+    
+    /* initialize waveformLeft */
+    this.waveformLeft = $(this.waveformElement).css('left').match(/[\d\.]+/)*1;
+    
     /* Highlighting behavior */
     $(this.waveformElement).mousedown(function(obj){ return function(event) { obj.start_drag(event); } }(this));
     $(this.waveformElement).mousemove(function(obj){return function(event) { obj.continue_drag(event); } }(this));
@@ -97,23 +100,23 @@ Highlighter.prototype.initialize_highlight = function() {
 
 Highlighter.prototype.draw_highlight = function() {
     
-    if(this.highlightStart == -1 || this.highlightEnd == -1)
-    {
+    if(this.highlightStart == -1 || this.highlightEnd == -1) {
         /* Clear highlight */
         $(this.highlightElement).css('margin-left', '0px').css('width', '0px');
     }
-    else
-    {
+    else {
         /* Forward highlight */
-        if(this.highlightStart < this.highlightEnd)
-        {
+        if(this.highlightStart < this.highlightEnd) {
             /* Set highlight */
-            $(this.highlightElement).css('margin-left', (this.highlightStart+400)+'px').css('width', (this.highlightEnd-this.highlightStart)+'px');
+            $(this.highlightElement).css('margin-left', (this.highlightStart+this.waveformLeft)+'px').css('width', (this.highlightEnd-this.highlightStart)+'px');
         }
-        else
-        {
+        else {
             /* set backwards highlight */
-            $(this.highlightElement).css('margin-left', (this.highlightEnd+400)+'px').css('width', (this.highlightStart-this.highlightEnd)+'px');            
+            $(this.highlightElement).css('margin-left', (this.highlightEnd+this.waveformLeft)+'px').css('width', (this.highlightStart-this.highlightEnd)+'px');            
         }
     }
+}
+
+Highlighter.prototype.set_waveform_left = function(left) {
+    this.waveformLeft = left;
 }

@@ -72,6 +72,8 @@ WaveformEditor.prototype.animate = function(params) {
     var newLeft = (newPos-400)*-1;
     /* Set new waveform position */
     $(this.waveformElement).css('left', newLeft+'px');
+    /* update highlighter left value */
+    this.highlighter.set_waveform_left(newLeft);
     
     /* make sure audio element is still playing, and we weren't just supposed to animate once */
     if($(this.audioElement).hasClass('playing') && !params.once ) {
