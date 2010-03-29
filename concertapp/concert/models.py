@@ -36,8 +36,8 @@ class GroupAudio(models.Model):
 	label = models.TextField()
 	
 class AudioSegment(models.Model):
-	beginning = models.IntegerField()
-	end = models.IntegerField()
+	beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
+	end = models.DecimalField(max_digits = 10, decimal_places = 2)
 
 class Tags(models.Model):
 	sid = models.ForeignKey(AudioSegment)
