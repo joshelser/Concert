@@ -90,6 +90,12 @@ Waveform.prototype.start_loop = function(params) {
     /* animate once to update interface */
     this.animate({once: true});
     
+    /* if loop is already running */
+    if(this.loopInterval != null) {
+        /* stop loop */
+        this.clear_loop();
+    }
+    
     /* Send interval out to keep checking on loop */
     this.loopInterval = setInterval(function(obj, params){ return function(){ obj.continue_loop(params); } }(this, params), com.concertsoundorganizer.animation.speed);
 }

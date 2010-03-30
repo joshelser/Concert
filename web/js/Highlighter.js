@@ -106,7 +106,12 @@ Highlighter.prototype.end_drag = function(event) {
     /* Dragging has stopped */
     this.dragging = 0;
     
-    /* get highlight values in proper order */
+    this.trigger_highlight();            
+}
+
+Highlighter.prototype.trigger_highlight = function() {
+    
+    /* put highlight values in proper order */
     if(this.highlightStart < this.highlightEnd) {
        var highlightStartPx = this.highlightStart;
        var highlightEndPx = this.highlightEnd;
@@ -134,7 +139,7 @@ Highlighter.prototype.end_drag = function(event) {
         /* Trigger clear highlight event */
         $(this.container).trigger('clear_highlight');
     } 
-            
+    
 }
 
 /**
@@ -191,5 +196,6 @@ Highlighter.prototype.set_highlight_time = function(data) {
     this.highlightEnd = endTimePerc*this.waveformWidth;
     
     this.draw_highlight();
+    this.trigger_highlight();
 }
 
