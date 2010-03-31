@@ -5,8 +5,8 @@ from django.template import RequestContext
 from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 
-from concertapp.concert.models import *
-from concertapp.concert.forms  import BlogpostForm, RegistrationForm
+from concertapp.concert.models  import *
+from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
 
 def posts(request):
     posts = Blogpost.objects.all()
@@ -46,4 +46,7 @@ def audio(request):
             RequestContext(request))
 
 def upload_audio(request):
-    pass
+    return create_object(request,
+            template_name='upload_audio.html',
+            post_save_redirect='/audio/',
+            form_class=UploadFileForm)
