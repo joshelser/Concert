@@ -15,8 +15,8 @@ class Blogpost(models.Model):
     def __unicode__(self):
         return self.title
 
-class User(models.Model):
-    pass
+#class User(models.Model):
+#    pass
 #    name = models.CharField(max_length = 30, unique = True)
 #    passwd = models.CharField(max_length = 20)
 #    email = models.EmailField()
@@ -28,7 +28,7 @@ class AudioSegment(models.Model):
 
 class Group(models.Model):
     gname = models.CharField(max_length = 50, unique = True)
-    admin = models.ForeignKey('User')
+    admin = models.ForeignKey(User)
 
 class Tag(models.Model):
     segment = models.ForeignKey('AudioSegment')
@@ -39,7 +39,7 @@ class Tag(models.Model):
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.OneToOneField('User')
+    user = models.OneToOneField(User)
     time = models.DateTimeField(auto_now_add = True)
     segment = models.OneToOneField('AudioSegment', null = True)
     tag = models.OneToOneField('Tag', null = True)
@@ -47,6 +47,6 @@ class Comment(models.Model):
 class Audio(models.Model):
     fileName = models.CharField(max_length = 100, unique = True)
     wavFile = models.FileField(storage = audioStorage, upload_to = 'audio/')
-    user = models.ForeignKey('User')
+    user = models.ForeignKey(User)
    
 admin.site.register(Blogpost)
