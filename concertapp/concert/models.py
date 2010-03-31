@@ -16,9 +16,10 @@ class Blogpost(models.Model):
         return self.title
 
 class User(models.Model):
-    name = models.CharField(max_length = 30, unique = True)
-    passwd = models.CharField(max_length = 20)
-    email = models.EmailField()
+    pass
+#    name = models.CharField(max_length = 30, unique = True)
+#    passwd = models.CharField(max_length = 20)
+#    email = models.EmailField()
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)

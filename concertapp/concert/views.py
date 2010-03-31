@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
+from django.contrib.auth import authenticate, login
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
@@ -50,3 +51,18 @@ def upload_audio(request):
             template_name='upload_audio.html',
             post_save_redirect='/audio/',
             form_class=UploadFileForm)
+
+def dumb_login(request):
+    user = authenticate(username='josh', password='josh')
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return HttpResponseRedirect('/audio/')
+        else:
+            return HttpResponseRedirect('/login')
+    else:
+        return HttpResponseRedirect('/login')
+
+def dumb_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/audio/')

@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('concertapp.concert.views',
+    url(r'^login$', 'dumb_login', name='login'),
+    url(r'^logout$', 'dumb_logout', name='logout'),
     url(r'^$', 'posts', name='posts'),
     # Users
     url(r'^users/$', 'users', name='users'),
