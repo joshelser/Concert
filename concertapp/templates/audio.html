@@ -4,7 +4,7 @@
 	<h1>Audio</h1>
     {% for obj in audio %}
     <h3>File Name: {{ obj.fileName }}</h3>
-        <p>Owner: {{ obj.user.name }}</p>
+        <p>Owner: {{ obj.user.username }}</p>
     {% endfor %}
         <a href='{% url upload_audio %}'>Upload New Audio</a> 
 {% endblock %}
