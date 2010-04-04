@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
+
+audioStorage = FileSystemStorage(location='audio')
 
 class Blogpost(models.Model):
     title = models.CharField(max_length=255)
@@ -11,11 +15,6 @@ class Blogpost(models.Model):
     def __unicode__(self):
         return self.title
 
-class User(models.Model):
-    name = models.CharField(max_length = 30, unique = True)
-    passwd = models.CharField(max_length = 20)
-    email = models.EmailField()
-
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
@@ -23,26 +22,25 @@ class AudioSegment(models.Model):
 
 class Group(models.Model):
     gname = models.CharField(max_length = 50, unique = True)
-    admin = models.ForeignKey('User', {'related_name': 'admin'})
+    admin = models.ForeignKey(User)
 
 class Tag(models.Model):
-    segment = models.ForeignKey('AudioSegment', {'related_name': 'segments'})
-    group = models.OneToOneField('Group', {'related_name': 'group'})
+    segment = models.ForeignKey('AudioSegment')
+    group = models.OneToOneField('Group')
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.OneToOneField('User', {'related_name': 'user'})
+    user = models.OneToOneField(User)
     time = models.DateTimeField(auto_now_add = True)
-    segment = models.OneToOneField('AudioSegment', {'related_name': 'segment',
-        'null': True})
-    tag = models.OneToOneField('Tag', {'related_name': 'tag', 'null': True})
+    segment = models.OneToOneField('AudioSegment', null = True)
+    tag = models.OneToOneField('Tag', null = True)
  
 class Audio(models.Model):
-    file = models.CharField(max_length = 100, unique = True)
-    wav = models.CharField(max_length = 100, unique = True)
-    user = models.ForeignKey('User', {'related_name': 'user'})
+    fileName = models.CharField(max_length = 100, unique = True)
+    wavFile = models.FileField(storage = audioStorage, upload_to = 'audio/')
+    user = models.ForeignKey(User, related_name = 'audio')
    
 admin.site.register(Blogpost)

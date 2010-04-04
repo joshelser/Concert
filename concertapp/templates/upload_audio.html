@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Upload a file</h1>
+<form method="POST" enctype="multipart/form-data" action="{% url upload_audio %}">
+    {{ form.as_p }}
+    <input type='submit' name='create' value='Create'></input>
+</form>
+
+<p><a href="{% url audio %}">Back</a></p>
+{% endblock %}
+
