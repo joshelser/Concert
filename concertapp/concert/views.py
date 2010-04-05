@@ -65,6 +65,12 @@ def upload_audio(request):
 
     return render_to_response('upload_audio.html', {'form': form})
 
+def dumb_registration(request):
+    user = User.objects.create_user('josh', 'josh@josh.com', 'josh')
+    user.is_staff = True
+    user.save()
+    return HttpResponseRedirect('/audio/')
+
 def dumb_login(request):
     user = authenticate(username='josh', password='josh')
     if user is not None:
