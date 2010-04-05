@@ -49,8 +49,13 @@ def audio(request):
 def upload_audio(request):
     if request.method == 'POST':
         # Need to add the user to the audio instance
-        instance = request.user
-        audio = Audio(user=instance)
+        user = request.user
+
+        # Bounce back to audio if not logged in
+        if user is None:
+            return HttpResponseRedirect('/audio/')
+
+        audio = Audio(user=user)
 
         # Then add the audio instance to the Form instance
         form = UploadFileForm(request.POST, request.FILES, instance=audio)

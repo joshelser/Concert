@@ -16,4 +16,4 @@ class RegistrationForm(ModelForm):
 class UploadFileForm(ModelForm):
     class Meta:
         model = Audio
-        exclude = ('user')
+        exclude = ('user', 'waveform')
