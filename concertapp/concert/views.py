@@ -64,15 +64,15 @@ def upload_audio(request):
 
         audio = Audio(user=user)
 
-        # Try to add handler to generate the waveform after uploading
-#        request.upload_handlers.append(generate_waveform)
-
         # Then add the audio instance to the Form instance
         form = UploadFileForm(request.POST, request.FILES, instance=audio)
         if form.is_valid():
             # Save the form
             form.save()
+
+            # Generate the waveform onto disk
             generate_waveform(audio)
+
             return HttpResponseRedirect('/audio/')
         else:
             print repr(form.errors)
@@ -81,14 +81,18 @@ def upload_audio(request):
 
     return render_to_response('upload_audio.html', {'form': form})
 
+def view_waveform(request):
+    return render_to_response('view_waveform.html', {}, RequestContext(request))
+
 def generate_waveform(audio):
     # Create the wav object
     obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavFile)))
     wavObj = audioFormats.wav(obj)
     length = wavObj.getLength()
-    print os.path.join(settings.MEDIA_ROOT,'images/'+str(audio.wavFile)+'.png')
     wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
         'images/'+str(audio.wavFile)+'.png'), 5 * length, 585)
+    audio.waveform = os.path.join(settings.MEDIA_ROOT,
+        'images/'+str(audio.wavFile)+'.png')
 
 
 def dumb_registration(request):
