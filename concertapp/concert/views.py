@@ -53,6 +53,10 @@ def audio(request):
     return render_to_response("audio.html", {'audio': audio},
             RequestContext(request))
 
+def view_audio(request, audio_id):
+    audio = Audio.objects.get(pk = audio_id)
+    return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
+
 def upload_audio(request):
     if request.method == 'POST':
         # Need to add the user to the audio instance
@@ -81,8 +85,8 @@ def upload_audio(request):
 
     return render_to_response('upload_audio.html', {'form': form})
 
-def view_waveform(request):
-    return render_to_response('view_waveform.html', {}, RequestContext(request))
+def view_waveform(request, audio_id):
+    return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
 def generate_waveform(audio):
     # Create the wav object
