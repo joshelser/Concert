@@ -321,13 +321,15 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
             peaks = processor.peaks(seek_point, next_seek_point, channel)
             waveform.draw_peaks(x, peaks, spectral_centroid)
      
-        waveform.save(path_split[0] + str(channel) + path_split[1])
+        waveform.save(os.path.join(path_split[0], str(channel) +
+            path_split[1]))
         print " done"
 
     if channels > 1:
         combined = Image.new("RGB", (image_width, image_height))
         for channel in range(channels):
-            cur = Image.open(path_split[0] + str(channel) + path_split[1])
+            cur = Image.open(os.path.join(path_split[0], str(channel) +
+                path_split[1]))
             combined.paste(cur, (0, channel * (image_height/channels)))
 
         combined.save(output_filename_w)
