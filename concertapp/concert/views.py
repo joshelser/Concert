@@ -95,8 +95,10 @@ def generate_waveform(audio):
     length = wavObj.getLength()
     wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
         'images/'+str(audio.wavFile)+'.png'), 5 * length, 585)
-    audio.waveform = os.path.join(settings.MEDIA_ROOT,
-        'images/'+str(audio.wavFile)+'.png')
+
+    # Save the path relative to the media_dir
+    audio.waveform = os.path.join('images', str(audio.wavFile)+'.png')
+    audio.save()
 
 
 def dumb_registration(request):
