@@ -6,8 +6,15 @@ from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
 
+from django.conf import settings
+
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
+
+from concertapp.concert import audioFormats
+from concertapp.concert.waveform import *
+
+import os
 
 def posts(request):
     posts = Blogpost.objects.all()
@@ -65,6 +72,7 @@ def upload_audio(request):
         if form.is_valid():
             # Save the form
             form.save()
+            generate_waveform(audio)
             return HttpResponseRedirect('/audio/')
         else:
             print repr(form.errors)
@@ -73,8 +81,12 @@ def upload_audio(request):
 
     return render_to_response('upload_audio.html', {'form': form})
 
-def generate_waveform():
-    print "creating the waveform..."
+def generate_waveform(audio):
+    # Create the wav object
+    obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavFile)))
+    length = obj.getLength()
+    obj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
+        'images/'+str(audio.wavFile)+'.png'), 5 * length, 585)
 
 
 def dumb_registration(request):
