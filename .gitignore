@@ -2,3 +2,5 @@
 *.pyc
 documentation
 *~
+concertapp/media/audio/*
+concertapp/media/images/*

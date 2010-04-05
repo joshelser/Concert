@@ -57,6 +57,9 @@ def upload_audio(request):
 
         audio = Audio(user=user)
 
+        # Try to add handler to generate the waveform after uploading
+#        request.upload_handlers.append(generate_waveform)
+
         # Then add the audio instance to the Form instance
         form = UploadFileForm(request.POST, request.FILES, instance=audio)
         if form.is_valid():
@@ -69,6 +72,10 @@ def upload_audio(request):
         form = UploadFileForm()
 
     return render_to_response('upload_audio.html', {'form': form})
+
+def generate_waveform():
+    print "creating the waveform..."
+
 
 def dumb_registration(request):
     user = User.objects.create_user('josh', 'josh@josh.com', 'josh')
