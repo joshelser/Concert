@@ -4,8 +4,6 @@ from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 
-audioStorage = FileSystemStorage(location='audio')
-
 class Blogpost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -40,7 +38,8 @@ class Comment(models.Model):
  
 class Audio(models.Model):
     fileName = models.CharField(max_length = 100, unique = True)
-    wavFile = models.FileField(storage = audioStorage, upload_to = 'audio/')
+    wavFile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'audio')
+    waveform = models.ImageField(upload_to = 'images/')
    
 admin.site.register(Blogpost)
