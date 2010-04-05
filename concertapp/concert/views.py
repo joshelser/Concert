@@ -84,8 +84,10 @@ def upload_audio(request):
 def generate_waveform(audio):
     # Create the wav object
     obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavFile)))
-    length = obj.getLength()
-    obj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
+    wavObj = audioFormats.wav(obj)
+    length = wavObj.getLength()
+    print os.path.join(settings.MEDIA_ROOT,'images/'+str(audio.wavFile)+'.png')
+    wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
         'images/'+str(audio.wavFile)+'.png'), 5 * length, 585)
 
 

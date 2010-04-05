@@ -26,6 +26,7 @@ import optparse, math, sys
 import scikits.audiolab as audiolab
 import ImageFilter, ImageChops, Image, ImageDraw, ImageColor
 import numpy
+import os
  
 class AudioProcessor(object):
     def __init__(self, audio_file, fft_size, window_function=numpy.ones):
@@ -301,6 +302,7 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
     samples_per_pixel = audio_file.get_nframes() / float(image_width)
     nyquist_freq = (audio_file.get_samplerate() / 2) + 0.0
     processor = AudioProcessor(audio_file, fft_size, numpy.hanning)
+    path_split = os.path.split(output_filename_w)
 
     for channel in range(channels):
         waveform = WaveformImage(image_width, image_height/channels)
@@ -319,13 +321,13 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
             peaks = processor.peaks(seek_point, next_seek_point, channel)
             waveform.draw_peaks(x, peaks, spectral_centroid)
      
-        waveform.save(str(channel)+output_filename_w)
+        waveform.save(path_split[0] + str(channel) + path_split[1])
         print " done"
 
     if channels > 1:
         combined = Image.new("RGB", (image_width, image_height))
         for channel in range(channels):
-            cur = Image.open(str(channel)+output_filename_w)
+            cur = Image.open(path_split[0] + str(channel) + path_split[1])
             combined.paste(cur, (0, channel * (image_height/channels)))
 
         combined.save(output_filename_w)
