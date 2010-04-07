@@ -17,3 +17,14 @@ class UploadFileForm(ModelForm):
     class Meta:
         model = Audio
         exclude = ('user')
+
+    def clean_wavFile(self):
+        filetype = self.cleaned_data['wavFile'].content_type
+
+
+        if filetype != 'audio/x-wav' and \
+                filetype != 'audio/mpeg' and \
+                filetype != 'application/ogg':
+            raise forms.ValidationError('Audio file must be wav, mp3, or ogg')
+
+        return
