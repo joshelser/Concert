@@ -27,7 +27,7 @@ class audio:
     def __init__(self, inputFileName):
         # Make sure file exists
         if not os.path.isfile(inputFileName):
-            raise IOError
+            raise IOError('Could not open the audio file: "%s"' % inputFileName)
         
         ## @public filePath The full path to a file
         self.filePath = inputFileName
