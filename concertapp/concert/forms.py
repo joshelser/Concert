@@ -14,6 +14,7 @@ class RegistrationForm(ModelForm):
         model = User
 
 class UploadFileForm(ModelForm):
+    wavFile = forms.FileField(label='Audio File')
     class Meta:
         model = Audio
         exclude = ('user', 'waveform')
