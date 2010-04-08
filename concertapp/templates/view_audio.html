@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3>Waveform</h3>
-<p>{{ audio.fileName }}</p>
-<p>{{ audio.wavFile }}</p>
+<h3>Audio File</h3>
+<p>Audio file name: {{ audio.filename }}</p>
 <p><img src="{{ audio.waveform.url }}" alt="image not found" /></p>
 {% endblock %}
