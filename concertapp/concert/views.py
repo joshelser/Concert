@@ -99,10 +99,19 @@ def view_waveform(request, audio_id):
 def generate_waveform(audio, filetype):
     # Create the wav object
     obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavfile)))
-    wavObj = audioFormats.wav(obj)
-    length = wavObj.getLength()
-    wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
-        'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
+
+    if filetype == 'audio/x-wav':
+        wavObj = audioFormats.wav(obj)
+        length = wavObj.getLength()
+        wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
+            'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
+    elif filetype == 'audio/mpeg':
+        pass
+    elif filetype == 'application/ogg':
+        pass
+    else:
+        msg = 'The submitted filetype "%s" has no waveform functionality implemented'
+        raise NotImplementedError(msg % filetype)
 
     # Save the path relative to the media_dir
     audio.waveform = os.path.join('images', str(audio.wavfile)+'.png')
