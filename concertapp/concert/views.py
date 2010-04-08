@@ -71,12 +71,19 @@ def upload_audio(request):
 
         # Then add the audio instance to the Form instance
         form = UploadFileForm(request.POST, request.FILES, instance=audio)
+
+        file = request.FILES['wavfile']
+
+        audio.filename = str(file)
+
         if form.is_valid():
             # Save the form
             form.save()
 
+            filetype = file.content_type
+
             # Generate the waveform onto disk
-            generate_waveform(audio)
+            generate_waveform(audio, filetype)
 
             return HttpResponseRedirect('/audio/')
         else:
@@ -89,16 +96,16 @@ def upload_audio(request):
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
-def generate_waveform(audio):
+def generate_waveform(audio, filetype):
     # Create the wav object
-    obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavFile)))
+    obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavfile)))
     wavObj = audioFormats.wav(obj)
     length = wavObj.getLength()
     wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
-        'images/'+str(audio.wavFile)+'.png'), 5 * length, 585)
+        'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
 
     # Save the path relative to the media_dir
-    audio.waveform = os.path.join('images', str(audio.wavFile)+'.png')
+    audio.waveform = os.path.join('images', str(audio.wavfile)+'.png')
     audio.save()
 
 

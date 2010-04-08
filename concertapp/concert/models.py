@@ -37,8 +37,8 @@ class Comment(models.Model):
     tag = models.OneToOneField('Tag', null = True)
  
 class Audio(models.Model):
-    fileName = models.CharField(max_length = 100, unique = True)
-    wavFile = models.FileField(upload_to = 'audio/')
+    filename = models.CharField(max_length = 100)
+    wavfile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'audio')
     waveform = models.ImageField(upload_to = 'images/')
    

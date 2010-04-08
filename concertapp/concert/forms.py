@@ -14,14 +14,14 @@ class RegistrationForm(ModelForm):
         model = User
 
 class UploadFileForm(ModelForm):
-    wavFile = forms.FileField(label='Audio File')
+    wavfile = forms.FileField(label='Audio File')
     class Meta:
         model = Audio
-        exclude = ('user', 'waveform')
+        exclude = ('user', 'waveform', 'filename')
 
     def clean_wavFile(self):
         # Get the content-type of the file
-        filetype = self.cleaned_data['wavFile'].content_type
+        filetype = self.cleaned_data['wavfile'].content_type
 
         # Ensure the file is wav, ogg, or mp3
         if filetype != 'audio/x-wav' and \
@@ -30,4 +30,4 @@ class UploadFileForm(ModelForm):
             raise forms.ValidationError('Audio file must be wav, mp3, or ogg')
 
         # Always return the data from the clean_* function
-        return self.cleaned_data['wavFile']
+        return self.cleaned_data['wavfile']
