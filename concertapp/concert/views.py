@@ -15,7 +15,7 @@ from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFil
 from concertapp.concert import audioFormats
 from concertapp.concert.waveform import *
 
-import os
+import os, tempfile
 
 def posts(request):
     posts = Blogpost.objects.all()
@@ -67,7 +67,7 @@ def upload_audio(request):
         if user is None:
             return HttpResponseRedirect('/audio/')
 
-        audio = Audio(user=user)
+        audio = Audio(user = user)
 
         # Then add the audio instance to the Form instance
         form = UploadFileForm(request.POST, request.FILES, instance=audio)
@@ -106,7 +106,21 @@ def generate_waveform(audio, filetype):
         wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
             'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
     elif filetype == 'audio/mpeg':
-        pass
+        # Create mp3 object
+        mp3Obj = audioFormats.mp3(obj)
+
+        # Create a file on disk and get its name
+        tempFileName = tempfile.mkstemp()[1]
+
+        # Decode the mp3 into a wav
+        proc = mp3Obj.mp3Decode(tempFileName)
+
+        # Wait to finish conversion before wavfile is generated
+        proc.wait()
+
+        # Write to the media directory
+        audio.wavfile = tempFileName
+        audio.save()
     elif filetype == 'application/ogg':
         pass
     else:
@@ -117,6 +131,13 @@ def generate_waveform(audio, filetype):
     audio.waveform = os.path.join('images', str(audio.wavfile)+'.png')
     audio.save()
 
+def delete_audio(request, audio_id):
+    audio = Audio.objects.get(pk = audio_id)
+    if audio.delete_wavfile():
+        audio = Audio.objects.all()
+        return render_to_response("audio.html", {'audio': audio}, RequestContext(request))
+    else:
+        return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
 def dumb_registration(request):
     user = User.objects.create_user('josh', 'josh@josh.com', 'josh')

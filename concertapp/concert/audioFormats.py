@@ -18,6 +18,9 @@ fileTypes = ('wav', 'ogg', 'mp3')
 ## Audio Class
 # @class audio
 #
+# @public filePath The full path to a file
+# @public fileName The actual name of the file
+# @public fileType The type of the audio file
 class audio:
     ## Constructor
     #
@@ -29,13 +32,10 @@ class audio:
         if not os.path.isfile(inputFileName):
             raise IOError('Could not open the audio file: "%s"' % inputFileName)
         
-        ## @public filePath The full path to a file
         self.filePath = inputFileName
 
-        ## @public fileName The actual name of the file
         self.fileName = os.path.basename(inputFileName)
 
-        ## @public fileType The type of the audio file
         self.fileType = os.path.splitext(self.fileName)[1].lower()[1:]
 
         # Ensure a file was uploaded in a known audio file format

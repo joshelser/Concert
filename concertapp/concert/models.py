@@ -4,6 +4,9 @@ from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 
+from concertapp.settings import MEDIA_ROOT
+import os
+
 class Blogpost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -12,6 +15,15 @@ class Blogpost(models.Model):
     
     def __unicode__(self):
         return self.title
+
+class RemovableFileField(models.FileField):
+    def delete_file(self, instance):
+        if getattr(instance, self.attname):
+            file_name = getattr(instance, 'get_%s_filename' % self.name)()
+
+            if os.path.exists(file_name):
+                os.remove(file_name)
+
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -41,5 +53,15 @@ class Audio(models.Model):
     wavfile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'audio')
     waveform = models.ImageField(upload_to = 'images/')
+
+    # Delete the current audio file from the filesystem
+    def delete_wavfile(self):
+        print self.wavfile
+        fullpath = os.path.join(MEDIA_ROOT, str(self.wavfile))
+        if os.path.exists(fullpath):
+            os.remove(fullpath)
+            return True
+        else:
+            return False
    
 admin.site.register(Blogpost)
