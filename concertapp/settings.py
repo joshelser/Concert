@@ -103,3 +103,6 @@ LOGIN_URL = '/accounts/login/'
 
 
 APPEND_SLASH = False
+
+# Make all uploaded files write to disk
+FILE_UPLOAD_MAX_MEMORY_SIZE = 0

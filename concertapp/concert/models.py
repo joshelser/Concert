@@ -4,8 +4,10 @@ from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 
-from concertapp.settings import MEDIA_ROOT
-import os
+from django.conf import settings
+from concertapp.concert import audioFormats
+
+import os, tempfile
 
 class Blogpost(models.Model):
     title = models.CharField(max_length=255)
@@ -15,15 +17,6 @@ class Blogpost(models.Model):
     
     def __unicode__(self):
         return self.title
-
-class RemovableFileField(models.FileField):
-    def delete_file(self, instance):
-        if getattr(instance, self.attname):
-            file_name = getattr(instance, 'get_%s_filename' % self.name)()
-
-            if os.path.exists(file_name):
-                os.remove(file_name)
-
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -53,6 +46,36 @@ class Audio(models.Model):
     wavfile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'audio')
     waveform = models.ImageField(upload_to = 'images/')
+
+    def mp3_to_wav(self, originalFile):
+        # Use the original filename as a prefix
+        prefixName = str(originalFile)
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(dir =
+                os.path.join(settings.MEDIA_ROOT, 'audio'), suffix = '.wav',
+                prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create the abstract audio object using the uploaded file
+        obj = audioFormats.audio(originalFile.temporary_file_path())
+
+        # Create an mp3 object
+        mp3Obj = audioFormats.mp3(obj)
+
+        # Decode the mp3 into wav
+        proc = mp3Obj.mp3Decode(newName)
+
+        proc.wait()
+
+        print 'Finished converting mp3 to wav'
+
+        return newName
+
+    def ogg_to_wav(self, file):
+        raise NotImplementedError("I didn't put in the ogg to wav yet")
 
     # Delete the current audio file from the filesystem
     def delete_wavfile(self):

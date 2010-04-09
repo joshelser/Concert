@@ -39,8 +39,8 @@ class audio:
         self.fileType = os.path.splitext(self.fileName)[1].lower()[1:]
 
         # Ensure a file was uploaded in a known audio file format
-        if not self.fileType in fileTypes:
-            raise NameError('Unknown audio file format')
+        #if not self.fileType in fileTypes:
+        #    raise NameError('Unknown audio file format')
 
 ## WAV class
 # @class wav

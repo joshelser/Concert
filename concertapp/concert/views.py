@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 
 from django.conf import settings
+from django.core.files.base import File
+from django.core.files.uploadedfile import UploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
@@ -69,21 +72,43 @@ def upload_audio(request):
 
         audio = Audio(user = user)
 
-        # Then add the audio instance to the Form instance
-        form = UploadFileForm(request.POST, request.FILES, instance=audio)
-
         file = request.FILES['wavfile']
 
         audio.filename = str(file)
+        filetype = file.content_type
+
+        form = None
+
+        # If it's already a wav file
+        if filetype == 'audio/x-wav':
+            # Then add the audio instance to the Form instance
+            form = UploadFileForm(request.POST, request.FILES, instance = audio)
+        else:
+            print repr(request.FILES['wavfile'])
+            # We need to convert the file
+            if filetype == 'audio/mpeg':
+                wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
+            elif filetype == 'application/ogg':
+                wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+            else:
+                msg = 'The submitted filetype "%s" has no waveform functionality implemented'
+                raise NotImplementedError(msg % filetype)
+
+            actual_file = open(wavFileName, 'r')
+            data = actual_file.read()
+
+            wavFile = SimpleUploadedFile(os.path.split(wavFileName)[-1], data)
+                    
+
+            # Create the form object with the converted file and audio instance
+            form = UploadFileForm(request.POST, {'wavfile': wavFile}, instance = audio)
 
         if form.is_valid():
             # Save the form
             form.save()
 
-            filetype = file.content_type
-
             # Generate the waveform onto disk
-            generate_waveform(audio, filetype)
+            generate_waveform(audio)
 
             return HttpResponseRedirect('/audio/')
         else:
@@ -96,36 +121,14 @@ def upload_audio(request):
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
-def generate_waveform(audio, filetype):
+def generate_waveform(audio):
     # Create the wav object
     obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavfile)))
 
-    if filetype == 'audio/x-wav':
-        wavObj = audioFormats.wav(obj)
-        length = wavObj.getLength()
-        wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
-            'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
-    elif filetype == 'audio/mpeg':
-        # Create mp3 object
-        mp3Obj = audioFormats.mp3(obj)
-
-        # Create a file on disk and get its name
-        tempFileName = tempfile.mkstemp()[1]
-
-        # Decode the mp3 into a wav
-        proc = mp3Obj.mp3Decode(tempFileName)
-
-        # Wait to finish conversion before wavfile is generated
-        proc.wait()
-
-        # Write to the media directory
-        audio.wavfile = tempFileName
-        audio.save()
-    elif filetype == 'application/ogg':
-        pass
-    else:
-        msg = 'The submitted filetype "%s" has no waveform functionality implemented'
-        raise NotImplementedError(msg % filetype)
+    wavObj = audioFormats.wav(obj)
+    length = wavObj.getLength()
+    wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
+        'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
 
     # Save the path relative to the media_dir
     audio.waveform = os.path.join('images', str(audio.wavfile)+'.png')
