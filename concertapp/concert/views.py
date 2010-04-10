@@ -124,9 +124,7 @@ def view_waveform(request, audio_id):
 
 def generate_waveform(audio):
     # Create the wav object
-    obj = audioFormats.audio(os.path.join(settings.MEDIA_ROOT, str(audio.wavfile)))
-
-    wavObj = audioFormats.wav(obj)
+    wavObj = audioFormats.Wav(os.path.join(settings.MEDIA_ROOT, str(audio.wavfile)))
     length = wavObj.getLength()
     wavObj.generateWaveform(os.path.join(settings.MEDIA_ROOT,
         'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)

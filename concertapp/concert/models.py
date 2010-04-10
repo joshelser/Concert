@@ -59,11 +59,8 @@ class Audio(models.Model):
         # Save the name of the new file
         newName = tempFile[1]
 
-        # Create the abstract audio object using the uploaded file
-        obj = audioFormats.audio(originalFile.temporary_file_path())
-
         # Create an mp3 object
-        mp3Obj = audioFormats.mp3(obj)
+        mp3Obj = audioFormats.Mp3(originalFile.temporary_file_path())
 
         # Decode the mp3 into wav
         proc = mp3Obj.mp3Decode(newName)
@@ -86,11 +83,8 @@ class Audio(models.Model):
         # Save the name of the new file
         newName = tempFile[1]
 
-        # Create the abstract audio object using the uploaded file
-        obj = audioFormats.audio(originalFile.temporary_file_path())
-
         # Create an mp3 object
-        oggObj = audioFormats.ogg(obj)
+        oggObj = audioFormats.Ogg(originalFile.temporary_file_path())
 
         # Decode the mp3 into wav
         proc = oggObj.oggDecode(newName)
