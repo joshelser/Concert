@@ -74,8 +74,32 @@ class Audio(models.Model):
 
         return newName
 
-    def ogg_to_wav(self, file):
-        raise NotImplementedError("I didn't put in the ogg to wav yet")
+    def ogg_to_wav(self, originalFile):
+        # Use the original filename as a prefix
+        prefixName = str(originalFile)
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(dir =
+                os.path.join(settings.MEDIA_ROOT, 'audio'), suffix = '.wav',
+                prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create the abstract audio object using the uploaded file
+        obj = audioFormats.audio(originalFile.temporary_file_path())
+
+        # Create an mp3 object
+        oggObj = audioFormats.ogg(obj)
+
+        # Decode the mp3 into wav
+        proc = oggObj.oggDecode(newName)
+
+        proc.wait()
+
+        print 'Finished converting ogg to wav'
+
+        return newName
 
     # Delete the current audio file from the filesystem
     def delete_wavfile(self):
