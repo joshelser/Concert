@@ -81,7 +81,10 @@ class AudioProcessor(object):
         # convert to mono by selecting left channel only
         # add option to draw both channels
         if channel != -1:
-            samples = samples[:,channel]
+            # Make sure we don't try to remove non-existent channels
+            if len(samples.shape) > 1:
+                samples = samples[:,channel]
+
             # Combine all channels into one channel
             # samples = numpy.array(samples).sum(1)
 
@@ -321,8 +324,13 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
             peaks = processor.peaks(seek_point, next_seek_point, channel)
             waveform.draw_peaks(x, peaks, spectral_centroid)
      
-        waveform.save(os.path.join(path_split[0], str(channel) +
-            path_split[1]))
+        # If we have only one channel, don't bother with renaming
+        if channels == 1:
+            waveform.save(output_filename_w)
+        else:
+            waveform.save(os.path.join(path_split[0], str(channel) +
+                path_split[1]))
+
         print " done"
 
     if channels > 1:
@@ -333,6 +341,7 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
             combined.paste(cur, (0, channel * (image_height/channels)))
 
         combined.save(output_filename_w)
+
  
     print " done"
  
