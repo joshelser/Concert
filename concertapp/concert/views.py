@@ -88,7 +88,7 @@ def upload_audio(request):
             # We need to convert the file
             if filetype == 'audio/mpeg':
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
-            elif filetype == 'application/ogg':
+            elif filetype == 'audio/ogg':
                 wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
             else:
                 msg = 'The submitted filetype "%s" has no waveform functionality implemented'
