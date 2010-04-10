@@ -99,6 +99,7 @@ def upload_audio(request):
 
             wavFile = SimpleUploadedFile(os.path.split(wavFileName)[-1], data)
                     
+            audio.wavfile = wavFile
 
             # Create the form object with the converted file and audio instance
             form = UploadFileForm(request.POST, {'wavfile': wavFile}, instance = audio)
