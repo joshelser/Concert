@@ -179,7 +179,7 @@ class mp3(audio):
     #
     # @return A subprocess object
     def mp3Decode(self, outputFileName):
-        command = "lame --decode --mp3input '%s' '%s' 2>&1 | awk -vRS='\\r' -F'[ /]+' '(NR>2){print $2/$3;fflush();}'" % (self.audioObj.filePath, outputFileName)
+        command = "lame --quiet --decode --mp3input '%s' '%s'" % (self.audioObj.filePath, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
@@ -192,7 +192,7 @@ class mp3(audio):
     #
     # @return A subprocess object
     def mp3Encode(self, outputFileName, quality=192):
-        command = "lame -m auto --preset cbr %i '%s' '%s' 2>&1 | awk -vRS='\\r' '(NR>3){gsub(/[()%%|]/,\" \");if($1 != \"\") print $2/100;fflush();}'" % (quality, self.audioObj.filePath, outputFileName)
+        command = "lame --quiet -m auto --preset cbr %i '%s' '%s'" % (quality, self.audioObj.filePath, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
@@ -218,11 +218,11 @@ class ogg(audio):
     #
     # @return A subprocess object
     def oggDecode(self, outputFileName):
-        command = "oggdec '%s' -o '%s' 2>&1 | awk -vRS='\\r' '(NR>1){gsub(/%%/,\" \");print $2/100;fflush();}'" % (self.audioObj.filePath, outputFileName)
+        command = "oggdec '%s' -o '%s' -Q" % (self.audioObj.filePath, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
-        return sub, command
+        return sub
 
     ## Encode audio into OGG
     #
@@ -232,7 +232,7 @@ class ogg(audio):
     #
     # @return A subprocess object
     def oggEncode(self, outputFileName, quality=192):
-        command = "oggenc -b %i '%s' -o '%s' 2>&1 | awk -vRS='\\r' '(NR>1){gsub(/%%/,\" \");print $2/100;fflush();}'" % (quality, self.audioObj.filePath, outputFileName)
+        command = "oggenc -b %i '%s' -o '%s'" % (quality, self.audioObj.filePath, outputFileName)
 
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
