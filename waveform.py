@@ -77,10 +77,14 @@ class AudioProcessor(object):
             # this can happen for wave files with broken headers...
             return numpy.zeros(size) if resize_if_less else numpy.zeros(2)
  
+        
         # convert to mono by selecting left channel only
         # add option to draw both channels
         if channel != -1:
-            samples = samples[:,channel]
+            # Make sure we don't try to remove non-existent channels
+            if len(samples.shape) > 1:
+                samples = samples[:,channel]
+
             # Combine all channels into one channel
             # samples = numpy.array(samples).sum(1)
 
