@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^', include('concertapp.concert.urls')),
-    (r'^api/', include('concertapp.api.urls')),
+#    (r'^api/', include('concertapp.api.urls')),
     (r'^admin/(.*)', admin.site.root),
     
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
