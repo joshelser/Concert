@@ -1,13 +1,13 @@
 from django.conf.urls.defaults import *
 from piston.resource import Resource
 from piston.authentication import HttpBasicAuthentication
-from piston.authentication import DjangoAuthentication
+#from piston.authentication import DjangoAuthentication
 from piston.doc import documentation_view
 
 from concertapp.api.handlers import BlogpostHandler
 
 basic_auth = HttpBasicAuthentication(realm='My sample API')
-django_auth = DjangoAuthentication()
+#django_auth = DjangoAuthentication()
 
 basic_blogposts = Resource(handler=BlogpostHandler, authentication=basic_auth)
 django_blogposts = Resource(handler=BlogpostHandler, authentication=django_auth)
