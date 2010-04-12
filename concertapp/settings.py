@@ -98,7 +98,8 @@ FIXTURE_DIRS = (
 
 # registration
 LOGIN_REDIRECT_URL = "/"
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/users/login/'
+LOGOUT_URL = '/users/logout/'
 
 
 APPEND_SLASH = False
