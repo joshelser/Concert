@@ -18,8 +18,11 @@ from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFil
 
 from concertapp.concert import audioFormats
 from concertapp.concert.waveform import *
+from concertapp.settings import MEDIA_ROOT
 
 import os, tempfile
+
+CHUNKSIZE = 1024 * 32
 
 def posts(request):
     posts = Blogpost.objects.all()
@@ -126,20 +129,32 @@ def upload_audio(request):
                 msg = 'The submitted filetype "%s" has no waveform functionality implemented'
                 raise NotImplementedError(msg % filetype)
 
-            # This should be replaced so we don't have to read the entire file into memory 
-            actual_file = open(wavFileName, 'r')
-            data = actual_file.read()
-
-            wavFile = SimpleUploadedFile(os.path.split(wavFileName)[-1], data)
+            # Create an (almost) empty file
+            wavFile = SimpleUploadedFile(os.path.split(wavFileName)[-1], 'a')
                     
-            audio.wavfile = wavFile
-
             # Create the form object with the converted file and audio instance
             form = UploadFileForm(request.POST, {'wavfile': wavFile}, instance = audio)
 
         if form.is_valid():
             # Save the form
             form.save()
+
+            # Open up the file in temp and in media
+            actual_file = open(wavFileName, 'r')
+            dest_file = open(os.path.join(MEDIA_ROOT, str(audio.wavfile)), 'w')
+
+            # Buffered read into the file in the media dir
+            data = actual_file.read(CHUNKSIZE)
+            while data != '':
+                dest_file.write(data)
+                data = actual_file.read(CHUNKSIZE)
+
+            # Close the file handles
+            actual_file.close()
+            dest_file.close()
+
+            # Remove the file from /tmp
+            os.remove(wavFileName)
 
             # Generate the waveform onto disk
             generate_waveform(audio)
