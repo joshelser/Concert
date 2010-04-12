@@ -52,9 +52,7 @@ class Audio(models.Model):
         prefixName = str(originalFile)
 
         # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(dir =
-                os.path.join(settings.MEDIA_ROOT, 'audio'), suffix = '.wav',
-                prefix = prefixName)
+        tempFile = tempfile.mkstemp(suffix = '.wav', prefix = prefixName)
 
         # Save the name of the new file
         newName = tempFile[1]
@@ -76,9 +74,7 @@ class Audio(models.Model):
         prefixName = str(originalFile)
 
         # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(dir =
-                os.path.join(settings.MEDIA_ROOT, 'audio'), suffix = '.wav',
-                prefix = prefixName)
+        tempFile = tempfile.mkstemp(suffix = '.wav', prefix = prefixName)
 
         # Save the name of the new file
         newName = tempFile[1]
