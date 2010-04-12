@@ -101,7 +101,6 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = '/accounts/login/'
 
 
-
 APPEND_SLASH = False
 
 # Make all uploaded files write to disk

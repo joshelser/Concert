@@ -87,7 +87,7 @@ class AnonymousBlogpostHandler(BlogpostHandler, AnonymousBaseHandler):
 
 class UserHandler(AnonymousBaseHandler):
     model = User
-    fields = ('id', 'name', 'passwd', 'email')
+    fields = ('id', 'name', 'passwd', 'email')#
 
     def create(self, request):
         print request

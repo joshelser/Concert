@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from piston.resource import Resource
 from piston.authentication import HttpBasicAuthentication
-#from piston.authentication import DjangoAuthentication
+
 from piston.doc import documentation_view
 
 from concertapp.api.handlers import BlogpostHandler
