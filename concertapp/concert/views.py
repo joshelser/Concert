@@ -126,6 +126,7 @@ def upload_audio(request):
                 msg = 'The submitted filetype "%s" has no waveform functionality implemented'
                 raise NotImplementedError(msg % filetype)
 
+            # This should be replaced so we don't have to read the entire file into memory 
             actual_file = open(wavFileName, 'r')
             data = actual_file.read()
 

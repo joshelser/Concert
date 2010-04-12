@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.admin',
     'concertapp.concert',
-    'concertapp.api',
+    #'concertapp.api',
 )
 
 FIXTURE_DIRS = (
