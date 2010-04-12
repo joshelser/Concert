@@ -8,6 +8,8 @@ urlpatterns = patterns('concertapp.concert.views',
     # Users
     url(r'^users/$', 'users', name='users'),
     url(r'^users/add/$', 'create_user', name='create_user'),
+    url(r'^users/login/$', 'login_user', name='login_user'),
+    url(r'^users/logout/$', 'logout_user', name='logout_user'),
     # Audio
     url(r'^audio/$', 'audio', name='audio'),
     url(r'^audio/upload/$', 'upload_audio', name='upload_audio'),

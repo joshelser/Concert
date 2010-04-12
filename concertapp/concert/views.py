@@ -11,6 +11,7 @@ from django.conf import settings
 from django.core.files.base import File
 from django.core.files.uploadedfile import UploadedFile
 from django.core.files.uploadedfile import SimpleUploadedFile
+#from django.core.validators import *
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
@@ -46,10 +47,41 @@ def users(request):
             RequestContext(request))
 
 def create_user(request):
-    return create_object(request, 
-            template_name='create_user.html',
-            post_save_redirect='/users/',
-            form_class=RegistrationForm)
+    #if request.user.is_authenticated():
+        # They already have an account; don't let them register again
+    #    return render_to_response('create_user.html', {'has_account': True})
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+                new_name = form.cleaned_data['username']
+                new_email = form.cleaned_data['email']
+                new_password1 = form.cleaned_data['password1']
+                new_password2 = form.cleaned_data['password2']
+                new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
+                new_profile.save()
+                return HttpResponseRedirect('/users/')
+    else:
+        form = RegistrationForm()
+    return render_to_response('create_user.html', {'form': form})
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponse('<h1>Logged in</h1>')#return render_to_response('login.html', {'form': form})
+            else:
+                return HttpResponse('<h1>Not Active</h1>')#return render_to_response('login.html', {'form': form})
+        else:
+            return HttpResponse('<h1>No user</h1>')#return render_to_response('login.html', {'form': form})
+    return render_to_response('login.html')
+
+def logout_user(request):
+    logout(request)
+    return HttpResponse('<h1>You were successfully logged out</h1>')
 
 def audio(request):
     audio = Audio.objects.all()

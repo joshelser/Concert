@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from django import forms
+#from django.core import validators
 
 from concertapp.concert.models import Blogpost, User, Audio
 
@@ -7,11 +8,32 @@ class BlogpostForm(ModelForm):
     class Meta:
         model = Blogpost
         exclude = ('author',)
-
+ 
 class RegistrationForm(ModelForm):
-    passwd = forms.CharField(label='Password', widget=forms.PasswordInput(render_value=False))
+    username = forms.CharField(label='username',
+                        max_length=30,
+                        required=True)
+    email = forms.EmailField(label='email',
+                         max_length=30,
+                         required=True)
+    password1 = forms.CharField(label='password1',
+                            max_length=60,
+                            required=True,
+                            widget=forms.PasswordInput(render_value=False))
+    password2 = forms.CharField(label='password2',
+                            max_length=60,
+                            required=True,
+                            widget=forms.PasswordInput(render_value=False))
     class Meta:
         model = User
+        exclude = ('username', 'first_name', 'last_name', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'groups', 'user_permissions')
+
+    #def isValidUsername(self, field_data, all_data):
+    #    try:
+    #        User.objects.get(username=field_data)
+    #    except User.DoesNotExist:
+    #        return
+    #    raise validators.ValidationError('The username "%s" is already taken.' % field_data)
 
 class UploadFileForm(ModelForm):
     wavfile = forms.FileField(label='Audio File')
