@@ -9,6 +9,6 @@ urlpatterns = patterns('',
 #    (r'^api/', include('concertapp.api.urls')),
     (r'^admin/(.*)', admin.site.root),
     
-    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+#    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+#    (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
 )
