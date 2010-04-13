@@ -20,6 +20,12 @@ def users(request):
     return render_to_response("users.html", {'users': users},
             RequestContext(request))
 
+def view_user(request, user_id):
+    user = User.objects.get(pk = user_id)
+
+    return render_to_response('view_user.html', {'user': user},
+            RequestContext(request))
+
 def create_user(request):
     #if request.user.is_authenticated():
         # They already have an account; don't let them register again
