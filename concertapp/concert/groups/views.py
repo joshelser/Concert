@@ -13,12 +13,30 @@ from django.conf import settings
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
 
-def groups(request):
+def groups(request, message = None):
     groups = Group.objects.all()
 
-    return render_to_response('all_groups.html', {'groups': groups},
+    return render_to_response('all_groups.html', {'groups': groups, 'message': message},
             RequestContext(request))
 
 @login_required
-def join_group(request, group_id):
-    return HttpResponse("<html><body>hi</body></html")
+def join_group(request, group_name):
+    return render_to_response('join_group.html', {'group_name': group_name},
+            RequestContext(request))
+
+@login_required
+def request_to_join_group(request):
+    if request.method == 'POST':
+        group_name = request.POST['group_name']
+
+        ug_request = UserGroupRequest(user = request.user, gname = group_name)
+
+        ug_request.save()
+
+        return groups(request, 'Group request left successfully')
+    else:
+        print "nope"
+
+
+
+

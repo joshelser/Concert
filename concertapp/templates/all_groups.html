@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<h1>Groups: </h1>
+    {% if message %}
+        <div id="alert">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+
+    <h1>Groups: </h1>
     {% for g in groups %}
     <div>
         <h3>{{ g }}</h3>

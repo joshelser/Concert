@@ -27,6 +27,10 @@ class UserGroup(models.Model):
     gname = models.CharField(max_length = 80, unique = True)
     admin = models.ForeignKey(User)
 
+class UserGroupRequest(models.Model):
+    user = models.ForeignKey(User)
+    gname = models.CharField(max_length = 80)
+
 class Tag(models.Model):
     segment = models.ForeignKey('AudioSegment')
     group = models.OneToOneField('UserGroup')
