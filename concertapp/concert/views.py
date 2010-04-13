@@ -8,15 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 
 from django.conf import settings
-from django.core.files.base import File
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
 
-from concertapp.concert import audioFormats
-from concertapp.concert.waveform import *
-from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 import os, tempfile
 

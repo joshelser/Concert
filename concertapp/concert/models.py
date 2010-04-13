@@ -5,7 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 
 from django.conf import settings
-from concertapp.concert import audioFormats
+from concertapp.concert.audio import audioFormats
 
 import os, tempfile
 
