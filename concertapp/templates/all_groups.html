@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Groups: </h1>
+    {% for g in groups %}
+    <div>
+        <h3>{{ g }}</h3>
+        <p><a href="{% url join_group g.name  %}">Join Group</a></p>
+    </div>
+    {% endfor %}
+{% endblock %}
