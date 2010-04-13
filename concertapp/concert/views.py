@@ -9,16 +9,14 @@ from django import forms
 
 from django.conf import settings
 from django.core.files.base import File
-from django.core.files.uploadedfile import UploadedFile
 from django.core.files.uploadedfile import SimpleUploadedFile
-#from django.core.validators import *
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
 
 from concertapp.concert import audioFormats
 from concertapp.concert.waveform import *
-from concertapp.settings import MEDIA_ROOT
+from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 import os, tempfile
 
@@ -71,16 +69,28 @@ def login_user(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        redirect_url = request.POST['next']
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponse('<h1>Logged in</h1>')#return render_to_response('login.html', {'form': form})
+
+                # Redirect to the requested page
+                return HttpResponseRedirect(redirect_url)
             else:
                 return HttpResponse('<h1>Not Active</h1>')#return render_to_response('login.html', {'form': form})
         else:
             return HttpResponse('<h1>No user</h1>')#return render_to_response('login.html', {'form': form})
-    return render_to_response('login.html')
+
+    # Use the default post login redirect
+    url = LOGIN_REDIRECT_URL
+
+    # Check to see if a post login page was requested
+    if request.GET.__contains__('next'):
+        url = request.GET['next']
+        
+    # Render the login page with the appropriate page
+    return render_to_response('login.html', {'next': url})
 
 def logout_user(request):
     logout(request)
