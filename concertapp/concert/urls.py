@@ -8,11 +8,7 @@ urlpatterns = patterns('concertapp.concert.views',
     # Users
     (r'^users/', include('concertapp.concert.users.urls')),
     # Audio
-    url(r'^audio/$', 'audio', name='audio'),
-    url(r'^audio/upload/$', 'upload_audio', name='upload_audio'),
-    url(r'^audio/(\d+)/$', 'view_audio', name='view_audio'),
-    url(r'^audio/(\d+)/waveform/$', 'view_waveform', name='view_waveform'),
-    url(r'^audio/(\d+)/delete/$', 'delete_audio', name='delete_audio'),
+    (r'^audio/', include('concertapp.concert.audio.urls')),
     # Blog content
     url(r'^add/$','create_post', name='create_post'),
     url(r'^ajaxy_add/$','create_ajaxy_post', name='create_ajaxy_post'),
