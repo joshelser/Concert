@@ -16,8 +16,6 @@ from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFil
 
 import os, tempfile
 
-CHUNKSIZE = 1024 * 32
-
 def posts(request):
     posts = Blogpost.objects.all()
 

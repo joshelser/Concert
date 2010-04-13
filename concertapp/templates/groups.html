@@ -5,5 +5,5 @@
     {% for g in groups %}
         <p>{{ g }}</p>
     {% endfor %}
-        <a href='{% url create_group %}'>Add Group</a> 
+        <a href='{% url create_group user_id %}'>Add Group</a> 
 {% endblock %}

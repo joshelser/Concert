@@ -5,10 +5,11 @@ from django.template import RequestContext
 from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 from django import forms
 
 from concertapp.concert.models  import *
-from concertapp.concert.forms   import RegistrationForm
+from concertapp.concert.forms   import RegistrationForm, CreateGroupForm
 
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
@@ -67,5 +68,29 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return HttpResponse('<h1>You were successfully logged out</h1><p><a href="/">Home</a></p>')
+
+@login_required
+def groups(request, user_id):
+    user = User.objects.get(pk = user_id)
+    groups = list()
+    for group in user.groups.all():
+        groups.append(group.name)
+    return render_to_response("groups.html", {'groups': groups, 'length': len(groups), 'user_id': user_id},RequestContext(request))
+
+@login_required
+def create_group(request, user_id):
+    if request.method == 'POST':
+        form = CreateGroupForm(request.POST)
+        if form.is_valid():
+                gname = form.cleaned_data['gname']
+                new_group = UserGroup(gname = gname, admin = request.user)
+                new_group.save()
+                g = Group(name = gname)
+                g.save()
+                request.user.groups.add(g)
+                return HttpResponseRedirect('/groups/')
+    else:
+        form = CreateGroupForm()
+    return render_to_response('create_group.html', {'form': form, 'user_id': user_id})
 
 

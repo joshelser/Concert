@@ -2,11 +2,11 @@
 
 {% block content %}
 <h1>Create an account</h1>
-<form method="POST" action="{% url create_group %}">
+<form method="POST" action="{% url create_group user_id %}">
     {{ form.as_p }}
     <input type='submit' name='create' value='Create'></input>
 </form>
 
-<p><a href="{% url groups %}">Back</a></p>
+<p><a href="{% url groups user_id %}">Back</a></p>
 {% endblock %}
 
