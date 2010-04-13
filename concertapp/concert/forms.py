@@ -2,13 +2,18 @@ from django.forms import ModelForm
 from django import forms
 #from django.core import validators
 
-from concertapp.concert.models import Blogpost, User, Audio
+from concertapp.concert.models import Blogpost, User, Audio, UserGroup
 
 class BlogpostForm(ModelForm):
     class Meta:
         model = Blogpost
         exclude = ('author',)
  
+class CreateGroupForm(ModelForm):
+    class Meta:
+        model = UserGroup
+        exclude = ('admin')
+
 class RegistrationForm(ModelForm):
     username = forms.CharField(label='username',
                         max_length=30,
