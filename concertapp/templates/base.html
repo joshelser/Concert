@@ -7,6 +7,15 @@
 {% block script %}{% endblock%}
 </head>
 <body>
+    <div id="login" style="float: right; border: 1px dotted black">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}.<br />
+            <a href="{% url logout_user %}">Logout Here</a>
+            </p>
+        {% else %}
+            <p>Please <a href="{% url login_user %}">Login</a></p>
+        {% endif %}
+    </div>
     {% block content %}
 
     {% endblock %}

@@ -66,6 +66,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return HttpResponse('<h1>You were successfully logged out</h1>')
+    return HttpResponse('<h1>You were successfully logged out</h1><p><a href="/">Home</a></p>')
 
 
