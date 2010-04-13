@@ -5,12 +5,13 @@ from django.template import RequestContext
 from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 from django import forms
 
 from django.conf import settings
 
 from concertapp.concert.models  import *
-from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
+from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
 
 
 import os, tempfile
@@ -28,6 +29,29 @@ def create_post(request):
     return create_object(request,template_name='edit_post.html',
                          post_save_redirect='/',
                          form_class=BlogpostForm)
+
+@login_required
+def groups(request):
+    groups = list()
+    for group in request.user.groups.all():
+        groups.append(group.name)
+    return render_to_response("groups.html", {'groups': groups, 'length': len(groups)},RequestContext(request))
+
+@login_required
+def create_group(request):
+    if request.method == 'POST':
+        form = CreateGroupForm(request.POST)
+        if form.is_valid():
+                gname = form.cleaned_data['gname']
+                new_group = UserGroup(gname = gname, admin = request.user)
+                new_group.save()
+                g = Group(name = gname)
+                g.save()
+                request.user.groups.add(g)
+                return HttpResponseRedirect('/groups/')
+    else:
+        form = CreateGroupForm()
+    return render_to_response('create_group.html', {'form': form})
     
 @login_required
 def create_ajaxy_post(request):

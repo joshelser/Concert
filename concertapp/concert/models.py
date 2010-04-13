@@ -23,13 +23,13 @@ class AudioSegment(models.Model):
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
 
-class Group(models.Model):
-    gname = models.CharField(max_length = 50, unique = True)
+class UserGroup(models.Model):
+    gname = models.CharField(max_length = 80, unique = True)
     admin = models.ForeignKey(User)
 
 class Tag(models.Model):
     segment = models.ForeignKey('AudioSegment')
-    group = models.OneToOneField('Group')
+    group = models.OneToOneField('UserGroup')
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()

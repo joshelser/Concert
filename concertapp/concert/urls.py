@@ -5,6 +5,9 @@ urlpatterns = patterns('concertapp.concert.views',
     url(r'^logout$', 'dumb_logout', name='logout'),
     url(r'^register$', 'dumb_registration', name='registration'),
     url(r'^$', 'posts', name='posts'),
+    #Groups
+    url(r'^groups/$', 'groups', name='groups'),
+    url(r'^groups/create$', 'create_group', name='create_group'),
     # Users
     (r'^users/', include('concertapp.concert.users.urls')),
     # Audio
