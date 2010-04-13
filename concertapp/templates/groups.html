@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Your Groups: {{ length }}</h1>
+    {% for g in groups %}
+        <p>{{ g }}</p>
+    {% endfor %}
+        <a href='{% url create_group %}'>Add Group</a> 
+{% endblock %}
