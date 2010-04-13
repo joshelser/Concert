@@ -88,7 +88,9 @@ def create_group(request, user_id):
                 g = Group(name = gname)
                 g.save()
                 request.user.groups.add(g)
-                return HttpResponseRedirect('/groups/')
+                return groups(request, user_id)
+                 #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
+                #return HttpResponseRedirect('/groups/')
     else:
         form = CreateGroupForm()
     return render_to_response('create_group.html', {'form': form, 'user_id': user_id})
