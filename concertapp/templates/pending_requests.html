@@ -2,9 +2,17 @@
 
 {% block content %}
     <h1>Pending Requests:</h1>
-    {% for r in requests %}
-    <div>
-        <a href="{% url accept_request user_id group r.user.username %}">{{ r.user.username }}</a> 
-    </div>
-    {% endfor %}
+    {% if requests %}
+        {% for r in requests %}
+        <div>
+            <a href="{% url accept_request user_id group r.user.username %}">{{ r.user.username }}</a> 
+        </div>
+        {% endfor %}
+    {% else %}
+        <div>
+            <p>No pending requests!</p>
+        </div>
+    {% endif %}
+
+    <p><a href="{% url manage_group user_id group %}">Back to group</a></p>
 {% endblock %}
