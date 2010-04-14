@@ -135,10 +135,11 @@ def add_to_group(request, user_id, group, user):
     if request.method == 'POST':
         group_name = request.POST['group_name']
         user_name = request.POST['user_name']
+        UserGroupRequest.objects.get(gname = group_name, user = User.objects.get(username = user_name)).delete()
         user = User.objects.get(username = user_name)
         g = Group.objects.get(name = group_name)
-        user.objects.groups.add(g)
-        url = '/groups/'+group+'/pending_requests/'
+        user.groups.add(g)
+        url = '/users/'+user_id+'/groups/manage/'+group+'/pending_requests/'
         return HttpResponseRedirect(url)
 
     
