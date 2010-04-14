@@ -6,12 +6,12 @@ from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
+
 from django import forms
 
 from django.conf import settings
 
 from concertapp.concert.models  import *
-from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
 
 def groups(request, message = None):
     groups = Group.objects.all()
@@ -28,6 +28,16 @@ def join_group(request, group_name):
 def request_to_join_group(request):
     if request.method == 'POST':
         group_name = request.POST['group_name']
+
+        # Make sure a request doesn't already exist for this user and group
+        try:
+            ug_requests = UserGroupRequest.objects.get(user = request.user,
+                    gname = group_name)
+        except UserGroupRequest.DoesNotExist:
+            pass
+        else:
+            return HttpResponse(
+                    '<h1>Error</h1><p>A request already exists</p>')
 
         ug_request = UserGroupRequest(user = request.user, gname = group_name)
 
