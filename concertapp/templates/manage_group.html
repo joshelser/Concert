@@ -4,8 +4,11 @@
 <div>
     <h1>{{ group }}</h1>
     <p>Choose an action</p>
-    <br />
-    <p><a href="{% url pending_requests user_id group %}">Pending Requests</a></p>
-    <p><a href="{% url choose_group user_id %}">Back to all my owned groups</a></p>
+    <div id="actions">
+        <ul>
+            <li><a href="{% url pending_requests user_id group %}">Pending Requests</a></li>
+        </ul>
     </div>
+    <p><a href="{% url choose_group user_id %}">Back to all my owned groups</a></p>
+</div>
 {% endblock %}
