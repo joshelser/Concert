@@ -16,6 +16,9 @@ from concertapp.concert.models  import *
 def groups(request, message = None):
     groups = Group.objects.all()
 
+    if request.GET['message']:
+        message = request.GET['message']
+
     return render_to_response('all_groups.html', {'groups': groups, 'message': message},
             RequestContext(request))
 
@@ -43,7 +46,10 @@ def request_to_join_group(request):
 
         ug_request.save()
 
-        return groups(request, 'Group request left successfully')
+        url = '/groups/?message=Group request left successfully'
+
+        return HttpResponseRedirect(url)
+        #return groups(request, 'Group request left successfully')
     else:
         print "nope"
 
