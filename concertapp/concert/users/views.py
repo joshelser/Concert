@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.views.generic.create_update  import create_object
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django import forms
 
 from concertapp.concert.models  import *
@@ -119,7 +119,7 @@ def choose_group(request, user_id):
 
 @login_required
 def accept_request(request, user_id, group_name, user_name):
-    return render_to_response('accept_request.html', {'user_id':user_id, 'gname': group_name, 'user': user_name},
+    return render_to_response('accept_request.html', {'user_id':user_id, 'group': group_name, 'user': user_name},
             RequestContext(request))
 
 @login_required
@@ -131,15 +131,15 @@ def pending_requests(request, user_id, group_name):
     requests = UserGroupRequest.objects.filter(gname = group_name)
     return render_to_response('pending_requests.html', {'group':group_name, 'user_id':user_id, 'requests': requests}, RequestContext(request))
 
-def add_to_group(request, user_id):
+def add_to_group(request, user_id, group, user):
     if request.method == 'POST':
         group_name = request.POST['group_name']
         user_name = request.POST['user_name']
         user = User.objects.get(username = user_name)
         g = Group.objects.get(name = group_name)
         user.objects.groups.add(g)
-
-        return pending_requests(request, user_id)
+        url = '/groups/'+group+'/pending_requests/'
+        return HttpResponseRedirect(url)
 
     
 

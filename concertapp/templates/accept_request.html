@@ -2,10 +2,10 @@
 
 {% block content %}
 <div>
-    <form method="POST" action="{% url add_to_group user_id %}">
+    <form method="POST" action="{% url add_to_group user_id group user %}">
         <p>Are you sure you want to accept this request?</p>
         <br />
-        <input type="hidden" name="group_name" value="{{ gname }}" />
+        <input type="hidden" name="group_name" value="{{ group }}" />
         <input type="hidden" name="user_name" value="{{ user }}" />
         <input type="submit" name="Accept" value="accept" />
     </form>
