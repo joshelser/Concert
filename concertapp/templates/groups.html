@@ -4,10 +4,11 @@
 	<h1>Your Groups: {{ length }}</h1>
     {% for g in groups %}
         <p>{{ g }}</p>
+        <a href='{% url pending_requests user_id g %}'>Pending Requests</a>
     {% endfor %}
 
     {% if show_create %}
+        <br />
         <a href='{% url create_group user_id %}'>Add Group</a> 
-    {% endif %}
-        <a href='{% url pending_requests user_id %}'>Pending Requests</a> 
+    {% endif %} 
 {% endblock %}
