@@ -9,15 +9,6 @@ from concertapp.audio import audioFormats
 
 import os, tempfile
 
-class Blogpost(models.Model):
-    title = models.CharField(max_length=255)
-    content = models.TextField()
-    author = models.ForeignKey(User, related_name='posts')
-    created_on = models.DateTimeField(auto_now_add=True)
-    
-    def __unicode__(self):
-        return self.title
-
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
@@ -25,10 +16,10 @@ class AudioSegment(models.Model):
 
 class UserGroup(models.Model):
     gname = models.CharField(max_length = 80, unique = True)
-    admin = models.ForeignKey(User)
+    admin = models.ForeignKey(User, related_name = 'administrator')
 
 class UserGroupRequest(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name = 'group_member')
     gname = models.CharField(max_length = 80)
 
 class Tag(models.Model):
@@ -40,7 +31,7 @@ class Tag(models.Model):
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name = 'author')
     time = models.DateTimeField(auto_now_add = True)
     segment = models.OneToOneField('AudioSegment', null = True)
     tag = models.OneToOneField('Tag', null = True)
@@ -48,7 +39,7 @@ class Comment(models.Model):
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
     wavfile = models.FileField(upload_to = 'audio/')
-    user = models.ForeignKey(User, related_name = 'audio')
+    user = models.ForeignKey(User, related_name = 'uploader')
     waveform = models.ImageField(upload_to = 'images/')
 
     def mp3_to_wav(self, originalFile):
@@ -104,5 +95,3 @@ class Audio(models.Model):
             return True
         else:
             return False
-   
-admin.site.register(Blogpost)

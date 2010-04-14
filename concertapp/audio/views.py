@@ -10,7 +10,7 @@ from django import forms
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.models  import *
-from concertapp.forms   import BlogpostForm, RegistrationForm, UploadFileForm
+from concertapp.forms   import RegistrationForm, UploadFileForm
 
 from concertapp.audio import audioFormats
 from concertapp.audio.waveform import *

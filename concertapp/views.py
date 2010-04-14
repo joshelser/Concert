@@ -11,27 +11,6 @@ from django import forms
 from django.conf import settings
 
 from concertapp.models  import *
-from concertapp.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
 
-
-import os, tempfile
-
-def posts(request):
-    posts = Blogpost.objects.all()
-
-    return render_to_response("posts.html", {
-        'posts': posts },
-        RequestContext(request))
-    
-def create_post(request):
-    return create_object(request,template_name='edit_post.html',
-                         post_save_redirect='/',
-                         form_class=BlogpostForm)
-
-@login_required
-def create_ajaxy_post(request):
-    form = BlogpostForm()
-    return direct_to_template(request,
-                              template='edit_ajaxy_post.html',
-                              extra_context={'form':form} )
-
+def index(request):
+    return render_to_response('index.html', {}, RequestContext(request))
