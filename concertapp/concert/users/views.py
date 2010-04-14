@@ -97,15 +97,15 @@ def create_group(request, user_id):
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         if form.is_valid():
-                gname = form.cleaned_data['gname']
-                new_group = UserGroup(gname = gname, admin = request.user)
-                new_group.save()
-                g = Group(name = gname)
-                g.save()
-                request.user.groups.add(g)
-                return groups(request, user_id)
-                 #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
-                return HttpResponseRedirect('/users/'+user_id+'/groups/')
+            gname = form.cleaned_data['gname']
+            new_group = UserGroup(gname = gname, admin = request.user)
+            new_group.save()
+            g = Group(name = gname)
+            g.save()
+            request.user.groups.add(g)
+            return groups(request, user_id)
+            #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
+            return HttpResponseRedirect('/users/'+user_id+'/groups/')
     else:
         form = CreateGroupForm()
 
