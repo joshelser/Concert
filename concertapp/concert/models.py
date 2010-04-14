@@ -27,10 +27,6 @@ class UserGroup(models.Model):
     gname = models.CharField(max_length = 80, unique = True)
     admin = models.ForeignKey(User)
 
-class UserGroupMembers(models.Model):
-    user = models.ForeignKey(User)
-    group = models.ForeignKey(UserGroup)
-
 class UserGroupRequest(models.Model):
     user = models.ForeignKey(User)
     gname = models.CharField(max_length = 80)
