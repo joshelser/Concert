@@ -126,11 +126,25 @@ def accept_request(request, user_id, group_name, user_name):
 
 @login_required
 def manage_group(request, user_id, group_name):
+    group = UserGroup.objects.get(gname = group_name)
+
+    # Check to see if the user is also the admin
+    if int(user_id) != int(group.admin_id):
+        return HttpResponse("<html><body><h3>Insufficient\
+        permission</h3></body></html>")
+
     return render_to_response('manage_group.html', {'group': group_name,
         'user_id':user_id}, RequestContext(request))
 
 @login_required
 def pending_requests(request, user_id, group_name):
+    group = UserGroup.objects.get(gname = group_name)
+
+    # Check to see if the user is also the admin
+    if int(user_id) != int(group.admin_id):
+        return HttpResponse("<html><body><h3>Insufficient\
+        permission</h3></body></html>")
+
     requests = UserGroupRequest.objects.filter(gname = group_name)
     return render_to_response('pending_requests.html', {'group':group_name,
         'user_id':user_id, 'requests': requests}, RequestContext(request))
