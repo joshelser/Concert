@@ -9,11 +9,11 @@ from django import forms
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from concertapp.concert.models  import *
-from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm
+from concertapp.models  import *
+from concertapp.forms   import BlogpostForm, RegistrationForm, UploadFileForm
 
-from concertapp.concert.audio import audioFormats
-from concertapp.concert.audio.waveform import *
+from concertapp.audio import audioFormats
+from concertapp.audio.waveform import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 import os, tempfile

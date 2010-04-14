@@ -87,7 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.markup',
-    'concertapp.concert',
+    'concertapp',
     #'concertapp.api',
 )
 

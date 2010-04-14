@@ -11,7 +11,7 @@ from django import forms
 
 from django.conf import settings
 
-from concertapp.concert.models  import *
+from concertapp.models  import *
 
 def groups(request, message = None):
     groups = Group.objects.all()

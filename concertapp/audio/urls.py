@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('concertapp.concert.audio.views',
+urlpatterns = patterns('concertapp.audio.views',
     # Audio
     url(r'^$', 'audio', name='audio'),
     url(r'^upload/$', 'upload_audio', name='upload_audio'),

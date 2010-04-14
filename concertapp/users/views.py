@@ -8,8 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django import forms
 
-from concertapp.concert.models  import *
-from concertapp.concert.forms   import RegistrationForm, CreateGroupForm
+from concertapp.models  import *
+from concertapp.forms   import RegistrationForm, CreateGroupForm
 from django.contrib.auth.forms import PasswordChangeForm
 
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL

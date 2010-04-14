@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('concertapp.concert.users.views',
+urlpatterns = patterns('concertapp.users.views',
     # Users
     url(r'^$', 'users', name='users'),
     url(r'^(\d+)/$', 'view_user', name='view_user'),

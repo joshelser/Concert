@@ -10,8 +10,8 @@ from django import forms
 
 from django.conf import settings
 
-from concertapp.concert.models  import *
-from concertapp.concert.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
+from concertapp.models  import *
+from concertapp.forms   import BlogpostForm, RegistrationForm, UploadFileForm, CreateGroupForm
 
 
 import os, tempfile
