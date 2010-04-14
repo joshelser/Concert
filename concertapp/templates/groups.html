@@ -3,9 +3,8 @@
 {% block content %}
 	<h1>Your Groups: {{ length }}</h1>
     {% for g in groups %}
-        <div>
+        <div style="border: 1px dashed blue; margin-bottom: 15px; padding: 10px; width: auto;">
             <p>{{ g }}</p>
-            <a href='{% url pending_requests user_id g %}'>Pending Requests</a>
         </div>
     {% endfor %}
 
