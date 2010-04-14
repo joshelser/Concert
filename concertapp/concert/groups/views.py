@@ -54,5 +54,3 @@ def request_to_join_group(request):
         print "nope"
 
 
-
-

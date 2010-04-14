@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Pending Requests:</h1>
+    {% for r in requests %}
+    <div>
+        <a href="{% url accept_request user_id group r.user.username %}">r.user.username</a> 
+    </div>
+    {% endfor %}
+{% endblock %}
