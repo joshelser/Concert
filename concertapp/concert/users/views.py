@@ -82,6 +82,7 @@ def groups(request, user_id):
     for group in user.groups.all():
         groups.append(group.name)
 
+    # Only show the add group link if it's your page
     # Need to cast the user_id to an int
     if request.user.id == int(user_id):
         show_create = True
@@ -115,21 +116,24 @@ def create_group(request, user_id):
 @login_required
 def choose_group(request, user_id):
     groups = UserGroup.objects.filter(admin = request.user)
-    return render_to_response('choose_group.html', {'groups': groups, 'user_id': user_id, 'length': len(groups)}, RequestContext(request))
+    return render_to_response('choose_group.html', {'groups': groups, 'user_id':
+        user_id, 'length': len(groups)}, RequestContext(request))
 
 @login_required
 def accept_request(request, user_id, group_name, user_name):
-    return render_to_response('accept_request.html', {'user_id':user_id, 'group': group_name, 'user': user_name},
-            RequestContext(request))
+    return render_to_response('accept_request.html', {'user_id':user_id,
+        'group': group_name, 'user': user_name}, RequestContext(request))
 
 @login_required
 def manage_group(request, user_id, group_name):
-    return render_to_response('manage_group.html', {'group': group_name, 'user_id':user_id}, RequestContext(request))
+    return render_to_response('manage_group.html', {'group': group_name,
+        'user_id':user_id}, RequestContext(request))
 
 @login_required
 def pending_requests(request, user_id, group_name):
     requests = UserGroupRequest.objects.filter(gname = group_name)
-    return render_to_response('pending_requests.html', {'group':group_name, 'user_id':user_id, 'requests': requests}, RequestContext(request))
+    return render_to_response('pending_requests.html', {'group':group_name,
+        'user_id':user_id, 'requests': requests}, RequestContext(request))
 
 def add_to_group(request, user_id, group, user):
     if request.method == 'POST':
