@@ -101,4 +101,36 @@ def create_group(request, user_id):
         form = CreateGroupForm()
     return render_to_response('create_group.html', {'form': form, 'user_id': user_id})
 
+@login_required
+def choose_group(request, user_id):
+    groups = UserGroup.objects.filter(admin = request.user)
+    return render_to_response('choose_group.html', {'groups': groups, 'user_id': user_id, 'length': len(groups)}, RequestContext(request))
+
+@login_required
+def accept_request(request, user_id, group_name, user_name):
+    return render_to_response('accept_request.html', {'user_id':user_id, 'gname': group_name, 'user': user_name},
+            RequestContext(request))
+
+@login_required
+def manage_group(request, user_id, group_name):
+    return render_to_response('manage_group.html', {'group': group_name, 'user_id':user_id}, RequestContext(request))
+
+@login_required
+def pending_requests(request, user_id, group_name):
+    requests = UserGroupRequest.objects.filter(gname = group_name)
+    return render_to_response('pending_requests.html', {'group':group_name, 'user_id':user_id, 'requests': requests}, RequestContext(request))
+
+def add_to_group(request, user_id):
+    if request.method == 'POST':
+        group_name = request.POST['group_name']
+        user_name = request.POST['user_name']
+        user = User.objects.get(username = user_name)
+        g = Group.objects.get(name = group_name)
+        user.objects.groups.add(g)
+
+        return pending_requests(request, user_id)
+
+    
+
+
 
