@@ -13,7 +13,7 @@ class CreateGroupForm(ModelForm):
     class Meta:
         model = UserGroup
         exclude = ('admin')
-
+ 
 class RegistrationForm(ModelForm):
     username = forms.CharField(label='username',
                         max_length=30,

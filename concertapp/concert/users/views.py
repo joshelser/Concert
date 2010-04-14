@@ -10,6 +10,7 @@ from django import forms
 
 from concertapp.concert.models  import *
 from concertapp.concert.forms   import RegistrationForm, CreateGroupForm
+from django.contrib.auth.forms import PasswordChangeForm
 
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
@@ -57,9 +58,9 @@ def login_user(request):
                 # Redirect to the requested page
                 return HttpResponseRedirect(redirect_url)
             else:
-                return HttpResponse('<h1>Not Active</h1>')#return render_to_response('login.html', {'form': form})
+                return HttpResponse('<h1>Not Active</h1>')
         else:
-            return HttpResponse('<h1>No user</h1>')#return render_to_response('login.html', {'form': form})
+            return HttpResponse('<h1>No user</h1>')
 
     # Use the default post login redirect
     url = LOGIN_REDIRECT_URL
@@ -74,6 +75,31 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return HttpResponse('<h1>You were successfully logged out</h1><p><a href="/">Home</a></p>')
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        f = PasswordChangeForm(request.user, request.POST)
+
+        if f.is_valid():
+            # Get the user
+            user = User.objects.get(pk = request.user.id)
+
+            # Set the new password
+            user.set_password(f.cleaned_data['new_password1'])
+
+            # Save the user
+            user.save()
+
+            return HttpResponseRedirect('/')
+        else:
+            print repr(f.errors)
+    else:
+        f = PasswordChangeForm(request.user)
+    
+    return render_to_response('change_password.html', {'form': f},
+            RequestContext(request))
+
 
 @login_required
 def groups(request, user_id):
