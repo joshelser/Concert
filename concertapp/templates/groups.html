@@ -3,12 +3,17 @@
 {% block content %}
 	<h1>Your Groups: {{ length }}</h1>
     {% for g in groups %}
-        <p>{{ g }}</p>
-        <a href='{% url pending_requests user_id g %}'>Pending Requests</a>
+        <div>
+            <p>{{ g }}</p>
+            <a href='{% url pending_requests user_id g %}'>Pending Requests</a>
+        </div>
     {% endfor %}
 
+    <br />
+
+    <p><a href="{% url choose_group user_id %}">Manage my groups</a></p>
+
     {% if show_create %}
-        <br />
         <p><a href='{% url create_group user_id %}'>Add Group</a></p>
     {% endif %} 
 {% endblock %}
