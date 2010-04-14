@@ -81,7 +81,16 @@ def groups(request, user_id):
     groups = list()
     for group in user.groups.all():
         groups.append(group.name)
-    return render_to_response("groups.html", {'groups': groups, 'length': len(groups), 'user_id': user_id},RequestContext(request))
+
+    # Need to cast the user_id to an int
+    if request.user.id == int(user_id):
+        show_create = True
+    else:
+        show_create = None
+
+    return render_to_response("groups.html", {'groups': groups, 'length':
+        len(groups), 'user_id': user_id, 'show_create': show_create},
+        RequestContext(request))
 
 @login_required
 def create_group(request, user_id):
@@ -96,9 +105,11 @@ def create_group(request, user_id):
                 request.user.groups.add(g)
                 return groups(request, user_id)
                  #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
-                #return HttpResponseRedirect('/groups/')
+                return HttpResponseRedirect('/users/'+user_id+'/groups/')
     else:
         form = CreateGroupForm()
-    return render_to_response('create_group.html', {'form': form, 'user_id': user_id})
+
+    return render_to_response('create_group.html', {'form': form,
+        'user_id': user_id})
 
 
