@@ -16,7 +16,7 @@ from concertapp.concert.models  import *
 def groups(request, message = None):
     groups = Group.objects.all()
 
-    if request.GET['message']:
+    if request.GET.__contains__('message'):
         message = request.GET['message']
 
     return render_to_response('all_groups.html', {'groups': groups, 'message': message},
