@@ -54,7 +54,6 @@ def upload_audio(request):
             # Then add the audio instance to the Form instance
             form = UploadFileForm(request.POST, request.FILES, instance = audio)
         else:
-            print repr(request.FILES['wavfile'])
             # We need to convert the file
             if filetype == 'audio/mpeg':
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
@@ -74,22 +73,24 @@ def upload_audio(request):
             # Save the form
             form.save()
 
-            # Open up the file in temp and in media
-            actual_file = open(wavFileName, 'r')
-            dest_file = open(os.path.join(MEDIA_ROOT, str(audio.wavfile)), 'w')
+            # Don't need to copy the file over if it's a wav
+            if filetype != 'audio/x-wav':
+                # Open up the file in temp and in media
+                actual_file = open(wavFileName, 'r')
+                dest_file = open(os.path.join(MEDIA_ROOT, str(audio.wavfile)), 'w')
 
-            # Buffered read into the file in the media dir
-            data = actual_file.read(CHUNKSIZE)
-            while data != '':
-                dest_file.write(data)
+                # Buffered read into the file in the media dir
                 data = actual_file.read(CHUNKSIZE)
+                while data != '':
+                    dest_file.write(data)
+                    data = actual_file.read(CHUNKSIZE)
 
-            # Close the file handles
-            actual_file.close()
-            dest_file.close()
+                # Close the file handles
+                actual_file.close()
+                dest_file.close()
 
-            # Remove the file from /tmp
-            os.remove(wavFileName)
+                # Remove the file from /tmp
+                os.remove(wavFileName)
 
             # Generate the waveform onto disk
             generate_waveform(audio)
