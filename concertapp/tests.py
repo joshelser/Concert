@@ -1,5 +1,6 @@
 import unittest
 
+from django.test import TestCase
 from django.test.client import Client
 from django.conf import settings
 
@@ -7,20 +8,20 @@ from concertapp.models import *
 
 import os
 
-class ConcertTest(unittest.TestCase):
-    #fixtures = ['users']
+class ConcertTest(TestCase):
+    fixtures = ['user.json']
 
     def setUp(self):
         self.client = Client()
 
         # An alternative to not getting a fixture to load...
-        u = User.objects.get(username = 'testuser')
-        u.set_password('test')
-        u.save()
+        #u = User.objects.get(username = 'test')
+        #u.set_password('test')
+        #u.save()
 
     def login(self, password='test'):
         response = self.client.post('/users/login/', {
-            'username': 'testuser',
+            'username': 'test',
             'password': password,
             'next': settings.LOGIN_REDIRECT_URL,
             }
@@ -61,9 +62,10 @@ class AudioTest(ConcertTest):
 
     def test_wav_upload_audio(self):
         # Login
-        login = self.client.login(username = 'testuser', password = 'test')
+        super(AudioTest, self).login()
+        #login = self.client.login(username = 'testuser', password = 'test')
 
-        self.assertTrue(login)
+        #self.assertTrue(login)
 
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.wav'))
         response = self.client.post('/audio/upload/', {'wavfile': f})
@@ -79,9 +81,11 @@ class AudioTest(ConcertTest):
 
     def test_ogg_upload_audio(self):
         # Login
-        login = self.client.login(username = 'testuser', password = 'test')
+        super(AudioTest, self).login()
 
-        self.assertTrue(login)
+        #login = self.client.login(username = 'testuser', password = 'test')
+
+        #self.assertTrue(login)
 
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.ogg'))
         response = self.client.post('/audio/upload/', {'wavfile': f})
