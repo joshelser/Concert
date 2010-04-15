@@ -49,6 +49,7 @@ def upload_audio(request):
 
         form = None
         wavFileName = None
+        extension = None
 
         # If it's already a wav file
         if filetype == 'audio/x-wav':
