@@ -21,21 +21,42 @@ class ConcertTest(unittest.TestCase):
     def login(self, password='test'):
         response = self.client.post('/users/login/', {
             'username': 'testuser',
-            'password': password
+            'password': password,
+            'next': settings.LOGIN_REDIRECT_URL,
             }
         )
 
         self.assertEquals(response.status_code, 302)
-        self.asssert_(response['Location'].endswith(settings.LOGIN_REDIRECT_URL))
+        self.assert_(response['Location'].endswith(settings.LOGIN_REDIRECT_URL))
 
 
 class UserTest(ConcertTest):
     #fixtures = ['users.json']
-    
-    def test_sanity(self):
+
+    def test_login_needed(self):
         response = self.client.get('/')
 
+        self.assertEquals(response.status_code, 302)
+        self.assert_(response['Location'].endswith('?next=/'))
+    
+    def test_login(self):
+        response = self.client.get('/')
+
+        self.assertEquals(response.status_code, 302)
+        self.assert_(response['Location'].endswith('?next=/'))
+
+        super(UserTest, self).login()
+        #response = self.client.post('/users/login/', {'username': 'testuser',
+        #    'password': 'test', 'next': '/'})
+
+        #print response['Location']
+        #self.assertEquals(response.status_code, 302)
+        #self.assert_(response['Location'].endswith('/'))
+
+        response = self.client.get('/')
+        print response['Location']
         self.assertEquals(response.status_code, 200)
+
 
 class AudioTest(ConcertTest):
     #fixtures = ['users.json']
@@ -58,8 +79,7 @@ class AudioTest(ConcertTest):
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
-    def test_view_wav_audio(self):
-        # Database is cleared after every test
+        # View the audio file
         response = self.client.get('/audio/1/')
 
         self.assertEquals(response.status_code, 200)
@@ -77,8 +97,7 @@ class AudioTest(ConcertTest):
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
-    def test_view_ogg_audio(self):
-        # Database is cleared after every test
+        # View the audio file
         response = self.client.get('/audio/1/')
 
         self.assertEquals(response.status_code, 200)
