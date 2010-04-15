@@ -10,7 +10,8 @@ from django import forms
 
 from django.conf import settings
 
-from concertapp.models  import *
+from concertapp.models import *
 
+@login_required
 def index(request):
     return render_to_response('index.html', {}, RequestContext(request))
