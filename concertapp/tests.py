@@ -39,6 +39,11 @@ class UserTest(ConcertTest):
 
 class AudioTest(ConcertTest):
     #fixtures = ['users.json']
+    
+    def test_view_audio(self):
+        response = self.client.get('/audio/')
+
+        self.assertEquals(response.status_code, 200)
 
     def test_wav_upload_audio(self):
         # Login
@@ -53,6 +58,12 @@ class AudioTest(ConcertTest):
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
+    def test_view_wav_audio(self):
+        # Database is cleared after every test
+        response = self.client.get('/audio/1/')
+
+        self.assertEquals(response.status_code, 200)
+
     def test_ogg_upload_audio(self):
         # Login
         login = self.client.login(username = 'testuser', password = 'test')
@@ -66,3 +77,8 @@ class AudioTest(ConcertTest):
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
+    def test_view_ogg_audio(self):
+        # Database is cleared after every test
+        response = self.client.get('/audio/1/')
+
+        self.assertEquals(response.status_code, 200)
