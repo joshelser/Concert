@@ -163,6 +163,22 @@ def manage_group(request, user_id, group_name):
         'user_id':user_id}, RequestContext(request))
 
 @login_required
+def remove_user(request, user_id, group_name):
+    users = User.objects.filter(groups__name=group_name).exclude(id = user_id)
+    return render_to_response('remove_user.html', {'group':group_name,
+        'user_id':user_id, 'users': users}, RequestContext(request))
+
+@login_required
+def remove(request, user_id, group_name, user):
+    return render_to_response('delete_user.html', {'user_id':user_id,
+        'group': group_name, 'user': user}, RequestContext(request))
+
+def remove_from_group(request,user_id, group_name, user):
+    User.objects.get(username = user).groups.remove(Group.objects.get(name = group_name))
+    url = '/users/'+user_id+'/groups/manage/'+group_name+'/remove_user/'
+    return HttpResponseRedirect(url)
+
+@login_required
 def pending_requests(request, user_id, group_name):
     group = UserGroup.objects.get(gname = group_name)
 

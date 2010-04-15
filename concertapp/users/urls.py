@@ -15,6 +15,9 @@ urlpatterns = patterns('concertapp.users.views',
     url(r'^(\d+)/groups/manage/(.+)/accept_request/(.+)/submit/$', 'add_to_group', name='add_to_group'),
     url(r'^(\d+)/groups/manage/(.+)/accept_request/(.+)/$', 'accept_request', name='accept_request'),
     url(r'^(\d+)/groups/manage/(.+)/pending_requests/$', 'pending_requests', name='pending_requests'),
+    url(r'^(\d+)/groups/manage/(.+)/remove_user/$', 'remove_user', name='remove_user'),
+    url(r'^(\d+)/groups/manage/(.+)/remove/(.+)/submit/$', 'remove_from_group', name='remove_from_group'),
+    url(r'^(\d+)/groups/manage/(.+)/remove/(.+)/$', 'remove', name='remove'),
     url(r'^(\d+)/groups/manage/(.+)/$', 'manage_group', name='manage_group')
 
 )
