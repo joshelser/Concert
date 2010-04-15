@@ -46,15 +46,8 @@ class UserTest(ConcertTest):
         self.assert_(response['Location'].endswith('?next=/'))
 
         super(UserTest, self).login()
-        #response = self.client.post('/users/login/', {'username': 'testuser',
-        #    'password': 'test', 'next': '/'})
-
-        #print response['Location']
-        #self.assertEquals(response.status_code, 302)
-        #self.assert_(response['Location'].endswith('/'))
 
         response = self.client.get('/')
-        print response['Location']
         self.assertEquals(response.status_code, 200)
 
 
