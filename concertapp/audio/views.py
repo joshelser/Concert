@@ -125,11 +125,14 @@ def generate_waveform(audio):
     # Create the wav object
     wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
     length = wavObj.getLength()
-    wavObj.generateWaveform(os.path.join(MEDIA_ROOT,
-        'images/'+str(audio.wavfile)+'.png'), 5 * length, 585)
+
+    # Name of the image file
+    imgPath = 'images/'+str(audio.wavfile) + '_' + str(5 * length) + '.png'
+
+    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, imgPath), 5 * length, 585)
 
     # Save the path relative to the media_dir
-    audio.waveform = os.path.join('images', str(audio.wavfile)+'.png')
+    audio.waveform = imgPath
     audio.save()
 
 def delete_audio(request, audio_id):

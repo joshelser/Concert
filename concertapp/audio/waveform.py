@@ -292,8 +292,6 @@ class WaveformImage(object):
         mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
         self.image.paste(255, mask)
 
-
-
         self.image.save(filename,transparency=255)
  
  
