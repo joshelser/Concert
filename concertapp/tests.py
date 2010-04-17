@@ -54,7 +54,6 @@ class UserTest(ConcertTest):
         #self.assert_(response['Location'].endswith('/'))
 
         response = self.client.get('/')
-        print response['Location']
         self.assertEquals(response.status_code, 200)
 
 
