@@ -76,9 +76,10 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
-#    os.path.join(BASE_DIR, 'templates'),
     os.path.join(BASE_DIR, 'adams_templates'),
     os.path.join(BASE_DIR, '../../piston/templates'),
+    os.path.join(BASE_DIR, 'templates'),
+    
 )
 
 INSTALLED_APPS = (

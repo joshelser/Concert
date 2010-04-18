@@ -1,0 +1,17 @@
+#user_container {
+  width:500px;
+  margin:auto;
+}
+
+.user {
+  margin-top:20px;
+
+}
+
+.add_user {
+  margin-top:50px;
+}
+
+.add_user > a {
+  text-decoration:underline;
+}
