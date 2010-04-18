@@ -2,11 +2,11 @@ from django.forms import ModelForm
 from django import forms
 #from django.core import validators
 
-from concertapp.models import User, Audio, UserGroup
+from concertapp.models import User, Audio, GroupAdmin
 
 class CreateGroupForm(ModelForm):
     class Meta:
-        model = UserGroup
+        model = GroupAdmin
         exclude = ('admin')
  
 class RegistrationForm(ModelForm):

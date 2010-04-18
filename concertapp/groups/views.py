@@ -46,6 +46,12 @@ def request_to_join_group(request):
             return HttpResponse(
                     '<h1>Error</h1><p>A request already exists</p>')
 
+        my_groups = request.user.groups.all()
+
+        if group in my_groups:
+            return HttpResponse(
+                    '<h1>Error</h1><p>You are already a member</p>')
+
         ug_request = UserGroupRequest(user = request.user, group = group)
 
         ug_request.save()

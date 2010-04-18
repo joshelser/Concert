@@ -126,11 +126,14 @@ def create_group(request, user_id):
         form = CreateGroupForm(request.POST)
         if form.is_valid():
             gname = form.cleaned_data['gname']
-            new_group = UserGroup(gname = gname, admin = request.user)
+
+            new_group = GroupAdmin(gname = gname, admin = request.user)
             new_group.save()
             g = Group(name = gname)
             g.save()
+
             request.user.groups.add(g)
+
             return groups(request, user_id)
             #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
             return HttpResponseRedirect('/users/'+user_id+'/groups/')
@@ -142,7 +145,7 @@ def create_group(request, user_id):
 
 @login_required
 def choose_group(request, user_id):
-    groups = UserGroup.objects.filter(admin = request.user)
+    groups = GroupAdmin.objects.filter(admin = request.user)
     return render_to_response('choose_group.html', {'groups': groups, 'user_id':
         user_id, 'length': len(groups)}, RequestContext(request))
 
@@ -153,7 +156,7 @@ def accept_request(request, user_id, group_name, user_name):
 
 @login_required
 def manage_group(request, user_id, group_name):
-    group = UserGroup.objects.get(gname = group_name)
+    group = GroupAdmin.objects.get(gname = group_name)
 
     # Check to see if the user is also the admin
     if int(user_id) != int(group.admin_id):
@@ -181,7 +184,7 @@ def remove_from_group(request,user_id, group_name, user):
 
 @login_required
 def pending_requests(request, user_id, group_name):
-    group = UserGroup.objects.get(gname = group_name)
+    group = GroupAdmin.objects.get(gname = group_name)
 
     # Check to see if the user is also the admin
     if int(user_id) != int(group.admin_id):
