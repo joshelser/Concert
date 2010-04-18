@@ -14,4 +14,6 @@ from concertapp.models import *
 
 @login_required
 def index(request):
-    return render_to_response('index.html', {}, RequestContext(request))
+    group_list = Group.objects.all()
+
+    return render_to_response('index.html', {'group_list': group_list}, RequestContext(request))

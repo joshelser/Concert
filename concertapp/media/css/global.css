@@ -66,12 +66,12 @@ form > input, fieldset > input {
   padding:0 8px 0 8px;
 	height:28px;
 }
-.clear {
-	clear:both;
-}
-a {
-	color:#333;
-}
+
+.error {color:red;}
+
+.clear {clear:both;}
+
+a {color:#333;}
 
 /*index*/
 
@@ -100,7 +100,7 @@ a {
 
 #header a {
   float:right;
-  margin:4px 10px;
+  margin:10px 10px;
 }
 
 #inner_wrapper {
@@ -113,7 +113,7 @@ a {
 	position:absolute;	
 	top:50%;
 	margin-top:-40px;
-	width:140px;
+	width:100px;
 	height:60px;
 	float:left;
 }
@@ -121,6 +121,8 @@ a {
 #play_button{float:left;}
 
 #edit_button{float:right;}
+
+.control_button {background:url(/media/graphics/button_reg.png) repeat-x;}
 
 .control_button:active {background:url(/media/graphics/button_press.png) repeat-x;}
 
@@ -141,7 +143,7 @@ a {
 	-moz-border-radius-bottomleft:15px;
 	-webkit-border-bottom-left-radius:15px;
 	height:3px;
-	width:140px;
+  width:100%;
 }
 
 #handle{
@@ -309,13 +311,18 @@ a {
 	background-color:#f4f4f4;
 	-moz-box-shadow:0px 1px 10px #999;	
 	overflow:hidden;
+  width:100%;
+}
+
+#login_container .error {
+  text-align:center;
+  margin-top:10px;
 }
 
 #login_wrapper {
 	width:700px;
 	margin:auto;
-	margin-top:43px;
-	
+	margin-top:33px;
 }
 
 #login {margin-top:7px;}
@@ -328,12 +335,27 @@ a {
 }
 
 #register_wrapper {
-	width:650px;
+	width:400px;
 	margin:auto;
 }
+
 
 #register_wrapper p {
 	line-height:23px;
 	text-align:center;
 	margin-top:20px;
 }
+
+#register_wrapper label {
+  margin-top:15px;
+  width:200px;
+  float:left;
+}
+
+#register_wrapper input {
+  float:right;
+  margin-top:15px;
+}
+
+
+

@@ -2,6 +2,8 @@
 
 {% block content %}
 <div id = "login_container">
+
+  <p class = "error">{{ error }}</p>
 	<div id = "login_wrapper">
     <img id = "logo" src = "/media/graphics/logo_large.png"/>
     <form id = "login" method="POST" action="{% url login_user %}">

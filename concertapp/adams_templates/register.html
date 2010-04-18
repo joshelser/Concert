@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id = "login_container">
+
+  <p class = "error">{{ error }}</p>
+	<div id = "login_wrapper">
+    <img id = "logo" src = "/media/graphics/logo_large.png"/>
+    <form id = "login" method="POST" action="{% url login_user %}">
+        <input type = "text" name = "username" value = "User Name">
+        <input type = "password" name = "password" value = "Password" autocomplete="off">
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input type = "submit" name = "login" value = "Login">        
+    </form>
+        
+    <br class = "clear"/>
+       
+	</div>
+</div>
+
+<div id = "register_wrapper">
+  <form method="POST" action="/users/add/">
+    <label for="id_username">Username</label> <input id="id_username" type="text" name="username" maxlength="30" /> <br class = "clear"/>
+    <label for="id_email">Email</label> <input id="id_email" type="text" name="email" maxlength="30" />  <br class = "clear"/>
+    <label for="id_password1">Password </label> <input id="id_password1" type="password" name="password1" maxlength="60" /> <br class = "clear"/>
+    <label for="id_password1">Password Repeated</label><input id="id_password2" type="password" name="password2" maxlength="60" />  <br class = "clear"/>
+    <input type='submit' name='create' value='Create'></input>  <br class = "clear"/>
+  </form>
+</div>
+
+{% endblock %}
+

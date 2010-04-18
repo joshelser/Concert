@@ -28,24 +28,25 @@ def view_user(request, user_id):
             RequestContext(request))
 
 def create_user(request):
-    #if request.user.is_authenticated():
-        # They already have an account; don't let them register again
+    # if request.user.is_authenticated():
+    # They already have an account; don't let them register again
     #    return render_to_response('create_user.html', {'has_account': True})
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-                new_name = form.cleaned_data['username']
-                new_email = form.cleaned_data['email']
-                new_password1 = form.cleaned_data['password1']
-                new_password2 = form.cleaned_data['password2']
-                new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
-                new_profile.save()
-                return HttpResponseRedirect('/users/')
+            new_name = form.cleaned_data['username']
+            new_email = form.cleaned_data['email']
+            new_password1 = form.cleaned_data['password1']
+            new_password2 = form.cleaned_data['password2']
+            new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
+            new_profile.save()
+            return HttpResponseRedirect('/users/')
     else:
         form = RegistrationForm()
-    return render_to_response('create_user.html', {'form': form})
+    return render_to_response('register.html', {'form': form})
 
 def login_user(request):
+    error = ''
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -60,7 +61,7 @@ def login_user(request):
             else:
                 return HttpResponse('<h1>Not Active</h1>')
         else:
-            return HttpResponse('<h1>No user</h1>')
+            error = "Either the username doesn't exist, or the password you gave us isn't correct.  Give it another try.";
 
     # Use the default post login redirect
     url = LOGIN_REDIRECT_URL
@@ -70,11 +71,11 @@ def login_user(request):
         url = request.GET['next']
         
     # Render the login page with the appropriate page
-    return render_to_response('login.html', {'next': url})
+    return render_to_response('login.html', {'next': url, 'error': error})
 
 def logout_user(request):
     logout(request)
-    return HttpResponse('<h1>You were successfully logged out</h1><p><a href="/">Home</a></p>')
+    return HttpResponseRedirect('/users/login/')
 
 @login_required
 def change_password(request):
