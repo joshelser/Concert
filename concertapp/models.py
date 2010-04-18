@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
@@ -20,7 +20,8 @@ class UserGroup(models.Model):
 
 class UserGroupRequest(models.Model):
     user = models.ForeignKey(User, related_name = 'group_member')
-    gname = models.CharField(max_length = 80)
+    group = models.ForeignKey(Group) 
+    #gname = models.CharField(max_length = 80)
 
 class Tag(models.Model):
     segment = models.ForeignKey('AudioSegment')

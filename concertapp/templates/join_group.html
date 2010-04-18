@@ -5,7 +5,7 @@
     <form method="POST" action="{% url request_to_join_group %}">
         <p>Are you sure you want to join this group?</p>
         <br />
-        <input type="hidden" name="group_name" value="{{ group_name }}" />
+        <input type="hidden" name="group_id" value="{{ group.id }}" />
         <input type="submit" value="Join" name="join" />
     </form>
 </div>

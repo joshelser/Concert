@@ -23,33 +23,36 @@ def groups(request, message = None):
             RequestContext(request))
 
 @login_required
-def join_group(request, group_name):
-    return render_to_response('join_group.html', {'group_name': group_name},
+def join_group(request, group_id):
+    group = Group.objects.get(pk = group_id)
+    return render_to_response('join_group.html', {'group': group},
             RequestContext(request))
 
 @login_required
 def request_to_join_group(request):
     if request.method == 'POST':
-        group_name = request.POST['group_name']
+        group_id = request.POST['group_id']
+
+        # Get the group object
+        group = Group.objects.get(pk = group_id)
 
         # Make sure a request doesn't already exist for this user and group
         try:
             ug_requests = UserGroupRequest.objects.get(user = request.user,
-                    gname = group_name)
+                    group = group)
         except UserGroupRequest.DoesNotExist:
             pass
         else:
             return HttpResponse(
                     '<h1>Error</h1><p>A request already exists</p>')
 
-        ug_request = UserGroupRequest(user = request.user, gname = group_name)
+        ug_request = UserGroupRequest(user = request.user, group = group)
 
         ug_request.save()
 
         url = '/groups/?message=Group request left successfully'
 
         return HttpResponseRedirect(url)
-        #return groups(request, 'Group request left successfully')
     else:
         print "nope"
 
