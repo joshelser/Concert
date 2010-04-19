@@ -26,6 +26,18 @@ def index(request):
       # Use user's default group
       selected_group = request.user.groups.get(name = request.user.username)
       
-    # Get all of this group's
-
-    return render_to_response('index.html', {'group_list': group_list, 'selected_group': selected_group}, RequestContext(request))
+    # Get all of this group's tags
+    tag_list = Tag.objects.filter(group = selected_group)
+    
+    # Get selected tag, or just use default tag
+    try:
+      # use selected tag if one was specified
+      selected_tag_id = request.GET['selected_tag_id']
+      selected_tag = Tag.objects.get(pk = selected_tag_id)
+    # no tag was selected
+    except KeyError:
+      # Use default tag
+      selected_tag = Tag.objects.get(group = selected_group, tag = 'Uploads')
+    
+    
+    return render_to_response('index.html', {'group_list': group_list, 'selected_group': selected_group, 'tag_list' : tag_list, 'selected_tag' : selected_tag}, RequestContext(request))
