@@ -16,5 +16,14 @@ from concertapp.models import *
 def index(request):
     # Get all groups for which the current user is a member
     group_list = request.user.groups.all()
+    
+    # Get selected group, or just user's default group
+    try:
+      # Use group if one was specified
+      selected_group_id = request.GET['selected_group_id']
+      selected_group = request.user.groups.get(id = selected_group_id)
+    except KeyError:
+      # Use user's default group
+      selected_group = request.user.groups.get(name = request.user.username)
 
-    return render_to_response('index.html', {'group_list': group_list}, RequestContext(request))
+    return render_to_response('index.html', {'group_list': group_list, 'selected_group': selected_group}, RequestContext(request))

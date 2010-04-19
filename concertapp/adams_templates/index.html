@@ -40,7 +40,14 @@
               <h1>Groups</h1>
               <ul>
               {% for group in group_list%}
-                  <li><a href = "#"> {{ group.name }} </a></li>
+              
+                {% comment %} Add "selected" class to the currently selected group. {% endcomment %}
+                
+                {% ifequal group selected_group %}
+                    <li class="selected"><a href="?selected_group_id={{ group.id }}"> {{ group.name }} </a></li>
+                {% else %}
+                    <li><a href = "?selected_group_id={{ group.id }}"> {{ group.name }} </a></li>
+                {% endifequal %}
               {% endfor %}
               </ul>
             </div>
