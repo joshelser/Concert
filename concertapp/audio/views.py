@@ -109,6 +109,13 @@ def upload_audio(request):
 
             # Generate the waveform onto disk
             generate_waveform(audio)
+            
+            # Get audio duration in seconds
+            duration = get_duration(audio)
+            
+            # Create the initial audio segment
+            first_segment = AudioSegment(name = audio.filename, beginning = 0, end = duration, audio = audio)
+            
 
             return HttpResponseRedirect('/audio/')
         else:
@@ -134,6 +141,18 @@ def generate_waveform(audio):
     # Save the path relative to the media_dir
     audio.waveform = imgPath
     audio.save()
+
+###
+# get_duration
+# Returns the duration of the audio file associated with the passed-in audio object.
+#
+# @param      audio     The audio object.
+###
+def get_duration(audio):
+  # Create wav object
+  wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
+  # Get duration
+  return wavObj.getLength()
 
 def delete_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)

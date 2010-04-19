@@ -13,6 +13,7 @@ class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
+    audio = models.ForeignKey('Audio') # An audio segment is associated with a single audio object
 
 class GroupAdmin(models.Model):
     group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
