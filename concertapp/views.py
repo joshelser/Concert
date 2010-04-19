@@ -14,6 +14,10 @@ from concertapp.models import *
 
 @login_required
 def index(request):
+    
+    ###
+    #   Groups
+    ###
     # Get all groups for which the current user is a member
     group_list = request.user.groups.all()
     
@@ -25,7 +29,10 @@ def index(request):
     except KeyError:
       # Use user's default group
       selected_group = request.user.groups.get(name = request.user.username)
-      
+    
+    ###
+    #   Tags
+    ###
     # Get all of this group's tags
     tag_list = Tag.objects.filter(group = selected_group)
     
@@ -39,5 +46,16 @@ def index(request):
       # Use default tag
       selected_tag = Tag.objects.get(group = selected_group, tag = 'Uploads')
     
+    ###
+    #   AudioSegments
+    ###
+    # Get all of this tag's audio segments
+    segment_list = selected_tag.segments.all()
     
-    return render_to_response('index.html', {'group_list': group_list, 'selected_group': selected_group, 'tag_list' : tag_list, 'selected_tag' : selected_tag}, RequestContext(request))
+    return render_to_response('index.html', {
+        'group_list': group_list, 
+        'selected_group': selected_group, 
+        'tag_list' : tag_list, 
+        'selected_tag' : selected_tag,
+        'segment_list' : segment_list
+        }, RequestContext(request))

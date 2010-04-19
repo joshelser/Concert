@@ -14,6 +14,11 @@ class AudioSegment(models.Model):
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio') # An audio segment is associated with a single audio object
+    
+    def tag_list(self):
+      # Get all tags associated with this audio segment
+      tags = self.tag
+      print 'Tags: '+tags
 
 class GroupAdmin(models.Model):
     group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
