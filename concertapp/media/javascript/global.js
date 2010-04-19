@@ -28,6 +28,12 @@
     var $id = $(this).attr('id').split('-')[1];
     /* replace viewer image div with waveform image for this segment's audio file */
     $('div#viewer_image').load('/audio/'+$id+'/waveform/');
+    
+    /* remove "selected" class from currently selected segment row */
+    $('tr.segment_row.selected').removeClass('selected');
+    
+    /* Add "selected" class to row */
+    $(this).addClass('selected');
   });
 
 })();
