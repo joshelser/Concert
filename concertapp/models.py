@@ -17,8 +17,13 @@ class AudioSegment(models.Model):
     
     def tag_list(self):
       # Get all tags associated with this audio segment
-      tags = self.tag
-      print 'Tags: '+tags
+      tags = self.tag_set.all()
+      output = tags[0].tag
+      if len(tags) > 1 :
+        for i in range(len(tags))+1 :
+          output += ', '+tags[i]
+      return output
+        
 
 class GroupAdmin(models.Model):
     group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)

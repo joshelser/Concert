@@ -81,9 +81,9 @@
                     {% for segment in segment_list %}
                         <tr>
                             <td>{{ segment.tag_list }}</td>
-                            <td>a_label_sample</td>
-                            <td>a_date_tagged_sample</td>
-                            <td>a_uploaded_by_sample</td>
+                            <td>{{ segment.name }}</td>
+                            <td></td>
+                            <td>{{ segment.audio.user.username }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}
