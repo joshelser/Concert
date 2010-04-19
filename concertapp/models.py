@@ -15,13 +15,12 @@ class AudioSegment(models.Model):
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
 
 class GroupAdmin(models.Model):
-    gname = models.CharField(max_length = 80, unique = True)
+    group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
     admin = models.ForeignKey(User, related_name = 'administrator')
 
 class UserGroupRequest(models.Model):
     user = models.ForeignKey(User, related_name = 'group_member')
     group = models.ForeignKey(Group) 
-    #gname = models.CharField(max_length = 80)
 
 class Tag(models.Model):
     segment = models.ForeignKey('AudioSegment')

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Create an account</h1>
+<h1>Create an group</h1>
 <form method="POST" action="{% url create_group user_id %}">
     {{ form.as_p }}
     <input type='submit' name='create' value='Create'></input>

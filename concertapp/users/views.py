@@ -125,18 +125,18 @@ def create_group(request, user_id):
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         if form.is_valid():
-            gname = form.cleaned_data['gname']
+            gname = form.cleaned_data['group_name']
 
-            new_group = GroupAdmin(gname = gname, admin = request.user)
-            new_group.save()
             g = Group(name = gname)
             g.save()
+
+            new_group = GroupAdmin(group = g, admin = request.user)
+            new_group.save()
 
             request.user.groups.add(g)
 
             return groups(request, user_id)
             #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
-            return HttpResponseRedirect('/users/'+user_id+'/groups/')
     else:
         form = CreateGroupForm()
 
@@ -150,20 +150,20 @@ def choose_group(request, user_id):
         user_id, 'length': len(groups)}, RequestContext(request))
 
 @login_required
-def accept_request(request, user_id, group_name, user_name):
+def accept_request(request, user_id, group_id, new_user_id):
     return render_to_response('accept_request.html', {'user_id':user_id,
-        'group': group_name, 'user': user_name}, RequestContext(request))
+        'group_id': group_id, 'new_user_id': new_user_id}, RequestContext(request))
 
 @login_required
-def manage_group(request, user_id, group_name):
-    group = GroupAdmin.objects.get(gname = group_name)
+def manage_group(request, user_id, group_id):
+    group = GroupAdmin.objects.get(group = Group.objects.get(pk = group_id))
 
     # Check to see if the user is also the admin
     if int(user_id) != int(group.admin_id):
         return HttpResponse("<html><body><h3>Insufficient\
         permission</h3></body></html>")
 
-    return render_to_response('manage_group.html', {'group': group_name,
+    return render_to_response('manage_group.html', {'group_id': group_id,
         'user_id':user_id}, RequestContext(request))
 
 @login_required
@@ -183,27 +183,32 @@ def remove_from_group(request,user_id, group_name, user):
     return HttpResponseRedirect(url)
 
 @login_required
-def pending_requests(request, user_id, group_name):
-    group = GroupAdmin.objects.get(gname = group_name)
+def pending_requests(request, user_id, group_id):
+    group_admin = GroupAdmin.objects.get(group = Group.objects.get(pk = group_id))
 
     # Check to see if the user is also the admin
-    if int(user_id) != int(group.admin_id):
+    if int(user_id) != int(group_admin.admin.id):
         return HttpResponse("<html><body><h3>Insufficient\
         permission</h3></body></html>")
 
-    requests = UserGroupRequest.objects.filter(gname = group_name)
-    return render_to_response('pending_requests.html', {'group':group_name,
+    requests = UserGroupRequest.objects.filter(group = group_admin.group)
+    return render_to_response('pending_requests.html', {'group_id':group_id,
         'user_id':user_id, 'requests': requests}, RequestContext(request))
 
-def add_to_group(request, user_id, group, user):
+def add_to_group(request, user_id, group_id, new_user_id):
     if request.method == 'POST':
-        group_name = request.POST['group_name']
-        user_name = request.POST['user_name']
-        UserGroupRequest.objects.get(gname = group_name, user = User.objects.get(username = user_name)).delete()
-        user = User.objects.get(username = user_name)
-        g = Group.objects.get(name = group_name)
+        #group_id = request.POST['group_id']
+        #user_id = request.POST['user_id']
+
+        UserGroupRequest.objects.get(group = Group.objects.get(pk = group_id),
+                user = User.objects.get(pk = new_user_id)).delete()
+
+        user = User.objects.get(pk = new_user_id)
+        g = Group.objects.get(pk = group_id)
+
         user.groups.add(g)
-        url = '/users/'+user_id+'/groups/manage/'+group+'/pending_requests/'
+
+        url = '/users/'+user_id+'/groups/manage/'+group_id+'/pending_requests/'
         return HttpResponseRedirect(url)
 
     

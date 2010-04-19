@@ -5,7 +5,7 @@
     {% if requests %}
         {% for r in requests %}
         <div>
-            <a href="{% url accept_request user_id group r.user.username %}">{{ r.user.username }}</a> 
+            <a href="{% url accept_request user_id group_id r.user.id %}">{{ r.user.username }}</a> 
         </div>
         {% endfor %}
     {% else %}
@@ -14,5 +14,5 @@
         </div>
     {% endif %}
 
-    <p><a href="{% url manage_group user_id group %}">Back to group</a></p>
+    <p><a href="{% url manage_group user_id group_id %}">Back to group</a></p>
 {% endblock %}

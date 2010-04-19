@@ -12,12 +12,12 @@ urlpatterns = patterns('concertapp.users.views',
     url(r'^(\d+)/groups/$', 'groups', name='groups'),
     url(r'^(\d+)/groups/create$', 'create_group', name='create_group'),
     url(r'^(\d+)/groups/manage/$', 'choose_group', name='choose_group'),
-    url(r'^(\d+)/groups/manage/(.+)/accept_request/(.+)/submit/$', 'add_to_group', name='add_to_group'),
-    url(r'^(\d+)/groups/manage/(.+)/accept_request/(.+)/$', 'accept_request', name='accept_request'),
-    url(r'^(\d+)/groups/manage/(.+)/pending_requests/$', 'pending_requests', name='pending_requests'),
-    url(r'^(\d+)/groups/manage/(.+)/remove_user/$', 'remove_user', name='remove_user'),
-    url(r'^(\d+)/groups/manage/(.+)/remove/(.+)/submit/$', 'remove_from_group', name='remove_from_group'),
-    url(r'^(\d+)/groups/manage/(.+)/remove/(.+)/$', 'remove', name='remove'),
-    url(r'^(\d+)/groups/manage/(.+)/$', 'manage_group', name='manage_group')
+    url(r'^(\d+)/groups/manage/(\d+)/accept_request/(\d+)/submit/$', 'add_to_group', name='add_to_group'),
+    url(r'^(\d+)/groups/manage/(\d+)/accept_request/(\d+)/$', 'accept_request', name='accept_request'),
+    url(r'^(\d+)/groups/manage/(\d+)/pending_requests/$', 'pending_requests', name='pending_requests'),
+    url(r'^(\d+)/groups/manage/(\d+)/remove_user/$', 'remove_user', name='remove_user'),
+    url(r'^(\d+)/groups/manage/(\d+)/remove/(.+)/submit/$', 'remove_from_group', name='remove_from_group'),
+    url(r'^(\d+)/groups/manage/(\d+)/remove/(.+)/$', 'remove', name='remove'),
+    url(r'^(\d+)/groups/manage/(\d+)/$', 'manage_group', name='manage_group')
 
 )

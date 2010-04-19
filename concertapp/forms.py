@@ -5,9 +5,12 @@ from django import forms
 from concertapp.models import User, Audio, GroupAdmin
 
 class CreateGroupForm(ModelForm):
+    group_name = forms.CharField(label="group_name", max_length=80,
+            required=True)
+
     class Meta:
         model = GroupAdmin
-        exclude = ('admin')
+        exclude = ('admin', 'group')
  
 class RegistrationForm(ModelForm):
     username = forms.CharField(label='username',
