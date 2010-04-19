@@ -19,5 +19,15 @@
     }
   });
 
+  /**
+   *  When segment row is clicked, load waveform into waveform viewer.
+   **/
+  $('.segment_row').click(function(event) {
+    event.preventDefault();
+    /* Get segment id */
+    var $id = $(this).attr('id').split('-')[1];
+    /* replace viewer image div with waveform image for this segment's audio file */
+    $('div#viewer_image').load('/audio/'+$id+'/waveform/');
+  });
 
 })();

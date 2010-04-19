@@ -50,7 +50,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost/media/'
+MEDIA_URL = 'http://localhost:8080/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -77,8 +77,10 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'adams_templates'),
+    os.path.join(BASE_DIR, 'audio/templates'),
     os.path.join(BASE_DIR, '../../piston/templates'),
     os.path.join(BASE_DIR, 'templates'),
+    
     
 )
 
@@ -101,7 +103,6 @@ FIXTURE_DIRS = (
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = '/users/login/'
 LOGOUT_URL = '/users/logout/'
-
 
 APPEND_SLASH = False
 

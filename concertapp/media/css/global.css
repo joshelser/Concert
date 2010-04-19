@@ -209,6 +209,15 @@ a {color:#333;}
 	height:102px;
 }
 
+#viewer_image {
+    width: inherit;
+    height: inherit;
+}
+.waveform_image {
+    width: inherit;
+    height: inherit;
+}
+
 
 
 /*body*/

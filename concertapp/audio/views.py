@@ -139,6 +139,10 @@ def upload_audio(request):
 
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
+    
+def waveform_image(request, audio_id):
+    audio = Audio.objects.get(pk = audio_id)
+    return render_to_response('waveform_image_tag.html', {'audio': audio}, RequestContext(request))
 
 def generate_waveform(audio):
     # Create the wav object
