@@ -14,6 +14,7 @@ from concertapp.models import *
 
 @login_required
 def index(request):
-    group_list = Group.objects.all()
+    # Get all groups for which the current user is a member
+    group_list = request.user.groups.all()
 
     return render_to_response('index.html', {'group_list': group_list}, RequestContext(request))
