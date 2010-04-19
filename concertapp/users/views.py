@@ -53,8 +53,9 @@ def create_user(request):
             # Add this user as a member of the new_group
             new_profile.groups.add(new_group)
             
-            # Create the default tag for all audio files uploaded by this user
-            default_tag = Tag()
+            # Create the default tag for all audio files uploaded by this user (fixture because it will not be able to be deleted)
+            default_tag = Tag(group = new_group, isProject = 0, isFixture = 1, tag = 'Uploads')
+            default_tag.save()
 
             return HttpResponseRedirect('/users/')
     else:
