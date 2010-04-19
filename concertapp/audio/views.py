@@ -113,8 +113,19 @@ def upload_audio(request):
             # Get audio duration in seconds
             duration = get_duration(audio)
             
+            # Get user's default group
+            default_group = user.groups.get(name = user.username)
+            
+            # Determine name of segment and tag
+            name = audio.filename
+            
             # Create the initial audio segment
-            first_segment = AudioSegment(name = audio.filename, beginning = 0, end = duration, audio = audio)
+            first_segment = AudioSegment(name = name, beginning = 0, end = duration, audio = audio)
+            first_segment.save()
+            
+            # Create initial audio tag for this user's default group (marked as fixture because it is permanent)
+            first_tag = Tag(segment = first_segment, group = default_group, tag = name, isProject = 0, isFixture = 1)
+            first_tag.save()
             
 
             return HttpResponseRedirect('/audio/')
