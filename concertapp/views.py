@@ -25,5 +25,7 @@ def index(request):
     except KeyError:
       # Use user's default group
       selected_group = request.user.groups.get(name = request.user.username)
+      
+    # Get all of this group's
 
     return render_to_response('index.html', {'group_list': group_list, 'selected_group': selected_group}, RequestContext(request))
