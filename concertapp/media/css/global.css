@@ -167,6 +167,7 @@ a {color:#333;}
 	float:right;
 	margin-top:7px;
 	height:130px;
+	width: 800px;
 	border:1px #e4e4e4 solid;
 	overflow:hidden;
 	-moz-border-radius-topleft:15px;
@@ -198,7 +199,7 @@ a {color:#333;}
 }
 
 #viewer_playhead {
-	margin-left:20px;
+	margin-left:0px;
 	width:1px; 
 	background-color: #aaddff;
 	border-left:1px #eee solid;

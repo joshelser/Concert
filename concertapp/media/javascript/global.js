@@ -1,4 +1,4 @@
-// Closure for the main app.
+  // Closure for the main app.
 (function() {
   // Handle placeholder text for input fields.  
   // Add focus and blur events to handle showing/hiding the placeholder.
@@ -16,7 +16,7 @@
       if ($.trim($(this).val()) == '') {
         $(this).val($(this).data('placeholder'));
       }
-    }Open
+    }
   });
 
 
