@@ -38,8 +38,21 @@ def create_user(request):
             new_email = form.cleaned_data['email']
             new_password1 = form.cleaned_data['password1']
             new_password2 = form.cleaned_data['password2']
+            # Create new user
             new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
             new_profile.save()
+            
+            # Create user's default group with same name as user
+            new_group = Group(name = new_name)
+            new_group.save();
+            
+            # Add this user as an administrator of the group
+            new_group_admin = GroupAdmin(group = new_group, admin = new_profile)
+            new_group_admin.save()
+            
+            # Add this user as a member of the new_group
+            new_profile.groups.add(new_group)
+
             return HttpResponseRedirect('/users/')
     else:
         form = RegistrationForm()
