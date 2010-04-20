@@ -49,8 +49,6 @@ var $waveformPlayer = null;
         if(!$(this).hasClass('disabled')) {
             /* play audio */
             play();
-            /* Change to pause button */
-            $(this).attr('id', 'pause_button').attr('value', 'Pause');
         }
     });
     
@@ -60,8 +58,6 @@ var $waveformPlayer = null;
         if(!$(this).hasClass('disabled')) {
             /* pause audio */
             pause();
-            /* Change to play button */
-            $(this).attr('id', 'play_button').attr('value', 'Play');
         }
     });
 
@@ -166,6 +162,10 @@ function play() {
     var $player = $('audio').addClass('playing').get(0);
     $player.play();
     $waveformPlayer.play();
+    
+    /* Change play button to pause button */
+    $('#play_button').attr('id', 'pause_button').attr('value', 'Pause');
+    
     //auto_pause_audio();
 }
 
@@ -176,4 +176,8 @@ function play() {
 function pause() {
     var $player = $('audio').removeClass('playing').get(0);
     $player.pause();
+    
+    /* Change pause to play button */
+    $('#pause_button').attr('id', 'play_button').attr('value', 'Play');
+    
 }
