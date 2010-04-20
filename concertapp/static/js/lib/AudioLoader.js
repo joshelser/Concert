@@ -85,7 +85,7 @@ function initialize_audio_durations($audios)
 **/
 function check_audio_duration($audio_id)
 {
-    if( typeof($('#'+$audio_id).attr('duration')) != 'undefined' )
+    if($('#'+$audio_id).get(0).duration)
     {
         return true;
     }

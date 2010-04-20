@@ -196,7 +196,7 @@ def audio_src(request, audio_id):
     
     #return audio src in plaintext
     response = HttpResponse(mimetype='text/plain')
-    response.write(audio.oggfile.url)
+    response.write(audio.wavfile.url)
     return response
 
 def generate_waveform(audio):

@@ -19,29 +19,19 @@
     }
   });
 
-  var $waveformViewer = null;
+  
   
 
   
-  /**
-   *    Playback functionality
-   **/
-  $('#play_button').click(function(event) {
-      event.preventDefault();
-      
-      play();
-  });
 
 })();
 
-/**
- *  play
- *  Plays the audio file, and also begins any associated waveform objects.
- **/
-function play() {
-    /* Get audio player */
-    var $player = $('audio').addClass('playing').get(0);
-    $player.play();
-    $waveformViewer.play();
-    //auto_pause_audio();
+function loading() {
+    /* Turn on global loading notification */
+    $('body').prepend('<img id="loader" src="/media/graphics/ajax-loader.gif" />');
+}
+
+function remove_loading() {
+    /* Remove loading notification */
+    $('#loader').remove();
 }

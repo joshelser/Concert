@@ -120,7 +120,8 @@ WaveformViewer.prototype.clicked = function(event) {
     /* percent of width */
     var clickPerc = clickX/$(container).css('width').match(/[\d]+/);
     /* new time in audio file */
-    var newTime = (clickPerc*audioElement.duration);
+    var newTime = clickPerc*audioElement.duration;
+    
     /* move current time of audio file to clicked location */
     audioElement.currentTime = newTime;
     
