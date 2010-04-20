@@ -18,6 +18,12 @@
       }
     }
   });
+  
+  /**
+   *    Preload images
+   **/
+  var images = [];
+  images.push($('<img />').attr('src', '/media/graphics/button_press.png'));
 
   
   

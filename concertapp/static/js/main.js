@@ -18,6 +18,11 @@ var $waveformPlayer = null;
         /* loading notification */
         loading();
         
+        /* If audio is currently playing, stop it */
+        if($('audio').hasClass('playing')) {
+            pause();
+        }
+        
         /* Get segment id */
         var segmentID = $(this).attr('id').split('-')[1];
 
@@ -80,6 +85,9 @@ function load_waveform(segmentID) {
     /* If waveform image is already this audio file */
     if(typeof($('#waveform_viewer').attr('data-audioid')) != 'undefined'
     && $('#waveform_viewer').attr('data-audioid') == audioID) {
+        /* Remove loading notification */
+        remove_loading();
+        
         /* Don't load image again */
         return;
     }
@@ -116,8 +124,15 @@ function load_audio(audioID) {
         url: '/audio/'+audioID+'/audiosrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
-                var $audioElement = $('audio').html('').get(0);
-                $('<source>').attr('src', data).appendTo($audioElement);
+                /* Remove audio element from page */
+                $('audio').html('').remove();
+                /* Create new audio element */
+                var audioElement = $('<audio>').attr('id', 'audio_element').attr('class', 'audio_element');
+                /* Add source to audio element */
+                $('<source>').attr('src', data).appendTo(audioElement);
+                /* Add audio element to page */
+                $('#audio_container').append(audioElement);
+                
                 var $audioElementID = $('audio').attr('id');
                 /* Wait for all audio elements to become available */
                 AudioLoader(function(){
