@@ -29,6 +29,7 @@ var $waveformPlayer = null;
 
         /* Add "selected" class to row */
         $(this).addClass('selected');
+        
 
     });
 
@@ -38,8 +39,10 @@ var $waveformPlayer = null;
     **/
     $('#play_button').click(function(event) {
         event.preventDefault();
-
-        play();
+        /* If button is not disabled */
+        if(!$(this).hasClass('disabled')) {
+            play();            
+        }
     });
 
 })();
@@ -86,7 +89,11 @@ function load_waveform(segmentID) {
 }
 
 /**
-*  LEFT OFF HERE
+*  load_audio
+*   Takes an Audio object id, and changes the <audio> element's src to that audio
+*   objects audio file.
+*
+*   @param              audioID             the Audio object id
 **/
 function load_audio(audioID) {
     /* Load audio element into audio container */
@@ -103,6 +110,9 @@ function load_audio(audioID) {
                     $waveformPlayer = new WaveformViewer('waveform_viewer', $audioElementID);
                     /* remove loading */
                     remove_loading();
+                    /* Enable play button */
+                    $('#play_button').removeClass('disabled');
+                    
                 });                            
             }
             else {
