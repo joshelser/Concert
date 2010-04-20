@@ -20,14 +20,31 @@
     });
 })();
 
+/**
+ *  load_waveform
+ *  Takes a segmentID, checks to see if this waveform is already loaded.
+ *  Retrieves the waveform and loads it into the viewer.
+ *
+ *  @param              segmentID           The ID of the AudioSegment object.
+ **/
 function load_waveform(segmentID) {
+    
+    /* Get waveform viewer image element */
+    var img = $('img#waveform_viewer_image').get(0);
+    
+    /* If waveform image is already this audio file */
+    if(typeof($(img).data('AudioSegmentID')) != 'undefined'
+    && $(img).data('AudioSegmentID') == segmentID) {
+        /* Don't load image again */
+        return;
+    }
+    
     $.ajax({
         url: '/audio/'+segmentID+'/waveformsrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* replace image src with proper image */
-                $('img#waveform_viewer_image').attr('src', data);
-                
+                $('img#waveform_viewer_image').attr('src', data).data('AudioSegmentID', segmentID);                
             }
             else {
                 alert('An error has occurred.');
