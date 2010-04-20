@@ -18,10 +18,16 @@ var WaveformViewer = function(containerID, audioID) {
     this.set_audio(audioID);
     
     /* The object to animate is the playhead */
-    this.playheadElement = $('#'+this.id+' > div.playhead').get(0)
+    this.playheadElement = $('#'+this.id+' > div.playhead').get(0);
+    if(!this.playheadElement) {
+      throw new Error('WaveformViewer: Unable to set playhead element.');
+    }
     
     /* also save timecode element */
     this.timecodeElement = $('#'+this.id+' > div.timecode').get(0);
+    if(!this.timecodeElement) {
+      throw new Error('WaveformViewer: Unable to set timecode element.');
+    }
     
     /* container width */
     this.waveformWidth = 800;
@@ -30,7 +36,7 @@ var WaveformViewer = function(containerID, audioID) {
     this.highlighter = new Highlighter({
         highlightElement: $(this.container).children('#viewer_highlight'), 
         container: this.container, 
-        waveformElement: $(this.container).children('#waveform_viewer_image'),
+        waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
         audioElementDuration: this.audioElement.duration
     });

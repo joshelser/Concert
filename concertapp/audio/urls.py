@@ -7,5 +7,5 @@ urlpatterns = patterns('concertapp.audio.views',
     url(r'^(\d+)/$', 'view_audio', name='view_audio'),
     url(r'^(\d+)/delete/$', 'delete_audio', name='delete_audio'),
     url(r'^(\d+)/waveform/$', 'waveform_image', name='waveform_image'),
-    url(r'^(\d+)/audioelement/$', 'audio_element', name='audio_element'),
+    url(r'^(\d+)/audiosrc/$', 'audio_src', name='audio_src'),
 )
