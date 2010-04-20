@@ -80,6 +80,8 @@
                     <th>Label</th>
                     <th>Date Tagged</th>
                     <th>Uploaded By</th>
+                    <th>In</th>
+                    <th>Out</th>
                 </tr>
                 {% if segment_list %}
                     {% for segment in segment_list %}
@@ -88,6 +90,8 @@
                             <td>{{ segment.name }}</td>
                             <td></td>
                             <td>{{ segment.audio.user.username }}</td>
+                            <td>{{ segment.beginning }}</td>
+                            <td>{{ segment.end }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}
@@ -99,4 +103,5 @@
     </div>
 </div>
 
+<script src="/js/main.js"></script>
 {% endblock %}

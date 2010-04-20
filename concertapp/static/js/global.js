@@ -21,47 +21,7 @@
 
   var $waveformViewer = null;
   
-  /**
-   *  When segment row is clicked, load waveform into waveform viewer.
-   **/
-  $('.segment_row').click(function(event) {
-    event.preventDefault();
-    /* Get segment id */
-    var $id = $(this).attr('id').split('-')[1];
-    
-    /* replace viewer image div with waveform image for this segment's audio file */
-    $.ajax({
-        url: '/audio/'+$id+'/waveformsrc/',
-        success: function(data, textStatus) {
-            if(textStatus == 'success') {
-                /* Replace image src with proper image */
-                $('img#waveform_viewer_image').attr('src', data);
-                
-                /* Load audio element into audio container */
-                $.ajax({
-                    url: '/audio/'+$id+'/audiosrc/',
-                    success: function(data, textStatus) {
-                        var $audioElement = $('audio').get(0);
-                        $('<source>').attr('src', data).appendTo($audioElement);
-                        /* Wait for all audio elements to become available */
-                        AudioLoader(function(){
-                          /* Create waveform viewer object */
-                          $waveformViewer = new WaveformViewer('waveform_viewer', $('audio').attr('id'));
-                        });
-                    }
-                });
-            }
-        }
-    });
-    
-    /* remove "selected" class from currently selected segment row */
-    $('tr.segment_row.selected').removeClass('selected');
-    
-    /* Add "selected" class to row */
-    $(this).addClass('selected');
-    
-        
-  });
+
   
   /**
    *    Playback functionality
@@ -69,10 +29,19 @@
   $('#play_button').click(function(event) {
       event.preventDefault();
       
-      /* Get audio player */
-      var $player = $('audio').addClass('playing').get(0);
-      $player.play();
-      //auto_pause_audio();
+      play();
   });
 
 })();
+
+/**
+ *  play
+ *  Plays the audio file, and also begins any associated waveform objects.
+ **/
+function play() {
+    /* Get audio player */
+    var $player = $('audio').addClass('playing').get(0);
+    $player.play();
+    $waveformViewer.play();
+    //auto_pause_audio();
+}

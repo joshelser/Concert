@@ -50,7 +50,7 @@ function sec_to_timecode($seconds)
  *  get_event_x
  *  Takes an event, and an element, and returns the X coordinate of that event relative to the element.
  *
- *  @param          $element            The element that the event occured on.
+ *  @param          $element            The element that the event occurred on.
  *  @param          $e                  The event object.
  *  @return         number              The x-coordinate of the event
  **/
