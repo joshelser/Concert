@@ -98,8 +98,55 @@ class Audio(models.Model):
 
         return newName
 
-    def wav_to_ogg(self, originalFile):
+    def mp3_to_ogg(self, originalFile):
+        # Convert from mp3 to wav
+        wavFileName = self.mp3_to_wav(originalFile)
+
         # Use the original filename as a prefix
+        prefixName = os.path.split(wavFileName)[-1]
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create an wav object
+        wavObj = audioFormats.Wav(wavFileName)
+
+        # Encode the wav into ogg
+        proc = wavObj.oggEncode(newName)
+
+        proc.wait()
+
+        print 'Finished converting wav to ogg'
+
+        return newName
+
+    def wavfilename_to_ogg(self, wavFileName):
+        # Use the original filename as a prefix
+        prefixName = os.path.split(wavFileName)[-1]
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create an wav object
+        wavObj = audioFormats.Wav(wavFileName)
+
+        # Encode the wav into ogg
+        proc = wavObj.oggEncode(newName)
+
+        proc.wait()
+
+        print 'Finished converting wav to ogg'
+
+        return newName
+
+    def wav_to_ogg(self, originalFile):
+         # Use the original filename as a prefix
         prefixName = str(originalFile)
 
         # Create a random file for the created wav file
@@ -120,7 +167,7 @@ class Audio(models.Model):
 
         return newName
 
-    # Delete the current audio file from the filesystem
+   # Delete the current audio file from the filesystem
     def delete_wavfile(self):
         print self.wavfile
         fullpath = os.path.join(MEDIA_ROOT, str(self.wavfile))

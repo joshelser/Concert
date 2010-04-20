@@ -59,7 +59,13 @@ def upload_audio(request):
         else:
             # We need to convert the file
             if filetype == 'audio/mpeg':
+                # Convert mp3 to wav
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
+
+                # Convert mp3 to ogg
+                oggFileName = audio.wavfilename_to_ogg(wavFileName)
+
+                audio.oggfile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
             elif filetype == 'audio/ogg' or filetype == 'application/ogg':
                 wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
 
@@ -73,13 +79,26 @@ def upload_audio(request):
                 extension = os.path.splitext(str(request.FILES['wavfile']))[1]
 
                 if extension == '.wav':
-                    form = UploadFileForm(request.POST, request.FILES, instance
-                            = audio)
+                    oggFileName = audio.wav_to_ogg(request.FILES['wavfile'])
+                    oggFile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
+            
+                    # Add the audio stuff to the audio object
+                    audio.oggfile = oggFile
+                    audio.wavfile = request.FILES['wavfile']
                 elif extension == '.mp3':
                     wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
+
+                    # Convert mp3 to ogg
+                    oggFileName = audio.wavfilename_to_ogg(wavFileName)
+
+                    audio.oggfile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
                 elif extension == '.ogg':
                     wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+
+                    # Save the oggfile in audio
                     audio.oggfile = request.FILES['wavfile']
+
+                    # Get the full path to the temp file
                     oggFileName = request.FILES['wavfile'].temporary_file_path()
                 else:
                     msg = 'The submitted filetype "%s" has no waveform functionality implemented'
@@ -97,7 +116,7 @@ def upload_audio(request):
             # Save the form
             audio = form.save()
 
-            # Don't need to copy the file over if it's a wav
+            # Copy over the file if it wasn't initially a wav
             if filetype != 'audio/x-wav' and extension != '.wav':
                 # Open up the file in temp and in media
                 actual_file = open(wavFileName, 'r')
@@ -116,6 +135,8 @@ def upload_audio(request):
                 # Remove the file from /tmp
                 os.remove(wavFileName)
 
+            # Need to copy over the temp ogg file to MEDIA_ROOT regardless of
+            # uploaded file type
             tempOggFile = open(oggFileName, 'r')
             destOggFile = open(os.path.join(MEDIA_ROOT, str(audio.oggfile)),
                     'w')
