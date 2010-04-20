@@ -185,15 +185,17 @@ a {color:#333;}
 	text-align:right;
 	font-weight:bold;
 	height:20px;
+	z-index: 2;
 }
 
 #viewer_highlight {
 	background-color:#00FFFF; 
 	z-index: 3;
-	opacity: .25; 
+	opacity: .25;
 	position: absolute; 
 	margin-left: 0px; 
 	width: 0px; 
+	height: inherit;
 	border-left: 1px solid #FFFAFA; 
 	border-right: 1px solid #FFFAFA;
 }

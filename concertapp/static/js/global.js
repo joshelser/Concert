@@ -19,6 +19,8 @@
     }
   });
 
+  var $waveformViewer = null;
+  
   /**
    *  When segment row is clicked, load waveform into waveform viewer.
    **/
@@ -36,7 +38,12 @@
     $(this).addClass('selected');
     
     /* Load audio element into audio container */
-    $('div#audio_container').load('/audio/'+$id+'/audioelement/');
+    $('div#audio_container').load('/audio/'+$id+'/audioelement/', function(){AudioLoader(function(){
+      /* Create waveform viewer object */
+      $waveformViewer = new WaveformViewer('waveform_viewer', $('audio').attr('id'));
+      
+    });});
+        
   });
 
 })();

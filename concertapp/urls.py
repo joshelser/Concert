@@ -16,5 +16,7 @@ urlpatterns = patterns('concertapp.views',
 if settings.DEBUG:
     urlpatterns += patterns('',
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+        (r'^js/(?P<path>.*)$', 'django.views.static.serve', {'document_root' : settings.STATIC_DOC_ROOT+'/js/'}),
+        (r'^css/(?P<path>.*)$', 'django.views.static.serve', {'document_root' : settings.STATIC_DOC_ROOT+'/css/'})
     )
 

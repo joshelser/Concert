@@ -55,7 +55,9 @@ MEDIA_URL = 'http://localhost:8080/media/'
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/admin_media/'
+ADMIN_MEDIA_PREFIX = 'http://localhost:8080/'
+STATIC_DOC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'f@vhy8vuq7w70v=cnynm(am1__*zt##i2--i2p-021@-qgws%g'
