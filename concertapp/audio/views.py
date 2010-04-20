@@ -36,10 +36,6 @@ def upload_audio(request):
         # Need to add the user to the audio instance
         user = request.user
 
-        # Bounce back to audio if not logged in
-        if user is None:
-            return HttpResponseRedirect('/audio/')
-
         audio = Audio(user = user)
 
         file = request.FILES['wavfile']
@@ -50,17 +46,24 @@ def upload_audio(request):
         form = None
         wavFileName = None
         extension = None
+        oggFileName = None
 
         # If it's already a wav file
         if filetype == 'audio/x-wav':
-            # Then add the audio instance to the Form instance
-            form = UploadFileForm(request.POST, request.FILES, instance = audio)
+            oggFileName = audio.wav_to_ogg(request.FILES['wavfile'])
+            oggFile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
+            
+            # Add the audio stuff to the audio object
+            audio.oggfile = oggFile
+            audio.wavfile = request.FILES['wavfile']
         else:
             # We need to convert the file
             if filetype == 'audio/mpeg':
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
             elif filetype == 'audio/ogg' or filetype == 'application/ogg':
                 wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+                audio.oggfile = request.FILES['wavfile']
+                oggFileName = request.FILES['wavfile'].temporary_file_path()
             else:
                 # Fallback onto file extensions
                 extension = os.path.splitext(str(request.FILES['wavfile']))[1]
@@ -72,21 +75,22 @@ def upload_audio(request):
                     wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
                 elif extension == '.ogg':
                     wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+                    audio.oggFile = request.FILES['wavfile']
                 else:
                     msg = 'The submitted filetype "%s" has no waveform functionality implemented'
                     raise NotImplementedError(msg % filetype)
 
             # Ignore this if we got a .wav extension
             if extension != '.wav':
-                # Create an (almost) empty file
-                wavFile = SimpleUploadedFile(os.path.split(wavFileName)[-1], 'a')
-                    
-                # Create the form object with the converted file and audio instance
-                form = UploadFileForm(request.POST, {'wavfile': wavFile}, instance = audio)
+                # Put it in the audio object
+                audio.wavfile = SimpleUploadedFile(os.path.split(wavFileName)[-1], 'a')
+
+        # Then add the audio instance to the Form instance
+        form = UploadFileForm(request.POST, instance = audio)
 
         if form.is_valid():
             # Save the form
-            form.save()
+            audio = form.save()
 
             # Don't need to copy the file over if it's a wav
             if filetype != 'audio/x-wav' and extension != '.wav':
@@ -106,6 +110,18 @@ def upload_audio(request):
 
                 # Remove the file from /tmp
                 os.remove(wavFileName)
+
+            tempOggFile = open(oggFileName, 'r')
+            destOggFile = open(os.path.join(MEDIA_ROOT, str(audio.oggfile)),
+                    'w')
+
+            data = tempOggFile.read(CHUNKSIZE)
+            while data != '':
+                destOggFile.write(data)
+                data = tempOggFile.read(CHUNKSIZE)
+
+            tempOggFile.close()
+            destOggFile.close()
 
             # Generate the waveform onto disk
             generate_waveform(audio)

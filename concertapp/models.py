@@ -50,6 +50,7 @@ class Comment(models.Model):
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
     wavfile = models.FileField(upload_to = 'audio/')
+    oggfile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveform = models.ImageField(upload_to = 'images/')
 
@@ -94,6 +95,28 @@ class Audio(models.Model):
         proc.wait()
 
         print 'Finished converting ogg to wav'
+
+        return newName
+
+    def wav_to_ogg(self, originalFile):
+        # Use the original filename as a prefix
+        prefixName = str(originalFile)
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create an wav object
+        wavObj = audioFormats.Wav(originalFile.temporary_file_path())
+
+        # Encode the wav into ogg
+        proc = wavObj.oggEncode(newName)
+
+        proc.wait()
+
+        print 'Finished converting wav to ogg'
 
         return newName
 
