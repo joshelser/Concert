@@ -34,6 +34,9 @@
     
     /* Add "selected" class to row */
     $(this).addClass('selected');
+    
+    /* Load audio element into audio container */
+    $('div#audio_container').load('/audio/'+$id+'/audioelement/');
   });
 
 })();

@@ -164,6 +164,10 @@ def view_waveform(request, audio_id):
 def waveform_image(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     return render_to_response('waveform_image_tag.html', {'audio': audio}, RequestContext(request))
+    
+def audio_element(request, audio_id):
+    audio = Audio.objects.get(pk = audio_id)
+    return render_to_response('audio_element.html', {'audio' : audio}, RequestContext(request))
 
 def generate_waveform(audio):
     # Create the wav object
