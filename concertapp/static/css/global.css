@@ -92,7 +92,7 @@ a {color:#333;}
 
 #header {
 	height:150px;
-	background:url(/media/graphics/header.jpg) top center no-repeat ;
+	background:url(/graphics/header.jpg) top center no-repeat ;
 	background-color:#f4f4f4;
 	overflow:hidden;
 	-moz-box-shadow:0px 1px 10px #999;
@@ -122,12 +122,12 @@ a {color:#333;}
 
 #edit_button{float:right;}
 
-.control_button {background:url(/media/graphics/button_reg.png) repeat-x;}
+.control_button {background:url(/graphics/button_reg.png) repeat-x;}
 
-.control_button:active {background:url(/media/graphics/button_press.png) repeat-x;}
+.control_button:active {background:url(/graphics/button_press.png) repeat-x;}
 
 .control_button.disabled { opacity: 0.5; }
-.control_button.disabled:active {background:url(/media/graphics/button_reg.png) repeat-x;}
+.control_button.disabled:active {background:url(/graphics/button_reg.png) repeat-x;}
 
 .volume_slider {
 	position:absolute;
@@ -135,7 +135,7 @@ a {color:#333;}
 }
 
 #slider {
-	background:url(/media/graphics/volume_slider.png) repeat-x;	
+	background:url(/graphics/volume_slider.png) repeat-x;	
 	border:1px #999 solid;
 	-moz-border-radius-topleft:15px;
 	-webkit-border-top-left-radius:15px;
@@ -155,7 +155,7 @@ a {color:#333;}
 	width:1px;
 	margin-left:3px;
 	border:1px #999 solid;
-	background:url(/media/graphics/handle.png) repeat-x;
+	background:url(/graphics/handle.png) repeat-x;
 	-moz-border-radius-topleft:15px;
 	-webkit-border-top-left-radius:15px;
 	-moz-border-radius-bottomright:15px;
@@ -177,11 +177,11 @@ a {color:#333;}
 	-moz-border-radius-bottomright:15px;
 	-webkit-border-top-left-radius:15px;
 	-webkit-border-bottom-right-radius:15px;
-	background:url(/media/graphics/viewer_back.png) repeat-x;
+	background:url(/graphics/viewer_back.png) repeat-x;
 }
 
 #viewer_timecode{
-	background:url(/media/graphics/logo.png) top left no-repeat;
+	background:url(/graphics/logo.png) top left no-repeat;
 	overflow:hidden;
 	margin:2px 5px 2px 20px;
 	font-family:Georgia, "Times New Roman", Times, serif;

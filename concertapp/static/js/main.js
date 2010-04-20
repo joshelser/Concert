@@ -130,6 +130,7 @@ function load_audio(audioID) {
                 $('#audio_container').append(audioElement);
                 
                 var $audioElementID = $('audio').attr('id');
+              
                 /* Wait for all audio elements to become available */
                 AudioLoader(function(){
                     /* Create waveform viewer object */
