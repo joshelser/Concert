@@ -63,7 +63,7 @@ def upload_audio(request):
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
 
                 # Convert mp3 to ogg
-                oggFileName = audio.mp3_to_ogg(request.FILES['wavfile'])
+                oggFileName = audio.wavfilename_to_ogg(wavFileName)
 
                 audio.oggfile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
             elif filetype == 'audio/ogg' or filetype == 'application/ogg':
@@ -79,13 +79,26 @@ def upload_audio(request):
                 extension = os.path.splitext(str(request.FILES['wavfile']))[1]
 
                 if extension == '.wav':
-                    form = UploadFileForm(request.POST, request.FILES, instance
-                            = audio)
+                    oggFileName = audio.wav_to_ogg(request.FILES['wavfile'])
+                    oggFile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
+            
+                    # Add the audio stuff to the audio object
+                    audio.oggfile = oggFile
+                    audio.wavfile = request.FILES['wavfile']
                 elif extension == '.mp3':
                     wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
+
+                    # Convert mp3 to ogg
+                    oggFileName = audio.wavfilename_to_ogg(wavFileName)
+
+                    audio.oggfile = SimpleUploadedFile(os.path.split(oggFileName)[-1], 'a')
                 elif extension == '.ogg':
                     wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+
+                    # Save the oggfile in audio
                     audio.oggfile = request.FILES['wavfile']
+
+                    # Get the full path to the temp file
                     oggFileName = request.FILES['wavfile'].temporary_file_path()
                 else:
                     msg = 'The submitted filetype "%s" has no waveform functionality implemented'

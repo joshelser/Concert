@@ -123,6 +123,27 @@ class Audio(models.Model):
 
         return newName
 
+    def wavfilename_to_ogg(self, wavFileName):
+        # Use the original filename as a prefix
+        prefixName = os.path.split(wavFileName)[-1]
+
+        # Create a random file for the created wav file
+        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
+
+        # Save the name of the new file
+        newName = tempFile[1]
+
+        # Create an wav object
+        wavObj = audioFormats.Wav(wavFileName)
+
+        # Encode the wav into ogg
+        proc = wavObj.oggEncode(newName)
+
+        proc.wait()
+
+        print 'Finished converting wav to ogg'
+
+        return newName
 
     def wav_to_ogg(self, originalFile):
          # Use the original filename as a prefix
