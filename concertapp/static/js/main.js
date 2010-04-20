@@ -32,19 +32,23 @@ function load_waveform(segmentID) {
     /* Get waveform viewer image element */
     var img = $('img#waveform_viewer_image').get(0);
     
+    /* Get the audioID associated with this segment */
+    var audioID = $('tr#segment_row-'+segmentID).attr('data-audioid');
+    
     /* If waveform image is already this audio file */
-    if(typeof($(img).data('AudioSegmentID')) != 'undefined'
-    && $(img).data('AudioSegmentID') == segmentID) {
+    if(typeof($(img).data('audioID')) != 'undefined'
+    && $(img).data('audioID') == audioID) {
         /* Don't load image again */
         return;
     }
     
+    /** Load waveform image **/
     $.ajax({
-        url: '/audio/'+segmentID+'/waveformsrc/',
+        url: '/audio/'+audioID+'/waveformsrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* replace image src with proper image */
-                $('img#waveform_viewer_image').attr('src', data).data('AudioSegmentID', segmentID);                
+                $('img#waveform_viewer_image').attr('src', data).data('audioID', audioID);                
             }
             else {
                 alert('An error has occurred.');
@@ -52,3 +56,5 @@ function load_waveform(segmentID) {
         }
     });
 }
+
+function load_audio(segmentID){}

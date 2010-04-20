@@ -85,7 +85,8 @@
                 </tr>
                 {% if segment_list %}
                     {% for segment in segment_list %}
-                        <tr id="segment_row-{{ segment.id }}" class="segment_row">
+                        {% comment %} For each segment row, store segment id in id attribute, and audio id in data-audioid attribute (this is valid HTML5) {% endcomment %}
+                        <tr id="segment_row-{{ segment.id }}" class="segment_row" data-audioid="{{ segment.audio.id }}">
                             <td>{{ segment.tag_list }}</td>
                             <td>{{ segment.name }}</td>
                             <td></td>
