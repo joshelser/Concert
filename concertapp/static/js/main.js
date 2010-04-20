@@ -35,13 +35,28 @@ var $waveformPlayer = null;
 
 
     /**
-    *    Playback functionality
+    *   Playback functionality
+    *   Behavior for play and pause buttons
     **/
-    $('#play_button').click(function(event) {
+    $('#play_button').live('click', function(event) {
         event.preventDefault();
         /* If button is not disabled */
         if(!$(this).hasClass('disabled')) {
-            play();            
+            /* play audio */
+            play();
+            /* Change to pause button */
+            $(this).attr('id', 'pause_button').attr('value', 'Pause');
+        }
+    });
+    
+    $('#pause_button').live('click', function(event) {
+        event.preventDefault();
+        /* if button is not disabled */
+        if(!$(this).hasClass('disabled')) {
+            /* pause audio */
+            pause();
+            /* Change to play button */
+            $(this).attr('id', 'play_button').attr('value', 'Play');
         }
     });
 
@@ -137,4 +152,13 @@ function play() {
     $player.play();
     $waveformPlayer.play();
     //auto_pause_audio();
+}
+
+/**
+ *  pause
+ *  Pauses the audio element.
+ **/
+function pause() {
+    var $player = $('audio').removeClass('playing').get(0);
+    $player.pause();
 }
