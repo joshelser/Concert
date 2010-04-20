@@ -62,7 +62,11 @@ def upload_audio(request):
                 wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
             elif filetype == 'audio/ogg' or filetype == 'application/ogg':
                 wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
+
+                # Save the oggfile in audio
                 audio.oggfile = request.FILES['wavfile']
+
+                # Get the full path to the temp file
                 oggFileName = request.FILES['wavfile'].temporary_file_path()
             else:
                 # Fallback onto file extensions
@@ -75,7 +79,8 @@ def upload_audio(request):
                     wavFileName = audio.mp3_to_wav(request.FILES['wavfile'])
                 elif extension == '.ogg':
                     wavFileName = audio.ogg_to_wav(request.FILES['wavfile'])
-                    audio.oggFile = request.FILES['wavfile']
+                    audio.oggfile = request.FILES['wavfile']
+                    oggFileName = request.FILES['wavfile'].temporary_file_path()
                 else:
                     msg = 'The submitted filetype "%s" has no waveform functionality implemented'
                     raise NotImplementedError(msg % filetype)
