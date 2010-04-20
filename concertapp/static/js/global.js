@@ -24,11 +24,19 @@
 
 })();
 
+/**
+ *  loading
+ *  Global function for turning on the loading notification on the entire page.
+ **/
 function loading() {
     /* Turn on global loading notification */
     $('body').prepend('<img id="loader" src="/media/graphics/ajax-loader.gif" />');
 }
 
+/**
+ *  loading
+ *  Global function for turning off the loading notification on the entire page.
+ **/
 function remove_loading() {
     /* Remove loading notification */
     $('#loader').remove();

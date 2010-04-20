@@ -181,7 +181,15 @@ def upload_audio(request):
 
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
-    
+
+###
+#   waveform_src
+#   responds in plain text with the audio waveform url for the requested
+#   audio object.
+#
+#   @param          request         HTTP request
+#   @param          audio_id        The Audio object id
+###
 def waveform_src(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     
@@ -190,7 +198,14 @@ def waveform_src(request, audio_id):
     response.write(audio.waveform.url)
     return response
     
-    
+###
+#   audio_src
+#   Responds in plain text with the path to the audiofile associated with
+#   the requested Audio object.
+#
+#   @param          request         HTTP request
+#   @param          audio_id        The Audio object id
+###/    
 def audio_src(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     
