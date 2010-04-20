@@ -1,8 +1,9 @@
 from django.forms import ModelForm
 from django import forms
+from django.contrib.auth.models import Group, User
 #from django.core import validators
 
-from concertapp.models import User, Audio, GroupAdmin
+from concertapp.models import Audio, GroupAdmin
 
 class CreateGroupForm(ModelForm):
     group_name = forms.CharField(label="group_name", max_length=80,
@@ -36,7 +37,11 @@ class RegistrationForm(ModelForm):
         try:
             User.objects.get(username=username)
         except User.DoesNotExist:
-            return username
+            try:
+                Group.objects.get(name = username)
+            except Group.DoesNotExist:
+                return username
+
         raise forms.ValidationError('The username "%s" is already taken.' %
                 username)
 

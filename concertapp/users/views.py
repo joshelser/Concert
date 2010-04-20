@@ -38,6 +38,7 @@ def create_user(request):
             new_email = form.cleaned_data['email']
             new_password1 = form.cleaned_data['password1']
             new_password2 = form.cleaned_data['password2']
+
             # Create new user
             new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
             new_profile.save()
