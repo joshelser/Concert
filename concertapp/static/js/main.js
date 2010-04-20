@@ -112,6 +112,8 @@ function load_audio(audioID) {
                     remove_loading();
                     /* Enable play button */
                     $('#play_button').removeClass('disabled');
+                    /* Enable edit button */
+                    $('#edit_button').removeClass('disabled');
                     
                 });                            
             }
