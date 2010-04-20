@@ -180,10 +180,16 @@ class Audio(models.Model):
 ##
 # Given a user, it creates the corresponding group
 #
-# @param user
-def create_group_all(user, tag_is_fixture = 0):
+# @param user The user object of the creator
+# @param group_name The name of the group (optional)
+# @param tag_is_fixture If the tag should be a fixture
+#
+def create_group_all(user, group_name = '', tag_is_fixture = 0):
+    if group_name == '':
+        group_name = user.username
+
     # Create user's default group
-    new_group = Group(name = user.username)
+    new_group = Group(name = group_name)
     new_group.save()
 
     # Make the user the admin

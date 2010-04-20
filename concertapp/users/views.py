@@ -133,16 +133,10 @@ def create_group(request, user_id):
         if form.is_valid():
             gname = form.cleaned_data['group_name']
 
-            g = Group(name = gname)
-            g.save()
+            # Create the group, groupadmin, and tag
+            create_group_all(request.user, gname, 1)
 
-            new_group = GroupAdmin(group = g, admin = request.user)
-            new_group.save()
-
-            request.user.groups.add(g)
-
-            return groups(request, user_id)
-            #render_to_response('groups.html', {'user_id': user_id}, RequestContext(request))
+            return HttpResponseRedirect('/users/'+user_id+'/groups/')
     else:
         form = CreateGroupForm()
 
