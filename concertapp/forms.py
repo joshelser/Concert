@@ -31,12 +31,14 @@ class RegistrationForm(ModelForm):
         model = User
         exclude = ('username', 'first_name', 'last_name', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'groups', 'user_permissions')
 
-    #def isValidUsername(self, field_data, all_data):
-    #    try:
-    #        User.objects.get(username=field_data)
-    #    except User.DoesNotExist:
-    #        return
-    #    raise validators.ValidationError('The username "%s" is already taken.' % field_data)
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError('The username "%s" is already taken.' %
+                username)
 
 class UploadFileForm(ModelForm):
     wavfile = forms.FileField(label='Audio File')

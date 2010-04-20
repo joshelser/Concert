@@ -57,7 +57,7 @@ def create_user(request):
             default_tag = Tag(group = new_group, isProject = 0, isFixture = 1, tag = 'Uploads')
             default_tag.save()
 
-            return HttpResponseRedirect('/users/')
+            return HttpResponseRedirect('/')
     else:
         form = RegistrationForm()
     return render_to_response('register.html', {'form': form})
