@@ -1,8 +1,9 @@
 from django.forms import ModelForm
 from django import forms
+from django.contrib.auth.models import Group, User
 #from django.core import validators
 
-from concertapp.models import User, Audio, GroupAdmin
+from concertapp.models import Audio, GroupAdmin
 
 class CreateGroupForm(ModelForm):
     group_name = forms.CharField(label="group_name", max_length=80,
@@ -31,12 +32,18 @@ class RegistrationForm(ModelForm):
         model = User
         exclude = ('username', 'first_name', 'last_name', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'groups', 'user_permissions')
 
-    #def isValidUsername(self, field_data, all_data):
-    #    try:
-    #        User.objects.get(username=field_data)
-    #    except User.DoesNotExist:
-    #        return
-    #    raise validators.ValidationError('The username "%s" is already taken.' % field_data)
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            try:
+                Group.objects.get(name = username)
+            except Group.DoesNotExist:
+                return username
+
+        raise forms.ValidationError('The username "%s" is already taken.' %
+                username)
 
 class UploadFileForm(ModelForm):
     wavfile = forms.FileField(label='Audio File')
