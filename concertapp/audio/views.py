@@ -161,13 +161,22 @@ def upload_audio(request):
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
     
-def waveform_image(request, audio_id):
+def waveform_src(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
-    return render_to_response('waveform_image_tag.html', {'audio': audio}, RequestContext(request))
+    
+    # return waveform path in plaintext
+    response = HttpResponse(mimetype='text/plain')
+    response.write(audio.waveform.url)
+    return response
+    
     
 def audio_src(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
-    return render_to_response('audio_src.html', {'audio' : audio}, RequestContext(request))
+    
+    #return audio src in plaintext
+    response = HttpResponse(mimetype='text/plain')
+    response.write(audio.oggfile.url)
+    return response
 
 def generate_waveform(audio):
     # Create the wav object

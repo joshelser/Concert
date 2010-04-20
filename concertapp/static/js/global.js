@@ -28,21 +28,30 @@
     event.preventDefault();
     /* Get segment id */
     var $id = $(this).attr('id').split('-')[1];
+    
     /* replace viewer image div with waveform image for this segment's audio file */
-    $('div#viewer_image').load('/audio/'+$id+'/waveform/', function(){
-        /* Load audio element into audio container */
-        $.ajax({
-            url: '/audio/'+$id+'/audiosrc/',
-            success: function(data, textStatus) {
-                var $audioElement = $('audio').get(0);
-                $('<source>').attr('src', data).appendTo($audioElement);
-                /* Wait for all audio elements to become available */
-                AudioLoader(function(){
-                  /* Create waveform viewer object */
-                  $waveformViewer = new WaveformViewer('waveform_viewer', $('audio').attr('id'));
+    $.ajax({
+        url: '/audio/'+$id+'/waveformsrc/',
+        success: function(data, textStatus) {
+            if(textStatus == 'success') {
+                /* Replace image src with proper image */
+                $('img#waveform_viewer_image').attr('src', data);
+                
+                /* Load audio element into audio container */
+                $.ajax({
+                    url: '/audio/'+$id+'/audiosrc/',
+                    success: function(data, textStatus) {
+                        var $audioElement = $('audio').get(0);
+                        $('<source>').attr('src', data).appendTo($audioElement);
+                        /* Wait for all audio elements to become available */
+                        AudioLoader(function(){
+                          /* Create waveform viewer object */
+                          $waveformViewer = new WaveformViewer('waveform_viewer', $('audio').attr('id'));
+                        });
+                    }
                 });
             }
-        });        
+        }
     });
     
     /* remove "selected" class from currently selected segment row */
