@@ -156,6 +156,34 @@ class Wav(Audio):
         create_png(self.filePath, imageName, imageWidth, imageHeight, channels, fft_size, f_max, f_min);
 
 
+    ## Encode audio into OGG
+    #
+    # @param self
+    # @param outputFileName
+    # @param quality
+    #
+    # @return A subprocess object
+    def oggEncode(self, outputFileName, quality=192):
+        command = "oggenc -b %i '%s' -o '%s'" % (quality, self.filePath, outputFileName)
+
+        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+        return sub
+
+
+    ## Encode audio into MP3
+    #
+    # @param self
+    # @param outputFileName
+    # @param quality
+    #
+    # @return A subprocess object
+    def mp3Encode(self, outputFileName, quality=192):
+        command = "lame --quiet -m auto --preset cbr %i '%s' '%s'" % (quality, self.filePath, outputFileName)
+
+        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        return sub
+
 ## MP3
 # @class mp3
 # 
@@ -180,18 +208,6 @@ class Mp3(Audio):
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
 
-    ## Encode audio into MP3
-    #
-    # @param self
-    # @param outputFileName
-    # @param quality
-    #
-    # @return A subprocess object
-    def mp3Encode(self, outputFileName, quality=192):
-        command = "lame --quiet -m auto --preset cbr %i '%s' '%s'" % (quality, self.filePath, outputFileName)
-
-        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-        return sub
 
 ## Ogg
 # @class ogg
@@ -218,16 +234,3 @@ class Ogg(Audio):
 
         return sub
 
-    ## Encode audio into OGG
-    #
-    # @param self
-    # @param outputFileName
-    # @param quality
-    #
-    # @return A subprocess object
-    def oggEncode(self, outputFileName, quality=192):
-        command = "oggenc -b %i '%s' -o '%s'" % (quality, self.filePath, outputFileName)
-
-        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-
-        return sub

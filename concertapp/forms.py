@@ -42,7 +42,8 @@ class UploadFileForm(ModelForm):
     wavfile = forms.FileField(label='Audio File')
     class Meta:
         model = Audio
-        exclude = ('user', 'waveform', 'filename')
+        fields = ('wavfile', )
+        #exclude = ('user', 'waveform', 'filename', 'oggfile')
 
     def clean_wavFile(self):
         # Get the content-type of the file
