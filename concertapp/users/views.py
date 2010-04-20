@@ -42,22 +42,10 @@ def create_user(request):
             # Create new user
             new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
             new_profile.save()
-            
-            # Create user's default group with same name as user
-            new_group = Group(name = new_name)
-            new_group.save();
-            
-            # Add this user as an administrator of the group
-            new_group_admin = GroupAdmin(group = new_group, admin = new_profile)
-            new_group_admin.save()
-            
-            # Add this user as a member of the new_group
-            new_profile.groups.add(new_group)
-            
-            # Create the default tag for all audio files uploaded by this user (fixture because it will not be able to be deleted)
-            default_tag = Tag(group = new_group, isProject = 0, isFixture = 1, tag = 'Uploads')
-            default_tag.save()
 
+            # Create user's default group
+            new_group = create_group_all(new_profile, tag_is_fixture = 1)
+            
             return HttpResponseRedirect('/')
     else:
         form = RegistrationForm()

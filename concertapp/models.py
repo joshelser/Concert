@@ -176,3 +176,27 @@ class Audio(models.Model):
             return True
         else:
             return False
+
+##
+# Given a user, it creates the corresponding group
+#
+# @param user
+def create_group_all(user, tag_is_fixture = 0):
+    # Create user's default group
+    new_group = Group(name = user.username)
+    new_group.save()
+
+    # Make the user the admin
+    new_group_admin = GroupAdmin(group = new_group, admin = user)
+    new_group_admin.save()
+            
+    # Add this user as a member of the new_group
+    user.groups.add(new_group)
+
+    # Create the default tag for all audio files uploaded by this user 
+    # (fixture because it will not be able to be deleted)
+    tag = Tag(group = new_group, isProject = 0, isFixture = tag_is_fixture, tag
+            = 'Uploads')
+    tag.save()
+
+    return new_group
