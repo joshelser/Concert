@@ -89,6 +89,7 @@ function load_waveform(segmentID) {
         url: '/audio/'+audioID+'/waveformsrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
+                alert(data);
                 /* replace image src with proper image */
                 $('img#waveform_viewer_image').attr('src', data);                
                 /* Set waveform viewer audioid attribute to proper audioID */
@@ -119,6 +120,7 @@ function load_audio(audioID) {
                 var $audioElement = $('audio').html('').get(0);
                 $('<source>').attr('src', data).appendTo($audioElement);
                 var $audioElementID = $('audio').attr('id');
+              
                 /* Wait for all audio elements to become available */
                 AudioLoader(function(){
                     /* Create waveform viewer object */
