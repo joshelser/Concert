@@ -52,6 +52,19 @@ var $waveformPlayer = null;
         }
     });
     
+    /** Space bar plays and pauses **/
+    $(document).bind('keypress', function(event){
+        if(event.keyCode == 32) {
+            event.preventDefault();
+            if($('#play_button').length) {
+                $('#play_button').click();                
+            }
+            else {                
+                $('#pause_button').click();
+            }
+        }
+    });
+    
     $('#pause_button').live('click', function(event) {
         event.preventDefault();
         /* if button is not disabled */
