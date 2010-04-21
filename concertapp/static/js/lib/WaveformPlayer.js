@@ -24,6 +24,14 @@ var WaveformPlayer = function(containerID, audioID) {
  **/
 WaveformPlayer.prototype = new WaveformViewer();
 
+/**
+ *  initialize
+ *  Function that runs initially, called by constructor.  Initializes all members
+ *  and checks all elements being retrieved from DOM for errors.
+ *
+ *  @param          containerID             The id of the container element.
+ *  @param          audioID                 The id of the associated audio element.
+ **/ 
 WaveformPlayer.prototype.initialize = function(containerID, audioID) {
     /* Set container members */
     this.set_container(containerID);

@@ -80,6 +80,7 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, waveformEdi
     /* behavior if highlight clear occurs on self */
     $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
 }
+
 /**
  *  animate
  *  Begins the animation for a WaveformViewer object.  Should be called
@@ -126,6 +127,14 @@ WaveformViewer.prototype.animate = function(params) {
     }               
 }
 
+/**
+ *  clicked
+ *  Behavior for a WaveformViewer whenever the container is clicked.
+ *  This seeks to the time in the audio file relative to the click, and updates
+ *  the interface accordingly.
+ *
+ *  @param          event           The click event.
+ **/
 WaveformViewer.prototype.clicked = function(event) {
     
     /* make some vars local for quicker access */
@@ -150,7 +159,9 @@ WaveformViewer.prototype.clicked = function(event) {
         $(container).children('div.playhead').css('margin-left', (clickX)+'px');                
         $(container).children('div.timecode').html(sec_to_timecode(newTime));
         
-        /* Manually update waveform_editor */
+        /*  Manually update WaveformEditor object if one exists.
+            One would not exist if this function is being used from a
+            WaveformPlayer object because it was inherited. */
         if(typeof(this.waveformEditor) != 'undefined') {
             this.waveformEditor.animate({once: true});            
         }
