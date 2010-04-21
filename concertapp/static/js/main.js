@@ -144,8 +144,8 @@ function load_audio(audioID, segmentID) {
                 
                 var $audioElementID = $('audio').attr('id');
               
-                /* Wait for all audio elements to become available */
-                AudioLoader(function(){
+                /* Wait for audio element to become available before finishing load */
+                $(audioElement).one('canplay', function(){
                     /* Create waveform viewer object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     
