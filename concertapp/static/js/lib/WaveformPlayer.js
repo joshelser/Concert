@@ -53,15 +53,21 @@ WaveformPlayer.prototype.initialize = function(containerID, audioID) {
     /* container width */
     this.waveformWidth = 800;
     
-    /* Highlighter on viewer 
-    this.highlighter = new Highlighter({
+    /* Highlighter on viewer */
+    this.highlighter = new HighlightViewer({
         highlightElement: $(this.container).children('#viewer_highlight'), 
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
         audioElementDuration: this.audioElement.duration
-    });*/
+    });
     
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
+    
+    /* behavior if highlight occurs on viewer */
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); } }(this));
+    /* behavior if highlight clear occurs on self */
+    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+    
 }

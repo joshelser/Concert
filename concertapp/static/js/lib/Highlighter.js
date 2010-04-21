@@ -12,6 +12,13 @@
  **/
 var Highlighter = function(params) {
     
+    if(typeof(params) != 'undefined') {
+        this.initialize(params);            
+    }
+    return this;    
+}
+
+Highlighter.prototype.initialize = function(params) { 
     /* Initialize members. */
     
     /* highlightElement is the element that is the actual highlight */
@@ -57,9 +64,6 @@ var Highlighter = function(params) {
     $(this.waveformElement).mousemove(function(obj){return function(event) { obj.continue_drag(event); } }(this));
     /* end highlight on mouseup (use entire container for this incase they drag off the image) */
     $(this.container).mouseup(function(obj){return function(event) { obj.end_drag(event); } }(this));
-    
-    
-    return this;    
 }
 
 /**
@@ -188,6 +192,12 @@ Highlighter.prototype.set_waveform_left = function(left) {
     this.waveformLeft = left*1;
 }
 
+/**
+ *  set_highlight_time
+ *  Sets the highlight based on time values sent as parameters.
+ *
+ *  @param          data        {start, end}
+ **/
 Highlighter.prototype.set_highlight_time = function(data) {
     var startTimePerc = data.start/this.audioElementDuration;
     var endTimePerc = data.end/this.audioElementDuration;

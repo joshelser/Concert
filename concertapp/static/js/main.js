@@ -98,7 +98,7 @@ function load_waveform(segmentID) {
                 /* Set waveform viewer audioid attribute to proper audioID */
                 $('#waveform_viewer').attr('data-audioid', audioID);
                 /* Load audio element, then intialize waveformPlayer object */
-                load_audio(audioID);
+                load_audio(audioID, segmentID);
             }
             else {
                 alert('An error has occurred.');
@@ -114,7 +114,7 @@ function load_waveform(segmentID) {
 *
 *   @param              audioID             the Audio object id
 **/
-function load_audio(audioID) {
+function load_audio(audioID, segmentID) {
     /* Load audio element into audio container */
     $.ajax({
         url: '/audio/'+audioID+'/audiosrc/',
@@ -135,6 +135,17 @@ function load_audio(audioID) {
                 AudioLoader(function(){
                     /* Create waveform viewer object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
+                    
+                    /* Get start and end times */
+                    times = {
+                        start: $('#segment_start-'+segmentID).html(),
+                        end: $('#segment_end-'+segmentID).html()
+                    };
+                    
+                    /*  Draw highlight on waveformPlayer based on start and end times.  
+                        This creates an audio loop, and a highlight drawn on the interface. */
+                    $waveformPlayer.highlighter.set_highlight_time(times);
+
                     /* remove loading */
                     remove_loading();
                     /* Enable play button */
