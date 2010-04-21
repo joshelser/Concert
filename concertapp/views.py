@@ -59,3 +59,9 @@ def index(request):
         'selected_tag' : selected_tag,
         'segment_list' : segment_list
         }, RequestContext(request))
+
+
+@login_required
+def edit(request,segment_id):
+    return render_to_response('edit.html');
+

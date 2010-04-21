@@ -199,8 +199,7 @@ a {color:#333;}
 	opacity: .25;
 	position: absolute; 
 	margin-left: 0px; 
-	width: 0px; 
-	height: inherit;
+	width: 0px;
 	border-left: 1px solid #FFFAFA; 
 	border-right: 1px solid #FFFAFA;
 }
@@ -209,23 +208,26 @@ a {color:#333;}
 	margin-left:0px;
 	width:1px; 
 	background-color: #aaddff;
-	border-left:1px #eee solid;
-	border-right:1px #eee solid;
 	position: absolute;
 	z-index: 1;
-	height:102px;
+	height:100px;
 }
 
 #viewer_image {
     width: inherit;
     height: inherit;
 }
+
 .waveform_image {
     width: inherit;
     height: inherit;
+    margin:auto;
 }
 
-
+.no_audio {
+    width:auto; !important
+    height:auto; !important
+}
 
 /*body*/
 #main_wrapper {

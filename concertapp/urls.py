@@ -5,6 +5,7 @@ import os
 
 urlpatterns = patterns('concertapp.views',
     url(r'^$', 'index', name='index'),
+    url(r'edit/(?P<segment_id>.*)$', 'edit', name='edit'),
     # Users
     (r'^users/', include('concertapp.users.urls')),
     # Audio
