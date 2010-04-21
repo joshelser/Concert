@@ -107,7 +107,9 @@ function load_waveform(segmentID) {
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* replace image src with proper image */
-                $('img#waveform_viewer_image').attr('src', data);                
+                $('img#waveform_viewer_image').attr('src', data);
+                /* show image */                
+                $('img#waveform_viewer_image').fadeIn('slow');
                 /* Set waveform viewer audioid attribute to proper audioID */
                 $('#waveform_viewer').attr('data-audioid', audioID);
                 /* Load audio element, then intialize waveformPlayer object */

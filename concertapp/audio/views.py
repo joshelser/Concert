@@ -189,13 +189,21 @@ def view_waveform(request, audio_id):
 #
 #   @param          request         HTTP request
 #   @param          audio_id        The Audio object id
+#   @param          type_waveform   specifies which image is wanted
 ###
-def waveform_src(request, audio_id):
+def waveform_src(request, audio_id, type_waveform = 'viewer'):
     audio = Audio.objects.get(pk = audio_id)
     
     # return waveform path in plaintext
     response = HttpResponse(mimetype='text/plain')
-    response.write(audio.waveform.url)
+    if type_waveform == 'viewer':
+        response.write(audio.waveformViewer.url)
+    elif type_waveform == 'editor':    
+        response.write(audio.waveformEditor.url)
+    else:
+        raise Exception("paramater type_waveform can be either 'viewer' or 'editor', '" + type_waveform + "' its invalid")
+        return
+        
     return response
     
 ###
@@ -218,14 +226,18 @@ def generate_waveform(audio):
     # Create the wav object
     wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
     length = wavObj.getLength()
+    
+    # Name of the image for the waveform viewer (small waveform image) 
+    viewerImgPath = 'images/viewers/'+str(audio.wavfile) + '_800.png'    
+    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 20)
 
-    # Name of the image file
-    imgPath = 'images/'+str(audio.wavfile) + '_' + str(5 * length) + '.png'
-
-    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, imgPath), 5 * length, 585)
+    # Name of the image for the waveform editor (large waveform image)
+    editorImgPath = 'images/editors/'+str(audio.wavfile) + '_' + str(5 * length) + '.png'
+    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, editorImgPath), 5 * length, 585)
 
     # Save the path relative to the media_dir
-    audio.waveform = imgPath
+    audio.waveformViewer = viewerImgPath    
+    audio.waveformEditor = editorImgPath
     audio.save()
 
 ###
