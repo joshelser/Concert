@@ -161,10 +161,21 @@ function load_audio(audioID, segmentID) {
 
                     /* remove loading */
                     remove_loading();
-                    /* Enable play button */
-                    $('#play_button').removeClass('disabled');
-                    /* Enable edit button */
-                    $('#edit_button').removeClass('disabled');
+                    
+                    /* If play button is disabled */
+                    if($('#play_button').hasClass('disabled')) {
+                        /* Enable play button */
+                        $('#play_button').removeClass('disabled');
+                        /* Enable edit button */
+                        $('#edit_button').removeClass('disabled');
+                        /* Enable volume slider */
+                        $('.volume_slider').removeClass('disabled');
+                        /* Create new volume slider object */
+                        $volumeSlider = new VolumeSlider({
+                            sliderID: 'slider',
+                            handleID: 'handle'
+                        });
+                    }
                     
                 });                            
             }
@@ -204,5 +215,4 @@ function pause() {
     
     /* Change pause to play button */
     $('#pause_button').attr('id', 'play_button').attr('value', 'Play');
-    
 }
