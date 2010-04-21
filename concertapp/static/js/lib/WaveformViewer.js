@@ -12,10 +12,37 @@
  **/
 var WaveformViewer = function(containerID, audioID) {
     
+    if(typeof(containerID) != 'undefined' && typeof(audioID) != 'undefined') {
+        this.initialize(containerID, audioID);
+    }    
+    
+    
+    return this;
+}
+/**
+ *  WaveformViewer objects inherit from the Waveform class
+ **/
+WaveformViewer.prototype = new Waveform();
+
+/**
+ *  initialize
+ *  Function that runs initially, called by constructor.  Initializes all members
+ *  and checks all elements being retrieved from DOM for errors.
+ *
+ *  @param          containerID             The id of the container element.
+ *  @param          audioID                 The id of the associated audio element.
+ *  @param          waveformEditor          The waveformEditor object.
+ **/
+WaveformViewer.prototype.initialize = function(containerID, audioID, waveformEditor) {
     /* Set container members */
     this.set_container(containerID);
     /* Set audio members */
     this.set_audio(audioID);
+    /* set reference to waveformEditor object */
+    this.waveformEditor = waveformEditor;
+    if(typeof(this.waveformEditor) == 'undefined') {
+        throw new Error('WaveformViewer: Unable to get waveformEditor object.');
+    }
     
     /* The object to animate is the playhead */
     this.playheadElement = $('#'+this.id+' > div.playhead').get(0);
@@ -52,16 +79,7 @@ var WaveformViewer = function(containerID, audioID) {
     $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate({once: true}); } }(this));
     /* behavior if highlight clear occurs on self */
     $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
-    
-    
-    
-    return this;
 }
-/**
- *  WaveformViewer objects inherit from the Waveform class
- **/
-WaveformViewer.prototype = new Waveform();
-
 /**
  *  animate
  *  Begins the animation for a WaveformViewer object.  Should be called
@@ -133,6 +151,8 @@ WaveformViewer.prototype.clicked = function(event) {
         $(container).children('div.timecode').html(sec_to_timecode(newTime));
         
         /* Manually update waveform_editor */
-        $waveformPlayers['waveform_editor'].animate({once: true});
+        if(typeof(this.waveformEditor) != 'undefined') {
+            this.waveformEditor.animate({once: true});            
+        }
     }
 }

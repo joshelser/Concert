@@ -44,7 +44,7 @@ Waveform.prototype.set_container = function(containerID) {
     /* Get container from DOM and set member variable */
     this.container = $('#'+containerID).get(0);
     if(!this.container) {
-        throw new Error('set_container: Invalid containerID.');
+        throw new Error('Waveform.prototype.set_container: Invalid containerID.');
     }    
 }
 
@@ -60,7 +60,7 @@ Waveform.prototype.set_audio = function(audioID) {
     this.audioID = audioID;
     this.audioElement = $('#'+audioID).get(0);
     if(!this.audioElement) {
-        throw new Error('set_audio: Invalid audioID');
+        throw new Error('Waveform.prototype.set_audio: Invalid audioID');
     }
 }
 

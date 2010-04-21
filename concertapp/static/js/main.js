@@ -134,7 +134,7 @@ function load_audio(audioID) {
                 /* Wait for all audio elements to become available */
                 AudioLoader(function(){
                     /* Create waveform viewer object */
-                    $waveformPlayer = new WaveformViewer('waveform_viewer', $audioElementID);
+                    $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     /* remove loading */
                     remove_loading();
                     /* Enable play button */

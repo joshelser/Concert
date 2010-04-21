@@ -23,7 +23,8 @@
    *    Preload images
    **/
   var images = [];
-  images.push($('<img />').attr('src', '/media/graphics/button_press.png'));
+  images.push($('<img />').attr('src', '/graphics/button_press.png'));
+  images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
 
   
   
@@ -36,7 +37,7 @@
  **/
 function loading() {
     /* Turn on global loading notification */
-    $('body').prepend('<img id="loader" src="/media/graphics/ajax-loader.gif" />');
+    $('body').prepend('<img id="loader" src="/graphics/ajax-loader.gif" />');
 }
 
 /**
