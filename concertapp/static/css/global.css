@@ -134,6 +134,7 @@ a {color:#333;}
 	top:75px;
 }
 
+.volume_slider.disabled { opacity: 0.5; }
 #slider {
 	background:url(/graphics/volume_slider.png) repeat-x;	
 	border:1px #999 solid;
@@ -146,7 +147,8 @@ a {color:#333;}
 	-moz-border-radius-bottomleft:15px;
 	-webkit-border-bottom-left-radius:15px;
 	height:3px;
-  width:100%;
+	/* Width must be defined in pixels for sliding to work correctly */
+    width:100px;
 }
 
 #handle{
