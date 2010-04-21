@@ -229,7 +229,7 @@ def generate_waveform(audio):
     
     # Name of the image for the waveform viewer (small waveform image) 
     viewerImgPath = 'images/viewers/'+str(audio.wavfile) + '_800.png'    
-    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 20)
+    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 110)
 
     # Name of the image for the waveform editor (large waveform image)
     editorImgPath = 'images/editors/'+str(audio.wavfile) + '_' + str(5 * length) + '.png'
