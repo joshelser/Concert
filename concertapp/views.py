@@ -101,8 +101,6 @@ def new_segment_submit(request):
             # Get the tag name
             tag_name = form.cleaned_data['tag_field']
 
-            parent_segment = AudioSegment.objects.get(pk = segment_id)
-
             # Save the form/segment
             segment = form.save(commit=False)
 
