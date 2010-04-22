@@ -124,11 +124,6 @@ def new_segment_submit(request):
                 tag = Tag(group = group, tag = tag_name, isProject = 0,
                         isFixture = 0)
 
-            print segment.name
-            print segment.beginning
-            print segment.end
-            print segment.audio
-
             segment.save()
 
             tag.save()
