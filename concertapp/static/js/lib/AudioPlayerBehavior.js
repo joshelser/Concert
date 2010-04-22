@@ -115,3 +115,37 @@ function toggle_play_pause_button() {
         $('#pause_button').attr('id', 'play_button').attr('value', 'Play');        
     }
 }
+
+/**
+ *  activate_controls
+ *  Enables all playback controls if they are disabled.
+ ***/
+function activate_controls() {
+    /* If play button is disabled */
+    if($('#play_button').hasClass('disabled')) {
+        /* Enable play button */
+        $('#play_button').removeClass('disabled');
+        /* Enable edit button */
+        $('#edit_button').removeClass('disabled');
+        /* Enable volume slider */
+        $('.volume_slider').removeClass('disabled');                                
+    }
+}
+
+/** 
+ *  initialize_volume_slider
+ *  Creates the volumeSlider object for the audio controls based on the given IDs
+ *  of DOM elements.
+ *
+ *  @param              params          {   sliderID: The id of the slider element,
+ *                                          handleID: The ID of the handle element,
+ *                                          audioID: the ID of the audio element }
+ **/
+function initialize_volume_slider(params) {
+    /* Create new volume slider object */
+    $volumeSlider = new VolumeSlider({
+        sliderID: params.sliderID,
+        handleID: params.handleID,
+        audioID: params.audioID
+    });
+}

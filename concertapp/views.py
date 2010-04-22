@@ -81,7 +81,8 @@ def edit(request, segment_id, group_id):
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
-        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url
+        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
+        'audioSegment' : audioSegment
         },RequestContext(request));
     
 
