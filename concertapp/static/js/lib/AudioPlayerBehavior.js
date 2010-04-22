@@ -62,7 +62,7 @@ function initialize_audio_player_behavior() {
 function play() {
     /* Get and play audio player */
     $('audio').get(0).play();
-    toggle_play_pause_buton();
+    toggle_play_pause_button();
 }
 
 /**

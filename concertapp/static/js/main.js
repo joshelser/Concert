@@ -17,7 +17,7 @@ var $volumeSlider = null;
         event.preventDefault();
         
         /* If audio is currently playing, stop it */
-        if($('audio').hasClass('playing')) {
+        if(!$('audio').get(0).paused) {
             pause();
         }
         
@@ -98,6 +98,8 @@ function load_waveform(segmentID) {
 *   objects audio file.
 *
 *   @param              audioID             the Audio object id
+*   @param              segmentID           the AudioSegment object id
+*   @param              callBackFunction    the function to be executed after the audio has been loaded
 **/
 function load_audio(audioID, segmentID, callBackFunction) {
     /* Load audio element into audio container */
