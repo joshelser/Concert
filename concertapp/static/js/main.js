@@ -16,8 +16,6 @@ var $volumeSlider = null;
     $('.segment_row').click(function(event) {
         event.preventDefault();
         
-        $('img#waveform_viewer_image').fadeOut('slow', loading());
-        
         /* If audio is currently playing, stop it */
         if($('audio').hasClass('playing')) {
             pause();
@@ -61,13 +59,14 @@ function load_waveform(segmentID) {
 
     /* If waveform image is already this audio file */
     if(typeof($('#waveform_viewer').attr('data-audioid')) != 'undefined'
-    && $('#waveform_viewer').attr('data-audioid') == audioID) {
-        /* Remove loading notification */
-        remove_loading();
-        
+    && $('#waveform_viewer').attr('data-audioid') == audioID) {     
         /* Don't load image again */
         return;
     }
+    
+    $('#viewer_highlight').css('width','0');
+    
+    $('img#waveform_viewer_image').fadeOut('slow', loading());
 
     /** Load waveform image **/
     $.ajax({
@@ -75,15 +74,16 @@ function load_waveform(segmentID) {
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* Load audio element, then intialize waveformPlayer object */
-                load_audio(audioID, segmentID);
-                /* replace image src with proper image */
-                $('img#waveform_viewer_image').attr('src', data);
-                /* show image */                
-                $('img#waveform_viewer_image').fadeIn('slow');
-                /* Set waveform viewer audioid attribute to proper audioID */
-                $('#waveform_viewer').attr('data-audioid', audioID);
-                /* remove loading */
-                remove_loading();
+                load_audio(audioID, segmentID, function() {
+                    /* remove loading */
+                    remove_loading();
+                    /* replace image src with proper image */
+                    $('img#waveform_viewer_image').attr('src', data);
+                    /* show image */                
+                    $('img#waveform_viewer_image').fadeIn('slow');
+                    /* Set waveform viewer audioid attribute to proper audioID */
+                    $('#waveform_viewer').attr('data-audioid', audioID);
+                });
             }
             else {
                 alert('An error has occurred.');
@@ -99,7 +99,7 @@ function load_waveform(segmentID) {
 *
 *   @param              audioID             the Audio object id
 **/
-function load_audio(audioID, segmentID) {
+function load_audio(audioID, segmentID, callBackFunction) {
     /* Load audio element into audio container */
     $.ajax({
         url: '/audio/'+audioID+'/audiosrc/',
@@ -155,6 +155,8 @@ function load_audio(audioID, segmentID) {
                     }
                     /* Set volume to 0.8 initially */
                     $volumeSlider.change_volume(0.8);
+                    
+                    callBackFunction();
                     
                 });                            
             }
