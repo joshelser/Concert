@@ -217,11 +217,21 @@ a {color:#333;}
 }
 
 #viewer_image {
+    width: inherit;
+    height: inherit;
 }
 
 .waveform_image {
+    width: inherit;
+    height: inherit;
     margin:auto;
 }
+
+.no_audio {
+    width:auto; !important
+    height:auto; !important
+}
+
 
 .default {
     width:auto !important;

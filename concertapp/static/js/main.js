@@ -4,9 +4,10 @@
 **/
 
 /**
-*  Global variable for waveform player.
+*  Global variable for waveform player and volume slider.
 **/
 var $waveformPlayer = null;
+var $volumeSlider = null;
 
 (function() {
     /**
@@ -70,6 +71,8 @@ var $waveformPlayer = null;
             pause();
         }
     });
+    
+    initialize_audio_player_behavior();
 
 })();
 
@@ -137,7 +140,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* Remove audio element from page */
-                $('audio').html('').remove();
+                $('audio').remove();
                 /* Create new audio element */
                 var audioElement = $('<audio>').attr('id', 'audio_element').attr('class', 'audio_element');
                 /* Add source to audio element */
@@ -148,7 +151,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
                 var $audioElementID = $('audio').attr('id');
               
                 /* Wait for audio element to become available before finishing load */
-                $(audioElement).one('canplay', function(){
+                $(audioElement).one('canplaythrough', function(){
                     /* Create waveform viewer object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     
@@ -175,9 +178,17 @@ function load_audio(audioID, segmentID, callBackFunction) {
                         /* Create new volume slider object */
                         $volumeSlider = new VolumeSlider({
                             sliderID: 'slider',
-                            handleID: 'handle'
+                            handleID: 'handle',
+                            audioID: 'audio_element'
                         });
+                                                
                     }
+                    else {
+                        /* Update volumeSlider's audio element */
+                        $volumeSlider.set_audio_element('audio_element');
+                    }
+                    /* Set volume to 0.8 initially */
+                    $volumeSlider.change_volume(0.8);
                     
                     callBackFunction();
                     
@@ -198,10 +209,8 @@ function load_audio(audioID, segmentID, callBackFunction) {
  *  Plays the audio file, and also begins any associated waveform objects.
  **/
 function play() {
-    /* Get audio player */
-    var $player = $('audio').addClass('playing').get(0);
-    $player.play();
-    $waveformPlayer.play();
+    /* Get and play audio player */
+    $('audio').get(0).play();
     
     /* Change play button to pause button */
     $('#play_button').attr('id', 'pause_button').attr('value', 'Pause');
@@ -214,8 +223,8 @@ function play() {
  *  Pauses the audio element.
  **/
 function pause() {
-    var $player = $('audio').removeClass('playing').get(0);
-    $player.pause();
+    /* Pause audio player */
+    $('audio').get(0).pause();
     
     /* Change pause to play button */
     $('#pause_button').attr('id', 'play_button').attr('value', 'Play');

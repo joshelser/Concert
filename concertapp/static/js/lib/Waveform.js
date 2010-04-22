@@ -13,23 +13,17 @@ var Waveform = function() {
 }
 
 /**
- *  setPlaying
- *  Adds the "playing" class to the waveform container.  Should be called
- *  before waveform animation starts.
+ *  watch_audio_behavior
+ *  Watches the audio element, and runs the play or pause method when audio element
+ *  is played or paused, respectively.
  **/
-Waveform.prototype.set_playing = function() {
-    /* Set container class to 'playing' */
-    $(this.container).addClass('playing');    
+Waveform.prototype.watch_audio_behavior = function(){
+    /* Run play method when audio element fires 'play' event. */
+    $(this.audioElement).bind('play', function(waveformObject){ return function(){ waveformObject.play(); } }(this));
+    /* Same for pause */
+    $(this.audioElement).bind('pause', function(waveformObject){ return function(){ waveformObject.pause(); } }(this));
 }
 
-/**
- *  setPaused
- *  Removes the "playing" class from the waveform container.  Should be called
- *  when animation completes.
- **/
-Waveform.prototype.set_paused = function() {
-    $(this.container).removeClass('playing');
-}
 
 /**
  *  set_container
@@ -43,7 +37,7 @@ Waveform.prototype.set_container = function(containerID) {
     
     /* Get container from DOM and set member variable */
     this.container = $('#'+containerID).get(0);
-    if(!this.container) {
+    if(typeof(this.container) == 'undefined') {
         throw new Error('Waveform.prototype.set_container: Invalid containerID.');
     }    
 }
@@ -59,7 +53,7 @@ Waveform.prototype.set_audio = function(audioID) {
     /* get audio element from DOM, and set member */
     this.audioID = audioID;
     this.audioElement = $('#'+audioID).get(0);
-    if(!this.audioElement) {
+    if(typeof(this.audioElement) == 'undefined') {
         throw new Error('Waveform.prototype.set_audio: Invalid audioID');
     }
 }
@@ -70,10 +64,20 @@ Waveform.prototype.set_audio = function(audioID) {
  *  associated audio element begins to play.
  **/
 Waveform.prototype.play = function() {
-    this.set_playing();
     
     this.animate();
 }
+
+/**
+ *  pause
+ *  Removes the "playing" class from the waveform container.  Should be called
+ *  when animation completes.
+ **/
+Waveform.prototype.pause = function() {
+    /* Does nothing right now */
+}
+
+
 
 /**
  *  start_loop
@@ -123,4 +127,23 @@ Waveform.prototype.continue_loop = function(params) {
 Waveform.prototype.clear_loop = function() {
     clearInterval(this.loopInterval);
     this.loopInterval = null;
+}
+
+/**
+ *  animate
+ *  Begins the animation for a Waveform object.  Should be called
+ *  when animation is to start or occur.  The child class will have to 
+ *  have implemented the draw_animation function, where one step
+ *  of the animation actually takes place.
+ **/
+Waveform.prototype.animate = function() {
+    
+    /* Draw the animation once */
+    this.draw_animation();
+    
+    /* make sure audio element is still playing */
+    if(!this.audioElement.paused) {
+        /* if so, go again in animation.speed ms */
+        setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
+    }
 }
