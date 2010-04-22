@@ -3,6 +3,12 @@
 *  main.js contains all of the functionality associated with the main page interface.
 **/
 
+/**
+ *  Global variable for WaveformPlayer object.
+ **/
+var $waveformPlayer = null;
+
+
 (function() {
     /**
     *  When segment row is clicked, load waveform into waveform viewer.
@@ -115,7 +121,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
               
                 /* Wait for audio element to become available before finishing load */
                 $(audioElement).one('canplaythrough', function(){
-                    /* Create waveform viewer object */
+                    /* Create waveform player object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     
                     /* Get start and end times */
@@ -131,21 +137,13 @@ function load_audio(audioID, segmentID, callBackFunction) {
                     $waveformPlayer.highlighter.set_highlight_time(times);
 
                     
-                    /* If play button is disabled */
-                    if($('#play_button').hasClass('disabled')) {
-                        /* Enable play button */
-                        $('#play_button').removeClass('disabled');
-                        /* Enable edit button */
-                        $('#edit_button').removeClass('disabled');
-                        /* Enable volume slider */
-                        $('.volume_slider').removeClass('disabled');
-                        /* Create new volume slider object */
-                        $volumeSlider = new VolumeSlider({
-                            sliderID: 'slider',
-                            handleID: 'handle',
-                            audioID: 'audio_element'
-                        });
-                                                
+                    /* If volume slider has not yet been defined */
+                    if($volumeSlider == null) {
+                        /* Enable control buttons */
+                        activate_controls();
+                        
+                        /* initialize volume slider */
+                        initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
                     }
                     else {
                         /* Update volumeSlider's audio element */

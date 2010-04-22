@@ -31,18 +31,12 @@ WaveformViewer.prototype = new Waveform();
  *
  *  @param          containerID             The id of the container element.
  *  @param          audioID                 The id of the associated audio element.
- *  @param          waveformEditor          The waveformEditor object.
  **/
-WaveformViewer.prototype.initialize = function(containerID, audioID, waveformEditor) {
+WaveformViewer.prototype.initialize = function(containerID, audioID) {
     /* Set container members */
     this.set_container(containerID);
     /* Set audio members */
     this.set_audio(audioID);
-    /* set reference to waveformEditor object */
-    this.waveformEditor = waveformEditor;
-    if(typeof(this.waveformEditor) == 'undefined') {
-        throw new Error('WaveformViewer: Unable to get waveformEditor object.');
-    }
     
     /* The object to animate is the playhead */
     this.playheadElement = $('#'+this.id+' > div.playhead').get(0);
@@ -68,17 +62,38 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, waveformEdi
         audioElementDuration: this.audioElement.duration
     });
     
+    /* Behavior when audio element is played and paused */
+    this.watch_audio_behavior(); 
+    
+    
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     
-    /* behavior if highlight is drawn on waveform editor */
-    $('#waveform_editor').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
-    /* behavior if waveform editor highlight is cleared */
-    $('#waveform_editor').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
     /* behavior if highlight occurs on viewer */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate(); } }(this));
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); obj.waveformEditor.draw_animation(); } }(this));
     /* behavior if highlight clear occurs on self */
     $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+}
+
+/**
+ *  set_waveform_editor
+ *  Initializes the associated WaveformEditor object with this WaveformViewer object.
+ *  Should be called after the WaveformViewer and WaveformEditor are instantiated.
+ *
+ *  @param              waveformEditor          The WaveformEditor object.
+ **/
+WaveformViewer.prototype.set_waveform_editor = function(waveformEditor){
+    /* set reference to waveformEditor object */
+    this.waveformEditor = waveformEditor;
+    if(typeof(this.waveformEditor) == 'undefined') {
+        throw new Error('WaveformViewer: Unable to get waveformEditor object.');
+    }
+    
+    /* Initialize waveform editor behavior */
+    /* behavior if highlight is drawn on waveform editor */
+    $(this.waveformEditor.container).bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
+    /* behavior if waveform editor highlight is cleared */
+    $(this.waveformEditor.container).bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
 }
 
 

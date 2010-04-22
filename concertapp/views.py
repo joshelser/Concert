@@ -85,6 +85,7 @@ def edit(request, segment_id, group_id):
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
         'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
         'form'              : form
+        'audioSegment' : audioSegment
         },RequestContext(request));
     
 
