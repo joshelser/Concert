@@ -96,8 +96,9 @@ def new_segment_submit(request):
     if request.method == 'POST':
         # Create the form
         form = CreateSegmentForm(request.POST)
-
+        
         if form.is_valid():
+            print 'valid'
             # Get the tag name
             tag_name = form.cleaned_data['tag_field']
 
@@ -139,6 +140,12 @@ def new_segment_submit(request):
 
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
+            return response
+        else :
+            
+            print 'invalid'+repr(form.errors)
+            response = HttpResponse(mimetype='text/plain')
+            response.write('Error: validating form')
             return response
 
 
