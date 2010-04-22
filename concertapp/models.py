@@ -52,7 +52,8 @@ class Audio(models.Model):
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'uploader')
-    waveform = models.ImageField(upload_to = 'images/')
+    waveformViewer = models.ImageField(upload_to = 'images/viewers')
+    waveformEditor = models.ImageField(upload_to = 'images/editors')
 
     def mp3_to_wav(self, originalFile):
         # Use the original filename as a prefix

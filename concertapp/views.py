@@ -53,6 +53,7 @@ def index(request):
     segment_list = selected_tag.segments.all()
     
     return render_to_response('index.html', {
+        'no_show' : "no_show",
         'group_list': group_list, 
         'selected_group': selected_group, 
         'tag_list' : tag_list, 
@@ -63,5 +64,9 @@ def index(request):
 
 @login_required
 def edit(request,segment_id):
+    audioSegment = Audio.objects.get(pk = segment_id)
+    
+    segmentWaveformURL = audioSegment.audio.waveform.url
+    
+    
     return render_to_response('edit.html');
-

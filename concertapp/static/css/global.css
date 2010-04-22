@@ -63,13 +63,15 @@ form > input, fieldset > input {
 	-moz-border-radius-bottomright:15px;
 	-webkit-border-bottom-right-radius:15px;
 	border:1px #b0b0b0 solid;
-  padding:0 8px 0 8px;
+    padding:0 8px 0 8px;
 	height:28px;
 }
 
 .error {color:red;}
 
 .clear {clear:both;}
+
+.no_show {display:none;}
 
 a {color:#333;}
 
@@ -202,6 +204,7 @@ a {color:#333;}
 	width: 0px;
 	border-left: 1px solid #FFFAFA; 
 	border-right: 1px solid #FFFAFA;
+	height:110px;
 }
 
 #viewer_playhead {
@@ -227,6 +230,17 @@ a {color:#333;}
 .no_audio {
     width:auto; !important
     height:auto; !important
+}
+
+
+.default {
+    width:auto !important;
+    height:auto !important; 
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-top:-24px;
+    
 }
 
 /*body*/

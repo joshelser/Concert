@@ -22,11 +22,11 @@
             <div id="waveform_editor" class="waveform">        	
                 <div id="editor_highlight" ></div>
                 <div id="editor_playhead" class="playhead"></div>
-                <div id="editor_image"><img class="waveform_image" id="waveform_viewer_image" src="/graphics/default_waveform.png"/></div>
+                <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_viewer_image" src = "{{ waveformEditorSrc }}" /></div>
             </div>     
         </div>
     </div>
 </div>
 
-<script src="/js/main.js"></script>
+<script src="/js/edit.js"></script>
 {% endblock %}
