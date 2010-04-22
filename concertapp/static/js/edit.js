@@ -21,6 +21,8 @@ var $waveformEditor = null;
         
         /* Create waveform viewer object */
         $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
+        /* Create waveform editor object */
+        $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
         
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});

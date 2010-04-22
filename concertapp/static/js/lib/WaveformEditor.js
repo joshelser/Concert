@@ -20,19 +20,19 @@ var WaveformEditor = function(containerID, audioID) {
     
     /* The object to animate is actual waveform image */
     this.waveformElement = $('#'+this.id+' > img.waveform_image').get(0);
-    if(!this.waveformElement) {
+    if(typeof(this.waveformElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get waveformElement.');
     }
     
     /* The highlight element on the page */
     this.highlightElement = $('#'+this.id+' > div#highlight').get(0);
-    if(!this.highlightElement) {
+    if(typeof(this.highlightElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get highlightElement.');
     }
     
     /* get waveform image width from end of waveform image file name */
     this.waveformWidth = $(this.waveformElement).attr('src').split('_')[1].match(/[\d]+/)*1;
-    if(!this.waveformWidth || typeof this.waveformWidth != 'number')
+    if(typeof(this.waveformWidth) != 'number')
     {
         throw new Error('WaveformEditor: Could not get waveform image width.');
     }
