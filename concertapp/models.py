@@ -35,7 +35,7 @@ class UserGroupRequest(models.Model):
 
 class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment')
-    group = models.OneToOneField(Group)
+    group = models.ForeignKey(Group)
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
