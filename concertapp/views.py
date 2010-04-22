@@ -111,7 +111,7 @@ def new_segment_submit(request):
             audio_id = request.POST['audio_id']
 
             # Set parent audio file
-            segment.audio = parent_segment.audio
+            segment.audio = audio_id
             
             # Get the specified group
             group = Group.objects.get(pk = group_id)
