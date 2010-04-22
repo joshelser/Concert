@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, widgets
 from django import forms
 from django.contrib.auth.models import Group, User
 #from django.core import validators
@@ -68,11 +68,13 @@ class UploadFileForm(ModelForm):
 class CreateSegmentForm(ModelForm):
     tag_field = forms.CharField(label='Tag', max_length=80)
     label_field = forms.CharField(label='Label', max_length=80)
+    group_id = widgets.HiddenInput()
+    audio_id = widgets.HiddenInput()
 
     class Meta:
         model = AudioSegment
         exclude = ('audio', )
-        fields = ['label_field', 'tag_field', 'beginning', 'end']
+        fields = ['label_field', 'tag_field', 'beginning', 'end', ]
 
     def clean_beginning(self):
         # Ensure valid numeric data

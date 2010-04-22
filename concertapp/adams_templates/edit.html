@@ -11,7 +11,9 @@
                 <h1>New Segment</h1>
                 <table>
                     {{ form.as_table }}
-                    <tr><td></td><td style="float:right"><input type="button" id="submit_button" value="Submit" /></td></tr>
+                    <input type="hidden" value="{{ group_id }}" id="id_group_id" />
+                    <input type="hidden" value="{{ audio_id }}" id="id_audio_id" />
+                    <tr><td></td><td style="float:right"><input type="submit" id="submit_button" value="Submit" /></td></tr>
                 </table>
                 <!--
                 <p><input type = "text" value = "Group" id = "group_field"/></p>
