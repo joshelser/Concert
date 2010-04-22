@@ -15,8 +15,6 @@ var $waveformEditor = null;
     /* Initialize audio player */
     initialize_audio_player_behavior();
     
-    /* Activate player controls */
-    activate_controls();
     
     /* Create audio viewers and editors when audio element is ready. */
     $('audio').one('canplaythrough', function(){
@@ -24,8 +22,17 @@ var $waveformEditor = null;
         /* Create waveform viewer object */
         $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
         
-        /* Create waveform editor object */
-        $waveformEditor = new WaveformEditor('waveform')
+        /* Initialize volume slider */
+        initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
+        /* Change volume to .8 by default */
+        $volumeSlider.change_volume(0.8);
+        
+        
+        /* Activate player controls */
+        activate_controls();
+        
+        
     });
+    
 
 })();

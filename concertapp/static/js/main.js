@@ -3,6 +3,12 @@
 *  main.js contains all of the functionality associated with the main page interface.
 **/
 
+/**
+ *  Global variable for WaveformPlayer object.
+ **/
+var $waveformPlayer = null;
+
+
 (function() {
     /**
     *  When segment row is clicked, load waveform into waveform viewer.

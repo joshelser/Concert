@@ -62,6 +62,10 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
         audioElementDuration: this.audioElement.duration
     });
     
+    /* Behavior when audio element is played and paused */
+    this.watch_audio_behavior(); 
+    
+    
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     

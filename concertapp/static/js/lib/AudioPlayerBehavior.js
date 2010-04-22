@@ -5,9 +5,8 @@
  
 
  /**
- *  Global variable for waveform player and volume slider.
+ *  Global variable for volume slider.
  **/
- var $waveformPlayer = null;
  var $volumeSlider = null;
 
 
