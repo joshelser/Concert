@@ -62,8 +62,8 @@ Highlighter.prototype.initialize = function(params) {
     $(this.waveformElement).mousedown(function(obj){ return function(event) { obj.start_drag(event); } }(this));
     /* continue highlight on mousemove */
     $(this.waveformElement).mousemove(function(obj){return function(event) { obj.continue_drag(event); } }(this));
-    /* end highlight on mouseup (use entire container for this incase they drag off the image) */
-    $(this.container).mouseup(function(obj){return function(event) { obj.end_drag(event); } }(this));
+    /* end highlight on mouseup (use body for this incase they drag off the image) */
+    $(document).mouseup(function(obj){return function(event) { obj.end_drag(event); } }(this));
 }
 
 /**
@@ -72,7 +72,8 @@ Highlighter.prototype.initialize = function(params) {
  *  
  *  @param          event           The mousedown event.
  **/
-Highlighter.prototype.start_drag = function(event) {    
+Highlighter.prototype.start_drag = function(event) {
+    event.preventDefault();
     /* Clear old highlight */
     this.initialize_highlight();
                 
@@ -90,6 +91,7 @@ Highlighter.prototype.start_drag = function(event) {
  *  @param          event           The mousemove event.
  **/
 Highlighter.prototype.continue_drag = function(event) {
+    event.preventDefault();
     /* if mouse is down */
     if(this.dragging){
         /* Get x location of mouse relative to element */
@@ -107,10 +109,13 @@ Highlighter.prototype.continue_drag = function(event) {
  *  @event          highlight       Thrown on successful highlight, from waveform editor container.
  **/
 Highlighter.prototype.end_drag = function(event) {
-    /* Dragging has stopped */
-    this.dragging = 0;
-    
-    this.trigger_highlight();            
+    event.preventDefault();
+    if(this.dragging) {
+        /* Dragging has stopped */
+        this.dragging = 0;
+
+        this.trigger_highlight();                    
+    }
 }
 
 Highlighter.prototype.trigger_highlight = function() {
