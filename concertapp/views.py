@@ -108,6 +108,8 @@ def new_segment_submit(request):
 
             # Explicitly set name
             segment.name = form.cleaned_data['label_field']
+            group_id = form.cleaned_data['group_id']
+            audio_id = form.cleaned_data['audio_id']
 
             # Set parent audio file
             segment.audio = parent_segment.audio
