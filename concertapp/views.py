@@ -134,7 +134,7 @@ def new_segment_submit(request):
 
             segment.save()
 
-            tag.save(commit=False)
+            tag.save()
 
             tag.segments.add(segment)
 
