@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import Group, User
 #from django.core import validators
 
-from concertapp.models import Audio, GroupAdmin
+from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment
 
 class CreateGroupForm(ModelForm):
     group_name = forms.CharField(label="group_name", max_length=80,
@@ -64,3 +64,37 @@ class UploadFileForm(ModelForm):
 
         # Always return the data from the clean_* function
         return self.cleaned_data['wavfile']
+
+class CreateSegmentForm(ModelForm):
+    tag_field = forms.CharField(label='Tag', max_length=80)
+    label_field = forms.CharField(label='Label', max_length=80)
+
+    class Meta:
+        model = AudioSegment
+        exclude = ('audio', )
+        fields = ['label_field', 'tag_field', 'beginning', 'end']
+
+    def clean_beginning(self):
+        # Ensure valid numeric data
+        if not self.cleaned_data['beginning'].isdigit():
+            raise forms.ValidationError('Must be an integer')
+
+        # cast string to int
+        val = int(self.cleaned_data['beginning'])
+
+        # Valid start time
+        if val < 0:
+            raise forms.ValidationError('Must be greater than zero')
+
+        return self.cleaned_data['beginning']
+
+    def clean_end(self):
+        if not self.cleaned_data['end'].isdigit():
+            raise forms.ValidationError('Must be an integer')
+
+        val = int(self.cleaned_data['end'])
+
+        if val <= int(self.cleaned_data['beginning']):
+            raise forms.ValidationError('Must be larger than beginning value')
+
+        return self.cleaned_data['end']

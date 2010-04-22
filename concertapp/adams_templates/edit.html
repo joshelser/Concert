@@ -9,13 +9,18 @@
         <div id = "left_wrapper">
             <form id = "new_segment">
                 <h1>New Segment</h1>
+                <table>
+                    {{ form.as_table }}
+                    <tr><td /><td style="float:right"><input type="button" id="submit_button" value="Submit" /></td></tr>
+                </table>
+                <!--
                 <p><input type = "text" value = "Group" id = "group_field"/></p>
                 <p><input type = "text" value = "Tag" id = "tag_field"/></p>
                 <p><input type = "text" value = "Label" id = "label_field"/></p>
                 <p>
                     <input type = "text" value = "In Time" id = "in_time_field"/>
                     <input type = "text" value = "Out Time" id = "out_time_field"/>
-                </p>
+                    </p>-->
             </form>               
         </div>
         <div id = "right_wrapper">

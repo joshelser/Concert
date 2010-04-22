@@ -11,7 +11,7 @@ from django import forms
 from django.conf import settings
 
 from concertapp.models import *
-from concertapp.forms   import UploadFileForm
+from concertapp.forms   import UploadFileForm, CreateSegmentForm
 
 @login_required
 def index(request):
@@ -78,12 +78,44 @@ def edit(request, segment_id, group_id):
     otherAudioSegments = AudioSegment.objects.filter(audio = audioSegment.audio)
     # Group
     group = Group.objects.get(pk = group_id)
+
+    form = CreateSegmentForm()
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
-        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url
+        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
+        'form'              : form
         },RequestContext(request));
     
+
+@login_required
+def new_segment_submit(request, segment_id, group_id):
+    if request.method == 'POST':
+        # Create the form
+        form = CreateSegmentForm(request.POST)
+
+        # Get the tag name
+        tag_name = form.tag_field
+
+        # Save the form/segment
+        segment = form.save()
+        
+        # Get the specified group
+        group = Group.objects.get(pk = group_id)
+
+        # Get or make the tag
+        try:
+            tag = Tag.objects.get(tag = tag_name)
+        except Tag.DoesNotExist:
+            # Doesn't exist, create tag 
+            tag = Tag(group_id = group_id, tag = tag_name, is_project = 0,
+                    is_fixture = 0)
+
+        # Add the group to the tag
+        tag.group = group
+
+
+
 
 
 ###
@@ -99,22 +131,3 @@ def admin(request):
     
     
     return render_to_response('admin.html',{'form':form});
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
