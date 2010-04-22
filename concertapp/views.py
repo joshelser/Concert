@@ -70,15 +70,14 @@ def index(request):
 ###
 @login_required
 def edit(request,segment_id):
+    # Requested audio segment
     audioSegment = AudioSegment.objects.get(pk = segment_id)
-    
-    waveformViewerURL = audioSegment.audio.waveformViewer.url
-    waveformEditorURL = audioSegment.audio.waveformEditor.url
-    
+    # Other audio segments associated with this audio file
+    otherAudioSegments = AudioSegment.objects.filter(audio = audioSegment.audio)
     
     return render_to_response('edit.html',{
-        'waveformEditorSrc' : waveformEditorURL,
-        'waveformViewerSrc' : waveformViewerURL
+        'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
+        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url
         },RequestContext(request));
     
 
