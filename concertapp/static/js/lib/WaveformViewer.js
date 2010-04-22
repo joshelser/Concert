@@ -76,36 +76,25 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, waveformEdi
     /* behavior if waveform editor highlight is cleared */
     $('#waveform_editor').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
     /* behavior if highlight occurs on viewer */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate({once: true}); } }(this));
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate(); } }(this));
     /* behavior if highlight clear occurs on self */
     $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
 }
 
+
 /**
- *  animate
- *  Begins the animation for a WaveformViewer object.  Should be called
- *  when animation is to start.
- *
- *  @param                  params              Parameters {once}
+ *  draw_animation
+ *  Where one step of the animation occurs.  This should be called from the animate 
+ *  function every 200ms or whatever the set animation speed is.
  **/
-WaveformViewer.prototype.animate = function(params) {
+WaveformViewer.prototype.draw_animation = function(){
     
-    /* set default arguments */
-    if(typeof(params) == 'undefined') {
-        params = {
-            once: false
-        };
-    }
-        
     /* localize audioElement */
     var audioElement = this.audioElement;
-    
     /* localize this */
     var thisLocal = this;
-    
     /* Percentage of song we are currently on */
     var actualPercent = audioElement.currentTime/audioElement.duration;
-    
     /* new position */
     var newPos = actualPercent*thisLocal.waveformWidth;
     
@@ -115,16 +104,7 @@ WaveformViewer.prototype.animate = function(params) {
     $(thisLocal.timecodeElement).html(timecode);
     
     /* Move playhead to new position */
-    $(thisLocal.playheadElement).css('margin-left', newPos+'px');
-    
-    /* make sure audio element is still playing */
-    if($(audioElement).hasClass('playing') && !params.once) {
-        /* if so, go again in animation.speed ms */
-        setTimeout(function(obj){ return function(){ obj.animate(); } }(thisLocal), com.concertsoundorganizer.animation.speed);
-    }
-    else {
-        thisLocal.set_paused();
-    }               
+    $(thisLocal.playheadElement).css('margin-left', newPos+'px');    
 }
 
 /**

@@ -4,9 +4,10 @@
 **/
 
 /**
-*  Global variable for waveform player.
+*  Global variable for waveform player and volume slider.
 **/
 var $waveformPlayer = null;
+var $volumeSlider = null;
 
 (function() {
     /**
@@ -73,6 +74,8 @@ var $waveformPlayer = null;
             pause();
         }
     });
+    
+    initialize_audio_player_behavior();
 
 })();
 
@@ -134,7 +137,7 @@ function load_audio(audioID, segmentID) {
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* Remove audio element from page */
-                $('audio').html('').remove();
+                $('audio').remove();
                 /* Create new audio element */
                 var audioElement = $('<audio>').attr('id', 'audio_element').attr('class', 'audio_element');
                 /* Add source to audio element */
@@ -145,7 +148,7 @@ function load_audio(audioID, segmentID) {
                 var $audioElementID = $('audio').attr('id');
               
                 /* Wait for audio element to become available before finishing load */
-                $(audioElement).one('canplay', function(){
+                $(audioElement).one('canplaythrough', function(){
                     /* Create waveform viewer object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     
@@ -173,9 +176,17 @@ function load_audio(audioID, segmentID) {
                         /* Create new volume slider object */
                         $volumeSlider = new VolumeSlider({
                             sliderID: 'slider',
-                            handleID: 'handle'
+                            handleID: 'handle',
+                            audioID: 'audio_element'
                         });
+                                                
                     }
+                    else {
+                        /* Update volumeSlider's audio element */
+                        $volumeSlider.set_audio_element('audio_element');
+                    }
+                    /* Set volume to 0.8 initially */
+                    $volumeSlider.change_volume(0.8);
                     
                 });                            
             }

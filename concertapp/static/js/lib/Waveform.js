@@ -124,3 +124,25 @@ Waveform.prototype.clear_loop = function() {
     clearInterval(this.loopInterval);
     this.loopInterval = null;
 }
+
+/**
+ *  animate
+ *  Begins the animation for a Waveform object.  Should be called
+ *  when animation is to start or occur.  The child class will have to 
+ *  have implemented the draw_animation function, where one step
+ *  of the animation actually takes place.
+ **/
+Waveform.prototype.animate = function() {
+    
+    /* Draw the animation once */
+    this.draw_animation();
+    
+    /* make sure audio element is still playing */
+    if(!this.audioElement.paused) {
+        /* if so, go again in animation.speed ms */
+        setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
+    }
+    else {
+        this.set_paused();
+    }               
+}
