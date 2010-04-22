@@ -95,27 +95,26 @@ def new_segment_submit(request, segment_id, group_id):
         # Create the form
         form = CreateSegmentForm(request.POST)
 
-        # Get the tag name
-        tag_name = form.cleaned_data['tag_field']
+        if form.is_valid():
+            # Get the tag name
+            tag_name = form.cleaned_data['tag_field']
 
-        # Save the form/segment
-        segment = form.save()
-        
-        # Get the specified group
-        group = Group.objects.get(pk = group_id)
+            # Save the form/segment
+            segment = form.save()
+            
+            # Get the specified group
+            group = Group.objects.get(pk = group_id)
 
-        # Get or make the tag
-        try:
-            tag = Tag.objects.get(tag = tag_name)
-        except Tag.DoesNotExist:
-            # Doesn't exist, create tag 
-            tag = Tag(group_id = group_id, tag = tag_name, is_project = 0,
-                    is_fixture = 0)
+            # Get or make the tag
+            try:
+                tag = Tag.objects.get(tag = tag_name)
+            except Tag.DoesNotExist:
+                # Doesn't exist, create tag 
+                tag = Tag(group_id = group_id, tag = tag_name, is_project = 0,
+                        is_fixture = 0)
 
-        # Add the group to the tag
-        tag.group = group
-
-
+            # Add the group to the tag
+            tag.group = group
 
 
 
