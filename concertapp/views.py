@@ -42,16 +42,18 @@ def index(request):
       # use selected tag if one was specified
       selected_tag_id = request.GET['selected_tag_id']
       selected_tag = Tag.objects.get(pk = selected_tag_id)
+      # Get all of this tag's audio segments
+      segment_list = selected_tag.segments.all()
     # no tag was selected
     except KeyError:
-      # Use default tag
-      selected_tag = Tag.objects.get(group = selected_group, tag = 'Uploads')
+      # Get all tags from this group
+      selected_tag = Tag.objects.filter(group = selected_group)
+      segment_list = []
+      # For each tag
+      for tag in selected_tag :
+          # Get all segments in this tag, add them into segment_list
+          segment_list.extend(tag.segments.all())
     
-    ###
-    #   AudioSegments
-    ###
-    # Get all of this tag's audio segments
-    segment_list = selected_tag.segments.all()
     
     return render_to_response('index.html', {
         'no_show' : "no_show",
