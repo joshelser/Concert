@@ -40,8 +40,8 @@ def create_user(request):
             new_password2 = form.cleaned_data['password2']
             
             try:
-                Groups.objects.get(name = new_name)
-            except Groups.DoesNotExist:
+                Group.objects.get(name = new_name)
+            except Group.DoesNotExist:
                 pass
             else:
                 return HttpResponse(
