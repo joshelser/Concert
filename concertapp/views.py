@@ -90,7 +90,7 @@ def edit(request, segment_id, group_id):
     
 
 @login_required
-def new_segment_submit(request, segment_id, group_id):
+def new_segment_submit(request):
     if request.method == 'POST':
         # Create the form
         form = CreateSegmentForm(request.POST)

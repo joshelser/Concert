@@ -10,7 +10,7 @@ urlpatterns = patterns('concertapp.views',
     url(r'^$', 'index', name='index'),
     #edit
     url(r'edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/{0,1}$', 'edit', name='edit'),
-    url(r'edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/submit$',
+    url(r'edit/submit$',
         'new_segment_submit', name='submit'),
     #admin
     url(r'admin/{0,1}$', 'admin', name='admin'),

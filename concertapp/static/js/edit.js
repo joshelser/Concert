@@ -22,7 +22,7 @@ var $waveformEditor = null;
         /* Create waveform viewer object */
         $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
         /* Create waveform editor object */
-        $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
+        //$waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
         
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
@@ -67,6 +67,8 @@ function edit_submit_handler(event, data) {
     var tag = $('#id_tag_field').attr('value');
     var beginning = $('#id_beginning').attr('value');
     var end = $('#id_end').attr('value');
+    var audioID = $('#id_audio_id').attr('value');
+    var groupID = $('#id_group_id').attr('value');
     
     /* Handle errors */
     
@@ -77,10 +79,12 @@ function edit_submit_handler(event, data) {
         data: {     label_field: label, 
                     tag_field: tag, 
                     beginning: beginning, 
-                    end: end
+                    end: end,
+                    audio_id: audioID,
+                    group_id: groupID
                     },
         success: function(data, textStatus) {
-            alert(textStatus);
+            alert(data);
         }
     });
 }
