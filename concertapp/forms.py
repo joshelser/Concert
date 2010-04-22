@@ -1,4 +1,4 @@
-from django.forms import ModelForm, widgets
+from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import Group, User
 #from django.core import validators
@@ -68,8 +68,8 @@ class UploadFileForm(ModelForm):
 class CreateSegmentForm(ModelForm):
     tag_field = forms.CharField(label='Tag', max_length=80)
     label_field = forms.CharField(label='Label', max_length=80)
-    group_id = widgets.HiddenInput()
-    audio_id = widgets.HiddenInput()
+    group_id = forms.HiddenInput()
+    audio_id = forms.HiddenInput()
 
     class Meta:
         model = AudioSegment
@@ -78,25 +78,24 @@ class CreateSegmentForm(ModelForm):
 
     def clean_beginning(self):
         # Ensure valid numeric data
-        if not self.cleaned_data['beginning'].isdigit():
-            raise forms.ValidationError('Must be an integer')
-
-        # cast string to int
-        val = int(self.cleaned_data['beginning'])
+        try:
+            val = float(self.cleaned_data['beginning'])
+        except ValueError:
+            raise forms.ValidationError('Must be a number')
 
         # Valid start time
-        if val < 0:
+        if val < 0.0:
             raise forms.ValidationError('Must be greater than zero')
 
         return self.cleaned_data['beginning']
 
     def clean_end(self):
-        if not self.cleaned_data['end'].isdigit():
-            raise forms.ValidationError('Must be an integer')
+        try:
+            val = float(self.cleaned_data['end'])
+        except ValueError:
+            raise forms.ValidationError('Must be a number')
 
-        val = int(self.cleaned_data['end'])
-
-        if val <= int(self.cleaned_data['beginning']):
+        if val <= float(self.cleaned_data['beginning']):
             raise forms.ValidationError('Must be larger than beginning value')
 
         return self.cleaned_data['end']
