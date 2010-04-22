@@ -57,8 +57,8 @@ var $waveformEditor = null;
  **/
 function edit_highlight_handler(event, data) {
     /* Put start and end times into form fields */
-    $('#id_beginning').attr('value', data.start);
-    $('#id_end').attr('value', data.end);    
+    $('#id_beginning').attr('value', Math.round(data.start*100)/100);
+    $('#id_end').attr('value', Math.round(data.end*100)/100);    
 }
 
 function edit_submit_handler(event, data) {
@@ -84,7 +84,12 @@ function edit_submit_handler(event, data) {
                     group_id: groupID
                     },
         success: function(data, textStatus) {
-            alert(textStatus);
+            if(textStatus == 'success') {
+                alert(data);
+            }
+            else {
+                alert('failure');
+            }
         }
     });
 }
