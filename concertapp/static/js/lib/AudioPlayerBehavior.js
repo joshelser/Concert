@@ -70,8 +70,10 @@ function initialize_audio_player_behavior() {
         if(!$(this).hasClass('disabled')) {
             /* Get ID of current audio segment */
             var segmentID = $('tr.segment_row.selected').attr('id').split('-')[1];
+            /* Get ID of current group */
+            var groupID = $('li.group.selected').attr('id').split('-')[1];
             /* redirect to edit page for selected segment */
-            window.location = '/edit/'+segmentID;            
+            window.location = '/edit/'+segmentID+'/'+groupID+'/';            
         }
     });
     

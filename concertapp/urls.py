@@ -9,13 +9,12 @@ urlpatterns = patterns('concertapp.views',
     #index
     url(r'^$', 'index', name='index'),
     #edit
-    url(r'edit/(?P<segment_id>\d+)/{0,1}$', 'edit', name='edit'),
+    url(r'edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/{0,1}$', 'edit', name='edit'),
     #admin
     url(r'admin/{0,1}$', 'admin', name='admin'),
     
     
     #functional_pages
-    
     # Users
     (r'^users/', include('concertapp.users.urls')),
     (r'^users/{0,1}$', include('concertapp.users.urls')),

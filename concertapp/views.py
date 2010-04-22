@@ -68,18 +68,20 @@ def index(request):
 #   The edit page for an audio file.
 #
 #   @param          segment_id          The ID of the requested segment.
+#   @param          group_id            The ID of the group whose tags and segments we're currently viewing.
 ###
 @login_required
-def edit(request,segment_id):
+def edit(request, segment_id, group_id):
+    # Requested audio segment
     audioSegment = AudioSegment.objects.get(pk = segment_id)
-    
-    waveformViewerURL = audioSegment.audio.waveformViewer.url
-    waveformEditorURL = audioSegment.audio.waveformEditor.url
-    
+    # Other audio segments associated with this audio file
+    otherAudioSegments = AudioSegment.objects.filter(audio = audioSegment.audio)
+    # Group
+    group = Group.objects.get(pk = group_id)
     
     return render_to_response('edit.html',{
-        'waveformEditorSrc' : waveformEditorURL,
-        'waveformViewerSrc' : waveformViewerURL
+        'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
+        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url
         },RequestContext(request));
     
 
