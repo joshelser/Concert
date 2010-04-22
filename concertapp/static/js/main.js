@@ -75,6 +75,7 @@ function load_waveform(segmentID) {
                     $('img#waveform_viewer_image').attr('src', data);
                     /* show image */                
                     $('img#waveform_viewer_image').fadeIn('slow');
+                    alert("AS");
                     /* Set waveform viewer audioid attribute to proper audioID */
                     $('#waveform_viewer').attr('data-audioid', audioID);
                 });
@@ -123,10 +124,11 @@ function load_audio(audioID, segmentID, callBackFunction) {
                         end: $('#segment_end-'+segmentID).html()
                     };
                     
+                    callBackFunction();
+                    
                     /*  Draw highlight on waveformPlayer based on start and end times.  
                         This creates an audio loop, and a highlight drawn on the interface. */
                     $waveformPlayer.highlighter.set_highlight_time(times);
-
 
                     
                     /* If play button is disabled */
@@ -152,7 +154,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
                     /* Set volume to 0.8 initially */
                     $volumeSlider.change_volume(0.8);
                     
-                    callBackFunction();
+                   
                     
                 });                            
             }

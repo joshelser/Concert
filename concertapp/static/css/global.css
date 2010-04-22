@@ -216,17 +216,6 @@ a {color:#333;}
 	height:100px;
 }
 
-#viewer_image {
-    width: inherit;
-    height: inherit;
-}
-
-.waveform_image {
-    width: inherit;
-    height: inherit;
-    margin:auto;
-}
-
 .no_audio {
     width:auto; !important
     height:auto; !important
