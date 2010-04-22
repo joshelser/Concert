@@ -18,10 +18,12 @@
                     {% comment %} Add "selected" class to the currently selected group. {% endcomment %}
 
                     {% ifequal group selected_group %}
-                        <li class="selected"><a href="?selected_group_id={{ group.id }}"> {{ group.name }} </a></li>
+                        <li class="selected" id="group-{{ group.id }}">
                     {% else %}
-                        <li><a href = "?selected_group_id={{ group.id }}"> {{ group.name }} </a></li>
+                        <li>
                     {% endifequal %}
+                            <a href="?selected_group_id={{ group.id }}"> {{ group.name }} </a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

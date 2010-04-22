@@ -75,7 +75,7 @@ function load_waveform(segmentID) {
                     $('img#waveform_viewer_image').attr('src', data);
                     /* show image */                
                     $('img#waveform_viewer_image').fadeIn('slow');
-                    alert("AS");
+
                     /* Set waveform viewer audioid attribute to proper audioID */
                     $('#waveform_viewer').attr('data-audioid', audioID);
                 });
