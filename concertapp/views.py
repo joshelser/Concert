@@ -96,7 +96,7 @@ def new_segment_submit(request, segment_id, group_id):
         form = CreateSegmentForm(request.POST)
 
         # Get the tag name
-        tag_name = form.tag_field
+        tag_name = form.cleaned_data['tag_field']
 
         # Save the form/segment
         segment = form.save()
