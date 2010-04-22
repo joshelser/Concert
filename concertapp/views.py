@@ -121,8 +121,8 @@ def new_segment_submit(request):
                 tag = Tag.objects.get(tag = tag_name)
             except Tag.DoesNotExist:
                 # Doesn't exist, create tag 
-                tag = Tag(group_id = group_id, tag = tag_name, is_project = 0,
-                        is_fixture = 0)
+                tag = Tag(group_id = group_id, tag = tag_name, isProject = 0,
+                        isFixture = 0)
 
             # Add the group to the tag
             tag.group = group
