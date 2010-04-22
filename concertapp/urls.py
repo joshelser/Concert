@@ -18,10 +18,13 @@ urlpatterns = patterns('concertapp.views',
     
     # Users
     (r'^users/', include('concertapp.users.urls')),
+    (r'^users/{0,1}$', include('concertapp.users.urls')),
     # Audio
     (r'^audio/', include('concertapp.audio.urls')),
+    (r'^audio/{0,1}$', include('concertapp.audio.urls')),
     # Groups
     (r'^groups/', include('concertapp.groups.urls')),
+    (r'^groups/{0,1}$', include('concertapp.groups.urls')),
 
 )
 
