@@ -84,3 +84,17 @@ def edit(request, segment_id, group_id):
         },RequestContext(request));
     
 
+
+###
+#   admin
+#   The admin page for a user
+#
+#   @param          segment_id          The ID of the requested segment.
+###
+@login_required
+def admin(request):
+    
+    
+    return render_to_response('admin.html');
+    
+
