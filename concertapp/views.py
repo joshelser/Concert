@@ -134,9 +134,12 @@ def new_segment_submit(request):
 
             segment.save()
 
+            tag.save(commit=False)
+
             tag.segments.add(segment)
 
             tag.save()
+            segment.save()
 
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
