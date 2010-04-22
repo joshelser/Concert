@@ -24,6 +24,7 @@ var $waveformEditor = null;
         
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
+        
         /* Change volume to .8 by default */
         $volumeSlider.change_volume(0.8);
         
@@ -32,7 +33,23 @@ var $waveformEditor = null;
         activate_controls();
         
         
+        
     });
+
+    /* Bind highlight event on viewer or editor to handler */
+    $('.waveform').bind('highlight', function(event, data){ return highlight_handler(event, data); });
     
 
 })();
+
+/**
+ *  highlight_handler
+ *  Handles highlight behavior.  This is called whenever a highlight occurs on either
+ *  waveform elements.
+ *
+ *  @param          event           This is an event handler.
+ *  @param          data            The data associated with this event {start(float), end(float)}
+ **/
+function highlight_handler(event, data) {
+    alert('highlight: '+data.start+' to '+data.end);
+}

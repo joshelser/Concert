@@ -70,7 +70,7 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     
     /* behavior if highlight occurs on viewer */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_editor'].animate(); } }(this));
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); obj.waveformEditor.draw_animation(); } }(this));
     /* behavior if highlight clear occurs on self */
     $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
 }
