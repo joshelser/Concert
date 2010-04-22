@@ -37,23 +37,48 @@ var $waveformEditor = null;
     });
 
     /* Bind highlight event on viewer or editor to handler */
-    $('.waveform').bind('highlight', function(event, data){ return highlight_handler(event, data); });
+    $('.waveform').bind('highlight', function(event, data){ return edit_highlight_handler(event, data); });
     
+    
+    /* Bind submit button for a new segment */
+    $('#submit_button').bind('click', function(event, data){ return edit_submit_handler(event, data); });
 
 })();
 
 /**
- *  highlight_handler
+ *  edit_highlight_handler
  *  Handles highlight behavior.  This is called whenever a highlight occurs on either
  *  waveform elements.
  *
  *  @param          event           This is an event handler.
  *  @param          data            The data associated with this event {start(float), end(float)}
  **/
-function highlight_handler(event, data) {
+function edit_highlight_handler(event, data) {
     /* Put start and end times into form fields */
     $('#id_beginning').attr('value', data.start);
-    $('#id_end').attr('value', data.end);
+    $('#id_end').attr('value', data.end);    
+}
+
+function edit_submit_handler(event, data) {
+    /* Get data from form */
+    var label = $('#id_label_field').attr('value');
+    var tag = $('#id_tag_field').attr('value');
+    var beginning = $('#id_beginning').attr('value');
+    var end = $('#id_end').attr('value');
     
+    /* Handle errors */
     
+    /* Submit form via ajax */
+    $.ajax({
+        url: 'submit',
+        type: 'POST',
+        data: {     label_field: label, 
+                    tag_field: tag, 
+                    beginning: beginning, 
+                    end: end
+                    },
+        success: function(data, textStatus) {
+            alert(textStatus);
+        }
+    });
 }
