@@ -4,6 +4,13 @@
  **/
  
 
+ /**
+ *  Global variable for waveform player and volume slider.
+ **/
+ var $waveformPlayer = null;
+ var $volumeSlider = null;
+
+
 /**
  *  initialize_audio_player_behavior
  *  Binds all interface events to the functions to be run when those events occur.
@@ -52,6 +59,22 @@ function initialize_audio_player_behavior() {
             pause();
         }
     });
+    
+    /**
+     *  Behavior when edit button is clicked
+     **/
+    $('#edit_button').bind('click', function(event){
+        event.preventDefault();
+        
+        /* If button is not disabled */
+        if(!$(this).hasClass('disabled')) {
+            /* Get ID of current audio segment */
+            var segmentID = $('tr.segment_row.selected').attr('id').split('-')[1];
+            /* redirect to edit page for selected segment */
+            window.location = '/edit/'+segmentID;            
+        }
+    });
+    
     
 }
 

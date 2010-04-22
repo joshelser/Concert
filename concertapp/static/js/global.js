@@ -27,6 +27,8 @@
   images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
   
   
+  
+  
 
 })();
 
