@@ -39,40 +39,6 @@ var $volumeSlider = null;
     });
 
 
-    /**
-    *   Playback functionality
-    *   Behavior for play and pause buttons
-    **/
-    $('#play_button').live('click', function(event) {
-        event.preventDefault();
-        /* If button is not disabled */
-        if(!$(this).hasClass('disabled')) {
-            /* play audio */
-            play();
-        }
-    });
-    
-    /** Space bar plays and pauses **/
-    $(document).bind('keypress', function(event){
-        if(event.keyCode == 32) {
-            event.preventDefault();
-            if($('#play_button').length) {
-                $('#play_button').click();                
-            }
-            else {                
-                $('#pause_button').click();
-            }
-        }
-    });
-    
-    $('#pause_button').live('click', function(event) {
-        event.preventDefault();
-        /* if button is not disabled */
-        if(!$(this).hasClass('disabled')) {
-            /* pause audio */
-            pause();
-        }
-    });
     
     initialize_audio_player_behavior();
 
@@ -199,31 +165,4 @@ function load_audio(audioID, segmentID) {
 
 
     });
-}
-
-
-/**
- *  play
- *  Plays the audio file, and also begins any associated waveform objects.
- **/
-function play() {
-    /* Get and play audio player */
-    $('audio').get(0).play();
-    
-    /* Change play button to pause button */
-    $('#play_button').attr('id', 'pause_button').attr('value', 'Pause');
-    
-    //auto_pause_audio();
-}
-
-/**
- *  pause
- *  Pauses the audio element.
- **/
-function pause() {
-    /* Pause audio player */
-    $('audio').get(0).pause();
-    
-    /* Change pause to play button */
-    $('#pause_button').attr('id', 'play_button').attr('value', 'Play');
 }

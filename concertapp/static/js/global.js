@@ -25,7 +25,6 @@
   var images = [];
   images.push($('<img />').attr('src', '/graphics/button_press.png'));
   images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
-a
   
   
 
