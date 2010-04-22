@@ -74,7 +74,7 @@ function edit_submit_handler(event, data) {
     
     /* Submit form via ajax */
     $.ajax({
-        url: 'submit',
+        url: '/edit/submit',
         type: 'POST',
         data: {     label_field: label, 
                     tag_field: tag, 
@@ -84,7 +84,7 @@ function edit_submit_handler(event, data) {
                     group_id: groupID
                     },
         success: function(data, textStatus) {
-            alert(data);
+            alert(textStatus);
         }
     });
 }

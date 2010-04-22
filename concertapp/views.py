@@ -140,6 +140,10 @@ def new_segment_submit(request):
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
             return response
+        else :
+            response = HttpResponse(mimetype='text/plain')
+            response.write('Error: validating form')
+            return response
 
 
     response = HttpResponse(mimetype='text/plain')
