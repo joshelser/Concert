@@ -20,7 +20,12 @@ var $waveformEditor = null;
     
     /* Create audio viewers and editors when audio element is ready. */
     $('audio').one('canplaythrough', function(){
+        
         /* Create waveform viewer object */
+        $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
+        
+        /* Create waveform editor object */
+        $waveformEditor = new WaveformEditor('waveform')
     });
 
 })();
