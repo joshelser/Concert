@@ -99,8 +99,16 @@ def new_segment_submit(request, segment_id, group_id):
             # Get the tag name
             tag_name = form.cleaned_data['tag_field']
 
+            parent_segment = AudioSegment.objects.get(pk = segment_id)
+
             # Save the form/segment
-            segment = form.save()
+            segment = form.save(commit=False)
+
+            # Explicitly set name
+            segment.name = form.cleaned_data['label_field']
+
+            # Set parent audio file
+            segment.audio = parent_segment.audio
             
             # Get the specified group
             group = Group.objects.get(pk = group_id)
@@ -115,6 +123,14 @@ def new_segment_submit(request, segment_id, group_id):
 
             # Add the group to the tag
             tag.group = group
+
+            print segment.name
+            print segment.beginning
+            print segment.end
+            print segment.audio
+
+            segment.save()
+
             tag.segments.add(segment)
 
             tag.save()
