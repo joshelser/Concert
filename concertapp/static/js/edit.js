@@ -51,5 +51,9 @@ var $waveformEditor = null;
  *  @param          data            The data associated with this event {start(float), end(float)}
  **/
 function highlight_handler(event, data) {
-    alert('highlight: '+data.start+' to '+data.end);
+    /* Put start and end times into form fields */
+    $('#id_beginning').attr('value', data.start);
+    $('#id_end').attr('value', data.end);
+    
+    
 }

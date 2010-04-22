@@ -40,12 +40,18 @@ function initialize_audio_player_behavior() {
     /** Space bar plays and pauses **/
     $(document).bind('keypress', function(event){
         if(event.keyCode == 32) {
-            event.preventDefault();
-            if($('#play_button').length) {
-                $('#play_button').click();                
+            /* If the space bar was pressed inside an input element, don't handle event */
+            if(event.target.toString().match(/HTMLInputElement/)) {
+                /* Do nothing */
             }
-            else {                
-                $('#pause_button').click();
+            else {
+                event.preventDefault();
+                if($('#play_button').length) {
+                    $('#play_button').click();                
+                }
+                else {                
+                    $('#pause_button').click();
+                }                
             }
         }
     });
