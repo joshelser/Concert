@@ -38,6 +38,14 @@ def create_user(request):
             new_email = form.cleaned_data['email']
             new_password1 = form.cleaned_data['password1']
             new_password2 = form.cleaned_data['password2']
+            
+            try:
+                Groups.objects.get(name = new_name)
+            except Groups.DoesNotExist:
+                pass
+            else:
+                return HttpResponse(
+                    '<h1>Error</h1><p>This username is already taken.</p>')
 
             # Create new user
             new_profile = User.objects.create_user(username=new_name, email=new_email, password=new_password1)
