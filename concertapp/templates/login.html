@@ -1,24 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Login to an account</h1>
-<p>
-<form method="POST" action="{% url login_user %}">
-    <label for="username">Username: </label>
-    <input type="text" name="username">
-    
-    <br />
-    
-    <label for="password">Password: </label>
-    <input type="password" name="password">
-    
-    <br />
+<div id = "login_container">
 
-    <input type="hidden" name="next" value="{{ next }}" />
+  <p class = "error">{{ error }}</p>
+	<div id = "login_wrapper">
+    <img id = "logo" src = "/graphics/logo_large.png"/>
+    <form id = "login" method="POST" action="{% url login_user %}">
+        <input type = "text" name = "username" value = "User Name">
+        <input type = "password" name = "password" value = "Password" autocomplete="off">
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input type = "submit" name = "login" value = "Login">        
+    </form>
+        
+    <br class = "clear"/>
+       
+	</div>
+</div>
 
-    <input type='submit' name='login' value='Login'></input>
-</form>
-</p>
+<div id = "register_wrapper">
+    <p>Not a user yet? <a href = "/users/add/"> Register </a></p>
+</div>
 
 {% endblock %}
 

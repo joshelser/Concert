@@ -1,24 +1,24 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-<title>Blogposts</title>
-{% block script %}{% endblock%}
+  <title>Concert</title>
+  <link rel=StyleSheet href="/css/global.css" type="text/css" media=screen>
+  <link rel=StyleSheet href="/css/devel.css" type="text/css" media=screen>
+  <script src="/js/lib/vendor/jquery-1.4.2.min.js"></script>
+  <script src="/js/lib/Waveform.js"></script>
+  <script src="/js/lib/WaveformViewer.js"></script>
+  <script src="/js/lib/Highlighter.js"></script>
+  <script src="/js/lib/HighlightViewer.js"></script>
+  <script src="/js/lib/helpers.js"></script>
+  <script src="/js/lib/WaveformPlayer.js"></script>
+  <script src="/js/lib/VolumeSlider.js"></script>
+  <script src="/js/lib/AudioPlayerBehavior.js"></script>
 </head>
 <body>
-    <div id="login" style="float: right; border: 1px dotted black">
-        {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}.<br />
-            <a href="{% url logout_user %}">Logout Here</a> <br />
-            <a href="{% url change_password %}">Change Password</a>
-            </p>
-        {% else %}
-            <p>Please <a href="{% url login_user %}">Login</a></p>
-        {% endif %}
-    </div>
     {% block content %}
 
     {% endblock %}
+    <script src="/js/global.js"></script>
 </body>
 </html>

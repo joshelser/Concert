@@ -173,7 +173,7 @@ def upload_audio(request):
 
             return HttpResponseRedirect('/audio/')
         else:
-            print repr(form.errors)
+            print repr(form.errors) + "sadsaD"
     else:
         form = UploadFileForm()
 

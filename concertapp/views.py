@@ -11,6 +11,7 @@ from django import forms
 from django.conf import settings
 
 from concertapp.models import *
+from concertapp.forms   import UploadFileForm
 
 @login_required
 def index(request):
@@ -91,8 +92,27 @@ def edit(request,segment_id):
 ###
 @login_required
 def admin(request):
+    form = UploadFileForm()
     
     
-    return render_to_response('admin.html');
     
+    return render_to_response('admin.html',{'form':form});
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

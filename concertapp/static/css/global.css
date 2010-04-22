@@ -378,5 +378,13 @@ a {color:#333;}
   margin-top:15px;
 }
 
+.admin_module {
+
+    float:left;
+    margin-top:50px;
+    margin-left:10%;
+    width:20%;
+    height:300px;
+}
 
 
