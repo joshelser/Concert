@@ -4,8 +4,18 @@ import os
 
 
 urlpatterns = patterns('concertapp.views',
+    #user_viewable_pages
+    
+    #index
     url(r'^$', 'index', name='index'),
-    url(r'edit/(?P<segment_id>\d+)/$', 'edit', name='edit'),
+    #edit
+    url(r'edit/(?P<segment_id>\d+)/{0,1}$', 'edit', name='edit'),
+    #admin
+    url(r'admin/{0,1}$', 'admin', name='admin'),
+    
+    
+    #functional_pages
+    
     # Users
     (r'^users/', include('concertapp.users.urls')),
     # Audio
