@@ -121,11 +121,8 @@ def new_segment_submit(request):
                 tag = Tag.objects.get(tag = tag_name)
             except Tag.DoesNotExist:
                 # Doesn't exist, create tag 
-                tag = Tag(group_id = group_id, tag = tag_name, isProject = 0,
+                tag = Tag(group = group, tag = tag_name, isProject = 0,
                         isFixture = 0)
-
-            # Add the group to the tag
-            tag.group = group
 
             print segment.name
             print segment.beginning
@@ -136,10 +133,11 @@ def new_segment_submit(request):
 
             tag.save()
 
-            tag.segments.add(segment)
+            newTag = Tag.objects.get(pk = tag.id)
 
-            tag.save()
-            segment.save()
+            newTag.segments.add(segment)
+
+            newTag.save()
 
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
