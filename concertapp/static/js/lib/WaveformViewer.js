@@ -133,17 +133,10 @@ WaveformViewer.prototype.clicked = function(event) {
     audioElement.currentTime = newTime;
     
     /* If song is not playing */
-    if(!$(audioElement).hasClass('playing'))
+    if(audioElement.paused)
     {
-        /* manually move playhead and change timecode. */
-        $(container).children('div.playhead').css('margin-left', (clickX)+'px');                
-        $(container).children('div.timecode').html(sec_to_timecode(newTime));
-        
-        /*  Manually update WaveformEditor object if one exists.
-            One would not exist if this function is being used from a
-            WaveformPlayer object because it was inherited. */
-        if(typeof(this.waveformEditor) != 'undefined') {
-            this.waveformEditor.animate({once: true});            
-        }
+        /* animate once */
+        this.draw_animation();
     }
+    /* If song is playing, viewer will animate automatically in animation.speed ms */
 }

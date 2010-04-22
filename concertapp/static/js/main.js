@@ -205,10 +205,8 @@ function load_audio(audioID, segmentID) {
  *  Plays the audio file, and also begins any associated waveform objects.
  **/
 function play() {
-    /* Get audio player */
-    var $player = $('audio').addClass('playing').get(0);
-    $player.play();
-    $waveformPlayer.play();
+    /* Get and play audio player */
+    $('audio').get(0).play();
     
     /* Change play button to pause button */
     $('#play_button').attr('id', 'pause_button').attr('value', 'Pause');
@@ -221,8 +219,8 @@ function play() {
  *  Pauses the audio element.
  **/
 function pause() {
-    var $player = $('audio').removeClass('playing').get(0);
-    $player.pause();
+    /* Pause audio player */
+    $('audio').get(0).pause();
     
     /* Change pause to play button */
     $('#pause_button').attr('id', 'play_button').attr('value', 'Play');
