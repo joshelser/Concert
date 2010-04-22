@@ -115,6 +115,7 @@ def new_segment_submit(request, segment_id, group_id):
 
             # Add the group to the tag
             tag.group = group
+            tag.segments.add(segment)
 
             tag.save()
 
