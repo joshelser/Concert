@@ -85,7 +85,9 @@ function edit_submit_handler(event, data) {
                     },
         success: function(data, textStatus) {
             if(textStatus == 'success') {
-                alert(data);
+                if(data == 'success') {
+                    alert('Your tag was saved successfully');
+                }
             }
             else {
                 alert('failure');
