@@ -25,7 +25,7 @@
   var images = [];
   images.push($('<img />').attr('src', '/graphics/button_press.png'));
   images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
-
+a
   
   
 
@@ -37,7 +37,7 @@
  **/
 function loading() {
     /* Turn on global loading notification */
-    $('body').prepend('<img id="loader" src="/graphics/ajax-loader.gif" />');
+    $('#viewer_image').append('<img id="loader" src="/graphics/ajax-loader.gif" />');
 }
 
 /**

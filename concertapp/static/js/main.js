@@ -15,8 +15,7 @@ var $waveformPlayer = null;
     $('.segment_row').click(function(event) {
         event.preventDefault();
         
-        /* loading notification */
-        loading();
+        $('img#waveform_viewer_image').fadeOut('slow', loading());
         
         /* If audio is currently playing, stop it */
         if($('audio').hasClass('playing')) {
@@ -106,14 +105,16 @@ function load_waveform(segmentID) {
         url: '/audio/'+audioID+'/waveformsrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
+                /* Load audio element, then intialize waveformPlayer object */
+                load_audio(audioID, segmentID);
                 /* replace image src with proper image */
                 $('img#waveform_viewer_image').attr('src', data);
                 /* show image */                
                 $('img#waveform_viewer_image').fadeIn('slow');
                 /* Set waveform viewer audioid attribute to proper audioID */
                 $('#waveform_viewer').attr('data-audioid', audioID);
-                /* Load audio element, then intialize waveformPlayer object */
-                load_audio(audioID, segmentID);
+                /* remove loading */
+                remove_loading();
             }
             else {
                 alert('An error has occurred.');
@@ -161,8 +162,7 @@ function load_audio(audioID, segmentID) {
                         This creates an audio loop, and a highlight drawn on the interface. */
                     $waveformPlayer.highlighter.set_highlight_time(times);
 
-                    /* remove loading */
-                    remove_loading();
+
                     
                     /* If play button is disabled */
                     if($('#play_button').hasClass('disabled')) {

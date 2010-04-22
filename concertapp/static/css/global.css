@@ -204,7 +204,7 @@ a {color:#333;}
 	width: 0px;
 	border-left: 1px solid #FFFAFA; 
 	border-right: 1px solid #FFFAFA;
-	height:inherit;
+	height:100px;
 }
 
 #viewer_playhead {
