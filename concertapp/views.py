@@ -11,7 +11,7 @@ from django import forms
 from django.conf import settings
 
 from concertapp.models import *
-from concertapp.forms   import UploadFileForm, CreateSegmentForm
+from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
 
 @login_required
 def index(request):
@@ -81,12 +81,14 @@ def edit(request, segment_id, group_id):
     # Group
     group = Group.objects.get(pk = group_id)
 
-    form = CreateSegmentForm()
+    createSegmentForm = CreateSegmentForm()
+    renameSegmentForm = RenameSegmentForm()
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
         'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
-        'form'              : form,
+        'createSegmentForm' : createSegmentForm,
+        'renameSegmentForm' : renameSegmentForm,
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
         'group_id' : group_id,
@@ -152,6 +154,61 @@ def new_segment_submit(request):
     return response
 
 
+
+
+###
+#   delete_segment
+#   Part of the manage segment use case.  Deletes a given segment from the 
+#   system
+#
+#   @param  segment_id      the id of the segment to be deleted
+### 
+@login_required 
+def delete_segment(request,segment_id):
+    # Requested audio segment
+    AudioSegment.objects.get(pk = segment_id).delete()
+    
+    response = HttpResponse(mimetype='text/plain')
+    response.write('success')
+    return response   
+    
+    
+###
+#   rename_segment
+#   Part of the manage segment use case.  renames a given segment 
+#
+### 
+@login_required 
+def rename_segment(request):
+    if request.method == 'POST':
+
+        form = RenameSegmentForm(request.POST)
+        
+        if form.is_valid:
+
+            the_id = request.POST['id_field']
+
+            segment = AudioSegment.objects.get(pk = the_id)
+            #TODO why doesn't form.clean_data['label_field'] work here?
+            segment.name = request.POST['label_field']
+            segment.save()
+            
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else:
+            print 'invalid'+repr(form.errors)
+            response = HttpResponse(mimetype='text/plain')
+            response.write('Error: validating form')
+            return response
+    
+    response = HttpResponse(mimetype='text/plain')
+    response.write('shouldn\'t be renaming a via anything but post')
+    return response
+
+
+
+
 ###
 #   admin
 #   The admin page for a user
@@ -165,3 +222,9 @@ def admin(request):
     
     
     return render_to_response('admin.html',{'form':form});
+    
+    
+    
+    
+    
+    

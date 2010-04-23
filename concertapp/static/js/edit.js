@@ -43,7 +43,11 @@ var $waveformEditor = null;
     
     
     /* Bind submit button for a new segment */
-    $('#submit_button').bind('click', function(event, data){ return edit_submit_handler(event, data); });
+    $('#new_submit_button').bind('click', function(event, data){ return edit_submit_handler(event, data); });
+    
+    /* Bind submit button for renaming a segment */
+    $('#rename_submit_button').bind('click', function(event, data){ return rename_submit_handler(event, data); });
+    
 
 })();
 
@@ -95,3 +99,33 @@ function edit_submit_handler(event, data) {
         }
     });
 }
+
+function rename_submit_handler(event, data) {
+
+    var label = $('#rename_segment #id_label_field').val();
+    var segment_id = $('#id_segment_id').val();
+    /* Submit form via ajax */
+    $.ajax({
+        url: '/rename_segment/',
+        type: 'POST',
+        data: {     label_field: label, 
+                    id_field: segment_id
+                    },
+        success: function(data, textStatus) {
+            if(textStatus == 'success') {
+                if(data == 'success') {
+                    alert('Your tag was renamed successfully');
+                }
+                else{
+                    alert(data);
+                }
+            }
+            else {
+                alert('failure');
+            }
+        }
+    });
+    
+}
+
+

@@ -10,10 +10,10 @@
             <form id = "new_segment">
                 <h1>New Segment</h1>
                 <table>
-                    {{ form.as_table }}
+                    {{ createSegmentForm.as_table }}
                     <input type="hidden" value="{{ group_id }}" id="id_group_id" />
                     <input type="hidden" value="{{ audio_id }}" id="id_audio_id" />
-                    <tr><td></td><td style="float:right"><input type="button" id="submit_button" value="Submit" /></td></tr>
+                    <tr><td></td><td style="float:right"><input type="button" id="new_submit_button" value="Submit" /></td></tr>
                 </table>
                 <!--
                 <p><input type = "text" value = "Group" id = "group_field"/></p>
@@ -23,8 +23,21 @@
                     <input type = "text" value = "In Time" id = "in_time_field"/>
                     <input type = "text" value = "Out Time" id = "out_time_field"/>
                     </p>-->
-            </form>               
+            </form>
+            <form id = "rename_segment">
+                <h1>Rename Segment</h1>
+                <table>
+                    {{ renameSegmentForm.as_table }}
+                    <input type = "hidden" value = "{{ audioSegment.id }}" id = 'id_segment_id'/>
+                    <tr>
+                        <td></td>
+                        <td ><input type="button" id="rename_submit_button" value="Submit" /></td>
+                    </tr>
+                </table>
+            
+            </form>
         </div>
+        <!---asdsadas-->
         <div id = "right_wrapper">
             <div id="waveform_editor" class="waveform">        	
                 <div id="editor_highlight" ></div> 
@@ -32,6 +45,7 @@
                 <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_editor_image" src = "{{ waveformEditorSrc }}" /></div>
             </div>     
         </div>
+        <br style = "clear:both;"/>
     </div>
 </div>
 

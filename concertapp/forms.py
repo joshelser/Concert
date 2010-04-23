@@ -30,7 +30,9 @@ class RegistrationForm(ModelForm):
                             widget=forms.PasswordInput(render_value=False))
     class Meta:
         model = User
-        exclude = ('username', 'first_name', 'last_name', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'groups', 'user_permissions')
+        exclude = ('username', 'first_name', 'last_name', 'email', 'password',
+             'is_staff', 'is_active', 'is_superuser', 'last_login', 
+             'date_joined', 'groups', 'user_permissions')
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -56,7 +58,7 @@ class UploadFileForm(ModelForm):
         # Get the content-type of the file
         filetype = self.cleaned_data['wavfile'].content_type
 
-        # Ensure the file is wav, ogg, or mp3
+         # Ensure the file is wav, ogg, or mp3
         if filetype != 'audio/x-wav' and \
                 filetype != 'audio/mpeg' and \
                 filetype != 'application/ogg':
@@ -73,7 +75,6 @@ class CreateSegmentForm(ModelForm):
 
     class Meta:
         model = AudioSegment
-        exclude = ('audio', )
         fields = ['label_field', 'tag_field', 'beginning', 'end', ]
 
     def clean_beginning(self):
@@ -99,3 +100,23 @@ class CreateSegmentForm(ModelForm):
             raise forms.ValidationError('Must be larger than beginning value')
 
         return self.cleaned_data['end']
+        
+
+    
+class RenameSegmentForm(ModelForm):
+    label_field = forms.CharField(label='Label', max_length=80)
+    id_field = forms.HiddenInput()
+    
+    
+    class Meta:
+        model = AudioSegment
+        fields = ['label_field']
+    
+    
+    
+    
+    
+    
+    
+    
+    
