@@ -25,19 +25,24 @@ Waveform.prototype.set_partner = function(partner){
     if(typeof(this.partner) == 'undefined') {
         throw new Error('Waveform.prototype.set_partner: Unable to get partner object.');
     }
-    
-    /* Initialize partner behavior */
-    /* if highlight is drawn on partner, clear highlight on self, draw highlight on self and animate */
-    $(this.partner.container).bind('highlight', function(obj){ return function(e, data){ data.noTrigger = true; obj.clear_loop(); obj.highlighter.set_highlight_time(data); obj.animate(); } }(this));
-    /* if partner highlight is cleared, clear highlight on self */
-    $(this.partner.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); } }(this));
 }
 
 Waveform.prototype.initialize_highlight_behavior = function(){
-    /* if highlight occurs on self, start audio loop and draw animation */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); } }(this));
-    /* if highlight clear occurs on self, clear audio loop */
-    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+    
+    /* If loop event is triggered on audio element, draw highlight and animate self */
+    $(this.audioElement).bind('highlight', function(obj){ return function(e, data){
+        data.noTrigger = true;
+        /* Draw new highlight based on loop data */
+        obj.highlighter.set_highlight_time(data);
+        /* animate */
+        obj.animate();
+    }}(this));
+    
+    /* If clear loop event is triggered on audio element from somewhere else, clear highlight */
+    $(this.audioElement).bind('clear_loop', function(obj){ return function(e, data){
+        /* Clear highlight */
+        obj.highlighter.initialize_highlight();
+    }}(this));
 }
 
 /**
@@ -103,61 +108,6 @@ Waveform.prototype.play = function() {
  **/
 Waveform.prototype.pause = function() {
     /* Does nothing right now */
-}
-
-
-
-/**
- *  start_loop
- *  Begins the requested audio loop.  This means that the audio starts at the given start time,
- *  and when it reaches the end time, it goes back to the start time.  This should
- *  be called whenever a section of the waveform is highlighted.
- *
- *  @param          params              {start, end} (times in seconds)
- **/
-Waveform.prototype.start_loop = function(params) {
-    /* Move audio to start time */
-    this.audioElement.currentTime = params.start;
-    
-    /* animate once to update interface */
-    this.draw_animation();
-    
-    /* if loop is already running */
-    if(this.loopInterval != null) {
-        /* stop loop */
-        this.clear_loop();
-    }
-    
-    /* Send interval out to keep checking on loop */
-    this.loopInterval = setInterval(function(obj, params){ return function(){ obj.continue_loop(params); } }(this, params), com.concertsoundorganizer.animation.speed);
-}
-
-/**
- *  continue_loop
- *  Continues the requested audio loop.  This will get called every animation.speed seconds, to make sure that the audio doesn't
- *  go past the requested time.
- *
- *  @param          params              {start, end} (times in seconds)
- **/
-Waveform.prototype.continue_loop = function(params) {
-    /* If we should restart the loop */
-    if(this.audioElement.currentTime >= params.end) {
-        /* restart */
-        this.audioElement.currentTime = params.start;
-    }
-}
-
-/**
- *  clear_loop
- *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
- *  whenever the highlighted area is cleared.
- **/
-Waveform.prototype.clear_loop = function() {
-    clearInterval(this.loopInterval);
-    this.loopInterval = null;
-    
-    /* Clear highlight */
-    this.highlighter.initialize_highlight();
 }
 
 /**

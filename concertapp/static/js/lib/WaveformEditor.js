@@ -31,7 +31,7 @@ var WaveformEditor = function(containerID, audioID) {
     }
     
     /* get waveform image width from end of waveform image file name */
-    this.waveformWidth = $(this.waveformElement).attr('src').split('_')[1].match(/[\d]+/)*1;
+    this.waveformWidth = $(this.waveformElement).attr('src').match(/_[\d]+.png$/)[0].match(/[\d]+/)*1;
     if(typeof(this.waveformWidth) != 'number')
     {
         throw new Error('WaveformEditor: Could not get waveform image width.');
@@ -43,7 +43,7 @@ var WaveformEditor = function(containerID, audioID) {
         container: this.container, 
         waveformElement: this.waveformElement,
         waveformWidth: this.waveformWidth,
-        audioElementDuration: this.audioElement.duration
+        audioElement: this.audioElement
     });
     
     /* Highlight behavior */

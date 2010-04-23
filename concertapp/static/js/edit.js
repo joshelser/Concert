@@ -12,8 +12,6 @@ var $waveformEditor = null;
 
 (function() {
     
-    /* Initialize audio player */
-    initialize_audio_player_behavior();
     
     
     /* Create audio viewers and editors when audio element is ready. */
@@ -23,9 +21,6 @@ var $waveformEditor = null;
         $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
         /* Create waveform editor object */
         $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
-        /* Make waveformViewer and waveformEditor know about eachother */
-        $waveformViewer.set_partner($waveformEditor);
-        $waveformEditor.set_partner($waveformViewer);
         
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
@@ -37,12 +32,14 @@ var $waveformEditor = null;
         /* Activate player controls */
         activate_controls();
         
+        /* Initialize audio player */
+        initialize_audio_player_behavior();
         
         
     });
 
     /* Bind highlight event on viewer or editor to handler */
-    $('.waveform').bind('highlight', function(event, data){ return edit_highlight_handler(event, data); });
+    $('audio').bind('loop', function(event, data){ return edit_highlight_handler(event, data); });
     
     
     /* Bind submit button for a new segment */

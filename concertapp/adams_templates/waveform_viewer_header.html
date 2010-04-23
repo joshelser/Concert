@@ -24,7 +24,7 @@
     </div>
     
     <div id="audio_container">
-            <audio id="audio_element" class="audio_element">
+            <audio id="audio_element" class="audio_element" data-looping="0">
                 {% if audioSegment %}
                     <source src="{{ audioSegment.audio.wavfile.url }}" />
                 {% endif %}

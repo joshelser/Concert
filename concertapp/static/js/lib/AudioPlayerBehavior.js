@@ -8,6 +8,7 @@
  *  Global variable for volume slider.
  **/
  var $volumeSlider = null;
+ 
 
 
 /**
@@ -23,6 +24,12 @@ function initialize_audio_player_behavior() {
     $('audio').live('change_volume', function(event, data){
         $(this).get(0).volume = data.volume;
     });
+    
+    /**
+     *  When looping events are triggered on an audio element.
+     **/
+    $('audio').live('loop', function(event, data){ return start_audio_loop(event, data); });
+    $('audio').live('clear_loop', function(event, data){ return clear_audio_loop(); });
     
     /**
     *   Playback functionality
@@ -153,4 +160,71 @@ function initialize_volume_slider(params) {
         handleID: params.handleID,
         audioID: params.audioID
     });
+}
+
+/**
+ *  start_audio_loop
+ *  Begins the requested audio loop.  This means that the audio starts at the given start time,
+ *  and when it reaches the end time, it goes back to the start time.  This should
+ *  be called whenever a section of the waveform is highlighted.
+ *
+ *  @param          event                This is an event handler
+ *  @param          data              {start, end} (times in seconds)
+ **/
+function start_audio_loop(event, data) {
+    /* Get audio element */
+    var audioElement = $('audio').get(0);
+
+    /* if loop is already running */
+    if($(audioElement).attr('data-looping') == '1') {
+        /* stop loop */
+        $(audioElement).trigger('clear_loop');
+    }
+    else {
+        /* mark loop as started */
+        $(audioElement).attr('data-looping', '1');
+    }
+    
+    /* Move audio to start time */
+    audioElement.currentTime = data.start;
+    
+    /* Continue loop */
+    continue_audio_loop(data);
+
+    /* trigger highlight event */
+    $(audioElement).trigger('highlight', data);
+}
+
+/**
+ *  continue_audio_loop
+ *  Continues the requested audio loop.  This will get called every animation.speed seconds, to make sure that the audio doesn't
+ *  go past the requested time.
+ *
+ *  @param          data              {start, end} (times in seconds)
+ **/
+function continue_audio_loop(data) {
+    /* Get audio element */
+    var audioElement = $('audio').get(0);
+    
+    /* If we are still looping */
+    if($(audioElement).attr('data-looping') == '1') { 
+        /* If we should restart the loop */
+        if(audioElement.currentTime >= data.end) {
+            /* restart */
+            $('audio').get(0).currentTime = data.start;
+        }
+        
+        /* Check again in animation speed ms */
+        setTimeout(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
+    }
+}
+
+/**
+ *  clear_audio_loop
+ *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
+ *  whenever the highlighted area is cleared.
+ **/
+function clear_audio_loop() {
+    /* Set as no longer looping */
+    $('audio').attr('data-looping', '0');
 }

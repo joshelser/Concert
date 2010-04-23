@@ -3,17 +3,7 @@
  *  This file contains helper functions that may be used throughout the client-side code.
  **/
 
-/**
- *  Global variables are in a namespace data structure.  A feature that will soon be 
- *  implemented in the Javascript language natively.
- **/
-if(!com) var com = {};
-if(!com.concertsoundorganizer) com.concertsoundorganizer = {};
-if(!com.concertsoundorganizer.animation) com.concertsoundorganizer.animation = {};
 
-com.concertsoundorganizer.animation = {
-    speed: 200,
-}
 
 /**
  *  sec_to_timecode

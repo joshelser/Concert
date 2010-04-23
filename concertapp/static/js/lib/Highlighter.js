@@ -45,12 +45,16 @@ Highlighter.prototype.initialize = function(params) {
         throw new Error('Highlighter: Could not initialize waveformWidth');
     }
     
-    /* duration of associated audio */
-    this.audioElementDuration = params.audioElementDuration;
-    if(typeof(this.audioElementDuration) == 'undefined') {
-        throw new Error('Highlighter: Could not initialize audioElementDuration.');
+    /* associated audioElement */
+    this.audioElement = params.audioElement;
+    if(typeof(this.audioElement) == 'undefined') {
+        throw new Error('Highlighter: Could not initialize audioElement.');
     }
+
+    /* duration of associated audio */
+    this.audioElementDuration = this.audioElement.duration;
     
+
     /* initialize highlight start and highlight end members */
     this.initialize_highlight();
     
@@ -118,6 +122,10 @@ Highlighter.prototype.end_drag = function(event) {
     }
 }
 
+/**
+ *  trigger_highlight
+ *  Triggers a loop or clear_loop event on the audio element, setting the audio loop.
+ **/
 Highlighter.prototype.trigger_highlight = function() {
     
     /* put highlight values in proper order */
@@ -140,13 +148,13 @@ Highlighter.prototype.trigger_highlight = function() {
            end: endTimePerc*this.audioElementDuration
        };
 
-       /* Trigger highlight event */
-       $(this.container).trigger('highlight', highlightData);
+       /* Trigger loop event on audio element */
+       $(this.audioElement).trigger('loop', highlightData);
     }
     /* If we just cleared a highlight */
     else {
-        /* Trigger clear highlight event */
-        $(this.container).trigger('clear_highlight');
+        /* Trigger clear loop event */
+        $(this.audioElement).trigger('clear_loop');
     } 
 }
 
