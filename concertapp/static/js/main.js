@@ -60,7 +60,8 @@ function load_waveform(segmentID) {
     /* If waveform image is already this audio file */
     if(typeof($('#waveform_viewer').attr('data-audioid')) != 'undefined'
     && $('#waveform_viewer').attr('data-audioid') == audioID) {     
-        /* Don't load image again */
+        /* Don't load image again, but change highlight */
+        main_draw_highlight(segmentID);
         return;
     }
     
@@ -124,17 +125,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
                     /* Create waveform player object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
                     
-                    /* Get start and end times */
-                    times = {
-                        start: $('#segment_start-'+segmentID).html(),
-                        end: $('#segment_end-'+segmentID).html()
-                    };
-                    
-                    
-                    /*  Draw highlight on waveformPlayer based on start and end times.  
-                        This creates an audio loop, and a highlight drawn on the interface. */
-                    $waveformPlayer.highlighter.set_highlight_time(times);
-
+                    main_draw_highlight(segmentID);
                     
                     /* If volume slider has not yet been defined */
                     if($volumeSlider == null) {
@@ -163,4 +154,24 @@ function load_audio(audioID, segmentID, callBackFunction) {
 
 
     });
+}
+
+/**
+ *  main_draw_highlight
+ *  Draws a highlight on the waveform viewer using the times from the segment whose ID
+ *  is sent as an argument.
+ *
+ *  @param          segmentID           The id of the AudioSegment object.
+ **/
+function main_draw_highlight(segmentID) {
+    /* Get start and end times */
+    times = {
+        start: $('#segment_start-'+segmentID).html(),
+        end: $('#segment_end-'+segmentID).html()
+    };
+    
+    
+    /*  Draw highlight on waveformPlayer based on start and end times.  
+        This creates an audio loop, and a highlight drawn on the interface. */
+    $waveformPlayer.highlighter.set_highlight_time(times);
 }
