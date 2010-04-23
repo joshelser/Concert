@@ -27,10 +27,10 @@ Waveform.prototype.set_partner = function(partner){
     }
     
     /* Initialize partner behavior */
-    /* if highlight is drawn on partner, draw highlight on self and animate */
-    $(this.partner.container).bind('highlight', function(obj){ return function(e, data){ data.noTrigger = true; obj.highlighter.set_highlight_time(data); obj.animate(); } }(this));
+    /* if highlight is drawn on partner, clear highlight on self, draw highlight on self and animate */
+    $(this.partner.container).bind('highlight', function(obj){ return function(e, data){ data.noTrigger = true; obj.clear_loop(); obj.highlighter.set_highlight_time(data); obj.animate(); } }(this));
     /* if partner highlight is cleared, clear highlight on self */
-    $(this.partner.container).bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
+    $(this.partner.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); } }(this));
 }
 
 Waveform.prototype.initialize_highlight_behavior = function(){
@@ -120,7 +120,7 @@ Waveform.prototype.start_loop = function(params) {
     this.audioElement.currentTime = params.start;
     
     /* animate once to update interface */
-    this.animate({once: true});
+    this.draw_animation();
     
     /* if loop is already running */
     if(this.loopInterval != null) {
@@ -155,6 +155,9 @@ Waveform.prototype.continue_loop = function(params) {
 Waveform.prototype.clear_loop = function() {
     clearInterval(this.loopInterval);
     this.loopInterval = null;
+    
+    /* Clear highlight */
+    this.highlighter.initialize_highlight();
 }
 
 /**

@@ -148,7 +148,6 @@ Highlighter.prototype.trigger_highlight = function() {
         /* Trigger clear highlight event */
         $(this.container).trigger('clear_highlight');
     } 
-    
 }
 
 /**
