@@ -43,10 +43,10 @@ var $waveformEditor = null;
     
     
     /* Bind submit button for a new segment */
-    $('#new_submit_button').bind('click', function(event, data){ return edit_submit_handler(event, data); });
+    $('#new_submit_button').bind('click', function(event, data){ return edit_new_submit_handler(event, data); });
     
     /* Bind submit button for renaming a segment */
-    $('#rename_submit_button').bind('click', function(event, data){ return rename_submit_handler(event, data); });
+    $('#rename_submit_button').bind('click', function(event, data){ return edit_rename_submit_handler(event, data); });
     
 
 })();
@@ -65,7 +65,11 @@ function edit_highlight_handler(event, data) {
     $('#id_end').attr('value', Math.round(data.end*100)/100);    
 }
 
-function edit_submit_handler(event, data) {
+/**
+ *  edit_submit_handler
+ *  This handles the event when the submit button is pressed on the new segment form
+ **/
+function edit_new_submit_handler(event, data) {
     /* Get data from form */
     var label = $('#id_label_field').attr('value');
     var tag = $('#id_tag_field').attr('value');
@@ -100,7 +104,7 @@ function edit_submit_handler(event, data) {
     });
 }
 
-function rename_submit_handler(event, data) {
+function edit_rename_submit_handler(event, data) {
 
     var label = $('#rename_segment #id_label_field').val();
     var segment_id = $('#id_segment_id').val();
