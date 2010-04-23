@@ -22,7 +22,10 @@ var $waveformEditor = null;
         /* Create waveform viewer object */
         $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
         /* Create waveform editor object */
-        //$waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
+        $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
+        /* Make waveformViewer and waveformEditor know about eachother */
+        $waveformViewer.set_partner($waveformEditor);
+        $waveformEditor.set_partner($waveformViewer);
         
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
@@ -118,7 +121,7 @@ function edit_rename_submit_handler(event, data) {
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 if(data == 'success') {
-                    alert('Your tag was renamed successfully');
+                    alert('Your segment was renamed successfully');
                 }
                 else{
                     alert(data);

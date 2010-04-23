@@ -13,6 +13,34 @@ var Waveform = function() {
 }
 
 /**
+ *  set_partner
+ *  Initializes the associated WaveformViewer object with this WaveformEditor object. (or vice versa)
+ *  Should be called after both objects are instantiated.
+ *
+ *  @param              partner             The partner object.
+ **/
+Waveform.prototype.set_partner = function(partner){
+    /* set reference to partner object */
+    this.partner = partner;
+    if(typeof(this.partner) == 'undefined') {
+        throw new Error('Waveform.prototype.set_partner: Unable to get partner object.');
+    }
+    
+    /* Initialize partner behavior */
+    /* if highlight is drawn on partner, draw highlight on self and animate */
+    $(this.partner.container).bind('highlight', function(obj){ return function(e, data){ data.noTrigger = true; obj.highlighter.set_highlight_time(data); obj.animate(); } }(this));
+    /* if partner highlight is cleared, clear highlight on self */
+    $(this.partner.container).bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
+}
+
+Waveform.prototype.initialize_highlight_behavior = function(){
+    /* if highlight occurs on self, start audio loop and draw animation */
+    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); } }(this));
+    /* if highlight clear occurs on self, clear audio loop */
+    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+}
+
+/**
  *  watch_audio_behavior
  *  Watches the audio element, and runs the play or pause method when audio element
  *  is played or paused, respectively.

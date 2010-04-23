@@ -19,13 +19,13 @@ var WaveformEditor = function(containerID, audioID) {
     this.set_audio(audioID);
     
     /* The object to animate is actual waveform image */
-    this.waveformElement = $('#'+this.id+' > img.waveform_image').get(0);
+    this.waveformElement = $('#'+this.id+' > div#editor_image').children('img.waveform_image').get(0);
     if(typeof(this.waveformElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get waveformElement.');
     }
     
     /* The highlight element on the page */
-    this.highlightElement = $('#'+this.id+' > div#highlight').get(0);
+    this.highlightElement = $('#'+this.id+' > div#editor_highlight').get(0);
     if(typeof(this.highlightElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get highlightElement.');
     }
@@ -46,14 +46,11 @@ var WaveformEditor = function(containerID, audioID) {
         audioElementDuration: this.audioElement.duration
     });
     
-    /* behavior if highlight is drawn on waveform viewer */
-    $('#waveform_viewer').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));    
-    /* behavior if waveform viewer highlight is cleared */
-    $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
-    /* behavior if highlight occurs on editor */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_viewer'].animate({once: true}); } }(this));
-    /* behavior if highlight clear occurs on self */
-    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+    /* Highlight behavior */
+    this.initialize_highlight_behavior();
+    
+    /* Watch audio element for playback */
+    this.watch_audio_behavior();
     
     return this;
     
@@ -63,20 +60,13 @@ var WaveformEditor = function(containerID, audioID) {
  **/
 WaveformEditor.prototype = new Waveform();
 
-/**
- *  animate
- *  Begins the animation for a waveform editor object.  Should be called
- *  when animation is to start.
- **/
-WaveformEditor.prototype.animate = function(params) {
 
-    /* set default arguments */
-    if(typeof(params) == 'undefined') {
-        params = {
-            once: false
-        };
-    }
-    
+/**
+ *  draw_animation
+ *  Draws one step of animation for a waveform editor object.  Should be called
+ *  every animationspeed ms if we are animating.
+ **/
+WaveformEditor.prototype.draw_animation = function() {    
     /* Percentage of song we are currently on */
     var actualPercent = this.audioElement.currentTime/this.audioElement.duration;
     
@@ -92,12 +82,4 @@ WaveformEditor.prototype.animate = function(params) {
     /* Move highlight to proper position */
     this.highlighter.draw_highlight();
     
-    /* make sure audio element is still playing, and we weren't just supposed to animate once */
-    if($(this.audioElement).hasClass('playing') && !params.once ) {
-        /* if so, go again in animation.speed ms  */
-        setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
-    }
-    else {
-        this.set_paused();
-    }
 }

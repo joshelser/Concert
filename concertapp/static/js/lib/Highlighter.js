@@ -201,9 +201,14 @@ Highlighter.prototype.set_waveform_left = function(left) {
  *  set_highlight_time
  *  Sets the highlight based on time values sent as parameters.
  *
- *  @param          data        {start, end}
+ *  @param          data        {start, end, [noTrigger]}
  **/
 Highlighter.prototype.set_highlight_time = function(data) {
+    
+    /* default value for noTrigger */
+    if(typeof(data.noTrigger) == 'undefined') {
+        data.noTrigger = false;
+    }
     var startTimePerc = data.start/this.audioElementDuration;
     var endTimePerc = data.end/this.audioElementDuration;
     
@@ -211,6 +216,8 @@ Highlighter.prototype.set_highlight_time = function(data) {
     this.highlightEnd = endTimePerc*this.waveformWidth;
     
     this.draw_highlight();
-    this.trigger_highlight();
+    if(!data.noTrigger) {
+        this.trigger_highlight();        
+    }
 }
 
