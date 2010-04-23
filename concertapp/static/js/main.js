@@ -130,7 +130,6 @@ function load_audio(audioID, segmentID, callBackFunction) {
                         end: $('#segment_end-'+segmentID).html()
                     };
                     
-                    callBackFunction();
                     
                     /*  Draw highlight on waveformPlayer based on start and end times.  
                         This creates an audio loop, and a highlight drawn on the interface. */
@@ -152,6 +151,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
                     /* Set volume to 0.8 initially */
                     $volumeSlider.change_volume(0.8);
                     
+                    callBackFunction();
                    
                     
                 });                            
