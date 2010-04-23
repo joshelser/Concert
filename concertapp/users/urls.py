@@ -18,6 +18,8 @@ urlpatterns = patterns('concertapp.users.views',
     url(r'^(\d+)/groups/manage/(\d+)/remove_user/{0,1}$', 'remove_user', name='remove_user'),
     url(r'^(\d+)/groups/manage/(\d+)/remove/(.+)/submit/{0,1}$', 'remove_from_group', name='remove_from_group'),
     url(r'^(\d+)/groups/manage/(\d+)/remove/(.+)/{0,1}$', 'remove', name='remove'),
+    url(r'^(\d+)/groups/manage/(\d+)/delete/$', 'delete_confirm', name='delete_confirm'),
+    url(r'^(\d+)/groups/manage/(\d+)/delete/submit/{0,1}$', 'delete', name='delete'),
     url(r'^(\d+)/groups/manage/(\d+)/{0,1}$', 'manage_group', name='manage_group')
 
 )

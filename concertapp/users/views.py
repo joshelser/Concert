@@ -190,6 +190,17 @@ def remove_from_group(request,user_id, group_name, user):
     url = '/users/'+user_id+'/groups/manage/'+group_name+'/remove_user/'
     return HttpResponseRedirect(url)
 
+def delete_confirm(request,user_id, group_id):
+    return render_to_response('delete_confirm.html', {'user_id':user_id,
+        'group_id':group_id}, RequestContext(request))
+
+def delete(request,user_id, group_id):
+    group = Group.objects.get(pk = group_id)
+    group.delete()
+    url = '/users/'+user_id+'/groups/manage/'
+    return HttpResponseRedirect(url)
+    
+
 @login_required
 def pending_requests(request, user_id, group_id):
     group_admin = GroupAdmin.objects.get(group = Group.objects.get(pk = group_id))
