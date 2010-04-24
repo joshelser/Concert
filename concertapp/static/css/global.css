@@ -516,9 +516,27 @@ div.dataTables_paginate {
 .button {
     background-repeat: no-repeat;
     background-position: center;
+    text-align: center;
     height: 16px;
+    display: block;
+}
+
+.button_text {
+    background-repeat: no-repeat;
+    background-position: right center;
+    text-align: left;
+    height: 16px;
+    padding-right: 16px;
 }
 
 .loading {
     background-image: url('/graphics/ajax-loader.gif');
+}
+
+.tags-label {
+    background-image: url('/graphics/icons/tags-label.png');
+}
+
+.tags {
+    background-image: url('/graphics/icons/tags.png');
 }
