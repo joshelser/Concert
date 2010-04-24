@@ -9,30 +9,32 @@ urlpatterns = patterns('concertapp.views',
     #index
     url(r'^$', 'index', name='index'),
     #edit
-    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/{0,1}$', 'edit', 
+    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'edit', 
         name='edit'),
     url(r'^edit/submit$',
         'new_segment_submit', name='submit'),
     #admin
-    url(r'^admin/{0,1}$', 'admin', name='admin'),
+    url(r'^admin/$', 'admin', name='admin'),
     #delete
-    url(r'^delete_segment/(?P<segment_id>\d+)/{0,1}$', 'delete_segment', 
+    url(r'^delete_segment/(?P<segment_id>\d+)/$', 'delete_segment', 
         name='delete_segment'),
     #rename
-    url(r'^rename_segment/{0,1}$', 'rename_segment', 
+    url(r'^rename_segment/$', 'rename_segment', 
         name='rename_segment'),
     
     
     #nested
     # Users
     (r'^users/', include('concertapp.users.urls')),
-    (r'^users/{0,1}$', include('concertapp.users.urls')),
+    (r'^users/$', include('concertapp.users.urls')),
     # Audio
     (r'^audio/', include('concertapp.audio.urls')),
-    (r'^audio/{0,1}$', include('concertapp.audio.urls')),
+    (r'^audio/$', include('concertapp.audio.urls')),
     # Groups
     (r'^groups/', include('concertapp.groups.urls')),
-    (r'^groups/{0,1}$', include('concertapp.groups.urls')),
+    (r'^groups/$', include('concertapp.groups.urls')),
+    # Tag operations
+    #(r'^tags/')
 
 )
 

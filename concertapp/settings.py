@@ -102,7 +102,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = '/users/login/'
 LOGOUT_URL = '/users/logout/'
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 # Make all uploaded files write to disk
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0

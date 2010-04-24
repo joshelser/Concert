@@ -496,3 +496,11 @@ div.dataTables_paginate {
 }
 
 
+.inline {
+    display: inline;
+}
+
+.sidebar_manage_link {
+    margin-left: 10px;
+    font-size: 70%;
+}
