@@ -54,3 +54,13 @@ function get_event_x($element, $e){
     return clickX;
 }
 
+/**
+ *  get_object_id
+ *  Given an element, retrieves the number at the end of the id attribute
+ *  (of that element) after the '-' character.
+ *
+ *  @param          element             The DOM (jQuery) object.
+ **/
+function get_object_id(element) {
+    return $(element).attr('id').split('-')[1]*1;
+}
