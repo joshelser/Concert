@@ -45,29 +45,32 @@
             </div>
         </div>
         <div id = "right_wrapper">
-            <table>
-                <tr id = "title_bar">
-                    <th>Tags</th>
-                    <th>Label</th>
-                    <th>Uploaded By</th>
-                    <th>In</th>
-                    <th>Out</th>
-                </tr>
-                {% if segment_list %}
-                    {% for segment in segment_list %}
-                        {% comment %} For each segment row, store segment id in id attribute, and audio id in data-audioid attribute (this is valid HTML5) {% endcomment %}
-                        <tr id="segment_row-{{ segment.id }}" class="segment_row" data-audioid="{{ segment.audio.id }}">
-                            <td>{{ segment.tag_list }}</td>
-                            <td>{{ segment.name }}</td>
-                            <td>{{ segment.audio.user.username }}</td>
-                            <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
-                            <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr><td colspan = "5">No audio found.</td></tr>
-                {% endif %}
-
+            <table class="segments_table">
+                <thead>
+                    <tr id = "title_bar">
+                        <th>Tags</th>
+                        <th>Label</th>
+                        <th>Uploaded By</th>
+                        <th>In</th>
+                        <th>Out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if segment_list %}
+                        {% for segment in segment_list %}
+                            {% comment %} For each segment row, store segment id in id attribute, and audio id in data-audioid attribute (this is valid HTML5) {% endcomment %}
+                            <tr id="segment_row-{{ segment.id }}" class="segment_row" data-audioid="{{ segment.audio.id }}">
+                                <td>{{ segment.tag_list }}</td>
+                                <td>{{ segment.name }}</td>
+                                <td>{{ segment.audio.user.username }}</td>
+                                <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
+                                <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan = "5">No audio found.</td></tr>
+                    {% endif %}
+                </tbody>
             </table>
         </div>
     </div>
