@@ -517,7 +517,6 @@ div.dataTables_paginate {
     background-repeat: no-repeat;
     background-position: center;
     height: 16px;
-    display: block;
 }
 
 .loading {
