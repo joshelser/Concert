@@ -173,5 +173,5 @@ function main_draw_highlight(segmentID) {
     
     /*  Draw highlight on waveformPlayer based on start and end times.  
         This creates an audio loop, and a highlight drawn on the interface. */
-    $waveformPlayer.highlighter.set_highlight_time(times);
+    $('audio').trigger('loop', times);
 }
