@@ -322,7 +322,7 @@ a {color:#333;}
 	height:28px;
 	color:#CCC;
 	margin:30px 20px 0 20px;
-  width:210px;
+    width:210px;
 }
 
 #search > input:focus {color:#585859;}
@@ -371,10 +371,10 @@ table.segments_table th {
 	background-position: right center;
 }
 
-table.segments_table th.headerSortUp {
+table.segments_table th.sorting_asc {
     background-image: url('/graphics/icons/arrow-090-medium.png');
 }
-table.segments_table th.headerSortDown {
+table.segments_table th.sorting_desc {
     background-image: url('/graphics/icons/arrow-270-medium.png');
 }
 
