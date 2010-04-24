@@ -367,6 +367,15 @@ table.segments_table th {
 	border-left:1px #c1c1c1 solid;
 	text-align:left;
 	padding-top:6px;
+	background-repeat: no-repeat;
+	background-position: right center;
+}
+
+table.segments_table th.headerSortUp {
+    background-image: url('/graphics/icons/arrow-090-medium.png');
+}
+table.segments_table th.headerSortDown {
+    background-image: url('/graphics/icons/arrow-270-medium.png');
 }
 
 
