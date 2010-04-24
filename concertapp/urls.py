@@ -34,6 +34,7 @@ urlpatterns = patterns('concertapp.views',
     (r'^groups/', include('concertapp.groups.urls')),
     (r'^groups/$', include('concertapp.groups.urls')),
     # Tag operations
+    (r'^tags/', include('concertapp.tags.urls')),
     (r'^tags/$', include('concertapp.tags.urls')),
 
 )
