@@ -384,6 +384,54 @@ table.segments_table tbody tr:hover {
 	color:#fff;
 }
 
+div.dataTables_paginate div {
+    height: 20px;
+    width: 20px;
+    background-repeat: no-repeat;
+}
+
+div.paginate_disabled_next {
+    float:right;
+    background-image: url('/graphics/icons/arrow.png');
+    opacity: .5;
+}
+
+div.paginate_enabled_next {
+    float:right;
+    background-image: url('/graphics/icons/arrow.png');
+    opacity: 1;
+}
+
+div.paginate_disabled_previous {
+    background-image: url('/graphics/icons/arrow-180.png');
+    float: left;
+    opacity: .5;
+}
+
+div.paginate_enabled_previous {
+    background-image: url('/graphics/icons/arrow-180.png');
+    float: left;
+    opacity: 1;
+}
+
+div.below_table {
+    width: 100%;
+    display: table-row;
+    text-align: center;
+}
+
+div.dataTables_info {
+    display: table-cell;
+    width: 100px;
+}
+div.dataTables_length {
+    display: table-cell;
+    width: 200px;
+}
+div.dataTables_paginate {
+    display: table-cell;
+    width: 50px;
+}
 
 
 /* Login */

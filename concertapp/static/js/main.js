@@ -36,8 +36,11 @@ var $waveformPlayer = null;
 
     });
 
-    /* Make main table sortable */
+    /*  Make main table sortable and searchable.  There are some options
+        that can go here to modify the look and properties of the DOM 
+        elements that are generated, I haven't looked into it too much. */
     $('table.segments_table').dataTable({
+        'sDom': '<"above_table"f>t<"below_table"ilp>', 
     });
 
     
