@@ -148,6 +148,8 @@ Highlighter.prototype.trigger_highlight = function() {
            end: endTimePerc*this.audioElementDuration
        };
 
+       /* Trigger clear loop event */
+       $(this.audioElement).trigger('clear_loop');
        /* Trigger loop event on audio element */
        $(this.audioElement).trigger('loop', highlightData);
     }

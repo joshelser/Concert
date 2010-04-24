@@ -188,8 +188,11 @@ function start_audio_loop(event, data) {
     /* Move audio to start time */
     audioElement.currentTime = data.start;
     
-    /* Continue loop */
-    continue_audio_loop(data);
+    /* Check again in animation speed ms */
+    var loopintervalid = setInterval(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
+    
+    /* Set loopintervalid as data attribute of audio element */
+    $(audioElement).attr('data-loopintervalid', loopintervalid);
 
     /* trigger highlight event */
     $(audioElement).trigger('highlight', data);
@@ -214,8 +217,6 @@ function continue_audio_loop(data) {
             $('audio').get(0).currentTime = data.start;
         }
         
-        /* Check again in animation speed ms */
-        setTimeout(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
     }
 }
 
@@ -227,4 +228,6 @@ function continue_audio_loop(data) {
 function clear_audio_loop() {
     /* Set as no longer looping */
     $('audio').attr('data-looping', '0');
+    /* Clear interval */
+    clearInterval($('audio').attr('data-loopintervalid'));
 }
