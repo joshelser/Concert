@@ -338,7 +338,9 @@ table.segments_table {
 	z-index:2;
 }
 
-table.segments_table tbody tr {height:45px;}
+table.segments_table tbody tr, table.segments_table tbody td {
+    height:45px;
+}
 
 table.segments_table tbody tr:nth-child(odd) {background-color:#f2f2f2;}
 

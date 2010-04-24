@@ -36,6 +36,10 @@ var $waveformPlayer = null;
 
     });
 
+    /* Make main table sortable */
+    $('table.segments_table').tablesorter({
+        sortList: [[1, 0]]
+    });
 
     
     initialize_audio_player_behavior();
