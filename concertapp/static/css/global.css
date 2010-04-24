@@ -504,3 +504,18 @@ div.dataTables_paginate {
     margin-left: 10px;
     font-size: 70%;
 }
+
+.pencil {
+    background-image: url('/graphics/icons/pencil-small.png');
+}
+
+.check {
+    background-image: url('/graphics/icons/tick.png');
+}
+
+.button {
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 16px;
+    display: block;
+}
