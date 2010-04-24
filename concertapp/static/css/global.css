@@ -519,3 +519,7 @@ div.dataTables_paginate {
     height: 16px;
     display: block;
 }
+
+.loading {
+    background-image: url('/graphics/ajax-loader.gif');
+}
