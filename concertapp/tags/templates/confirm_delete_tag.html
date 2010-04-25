@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Delete tag</h1>
+    <p>
+        Are you sure you want to delete this tag?<br />
+    </p>
+    
+    {% ifequal tag.segments.count 0 %}
+        <p>There are no segments tagged "{{ tag.tag }}"</p>
+    {% else %}
+        <p>The following segments are tagged "{{ tag.tag }}":<br /><br />Any segments that are just tagged "{{ tag.tag }}" will be deleted.<br /><br /></p>
+        {{ tag_segments_table }}
+    {% endifequal %}
+    
+    <br /><br /><a href="/tags/delete/{{ tag.id }}/">I am sure, delete "{{ tag.tag }}"</a>
+    
+    <script src="/js/confirmDeleteTag.js"></script>
+{% endblock %}
