@@ -49,8 +49,11 @@
         <!---asdsadas-->
         <div id = "right_wrapper">
             <div id="waveform_editor" class="waveform">        	
-                <div id="editor_highlight" class="editor_highlight"></div>
-                <div id="editor_highlight_static" class="editor_highlight" ><div id="editor_highlight_static_tags" class="highlight_static_tags">Tag1, tag2, something</div></div>
+                <div id="editor_highlight" class="editor_highlight_container"><div class="editor_highlight"></div></div>
+                <div id="editor_highlight_static" class="editor_highlight_container" >
+                    <div id="editor_highlight_static_tags" class="highlight_static_tags"></div>
+                    <div id="editor_highlight_static_highlight" class="editor_highlight"></div>
+                </div>
                 <div id="editor_playhead" class="playhead"></div>
                 <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_editor_image" src = "{{ waveformEditorSrc }}" /></div>
             </div>     

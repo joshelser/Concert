@@ -55,8 +55,9 @@ HighlightViewer.prototype.initialize = function(params) {
     
     /* JSON list of tag objects for this highlighted section */
     this.tags = params.tags;
-    if(typeof(this.tags) == 'undefined') {
-        throw new Error('HighlightViewer: Could not initialize tags.')
+    if(typeof(this.tags) != 'undefined') {
+        /* initialize display */
+        this.display_tags();
     }
 
     /* duration of associated audio */
@@ -67,6 +68,23 @@ HighlightViewer.prototype.initialize = function(params) {
     
     /* initialize waveformLeft */
     this.set_waveform_left($(this.waveformElement).css('left').match(/[\d\.]+/));
+    
+    
 
+}
+
+HighlightViewer.prototype.display_tags = function() {
+
+    
+    /* String to ultimately inject into tag display */
+    var out = this.tags[0]['fields']['tag'];
+    /* For each tag */
+    for(var i = 1; i < this.tags.length; i++) {
+        /* Format output for this tag */
+        out += ', '+this.tags[i]['fields']['tag'];
+    }
+    
+    /* Display output in tag area above highlight */
+    $(this.highlightElement).children('#editor_highlight_static_tags').html(out);
 }
 
