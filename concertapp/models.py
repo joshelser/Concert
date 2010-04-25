@@ -19,9 +19,9 @@ class AudioSegment(models.Model):
       # Get all tags associated with this audio segment
       tags = self.tag_set.all()
       output = tags[0].tag
-      if len(tags) > 1 :
+      if tags.count() > 1 :
         for i in range(len(tags)-1) :
-          output += ', '+tags[i+1]
+            output += ', '+tags[i+1].tag
       return output
         
 
