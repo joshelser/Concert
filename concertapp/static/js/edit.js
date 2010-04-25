@@ -95,6 +95,7 @@ function edit_new_submit_handler(event, data) {
             if(textStatus == 'success') {
                 if(data == 'success') {
                     alert('Your tag was saved successfully');
+                    window.location = '/';
                 }
             }
             else {
