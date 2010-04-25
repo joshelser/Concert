@@ -20,8 +20,8 @@ class AudioSegment(models.Model):
       tags = self.tag_set.all()
       output = tags[0].tag
       if len(tags) > 1 :
-        for i in range(len(tags))+1 :
-          output += ', '+tags[i]
+        for i in range(len(tags)-1) :
+          output += ', '+tags[i+1]
       return output
         
 

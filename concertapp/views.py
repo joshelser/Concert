@@ -15,54 +15,62 @@ from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentFo
 
 @login_required
 def index(request):
-    
+
     ###
     #   Groups
     ###
     # Get all groups for which the current user is a member
     group_list = request.user.groups.all()
-    
+
     # Get selected group, or just user's default group
     try:
-      # Use group if one was specified
-      selected_group_id = request.GET['selected_group_id']
-      selected_group = request.user.groups.get(id = selected_group_id)
+        # Use group if one was specified
+        selected_group_id = request.GET['selected_group_id']
+        selected_group = request.user.groups.get(id = selected_group_id)
     except KeyError:
-      # Use user's default group
-      selected_group = request.user.groups.get(name = request.user.username)
-    
+        # Use user's default group
+        selected_group = request.user.groups.get(name = request.user.username)
+
     ###
     #   Tags
     ###
     # Get all of this group's tags
     tag_list = Tag.objects.filter(group = selected_group)
-    
+
     # Get selected tag, or just use default tag
     try:
-      # use selected tag if one was specified
-      selected_tag_id = request.GET['selected_tag_id']
-      selected_tag = Tag.objects.get(pk = selected_tag_id)
-      # Get all of this tag's audio segments
-      segment_list = selected_tag.segments.all()
-    # no tag was selected
+        # use selected tag if one was specified
+        selected_tag_id = request.GET['selected_tag_id']
+        selected_tag = Tag.objects.get(pk = selected_tag_id)
+        # Get all of this tag's audio segments
+        segment_list = selected_tag.segments.all()
+        # no tag was selected
     except KeyError:
-      # Get all tags from this group
-      selected_tag = Tag.objects.filter(group = selected_group)
-      segment_list = []
-      # For each tag
-      for tag in selected_tag :
-          # Get all segments in this tag, add them into segment_list
-          segment_list.extend(tag.segments.all())
+        # Get all tags from this group
+        selected_tag = Tag.objects.filter(group = selected_group)
+        segment_list = []
+        all_segments = AudioSegment.objects.all()
+        # For each segment
+        for segment in all_segments :
+            # For each of the selected tags
+            for tag in selected_tag:
+                # If this tag is one of the segment's tags
+                if segment.tag_set.filter(id = tag.id).count() > 0 :
+                    # Add to our segment list
+                    segment_list.append(segment)
+                    # Move on to next segment
+                    break
     
-    
+
+
     return render_to_response('index.html', {
-        'no_show' : "no_show",
-        'group_list': group_list, 
-        'selected_group': selected_group, 
-        'tag_list' : tag_list, 
-        'selected_tag' : selected_tag,
-        'segment_list' : segment_list
-        }, RequestContext(request))
+    'no_show' : "no_show",
+    'group_list': group_list, 
+    'selected_group': selected_group, 
+    'tag_list' : tag_list, 
+    'selected_tag' : selected_tag,
+    'segment_list' : segment_list
+    }, RequestContext(request))
 
 
 ###
