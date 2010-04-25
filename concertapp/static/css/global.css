@@ -329,6 +329,10 @@ a {color:#333;}
 
 #search > input:focus {color:#585859;}
 
+#groups ul li.selected {
+        font-weight: bold;
+}
+
 /*library*/
 #right_wrapper {
 	overflow:hidden;
