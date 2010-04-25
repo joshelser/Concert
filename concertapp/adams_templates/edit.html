@@ -7,8 +7,11 @@
 
     <div id = "main_wrapper">
         <div id = "left_wrapper">
+            <h1>Currently editing "{{ audioSegment.name }}"</h1>
+            <br />
+            <br />
             <form id = "new_segment">
-                <h1>New Segment</h1>
+                <h1>New Segment (on this audio file)</h1>
                 <table>
                     {{ createSegmentForm.as_table }}
                     <input type="hidden" value="{{ group_id }}" id="id_group_id" />
@@ -24,8 +27,10 @@
                     <input type = "text" value = "Out Time" id = "out_time_field"/>
                     </p>-->
             </form>
+            <br />
+            <br />
             <form id = "rename_segment">
-                <h1>Rename Segment</h1>
+                <h1>Rename "{{ audioSegment.name }}"</h1>
                 <table>
                     {{ renameSegmentForm.as_table }}
                     <input type = "hidden" value = "{{ audioSegment.id }}" id = 'id_segment_id'/>
