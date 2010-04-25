@@ -52,11 +52,11 @@ class Tag(models.Model):
         for segment in segments :
             # If segment only has one tag, it is this one, so we can delete segment as well
             if segment.tag_set.count() == 1 :
-                print 'delete '+segment.name
+                # delete segment
+                segment.delete()
         
         # Delete tag using built-in delete method
-        #super(Tag, self).delete(*args, **kwargs)
-        print 'deleting tag '+self.tag
+        super(Tag, self).delete(*args, **kwargs)
         return
  
 class Comment(models.Model):
