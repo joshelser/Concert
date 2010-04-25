@@ -46,6 +46,16 @@ var WaveformEditor = function(containerID, audioID) {
         audioElement: this.audioElement
     });
     
+    /* Static highlighter on viewer */
+    this.highlightViewer = new HighlightViewer({
+        highlightElement: $(this.container).children('#editor_highlight_static'), 
+        container: this.container, 
+        waveformElement: this.waveformElement,
+        waveformWidth: this.waveformWidth,
+        audioElement: this.audioElement
+    });
+    
+    
     /* Highlight behavior */
     this.initialize_highlight_behavior();
     
@@ -81,5 +91,8 @@ WaveformEditor.prototype.draw_animation = function() {
     this.highlighter.set_waveform_left(newLeft);
     /* Move highlight to proper position */
     this.highlighter.draw_highlight();
+    /* Same for highlight viewer */
+    this.highlightViewer.set_waveform_left(newLeft);
+    this.highlightViewer.draw_highlight();
     
 }

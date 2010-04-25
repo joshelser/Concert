@@ -34,7 +34,9 @@ var $waveformEditor = null;
         /* Initialize audio player */
         initialize_audio_player_behavior(function(){
             /* Set static highlight for this segment of the audio */
-            $waveformViewer.highlightViewer.set_highlight_time({start: $('#segment_start').val(), end: $('#segment_end').val() });            
+            $waveformViewer.highlightViewer.set_highlight_time({start: $('#segment_start').val(), end: $('#segment_end').val(), noTrigger: true });
+            /* Same for editor */
+            $waveformEditor.highlightViewer.set_highlight_time({start: $('#segment_start').val(), end: $('#segment_end').val() });
         });
 
         

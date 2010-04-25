@@ -177,6 +177,7 @@ a {color:#333;}
 
 #waveform_editor {
     height: 585px;
+    width: 800px;
     background-color: black;
     overflow: hidden;
 }
@@ -195,7 +196,7 @@ a {color:#333;}
     z-index: 1;
 }
 
-#editor_highlight { 
+.editor_highlight { 
     z-index: 2;
     position: absolute;
     margin-left: 0px;
