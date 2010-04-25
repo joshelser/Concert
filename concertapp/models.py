@@ -39,6 +39,25 @@ class Tag(models.Model):
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
+    
+    def delete(self, *args, **kwargs):
+        # Do not delete if this is a permanent tag
+        if self.isFixture :
+            return
+        
+        # Get all segments with this tag
+        segments = self.segments.all()
+        
+        # For each segment
+        for segment in segments :
+            # If segment only has one tag, it is this one, so we can delete segment as well
+            if segment.tag_set.count() == 1 :
+                print 'delete '+segment.name
+        
+        # Delete tag using built-in delete method
+        #super(Tag, self).delete(*args, **kwargs)
+        print 'deleting tag '+self.tag
+        return
  
 class Comment(models.Model):
     comment = models.TextField()

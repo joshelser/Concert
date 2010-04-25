@@ -540,3 +540,7 @@ div.dataTables_paginate {
 .tags {
     background-image: url('/graphics/icons/tags.png');
 }
+
+.cross {
+    background-image: url('/graphics/icons/cross.png');
+}
