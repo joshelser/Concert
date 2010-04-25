@@ -27,6 +27,11 @@ Waveform.prototype.set_partner = function(partner){
     }
 }
 
+/**
+ *  initialize_highlight_behavior
+ *  This is the behavior when a highlight or clear_loop event is triggered on the associated audio
+ *  element.
+ **/
 Waveform.prototype.initialize_highlight_behavior = function(){
     
     /* If loop event is triggered on audio element, draw highlight and animate self */
@@ -127,4 +132,26 @@ Waveform.prototype.animate = function() {
         /* if so, go again in animation.speed ms */
         setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
     }
+}
+
+/**
+ *  set_highlight_viewer
+ *  Sets the static highlight viewer for this Waveform object.  This is used
+ *  if we are currently viewing a segment, and want to display the segment's
+ *  location on the audio element at all times.
+ *
+ *  @param              params             {    highlightElement : The element to use for highlighting,
+ *                                              waveformElement: The element that is the waveform image,
+ *                                              tags:           The Tag JSON objects. }
+ **/
+Waveform.prototype.set_highlight_viewer = function(params) {
+    /* Static highlighter on viewer */
+    this.highlightViewer = new HighlightViewer({
+        highlightElement: params.highlightElement, 
+        container: this.container, 
+        waveformElement: params.waveformElement,
+        waveformWidth: this.waveformWidth,
+        audioElement: this.audioElement,
+        tags: params.tags
+    });    
 }

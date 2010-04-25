@@ -10,10 +10,10 @@
  *  @param              audioID                 The id of the associated audio element.
  *  @return             this                    Constructor
  **/
-var WaveformViewer = function(containerID, audioID) {
+var WaveformViewer = function(containerID, audioID, tags) {
     
     if(typeof(containerID) != 'undefined' && typeof(audioID) != 'undefined') {
-        this.initialize(containerID, audioID);
+        this.initialize(containerID, audioID, tags);
     }    
     
     
@@ -32,7 +32,7 @@ WaveformViewer.prototype = new Waveform();
  *  @param          containerID             The id of the container element.
  *  @param          audioID                 The id of the associated audio element.
  **/
-WaveformViewer.prototype.initialize = function(containerID, audioID) {
+WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
     /* Set container members */
     this.set_container(containerID);
     /* Set audio members */
@@ -61,14 +61,12 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
         waveformWidth: this.waveformWidth,
         audioElement: this.audioElement
     });
-    
+
     /* Static highlighter on viewer */
-    this.highlightViewer = new HighlightViewer({
+    this.set_highlight_viewer({
         highlightElement: $(this.container).children('#viewer_highlight_static'), 
-        container: this.container, 
-        waveformElement: $(this.container).children('#viewer_image'),
-        waveformWidth: this.waveformWidth,
-        audioElement: this.audioElement
+        waveformElement : $(this.container).children('#viewer_image'), 
+        tags: tags
     });
     
     

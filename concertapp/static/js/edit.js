@@ -16,11 +16,13 @@ var $waveformEditor = null;
     
     /* Create audio viewers and editors when audio element is ready. */
     $('audio').one('canplaythrough', function(){
-        
+        /* Get tags for this audio segment which have been placed on DOM */
+        var jsonTags = eval('('+$('#jsonTags').val()+')');
+
         /* Create waveform viewer object */
-        $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element');
+        $waveformViewer = new WaveformViewer('waveform_viewer', 'audio_element', jsonTags);
         /* Create waveform editor object */
-        $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
+        $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element', jsonTags);
         
         
         /* Initialize volume slider */
@@ -75,6 +77,9 @@ function edit_highlight_handler(event, data) {
 /**
  *  edit_submit_handler
  *  This handles the event when the submit button is pressed on the new segment form
+ *
+ *  @param          event           This is an event handler.
+ *  @param          data            The data associated with this event {}
  **/
 function edit_new_submit_handler(event, data) {
     /* Get data from form */

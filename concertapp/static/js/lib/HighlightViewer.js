@@ -7,7 +7,7 @@
  *  HighlightViewer
  *  The constructor for a HighlightViewer object.
  *
- *  @param          params                      Params list. {highlightElement, container, waveformElement, waveformWidth, audioElementDuration}
+ *  @param          params                      Params list. {highlightElement, container, waveformElement, waveformWidth, audioElementDuration, tags}
  *  @return         this                        Constructor.
  **/
 var HighlightViewer = function(params) {
@@ -50,7 +50,13 @@ HighlightViewer.prototype.initialize = function(params) {
     /* associated audioElement */
     this.audioElement = params.audioElement;
     if(typeof(this.audioElement) == 'undefined') {
-        throw new Error('Highlighter: Could not initialize audioElement.');
+        throw new Error('HighlightViewer: Could not initialize audioElement.');
+    }
+    
+    /* JSON list of tag objects for this highlighted section */
+    this.tags = params.tags;
+    if(typeof(this.tags) == 'undefined') {
+        throw new Error('HighlightViewer: Could not initialize tags.')
     }
 
     /* duration of associated audio */

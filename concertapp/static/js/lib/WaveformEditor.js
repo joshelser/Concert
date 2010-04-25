@@ -9,9 +9,10 @@
  *
  *  @param          containerID         The ID of the container element on the DOM.
  *  @param          audioID             The id of the audio element on the DOM.
+ *  @param          tags                The list of JSON Tag objects.
  *  @return         this                Constructor.
  **/
-var WaveformEditor = function(containerID, audioID) {
+var WaveformEditor = function(containerID, audioID, tags) {
     
     /* Set container members */
     this.set_container(containerID);
@@ -47,14 +48,11 @@ var WaveformEditor = function(containerID, audioID) {
     });
     
     /* Static highlighter on viewer */
-    this.highlightViewer = new HighlightViewer({
-        highlightElement: $(this.container).children('#editor_highlight_static'), 
-        container: this.container, 
+    this.set_highlight_viewer({
+        highlightElement: $('#editor_highlight_static').get(0),
         waveformElement: this.waveformElement,
-        waveformWidth: this.waveformWidth,
-        audioElement: this.audioElement
+        tags: tags
     });
-    
     
     /* Highlight behavior */
     this.initialize_highlight_behavior();
