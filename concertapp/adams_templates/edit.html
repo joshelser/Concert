@@ -4,6 +4,10 @@
 
 <input type="hidden" id="segment_start" value="{{ audioSegment.beginning }}" />
 <input type="hidden" id="segment_end" value="{{ audioSegment.end }}" />
+<input type="hidden" value="{{ group_id }}" id="id_group_id" />
+<input type="hidden" value="{{ audio_id }}" id="id_audio_id" />
+<input type = "hidden" value = "{{ audioSegment.id }}" id = 'id_segment_id'/>
+
 <div id = "index_container">
     
     {% include "waveform_viewer_header.html" %}
@@ -17,8 +21,6 @@
                 <h1>New Segment (on this audio file)</h1>
                 <table>
                     {{ createSegmentForm.as_table }}
-                    <input type="hidden" value="{{ group_id }}" id="id_group_id" />
-                    <input type="hidden" value="{{ audio_id }}" id="id_audio_id" />
                     <tr><td></td><td style="float:right"><input type="button" id="new_submit_button" value="Submit" /></td></tr>
                 </table>
                 <!--
@@ -36,7 +38,6 @@
                 <h1>Rename "{{ audioSegment.name }}"</h1>
                 <table>
                     {{ renameSegmentForm.as_table }}
-                    <input type = "hidden" value = "{{ audioSegment.id }}" id = 'id_segment_id'/>
                     <tr>
                         <td></td>
                         <td ><input type="button" id="rename_submit_button" value="Submit" /></td>
