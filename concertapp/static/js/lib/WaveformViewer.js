@@ -62,6 +62,16 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
         audioElement: this.audioElement
     });
     
+    /* Static highlighter on viewer */
+    this.highlightViewer = new HighlightViewer({
+        highlightElement: $(this.container).children('#viewer_highlight_static'), 
+        container: this.container, 
+        waveformElement: $(this.container).children('#viewer_image'),
+        waveformWidth: this.waveformWidth,
+        audioElement: this.audioElement
+    });
+    
+    
     /* Behavior when audio element is played and paused */
     this.watch_audio_behavior(); 
     

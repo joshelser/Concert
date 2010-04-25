@@ -22,6 +22,7 @@ var $waveformEditor = null;
         /* Create waveform editor object */
         $waveformEditor = new WaveformEditor('waveform_editor', 'audio_element');
         
+        
         /* Initialize volume slider */
         initialize_volume_slider({sliderID: 'slider', handleID: 'handle', audioID: 'audio_element'});
         
@@ -29,12 +30,16 @@ var $waveformEditor = null;
         $volumeSlider.change_volume(0.8);
         
         
-        /* Activate player controls */
-        activate_controls();
         
         /* Initialize audio player */
-        initialize_audio_player_behavior();
+        initialize_audio_player_behavior(function(){
+            /* Set static highlight for this segment of the audio */
+            $waveformViewer.highlightViewer.set_highlight_time({start: $('#segment_start').val(), end: $('#segment_end').val() });            
+        });
+
         
+        /* Activate player controls */
+        activate_controls();
         
     });
 

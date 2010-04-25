@@ -8,14 +8,20 @@
  *  Global variable for volume slider.
  **/
  var $volumeSlider = null;
+ /**
+  * Global variable for current loop interval
+  **/
+ var $loopInterval = null;
  
 
 
 /**
  *  initialize_audio_player_behavior
  *  Binds all interface events to the functions to be run when those events occur.
+ *
+ *  @param              callback                The function to execute when initialization is over.
  **/
-function initialize_audio_player_behavior() {
+function initialize_audio_player_behavior(callback) {
     
     /**
      *  When change_volume event is triggered on audio element,
@@ -29,7 +35,7 @@ function initialize_audio_player_behavior() {
      *  When looping events are triggered on an audio element.
      **/
     $('audio').live('loop', function(event, data){ return start_audio_loop(event, data); });
-    $('audio').live('clear_loop', function(event, data){ return clear_audio_loop(); });
+    $('audio').live('clear_loop', function(event, data){ return clear_audio_loop(event, data); });
     
     /**
     *   Playback functionality
@@ -89,6 +95,9 @@ function initialize_audio_player_behavior() {
         }
     });
     
+    if(typeof(callback) != 'undefined') {
+        callback();
+    }
     
 }
 
@@ -176,26 +185,20 @@ function start_audio_loop(event, data) {
     var audioElement = $('audio').get(0);
 
     /* if loop is already running */
-    if($(audioElement).attr('data-looping') == '1') {
-        /* stop loop */
-        $(audioElement).trigger('clear_loop');
+    if($loopInterval != null) {
+        /* stop loop, and then come back */
+        clear_audio_loop(event, data);
     }
     else {
-        /* mark loop as started */
-        $(audioElement).attr('data-looping', '1');
-    }
-    
-    /* Move audio to start time */
-    audioElement.currentTime = data.start;
-    
-    /* Check again in animation speed ms */
-    var loopintervalid = setInterval(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
-    
-    /* Set loopintervalid as data attribute of audio element */
-    $(audioElement).attr('data-loopintervalid', loopintervalid);
+        /* Move audio to start time */
+        audioElement.currentTime = data.start;
 
-    /* trigger highlight event */
-    $(audioElement).trigger('highlight', data);
+        /* Check again in animation speed ms */
+        $loopInterval = setInterval(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
+
+        /* trigger highlight event */
+        $(audioElement).trigger('highlight', data);
+    }    
 }
 
 /**
@@ -210,11 +213,11 @@ function continue_audio_loop(data) {
     var audioElement = $('audio').get(0);
     
     /* If we are still looping */
-    if($(audioElement).attr('data-looping') == '1') { 
+    if($loopInterval != null) { 
         /* If we should restart the loop */
         if(audioElement.currentTime >= data.end) {
             /* restart */
-            $('audio').get(0).currentTime = data.start;
+            audioElement.currentTime = data.start;
         }
         
     }
@@ -225,9 +228,19 @@ function continue_audio_loop(data) {
  *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
  *  whenever the highlighted area is cleared.
  **/
-function clear_audio_loop() {
+function clear_audio_loop(event, data) {
+    
+    if($loopInterval != null) {
+        /* Clear interval */
+        clearInterval($loopInterval);
+        $loopInterval = null;      
+    }
+    
     /* Set as no longer looping */
     $('audio').attr('data-looping', '0');
-    /* Clear interval */
-    clearInterval($('audio').attr('data-loopintervalid'));
+    
+    /* If data was sent in, we are supposed to start another loop after clearing */
+    if(typeof(data) != 'undefined') {
+        start_audio_loop(event, data);
+    }
 }

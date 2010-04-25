@@ -71,6 +71,7 @@ function load_waveform(segmentID) {
         return;
     }
     
+    
     $('#viewer_highlight').css('width','0');
     
     $('img#waveform_viewer_image').fadeOut('slow', loading());
@@ -82,8 +83,8 @@ function load_waveform(segmentID) {
             if(textStatus == 'success') {
                 /* Load audio element, then intialize waveformPlayer object */
                 load_audio(audioID, segmentID, function() {
-                    /* remove loading */
-                    remove_loading();
+                    main_draw_highlight(segmentID);
+                    
                     /* replace image src with proper image */
                     $('img#waveform_viewer_image').attr('src', data);
                     /* show image */                
@@ -91,6 +92,9 @@ function load_waveform(segmentID) {
 
                     /* Set waveform viewer audioid attribute to proper audioID */
                     $('#waveform_viewer').attr('data-audioid', audioID);
+
+                    /* remove loading */
+                    remove_loading();
                 });
             }
             else {
@@ -115,6 +119,9 @@ function load_audio(audioID, segmentID, callBackFunction) {
         url: '/audio/'+audioID+'/audiosrc/',
         success: function(data, textStatus) {
             if(textStatus == 'success') {
+                /* Clear audio loop */
+                $('audio').trigger('clear_loop');                    
+
                 /* Remove audio element from page */
                 $('audio').remove();
                 /* Create new audio element */
@@ -130,9 +137,7 @@ function load_audio(audioID, segmentID, callBackFunction) {
                 $(audioElement).one('canplaythrough', function(){
                     /* Create waveform player object */
                     $waveformPlayer = new WaveformPlayer('waveform_viewer', $audioElementID);
-                    
-                    main_draw_highlight(segmentID);
-                    
+                                        
                     /* If volume slider has not yet been defined */
                     if($volumeSlider == null) {
                         /* Enable control buttons */
@@ -179,5 +184,5 @@ function main_draw_highlight(segmentID) {
     
     /*  Draw highlight on waveformPlayer based on start and end times.  
         This creates an audio loop, and a highlight drawn on the interface. */
-    $('audio').trigger('clear_loop').trigger('loop', times);
+    $('audio').trigger('loop', times);
 }

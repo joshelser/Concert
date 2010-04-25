@@ -16,7 +16,8 @@
 
             <div id="waveform_viewer" class="waveform">        	
                 <div id="viewer_timecode" class="timecode">00:00:00</div>
-                <div id="viewer_highlight"></div>
+                <div id="viewer_highlight_static" class="viewer_highlight"></div>
+                <div id="viewer_highlight" class="viewer_highlight"></div>
                 <div id="viewer_playhead" class="playhead"></div>
                 <div id="viewer_image"><img class="waveform_image {{ no_show }}" id="waveform_viewer_image" src = "{{ waveformViewerSrc }}"/></div>
             </div>
@@ -24,7 +25,7 @@
     </div>
     
     <div id="audio_container">
-            <audio id="audio_element" class="audio_element" data-looping="0">
+            <audio id="audio_element" class="audio_element">
                 {% if audioSegment %}
                     <source src="{{ audioSegment.audio.wavfile.url }}" />
                 {% endif %}

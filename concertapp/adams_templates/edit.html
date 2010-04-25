@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<input type="hidden" id="segment_start" value="{{ audioSegment.beginning }}" />
+<input type="hidden" id="segment_end" value="{{ audioSegment.end }}" />
 <div id = "index_container">
     
     {% include "waveform_viewer_header.html" %}
 
     <div id = "main_wrapper">
         <div id = "left_wrapper">
-            <h1>Currently editing "{{ audioSegment.name }}"</h1>
+            <h1>Currently editing the "{{ audioSegment.name }}" segment</h1>
             <br />
             <br />
             <form id = "new_segment">

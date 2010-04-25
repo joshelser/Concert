@@ -47,11 +47,14 @@ HighlightViewer.prototype.initialize = function(params) {
         throw new Error('HighlightViewer: Could not initialize waveformWidth');
     }
     
-    /* duration of associated audio */
-    this.audioElementDuration = params.audioElementDuration;
-    if(typeof(this.audioElementDuration) == 'undefined') {
-        throw new Error('HighlightViewer: Could not initialize audioElementDuration.');
+    /* associated audioElement */
+    this.audioElement = params.audioElement;
+    if(typeof(this.audioElement) == 'undefined') {
+        throw new Error('Highlighter: Could not initialize audioElement.');
     }
+
+    /* duration of associated audio */
+    this.audioElementDuration = this.audioElement.duration;
     
     /* initialize highlight start and highlight end members */
     this.initialize_highlight();

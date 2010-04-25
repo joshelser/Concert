@@ -59,7 +59,7 @@ WaveformPlayer.prototype.initialize = function(containerID, audioID) {
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
-        audioElementDuration: this.audioElement.duration
+        audioElement: this.audioElement
     });
     
     /* Behavior when audio element is played and paused */
