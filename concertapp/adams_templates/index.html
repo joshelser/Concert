@@ -54,6 +54,7 @@
                         <th>In</th>
                         <th>Out</th>
                         <th>Delete</th>
+                        <th>temp Edit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +67,10 @@
                                 <td>{{ segment.audio.user.username }}</td>
                                 <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
                                 <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
-                                <td id="segment_delete-{{ segment.id }}"><span id="segmentDeleteButton-{{ segment.id }}" class="cross button segmentDeleteButton"><!-- --></span></td>
+                                <td id="segment_delete-{{ segment.id }}">
+                                    <span id="segmentDeleteButton-{{ segment.id }}" class="cross button segmentDeleteButton"><!-- --></span>
+                                </td>
+                                <td><a href="/edit/{{ segment.id }}/{{ selected_group.id }}/">Edit</a></td>
                             </tr>
                         {% endfor %}
                     {% else %}
