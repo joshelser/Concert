@@ -100,6 +100,7 @@ def edit(request, segment_id, group_id):
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
         'group_id' : group_id,
+        'user'     : request.user,
         },RequestContext(request));
     
 
