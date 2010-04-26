@@ -564,6 +564,7 @@ div.dataTables_paginate {
     background-position: center;
     text-align: center;
     height: 16px;
+    width: 16px;
     display: block;
 }
 
@@ -579,6 +580,9 @@ div.dataTables_paginate {
     background-image: url('/graphics/ajax-loader.gif');
 }
 
+/**
+ *  Icons
+ **/
 .tags-label {
     background-image: url('/graphics/icons/tags-label.png');
 }
@@ -587,9 +591,15 @@ div.dataTables_paginate {
     background-image: url('/graphics/icons/tags.png');
 }
 
+.tag-plus {
+    background-image: url('/graphics/icons/tag--plus.png');
+}
+
 .cross {
     background-image: url('/graphics/icons/cross.png');
 }
+
+
 .highlight_static_tags {
     font-size: 50%!important;
     color: white !important;
@@ -610,4 +620,16 @@ div.dataTables_paginate {
     z-index: 3;
     position: relative;
     padding: 5px;
+}
+
+.float_left {
+    float: left;
+}
+
+.float_right {
+    float: right;
+}
+
+.clear_both {
+    clear: both;
 }

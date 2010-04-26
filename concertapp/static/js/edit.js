@@ -57,6 +57,11 @@ var $waveformEditor = null;
     /* Bind submit button for renaming a segment */
     $('#rename_submit_button').bind('click', function(event, data){ return edit_rename_submit_handler(event, data); });
     
+    /* Add tag button for adding a tag to current segment */
+    $('.addTagButton').bind('click', function(){
+        var segmentID = get_object_id(this);
+        add_tag(segmentID);
+    });
 
 })();
 
@@ -117,6 +122,14 @@ function edit_new_submit_handler(event, data) {
     });
 }
 
+/**
+ *  edit_rename_submit_handler
+ *  This is to be called whenever the submit button is pressed on the rename
+ *  segment form.
+ *
+ *  @param          event           this is an event handler
+ *  @param          data
+ **/
 function edit_rename_submit_handler(event, data) {
 
     var label = $('#rename_segment #id_label_field').val();
@@ -146,4 +159,35 @@ function edit_rename_submit_handler(event, data) {
     
 }
 
-
+/**
+ *  add_tag
+ *  This is to be called whenever a tag is to be added to the current segment.
+ *
+ *  @param              segmentID               the id of the AudioSegment object.
+ ***/
+function add_tag(segmentID) {
+    var answer = prompt('Enter the tag name');
+    var groupID = $('#id_group_id').val();
+    
+    if(answer.match(/[/]/)) {
+        alert('Error: Tag cannot include any slashes.');
+    }
+    else if(answer != '') {
+        $.ajax({
+            url: '/tags/addTagToSegment/'+groupID+'/'+segmentID+'/'+answer+'/',
+            success: function(data, textStatus) {
+                if(textStatus == 'success' && data == 'success') {
+                    /* Add tag to tag list */
+                    $('#editor_highlight_static_tag_text').append(', '+answer);
+                }
+                else {
+                    alert('Error: '+data);
+                }
+            }
+        });
+    }
+    else {
+        alert('Error: You must enter a tag');
+    }
+    
+}
