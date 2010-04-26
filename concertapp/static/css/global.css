@@ -193,6 +193,14 @@ body {
 	-webkit-border-bottom-left-radius:15px;
 }
 
+#big_logo {
+  margin:auto;
+  position:relative;
+  left:50%;
+  margin-left:-102px;
+  top:50%;
+  margin-top:-26px;
+}
 .waveform {width: 800px;}
 
 #waveform_editor {
@@ -517,15 +525,23 @@ div.dataTables_paginate {
   
 }
 
+#admin_container {
+  overflow:visible;
+  height:100%;
+  padding-bottom:400px;
+}
+
 .admin_module {
-    border:1px #666 dashed;
-    padding:2%;
+    border-left:1px #666 dashed;
+    padding:1%;
     float:left;
     margin-top:50px;
-    margin-left:10%;
-    width:16%;
-    min-height:300px;
+    margin-left:2.5%;
+    margin-right:2.5%;
+    width:26%;
+    min-height:100px;
 }
+
 .admin_module > h1 {
   text-decoration:underline;
   margin-bottom:20px;
@@ -534,7 +550,7 @@ div.dataTables_paginate {
 .admin_module > h2 {
   font-weight:normal;
   font-style:italic;
-  margin-bottom:10px;
+  margin-bottom:20px;
 }
 
 #join_group.admin_module li {

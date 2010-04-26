@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 
 {% block content %}
 <div id = "index_container">
-    {% include "login-header.html" %}
+    {% include "include/login-header.html" %}
     
     <div id = "register_wrapper">
       <form method="POST" action="/users/add/">
