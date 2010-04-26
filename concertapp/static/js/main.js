@@ -14,6 +14,13 @@ var $waveformPlayer = null;
     *  When segment row is clicked, load waveform into waveform viewer.
     **/
     $('.segment_row').click(function(event) {
+        
+        /* If a delete button was clicked */
+        if($(event.target).hasClass('segmentDeleteButton')) {
+            /* Do nothing */
+            return;
+        }
+        
         event.preventDefault();
         
         /* If audio is currently playing, stop it */
@@ -45,6 +52,12 @@ var $waveformPlayer = null;
 
     
     initialize_audio_player_behavior();
+    
+    /* Behavior for delete segment buttons */
+    $('.segmentDeleteButton').bind('click', function(){
+        var segmentID = get_object_id(this);
+        delete_segment(segmentID);
+    });
 
 })();
 
@@ -71,10 +84,10 @@ function load_waveform(segmentID) {
         return;
     }
     
-    
+    loading();
     $('#viewer_highlight').css('width','0');
     
-    $('img#waveform_viewer_image').fadeOut('slow', loading());
+    $('img#waveform_viewer_image').fadeOut('slow');
 
     /** Load waveform image **/
     $.ajax({
@@ -185,4 +198,44 @@ function main_draw_highlight(segmentID) {
     /*  Draw highlight on waveformPlayer based on start and end times.  
         This creates an audio loop, and a highlight drawn on the interface. */
     $('audio').trigger('loop', times);
+}
+
+/**
+ *  delete_segment
+ *  Deletes a specified segment.
+ *
+ *  @param              segmentID           The ID of the segment object to delete.
+ **/
+function delete_segment(segmentID) {
+    
+    /* Show confirm alert */
+    var answer = confirm('Are you sure you want to delete this segment?');
+    
+    /* If they answered true */
+    if(answer == true) {
+        loading();
+        /* Ajax call to delete segment */
+        $.ajax({
+            url: '/delete_segment/'+segmentID,
+            success: function(data, textStatus){
+                /* If request was successful */
+                if(textStatus == 'success' && data == 'success') {
+                    
+                    /* If the segment that was deleted was the currently selected */
+                    if($('tr#segment_row-'+segmentID).hasClass('selected')) {
+                        /*  Should do some fancy stuff here to handle this case, but instead 
+                            Im just going to refresh the page. */
+                        location.reload();
+
+                    }
+                    /* Remove segment from list */
+                    $('tr#segment_row-'+segmentID).remove();
+                    remove_loading();
+                }
+                else {
+                    alert('Error: '+data);
+                }
+            }
+        });
+    }
 }

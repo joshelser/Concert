@@ -53,6 +53,7 @@
                         <th>Uploaded By</th>
                         <th>In</th>
                         <th>Out</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,6 +66,7 @@
                                 <td>{{ segment.audio.user.username }}</td>
                                 <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
                                 <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
+                                <td id="segment_delete-{{ segment.id }}"><span id="segmentDeleteButton-{{ segment.id }}" class="cross button segmentDeleteButton"><!-- --></span></td>
                             </tr>
                         {% endfor %}
                     {% else %}
