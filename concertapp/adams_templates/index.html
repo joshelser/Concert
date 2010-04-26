@@ -70,7 +70,7 @@
                                 <td id="segment_delete-{{ segment.id }}">
                                     <span id="segmentDeleteButton-{{ segment.id }}" class="cross button segmentDeleteButton"><!-- --></span>
                                 </td>
-                                <td><a href="/edit/{{ segment.id }}/{{ selected_group.id }}/">Edit</a></td>
+                                <td><a class="temp_edit_button" href="/edit/{{ segment.id }}/{{ selected_group.id }}/">Edit</a></td>
                             </tr>
                         {% endfor %}
                     {% else %}

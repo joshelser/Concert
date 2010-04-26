@@ -16,7 +16,7 @@ var $waveformPlayer = null;
     $('.segment_row').click(function(event) {
         
         /* If a delete button was clicked */
-        if($(event.target).hasClass('segmentDeleteButton')) {
+        if($(event.target).hasClass('segmentDeleteButton') || $(event.target).hasClass('temp_edit_button')) {
             /* Do nothing */
             return;
         }
