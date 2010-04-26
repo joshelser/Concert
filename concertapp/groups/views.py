@@ -19,12 +19,11 @@ def groups(request, message = None):
     groups = list()
     inGroup = False
     for group in g:
-        for ug in request.user.groups:
-            if group == ug:
-                inGroup = True
-        if inGroup = False:
+        try:
+            request.user.groups.get(name = group.name)
+        except Group.DoesNotExist:
             groups.append(group)
-        inGroup = False
+        
     if request.GET.__contains__('message'):
         message = request.GET['message']
 
