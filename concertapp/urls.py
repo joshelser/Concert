@@ -9,10 +9,8 @@ urlpatterns = patterns('concertapp.views',
     #index
     url(r'^$', 'index', name='index'),
     #edit
-    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'edit', 
-        name='edit'),
-    url(r'^edit/submit$',
-        'new_segment_submit', name='submit'),
+    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'edit', name='edit'),
+    url(r'^edit/submit$', 'new_segment_submit', name='submit'),
     #admin
     url(r'^admin/', 'admin', name='admin'),
     #delete
@@ -26,16 +24,12 @@ urlpatterns = patterns('concertapp.views',
     #nested
     # Users
     (r'^users/', include('concertapp.users.urls')),
-    (r'^users/$', include('concertapp.users.urls')),
     # Audio
     (r'^audio/', include('concertapp.audio.urls')),
-    (r'^audio/$', include('concertapp.audio.urls')),
     # Groups
     (r'^groups/', include('concertapp.groups.urls')),
-    (r'^groups/$', include('concertapp.groups.urls')),
     # Tag operations
     (r'^tags/', include('concertapp.tags.urls')),
-    (r'^tags/$', include('concertapp.tags.urls')),
 
 )
 

@@ -56,8 +56,12 @@ table {
 }
 
 
+
+
+
+
 /* True Global (All pages)*/
-form > input, fieldset > input {	
+input {	
 	-moz-border-radius-topleft:15px;
 	-webkit-border-top-left-radius:15px;
 	-moz-border-radius-bottomright:15px;
@@ -67,7 +71,7 @@ form > input, fieldset > input {
 	height:28px;
 }
 
-.error,.alert {color:red;}
+.error,.alert {color:red;height:30px;}
 
 #main_wrapper > .alert {
   margin-top:50px;
@@ -93,6 +97,7 @@ a {color:#333;}
 /*header*/
 #header_wrapper {
 	position:fixed;
+	top:0;
 	width:100%;
 	z-index:3;
 }
@@ -103,11 +108,24 @@ a {color:#333;}
 	background-color:#f4f4f4;
 	overflow:hidden;
 	-moz-box-shadow:0px 1px 10px #999;
+	box-shadow:0px 1px 10px #999;
+	-webkit-box-shadow:0px 1px 10px #999;
 }
 
-#header a {
-  float:right;
-  margin:10px 10px;
+
+body {
+  margin-top:150px;
+}
+
+#links {
+  position:fixed;
+  top:10px;
+  right:20px;
+}
+
+#links > li {
+  display:inline;
+  margin-left:10px;
 }
 
 #inner_wrapper {
@@ -175,10 +193,7 @@ a {color:#333;}
 	-webkit-border-bottom-left-radius:15px;
 }
 
-.waveform {
-    width: 800px;
-	
-}
+.waveform {width: 800px;}
 
 #waveform_editor {
     height: 585px;
@@ -186,13 +201,9 @@ a {color:#333;}
     background-color: black;
     overflow: hidden;
 }
-#editor_image {
-    z-index: 0;
-}
-#waveform_editor_image {
-    left: 400px;
-    
-}
+
+#editor_image {z-index: 0;}
+#waveform_editor_image {left: 400px;}
 
 #editor_playhead {
     margin-left: 400px;
@@ -240,7 +251,7 @@ a {color:#333;}
 }
 
 .playhead {
-    width:1px; 
+  width:1px; 
 	background-color: #aaddff;
 	
 }
@@ -452,24 +463,14 @@ div.dataTables_paginate {
 }
 
 
-/* Login */
-#login_container {
-	height:150px;
-	background-color:#f4f4f4;
-	-moz-box-shadow:0px 1px 10px #999;	
-	overflow:hidden;
-  width:100%;
-}
 
-#login_container .error {
-  text-align:center;
-  margin-top:10px;
-}
+
 
 #login_wrapper {
 	width:700px;
 	margin:auto;
-	margin-top:33px;
+	margin-top:23px;
+	text-align:center;
 }
 
 #login {margin-top:7px;}
@@ -482,26 +483,38 @@ div.dataTables_paginate {
 }
 
 #register_wrapper {
-	width:400px;
+  margin-top:50px;
+	width:700px;
+	overflow:hidden;
 	margin:auto;
 }
 
-
 #register_wrapper p {
 	line-height:23px;
-	text-align:center;
+	text-align:right;
 	margin-top:20px;
+	width:100%;
 }
 
-#register_wrapper label {
+#register_wrapper > form {
+  float:right;
+  width:300px;
+}
+
+#register_wrapper > form > p {
   margin-top:15px;
-  width:200px;
+  height:20px;
+  clear:both;
+}
+
+
+#register_wrapper > form > p > label {
   float:left;
 }
 
-#register_wrapper input {
+#register_wrapper > form > p > input {
   float:right;
-  margin-top:15px;
+  
 }
 
 .admin_module {
