@@ -565,6 +565,8 @@ div.dataTables_paginate {
 .cross {
     background-image: url('/graphics/icons/cross.png');
 }
+
+
 .highlight_static_tags {
     font-size: 50%!important;
     color: white !important;

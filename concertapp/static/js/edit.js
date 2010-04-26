@@ -122,6 +122,14 @@ function edit_new_submit_handler(event, data) {
     });
 }
 
+/**
+ *  edit_rename_submit_handler
+ *  This is to be called whenever the submit button is pressed on the rename
+ *  segment form.
+ *
+ *  @param          event           this is an event handler
+ *  @param          data
+ **/
 function edit_rename_submit_handler(event, data) {
 
     var label = $('#rename_segment #id_label_field').val();
@@ -151,7 +159,12 @@ function edit_rename_submit_handler(event, data) {
     
 }
 
-
+/**
+ *  add_tag
+ *  This is to be called whenever a tag is to be added to the current segment.
+ *
+ *  @param              segmentID               the id of the AudioSegment object.
+ ***/
 function add_tag(segmentID) {
     var answer = prompt('Enter the tag name');
     var groupID = $('#id_group_id').val();
