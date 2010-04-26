@@ -13,9 +13,17 @@ from django.conf import settings
 
 from concertapp.models  import *
 
+@login_required
 def groups(request, message = None):
-    groups = Group.objects.all()
-
+    g = Group.objects.all()
+    groups = list()
+    inGroup = False
+    for group in g:
+        try:
+            request.user.groups.get(name = group.name)
+        except Group.DoesNotExist:
+            groups.append(group)
+        
     if request.GET.__contains__('message'):
         message = request.GET['message']
 

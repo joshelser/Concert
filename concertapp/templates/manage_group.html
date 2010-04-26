@@ -8,6 +8,7 @@
         <ul>
             <li><a href="{% url pending_requests user_id group_id %}">Pending Requests</a></li>
             <li><a href="{% url remove_user user_id group_id %}">Remove a user</a></li>
+            <li><a href="{% url delete_confirm user_id group_id %}">Delete this group</a></li>
         </ul>
     </div>
     <p><a href="{% url choose_group user_id %}">Back to all my owned groups</a></p>
