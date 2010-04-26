@@ -12,14 +12,26 @@
         <div class = "admin_module" id = "upload_audio">
             <h1>Upload Audio</h1>
             <form method="POST" enctype="multipart/form-data" action="{% url upload_audio %}">
-                {{ form.as_p }}
+                {{ uploadFileForm.as_p }}
                 <p><strong>Note:</strong> Must be an mp3, ogg, or wav file type</p>
                 <input type='submit' name='create' value='Create' />
             </form>        
         </div>
         <div class = "admin_module" id = "join_group">
-        
-        
+            <h1>Request to Join Group</h1>
+                
+            {% if message %}
+              <div id="alert">
+                  <p>{{ message }}</p>
+              </div>
+            {% endif %}
+            <h2>Click on a Group to Request to Join</h2>
+            {% for g in groups %}
+            <ul>
+                <li><a href="{% url join_group g.id  %}"><span>{{ g }}</span></a></li>
+            </ul>
+            {% endfor %}
+                
         </div>
         <div class = "admin_module" id = "manage_tags">
         

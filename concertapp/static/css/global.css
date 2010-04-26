@@ -493,14 +493,29 @@ div.dataTables_paginate {
 }
 
 .admin_module {
-
+    border:1px #666 dashed;
+    padding:2%;
     float:left;
     margin-top:50px;
     margin-left:10%;
-    width:20%;
+    width:18%;
     height:300px;
 }
+.admin_module > h1 {
+  text-decoration:underline;
+  margin-bottom:20px;
+}
 
+.admin_module > h2 {
+  font-weight:normal;
+  font-style:italic;
+  margin-bottom:10px;
+}
+
+#join_group.admin_module li {
+  font:inherit;
+  color:inherit;
+}
 
 .inline {
     display: inline;

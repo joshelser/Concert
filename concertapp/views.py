@@ -225,11 +225,21 @@ def rename_segment(request):
 ###
 @login_required
 def admin(request):
-    form = UploadFileForm()
+    uploadFileForm = UploadFileForm()
     
+    groups = Group.objects.all()
+    message = None
+    if request.GET.__contains__('message'):
+        message = request.GET['message']    
     
-    
-    return render_to_response('admin.html',{'form':form});
+    return render_to_response('admin.html',{
+      'uploadFileForm':uploadFileForm,
+      'groups': groups,
+      'message': message
+      
+      
+      
+      });
     
     
     
