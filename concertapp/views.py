@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django import forms
 from django.core import serializers
+from django.http import Http404
 
 from django.conf import settings
 
@@ -111,6 +112,11 @@ def edit(request, segment_id, group_id):
     
 @login_required
 def download_segment(request, segment_id, group_id, type):
+    group = Group.objects.get(pk = group_id)
+
+    if group not in request.user.groups.all():
+        raise Http404
+
     return HttpResponse('temp')
 
 @login_required
