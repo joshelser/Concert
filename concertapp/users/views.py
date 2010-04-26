@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django import forms
 
+from django.http import Http404
+
 from concertapp.models  import *
 from concertapp.forms   import RegistrationForm, CreateGroupForm
 from django.contrib.auth.forms import PasswordChangeForm
@@ -118,6 +120,9 @@ def change_password(request):
 
 @login_required
 def groups(request, user_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     user = User.objects.get(pk = user_id)
     groups = list()
     for group in user.groups.all():
@@ -136,6 +141,9 @@ def groups(request, user_id):
 
 @login_required
 def create_group(request, user_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         if form.is_valid():
@@ -153,17 +161,26 @@ def create_group(request, user_id):
 
 @login_required
 def choose_group(request, user_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     groups = GroupAdmin.objects.filter(admin = request.user)
     return render_to_response('choose_group.html', {'groups': groups, 'user_id':
         user_id, 'length': len(groups)}, RequestContext(request))
 
 @login_required
 def accept_request(request, user_id, group_id, new_user_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     return render_to_response('accept_request.html', {'user_id':user_id,
         'group_id': group_id, 'new_user_id': new_user_id}, RequestContext(request))
 
 @login_required
 def manage_group(request, user_id, group_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     group = GroupAdmin.objects.get(group = Group.objects.get(pk = group_id))
 
     # Check to see if the user is also the admin
@@ -176,25 +193,40 @@ def manage_group(request, user_id, group_id):
 
 @login_required
 def remove_user(request, user_id, group_name):
+    if request.user.id != int(user_id):
+        raise Http404
+
     users = User.objects.filter(groups__name=group_name).exclude(id = user_id)
     return render_to_response('remove_user.html', {'group':group_name,
         'user_id':user_id, 'users': users}, RequestContext(request))
 
 @login_required
 def remove(request, user_id, group_name, user):
+    if request.user.id != int(user_id):
+        raise Http404
+
     return render_to_response('delete_user.html', {'user_id':user_id,
         'group': group_name, 'user': user}, RequestContext(request))
 
 def remove_from_group(request,user_id, group_name, user):
+    if request.user.id != int(user_id):
+        raise Http404
+
     User.objects.get(username = user).groups.remove(Group.objects.get(name = group_name))
     url = '/users/'+user_id+'/groups/manage/'+group_name+'/remove_user/'
     return HttpResponseRedirect(url)
 
 def delete_confirm(request,user_id, group_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     return render_to_response('delete_confirm.html', {'user_id':user_id,
         'group_id':group_id}, RequestContext(request))
 
 def delete(request,user_id, group_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     group = Group.objects.get(pk = group_id)
     group.delete()
     url = '/users/'+user_id+'/groups/manage/'
@@ -203,6 +235,9 @@ def delete(request,user_id, group_id):
 
 @login_required
 def pending_requests(request, user_id, group_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     group_admin = GroupAdmin.objects.get(group = Group.objects.get(pk = group_id))
 
     # Check to see if the user is also the admin
@@ -215,6 +250,9 @@ def pending_requests(request, user_id, group_id):
         'user_id':user_id, 'requests': requests}, RequestContext(request))
 
 def add_to_group(request, user_id, group_id, new_user_id):
+    if request.user.id != int(user_id):
+        raise Http404
+
     if request.method == 'POST':
         #group_id = request.POST['group_id']
         #user_id = request.POST['user_id']
