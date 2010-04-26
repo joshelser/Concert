@@ -28,16 +28,12 @@ urlpatterns = patterns('concertapp.views',
     #nested
     # Users
     (r'^users/', include('concertapp.users.urls')),
-    (r'^users/$', include('concertapp.users.urls')),
     # Audio
     (r'^audio/', include('concertapp.audio.urls')),
-    (r'^audio/$', include('concertapp.audio.urls')),
     # Groups
     (r'^groups/', include('concertapp.groups.urls')),
-    (r'^groups/$', include('concertapp.groups.urls')),
     # Tag operations
     (r'^tags/', include('concertapp.tags.urls')),
-    (r'^tags/$', include('concertapp.tags.urls')),
 
 )
 
