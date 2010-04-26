@@ -57,6 +57,11 @@ var $waveformEditor = null;
     /* Bind submit button for renaming a segment */
     $('#rename_submit_button').bind('click', function(event, data){ return edit_rename_submit_handler(event, data); });
     
+    /* Add tag button for adding a tag to current segment */
+    $('.addTagButton').bind('click', function(){
+        var segmentID = get_object_id(this);
+        add_tag(segmentID);
+    });
 
 })();
 
@@ -147,3 +152,29 @@ function edit_rename_submit_handler(event, data) {
 }
 
 
+function add_tag(segmentID) {
+    var answer = prompt('Enter the tag name');
+    var groupID = $('#id_group_id').val();
+    
+    if(answer.match(/[/]/)) {
+        alert('Error: Tag cannot include any slashes.');
+    }
+    else if(answer != '') {
+        $.ajax({
+            url: '/tags/addTagToSegment/'+groupID+'/'+segmentID+'/'+answer+'/',
+            success: function(data, textStatus) {
+                if(textStatus == 'success' && data == 'success') {
+                    /* Add tag to tag list */
+                    $('#editor_highlight_static_tag_text').append(', '+answer);
+                }
+                else {
+                    alert('Error: '+data);
+                }
+            }
+        });
+    }
+    else {
+        alert('Error: You must enter a tag');
+    }
+    
+}

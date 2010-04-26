@@ -63,6 +63,13 @@ def manage_group_tags(request, group_id):
         # User not in this group redirect back to manage_tags
         return HttpResponseRedirect('/tags/manage/%s/' % message)
 
+###
+#   confirm_delete_tag
+#   This is the controller for the confirm page when you are deleting a tag.
+#
+#   @param              request         
+#   @param              tagID               The id of the Tag object about to be deleted.
+###
 @login_required
 def confirm_delete_tag(request, tagID):
     # get tag object
@@ -75,7 +82,13 @@ def confirm_delete_tag(request, tagID):
     else :
         raise Http404
     
-  
+###
+#   delete_tag
+#   Delete a tag and all segments that only have this tag.
+#
+#   @param              request
+#   @param              tagID               The id of the Tag object to delete
+###
 @login_required
 def delete_tag(request, tagID):
     # get tag object
@@ -125,7 +138,15 @@ def update_tag_name(request):
     else :
         response.write('success')
     return response
-    
+
+###
+#   get_tag_segments
+#   Retrieves the table of segments associated with the given tag.  Can be used
+#   whenever all segments for a tag need to be displayed.
+#
+#   @param              request
+#   @param              tagID               The id of the Tag object whose segments we are displaying
+###
 @login_required
 def get_tag_segments(request, tagID):
     # Get tag object
@@ -136,5 +157,56 @@ def get_tag_segments(request, tagID):
         return render_to_response('tag_segments_table.html', {'tag' : tag, 'segments' : tag.segments.all() })
     else :
         raise Http404
+
+###
+#   add_tag_to_segment
+#   Adds the given tag to the given segment, creating the tag if it does not exist.
+#
+#   @param                  request
+#   @param                  groupID                 The id of the group in which this tag is to be created
+#   @param                  segmentID               The id of the segment object 
+#   @param                  tag                     The text of the tag to add to the segment
+###
+@login_required
+def add_tag_to_segment(request, groupID, segmentID, tag):
     
+    # Get this segment
+    segment = AudioSegment.objects.get(pk = segmentID)
+    # Get this group
+    group = Group.objects.get(pk = groupID)
+    
+    # Char field object for validation
+    f = forms.CharField()
+    
+    try:
+        # Get input tag name (error is thrown if blank)
+        newTagName = f.clean(tag)
+        # Get tag object if exists
+        tag = Tag.objects.get(tag = newTagName)
+        if tag.segments.filter(id = segment.id):
+            error = 'Segment already has this tag'
+        else:
+            # Add this segment to the current tag's segments
+            tag.segments.add(segment)
+    except ValidationError:
+        # Name is blank
+        error = 'A name is required.'
+    # Tag with this name does not exist
+    except Tag.DoesNotExist:
+        # Create new tag object
+        newTag = Tag(group = group, tag = newTagName, isProject = 0, isFixture = 0)
+        newTag.save()
+        newTag.segments.add(segment)
+        newTag.save()
+        
+    
+    
+    response = HttpResponse(mimetype='text/plain')
+    
+    # If an error variable was defined in this scope
+    if 'error' in locals() :
+        response.write(error)
+    else :
+        response.write('success')
+    return response
     

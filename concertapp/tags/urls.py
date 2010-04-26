@@ -9,5 +9,6 @@ urlpatterns = patterns('concertapp.tags.views',
     # Ajax
     url(r'^updateTagName/$', 'update_tag_name', name='update_tag_name'),
     url(r'^getTagSegments/(?P<tagID>\d+)/$', 'get_tag_segments', name='get_tag_segments'),
+    url(r'^addTagToSegment/(?P<groupID>\d+)/(?P<segmentID>\d+)/(?P<tag>[^/]+)/$', 'add_tag_to_segment', name='add_tag_to_segment'),
     
 )
