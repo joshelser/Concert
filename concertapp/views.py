@@ -7,6 +7,7 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django import forms
+from django.core import serializers
 
 from django.conf import settings
 
@@ -89,6 +90,9 @@ def edit(request, segment_id, group_id):
     # Group
     group = Group.objects.get(pk = group_id)
 
+    # Tags for the requested segment in json format
+    jsonTags = serializers.serialize('json', audioSegment.tag_set.all())
+    
     createSegmentForm = CreateSegmentForm()
     renameSegmentForm = RenameSegmentForm()
     
@@ -100,6 +104,7 @@ def edit(request, segment_id, group_id):
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
         'group_id' : group_id,
+        'jsonTags' : jsonTags,
         'user'     : request.user,
         },RequestContext(request));
     

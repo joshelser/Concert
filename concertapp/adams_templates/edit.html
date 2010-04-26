@@ -7,7 +7,7 @@
 <input type="hidden" value="{{ group_id }}" id="id_group_id" />
 <input type="hidden" value="{{ audio_id }}" id="id_audio_id" />
 <input type = "hidden" value = "{{ audioSegment.id }}" id = 'id_segment_id'/>
-
+<input type="hidden" value="{{ jsonTags }}" id="jsonTags" />
 <div id = "index_container">
     
     {% include "waveform_viewer_header.html" %}
@@ -49,8 +49,11 @@
         <!---asdsadas-->
         <div id = "right_wrapper">
             <div id="waveform_editor" class="waveform">        	
-                <div id="editor_highlight" class="editor_highlight"></div>
-                <div id="editor_highlight_static" class="editor_highlight" ></div>
+                <div id="editor_highlight" class="editor_highlight_container"><div class="editor_highlight"></div></div>
+                <div id="editor_highlight_static" class="editor_highlight_container" >
+                    <div id="editor_highlight_static_tags" class="highlight_static_tags"></div>
+                    <div id="editor_highlight_static_highlight" class="editor_highlight"></div>
+                </div>
                 <div id="editor_playhead" class="playhead"></div>
                 <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_editor_image" src = "{{ waveformEditorSrc }}" /></div>
             </div>     
