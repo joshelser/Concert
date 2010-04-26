@@ -14,7 +14,7 @@ urlpatterns = patterns('concertapp.views',
     url(r'^edit/submit$',
         'new_segment_submit', name='submit'),
     #admin
-    url(r'^admin/$', 'admin', name='admin'),
+    url(r'^admin/', 'admin', name='admin'),
     #delete
     url(r'^delete_segment/(?P<segment_id>\d+)/$', 'delete_segment', 
         name='delete_segment'),

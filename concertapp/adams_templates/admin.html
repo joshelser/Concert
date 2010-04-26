@@ -9,22 +9,65 @@
     </div>
     
     <div id = "main_wrapper">
+        {% if message %}
+          <p class="alert admin">{{ message }}</p>
+        {% endif %}
         <div class = "admin_module" id = "upload_audio">
             <h1>Upload Audio</h1>
             <form method="POST" enctype="multipart/form-data" action="{% url upload_audio %}">
-                {{ form.as_p }}
+                {{ uploadFileForm.as_p }}
                 <p><strong>Note:</strong> Must be an mp3, ogg, or wav file type</p>
                 <input type='submit' name='create' value='Create' />
             </form>        
         </div>
         <div class = "admin_module" id = "join_group">
-        
+            <h1>Request to Join Group</h1>
+                
+
+            <h2>Click on a Group to Request to Join</h2>
+            <ul>
+            {% for g in joinGroups %}
+                <li><a href="{% url join_group g.id  %}">{{ g }}</a></li>
+            {% endfor %}
+            </ul>
+            
+                
+        </div>
+        <div class = "admin_module" id = "accept_group_request">
+            <h1>Manage Groups</h1>
+            <h2>Click on a Group to Manage the Group</h2> 
+            <ul>                
+              {% for g in myGroups %}
+              <li><a href='{% url manage_group user_id g.group.id %}'>{{ g.group.name }}</a> </li>
+              {% endfor %}
+            </ul>
+
+            <br />
+
+            <p><a href='{% url create_group user_id %}'>Create Group</a></p>
         
         </div>
+        
         <div class = "admin_module" id = "manage_tags">
+          <h1>Manage Tags</h1>
+          <h2>Click on a Group to Manage the Group's Tags</h2>
+          <ul id="group_list">
+          {% for g in myGroups %}
+            <li id="group-{{ g.group.id }}"><a href="/tags/group/{{ g.group.id }}">{{ g.group.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </div>
         
-        
-        </div>    
+                
+        <div class = "admin_module" id = "manage_segments">
+          <h1>Manage Audio Segments</h1>
+          <h2>Click on a Group to Manage the Group's Segments</h2>
+          <ul id="group_list">
+          {% for g in myGroups %}
+            <li id="group-{{ g.group.id }}"><a href="/segments/group/{{ g.group.id }}">{{ g.group.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </div>
     </div>
     
 </div>

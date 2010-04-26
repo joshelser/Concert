@@ -27,8 +27,10 @@ def groups(request, message = None):
     if request.GET.__contains__('message'):
         message = request.GET['message']
 
-    return render_to_response('all_groups.html', {'groups': groups, 'message': message},
-            RequestContext(request))
+    return render_to_response('all_groups.html', {
+      'groups': groups,
+      'message': message},
+      RequestContext(request))
 
 @login_required
 def join_group(request, group_id):
@@ -64,7 +66,7 @@ def request_to_join_group(request):
 
         ug_request.save()
 
-        url = '/groups/?message=Group request left successfully'
+        url = '/admin/' + str(request.user.id) + '/?message=Group request sent successfully'
 
         return HttpResponseRedirect(url)
     else:

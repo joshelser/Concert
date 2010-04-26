@@ -11,6 +11,8 @@
             <li><a href="{% url delete_confirm user_id group_id %}">Delete this group</a></li>
         </ul>
     </div>
-    <p><a href="{% url choose_group user_id %}">Back to all my owned groups</a></p>
+    <a href="{% url choose_group user_id %}">Back to all my owned groups</a>
+    <a href="/">Back to Main Page</a>
+    
 </div>
 {% endblock %}

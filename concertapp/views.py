@@ -200,11 +200,11 @@ def rename_segment(request):
         
         if form.is_valid:
 
-            the_id = request.POST['id_field']
+            the_id = request.cleaned_data['id_field']
 
             segment = AudioSegment.objects.get(pk = the_id)
             #TODO why doesn't form.clean_data['label_field'] work here?
-            segment.name = request.POST['label_field']
+            segment.name = request.cleaned_data['label_field']
             segment.save()
             
             response = HttpResponse(mimetype='text/plain')
@@ -227,15 +227,45 @@ def rename_segment(request):
 #   admin
 #   The admin page for a user
 #
-#   @param          segment_id          The ID of the requested segment.
 ###
 @login_required
 def admin(request):
-    form = UploadFileForm()
+
+    user_id = request.user.id
     
+    #upload file
+    uploadFileForm = UploadFileForm()
     
+    #list joinable groups
+    g = Group.objects.all()
+    joinGroups = list()
+    inGroup = False
+    for group in g:
+        try:
+            request.user.groups.get(name = group.name)
+        except Group.DoesNotExist:
+            joinGroups.append(group)
+        
+    message = None
+    if request.GET.__contains__('message'):
+        message = request.GET['message']    
     
-    return render_to_response('admin.html',{'form':form});
+    #list requests to join this groups
+    myGroups = GroupAdmin.objects.filter(admin = request.user)
+
+    return render_to_response('admin.html',{
+      'uploadFileForm':uploadFileForm,
+      'joinGroups': joinGroups,
+      'message': message,
+      'myGroups':myGroups,
+      'length':len(myGroups),
+      'user_id': user_id,
+      'show_create': True
+      
+      
+      
+      
+      });
     
     
     
