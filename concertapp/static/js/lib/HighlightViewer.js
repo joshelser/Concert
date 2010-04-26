@@ -85,6 +85,6 @@ HighlightViewer.prototype.display_tags = function() {
     }
     
     /* Display output in tag area above highlight */
-    $(this.highlightElement).children('#editor_highlight_static_tags').html(out);
+    $(this.highlightElement).find('#editor_highlight_static_tag_text').html(out);
 }
 
