@@ -13,6 +13,8 @@ urlpatterns = patterns('concertapp.views',
         name='edit'),
     url(r'^edit/submit$',
         'new_segment_submit', name='submit'),
+    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/download/(?P<type>(mp3|ogg))/$',
+        'download_segment', name='download'),
     #admin
     url(r'^admin/', 'admin', name='admin'),
     #delete

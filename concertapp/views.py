@@ -103,11 +103,15 @@ def edit(request, segment_id, group_id):
         'renameSegmentForm' : renameSegmentForm,
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
+        'segment_id': segment_id,
         'group_id' : group_id,
         'jsonTags' : jsonTags,
         'user'     : request.user,
         },RequestContext(request));
     
+@login_required
+def download_segment(request, segment_id, group_id, type):
+    return HttpResponse('temp')
 
 @login_required
 def new_segment_submit(request):
