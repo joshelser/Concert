@@ -269,7 +269,6 @@ def rename_segment(request):
             the_id = request.cleaned_data['id_field']
 
             segment = AudioSegment.objects.get(pk = the_id)
-            #TODO why doesn't form.clean_data['label_field'] work here?
             segment.name = request.cleaned_data['label_field']
             segment.save()
             
