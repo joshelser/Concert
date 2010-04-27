@@ -176,19 +176,34 @@ Highlighter.prototype.trigger_highlight = function() {
         if(startTime < 0) {
             startTime = 0;
         }
+        if(endTime < 0) {
+            endTime = 0;
+        }
         if(endTime > this.audioElementDuration) {
             endTime = this.audioElementDuration;
         }
+        if(startTime > this.audioElementDuration) {
+            startTime = this.audioElementDuration;
+        }
+        
+        /* If highlight isn't even in the audio file */
+        if(startTime == endTime) {            
+            /* Trigger clear loop event */
+            $(this.audioElement).trigger('clear_loop');
+        }
+        else {
+            var highlightData = {
+                start: startTime,
+                end: endTime
+            };
 
-        var highlightData = {
-            start: startTime,
-            end: endTime
-        };
+            /* Trigger clear loop event */
+            $(this.audioElement).trigger('clear_loop');
+            /* Trigger loop event on audio element */
+            $(this.audioElement).trigger('loop', highlightData);
+            
+        }
 
-        /* Trigger clear loop event */
-        $(this.audioElement).trigger('clear_loop');
-        /* Trigger loop event on audio element */
-        $(this.audioElement).trigger('loop', highlightData);
     }
     /* If we just cleared a highlight */
     else {
