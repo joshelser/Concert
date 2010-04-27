@@ -56,6 +56,13 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
         throw new Error('WaveformViewer: Unable to set highlightElement.');
     }
     
+    /** Static highlight element must be watched for highlighting behavior **/
+    var staticHighlightElement = $('#viewer_highlight_static').get(0);
+    if(typeof(staticHighlightElement) == 'undefined') {
+        throw new Error('WaveformViewer: Could not get static highlight element.');
+    }
+    
+    
     /* container width */
     this.waveformWidth = 800;
     
@@ -65,7 +72,8 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
-        audioElement: this.audioElement
+        audioElement: this.audioElement,
+        staticHighlightElement: staticHighlightElement
     });
 
     /* Static highlighter on viewer */
