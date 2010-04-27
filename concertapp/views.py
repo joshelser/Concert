@@ -12,8 +12,11 @@ from django.http import Http404
 
 from django.conf import settings
 
-from concertapp.models import *
+from concertapp.models import Audio, Tag, AudioSegment, Group, GroupAdmin
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
+
+from concertapp.audio.audioFormats import *
+import tempfile, os
 
 @login_required
 def index(request):
@@ -112,12 +115,66 @@ def edit(request, segment_id, group_id):
     
 @login_required
 def download_segment(request, segment_id, group_id, type):
+    # Get the group
     group = Group.objects.get(pk = group_id)
 
+    # Make sure the current user is a member of this group
     if group not in request.user.groups.all():
         raise Http404
 
-    return HttpResponse('temp')
+    # Get the segment
+    try:
+        segment = AudioSegment.objects.get(pk = segment_id)
+    except AudioSegment.DoesNotExist:
+        raise Http404
+
+    # Get the parent audio
+    parent = segment.audio
+
+    # Make a wav object
+    parentWav = Wav(parent.wavfile)
+
+    # Make a temporary file
+    tempFile = tempfile.mkstemp(suffix = '.wav', prefix = parent.filename)
+
+    # Get the name
+    newFileName = tempFile[1]
+
+    # Crop the parent file and write it to the newly created file
+    parentWav.crop(newFileName, segment.begin, segment.end)
+
+    if type == 'mp3':
+        newWav = Wav(newFileName)
+
+        basename = os.path.split(os.path.splitext(newFileName)[0])[1]
+
+        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.mp3'
+        filePrefix = MEDIA_ROOT + 'temp/'
+        urlPrefix = ADMIN_MEDIA_PREFIX + MEDIA_URL + 'temp/'
+
+        proc = newWav.mp3Encode(filePrefix + newName)
+
+        proc.wait()
+
+        return render_to_response('download_segment.html', {'newName': newName,
+            'urlPrefix': urlPrefix}, RequestContext(request));
+    elif type == 'ogg':
+        newWav = Wav(newFileName)
+
+        basename = os.path.split(os.path.splitext(newFileName)[0])[1]
+
+        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.ogg'
+        filePrefix = MEDIA_ROOT + 'temp/'
+        urlPrefix = ADMIN_MEDIA_PREFIX + MEDIA_URL + 'temp/'
+
+        proc = newWav.oggEncode(filePrefix + newName)
+
+        proc.wait()
+
+        return render_to_response('download_segment.html', {'newName': newName,
+            'urlPrefix': urlPrefix}, RequestContext(request));
+    else:
+        return Http404
 
 @login_required
 def new_segment_submit(request):
@@ -126,7 +183,6 @@ def new_segment_submit(request):
         form = CreateSegmentForm(request.POST)
         
         if form.is_valid():
-            print 'valid'
             # Get the tag name
             tag_name = form.cleaned_data['tag_field']
 
@@ -208,7 +264,7 @@ def rename_segment(request):
 
         form = RenameSegmentForm(request.POST)
         
-        if form.is_valid:
+        if form.is_valid():
 
             the_id = request.cleaned_data['id_field']
 
