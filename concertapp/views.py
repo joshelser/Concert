@@ -12,7 +12,7 @@ from django.http import Http404
 
 from django.conf import settings
 
-from concertapp.models import Audio, Tag, AudioSegment, Group, GroupAdmin
+from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
 
 from concertapp.audio.audioFormats import *
@@ -132,7 +132,7 @@ def download_segment(request, segment_id, group_id, type):
     parent = segment.audio
 
     # Make a wav object
-    parentWav = Wav(parent.wavfile)
+    parentWav = Wav(os.path.join(settings.MEDIA_ROOT, str(parent.wavfile)))
 
     # Make a temporary file
     tempFile = tempfile.mkstemp(suffix = '.wav', prefix = parent.filename)
@@ -149,8 +149,8 @@ def download_segment(request, segment_id, group_id, type):
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
         newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.mp3'
-        filePrefix = MEDIA_ROOT + 'temp/'
-        urlPrefix = ADMIN_MEDIA_PREFIX + MEDIA_URL + 'temp/'
+        filePrefix = settings.MEDIA_ROOT + 'temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
 
         proc = newWav.mp3Encode(filePrefix + newName)
 
@@ -164,8 +164,8 @@ def download_segment(request, segment_id, group_id, type):
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
         newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.ogg'
-        filePrefix = MEDIA_ROOT + 'temp/'
-        urlPrefix = ADMIN_MEDIA_PREFIX + MEDIA_URL + 'temp/'
+        filePrefix = settings.MEDIA_ROOT + 'temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
 
         proc = newWav.oggEncode(filePrefix + newName)
 
