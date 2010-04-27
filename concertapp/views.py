@@ -15,6 +15,8 @@ from django.conf import settings
 from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
 
+from concertapp.settings import MEDIA_ROOT
+
 @login_required
 def index(request):
 
@@ -190,11 +192,26 @@ def new_segment_submit(request):
 @login_required 
 def delete_segment(request,segment_id):
     # Requested audio segment
-    AudioSegment.objects.get(pk = segment_id).delete()
+    audioSegment = AudioSegment.objects.get(pk = segment_id)
+    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
+    
+    
+    if len(otherChildren) == 1:
+        theAudio = Audio.objects.get(audiosegment = audioSegment)
+
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.wavfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.oggfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformViewer)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformEditor)))
+    
+       
+    audioSegment.audio.delete()
+    audioSegment.delete()
+    
     
     response = HttpResponse(mimetype='text/plain')
     response.write('success')
-    return response   
+    return response 
     
     
 ###
@@ -213,7 +230,6 @@ def rename_segment(request):
             the_id = request.cleaned_data['id_field']
 
             segment = AudioSegment.objects.get(pk = the_id)
-            #TODO why doesn't form.clean_data['label_field'] work here?
             segment.name = request.cleaned_data['label_field']
             segment.save()
             

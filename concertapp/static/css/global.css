@@ -81,6 +81,7 @@ input {
 .clear {clear:both;}
 
 .no_show {display:none;}
+.hidden {visibility:hidden;}
 
 a {color:#333;}
 

@@ -32,7 +32,7 @@ def view_audio(request, audio_id):
 
 @login_required
 def upload_audio(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and "wavfile" in request.FILES:
         # Need to add the user to the audio instance
         user = request.user
 
@@ -170,14 +170,27 @@ def upload_audio(request):
             default_tag.segments.add(first_segment)
             default_tag.save()
             
-
-            return HttpResponseRedirect('/audio/')
+            if "ajax" in request.POST:
+                response = HttpResponse(mimetype='text/plain', responseText = 'success');
+                response.write("sucess")
+                return response
+            else:
+                return HttpResponseRedirect('/audio/')
         else:
-            print repr(form.errors) + "sadsaD"
+            if "ajax" in request.POST:
+                response = HttpResponse(mimetype='text/plain', responseText = 'failure')
+                response.write("failure")
+                return response
+            else:          
+                print repr(form.errors)
+    
+    form = UploadFileForm()
+    if "ajax" in request.POST:
+        response = HttpResponse(mimetype='text/plain',responseText = 'failure')
+        response.write("failure")
+        return response
     else:
-        form = UploadFileForm()
-
-    return render_to_response('upload_audio.html', {'form': form})
+        return render_to_response('upload_audio.html', {'form': form})
 
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))

@@ -337,6 +337,8 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
             cur = Image.open(os.path.join(path_split[0], str(channel) +
                 path_split[1]))
             combined.paste(cur, (0, channel * (image_height/channels)))
+            os.remove(os.path.join(path_split[0], str(channel) +
+                path_split[1]))
 
         combined.save(output_filename_w)
 
