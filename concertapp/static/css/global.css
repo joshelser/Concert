@@ -209,6 +209,7 @@ a {color:#333;}
     width: 800px;
     background-color: black;
     overflow: hidden;
+    z-index: 5;
 }
 
 #editor_image {z-index: 0;}
@@ -234,7 +235,7 @@ a {color:#333;}
 }
 
 #editor_highlight_highlight {
-    z-index: 3;
+    z-index: 4;
 }
 
 #editor_highlight_static_highlight {
