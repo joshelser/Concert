@@ -207,7 +207,6 @@ a {color:#333;}
 #waveform_editor {
     height: 585px;
     width: 800px;
-    background-color: black;
     overflow: hidden;
 }
 

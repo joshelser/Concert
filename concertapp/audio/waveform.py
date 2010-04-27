@@ -222,6 +222,8 @@ class WaveformImage(object):
         colors = [
                     (255,102,102),
                     (255,51,51),
+                    
+                    (255,4,4),
                  ]
  
         # this line gets the old "screaming" colors back...
@@ -250,7 +252,8 @@ class WaveformImage(object):
  
         self.previous_x, self.previous_y = x, y2
  
-        self.draw_anti_aliased_pixels(x, y1, y2, line_color)
+        # TODO: make anti aliasing not produce dark spots on waveform
+        # self.draw_anti_aliased_pixels(x, y1, y2, line_color)
  
     def draw_anti_aliased_pixels(self, x, y1, y2, color):
         """ vertical anti-aliasing at y1 and y2 """
@@ -332,7 +335,8 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
         print " done"
 
     if channels > 1:
-        combined = Image.new("RGB", (image_width, image_height))
+        combined = Image.new("RGBA", (image_width, image_height))
+        
         for channel in range(channels):
             cur = Image.open(os.path.join(path_split[0], str(channel) +
                 path_split[1]))
