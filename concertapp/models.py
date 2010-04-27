@@ -61,10 +61,10 @@ class Tag(models.Model):
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.OneToOneField(User, related_name = 'author')
+    user = models.ForeignKey(User, related_name = 'author')
     time = models.DateTimeField(auto_now_add = True)
-    segment = models.OneToOneField('AudioSegment', null = True)
-    tag = models.OneToOneField('Tag', null = True)
+    segment = models.ForeignKey('AudioSegment', null = True)
+    tag = models.ForeignKey('Tag', null = True)
  
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
