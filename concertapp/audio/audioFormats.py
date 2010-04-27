@@ -90,6 +90,14 @@ class Wav(Audio):
     #
     #  Extra details
     def crop(self, outputFileName, begin, end):
+        # Check the begin time
+        if begin < 0:
+            raise ValueError('Begin must be greater than or equal to zero')
+
+        # Check the end time
+        if end > self.getLength():
+            raise ValueError('End must be less than or equal to the length')
+
         import wave
         import sys
     
