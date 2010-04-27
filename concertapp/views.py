@@ -14,6 +14,7 @@ from django.conf import settings
 
 from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
+from django.core.servers.basehttp import FileWrapper
 
 from concertapp.audio import audioFormats
 import tempfile, os
@@ -157,8 +158,13 @@ def download_segment(request, segment_id, group_id, type):
 
         proc.wait()
 
-        return render_to_response('download_segment.html', {'newName': newName,
-            'urlPrefix': urlPrefix}, RequestContext(request));
+        filename = os.path.splitext(parent.filename)[0] + '.mp3'
+
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/mp3')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
     elif type == 'ogg':
         newWav = audioFormats.Wav(newFileName)
 
@@ -172,8 +178,13 @@ def download_segment(request, segment_id, group_id, type):
 
         proc.wait()
 
-        return render_to_response('download_segment.html', {'newName': newName,
-            'urlPrefix': urlPrefix}, RequestContext(request));
+        filename = os.path.splitext(parent.filename)[0] + '.ogg'
+
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/ogg')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
     else:
         return Http404
 
