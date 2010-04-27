@@ -126,7 +126,6 @@ def new_segment_submit(request):
         form = CreateSegmentForm(request.POST)
         
         if form.is_valid():
-            print 'valid'
             # Get the tag name
             tag_name = form.cleaned_data['tag_field']
 
