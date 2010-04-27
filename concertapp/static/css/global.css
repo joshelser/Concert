@@ -81,6 +81,7 @@ input {
 .clear {clear:both;}
 
 .no_show {display:none;}
+.hidden {visibility:hidden;}
 
 a {color:#333;}
 
@@ -113,8 +114,8 @@ a {color:#333;}
 }
 
 
-body {
-  margin-top:150px;
+#header_push {
+  height:150px;
 }
 
 #links {

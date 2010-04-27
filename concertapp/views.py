@@ -16,6 +16,7 @@ from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
 from django.core.servers.basehttp import FileWrapper
 
+from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
 import tempfile, os
 
@@ -280,11 +281,26 @@ def new_segment_submit(request):
 @login_required 
 def delete_segment(request,segment_id):
     # Requested audio segment
-    AudioSegment.objects.get(pk = segment_id).delete()
+    audioSegment = AudioSegment.objects.get(pk = segment_id)
+    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
+    
+    
+    if len(otherChildren) == 1:
+        theAudio = Audio.objects.get(audiosegment = audioSegment)
+
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.wavfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.oggfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformViewer)))
+        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformEditor)))
+    
+       
+    audioSegment.audio.delete()
+    audioSegment.delete()
+    
     
     response = HttpResponse(mimetype='text/plain')
     response.write('success')
-    return response   
+    return response 
     
     
 ###

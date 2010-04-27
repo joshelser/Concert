@@ -6,44 +6,54 @@
     
     <div id = "main_wrapper">
         {% if message %}
-          <p class="alert admin">{{ message }}</p>
+        <p class="alert admin hidden">{{ message }}</p>
         {% endif %}
+        
+        
         <div class = "admin_module" id = "upload_audio">
             <h1>Upload Audio</h1>
             <h2>Choose an .ogg, .mp3, or .wav File to Upload</h2>
             <form method="POST" enctype="multipart/form-data" action="{% url upload_audio %}">
-                {{ uploadFileForm}}
-                <input type='submit' name='create' value='Upload' />
+              {% for field in uploadFileForm %}
+                {{ field }}
+              {% endfor %}
+              <input type='submit' name='create' value='Upload' />
             </form>        
         </div>
+        
+        
+        
         <div class = "admin_module" id = "join_group">
             <h1>Request to Join Group</h1>
-                
-
             <h2>Click on a Group to Request to Join</h2>
             <ul>
             {% for g in joinGroups %}
-                <li><a href="{% url join_group g.id  %}">{{ g }}</a></li>
+              <li><a href="{% url join_group g.id  %}">{{ g }}</a></li>
             {% endfor %}
-             </ul>
-            
-                
+            </ul>    
         </div>
+        
+        
+        
         <div class = "admin_module" id = "accept_group_request">
             <h1>Manage Groups</h1>
             <h2>Click on a Group to Manage the Group</h2> 
             <ul>                
-              {% for g in myGroups %}
+            {% for g in myGroups %}
               <li><a href='{% url manage_group user_id g.group.id %}'>{{ g.group.name }}</a> </li>
-              {% endfor %}
+            {% endfor %}
             </ul>
 
             <br />
 
             <p><a href='{% url create_group user_id %}'>Create Group</a></p>
-        
         </div>
+        
+        
+        
         <br class = "clear"/>
+        
+        
         
         <div class = "admin_module" id = "manage_tags">
           <h1>Manage Tags</h1>
@@ -54,6 +64,7 @@
           {% endfor %}
           </ul>
         </div>
+        
         
                 
         <div class = "admin_module" id = "manage_segments">
@@ -66,6 +77,9 @@
           </ul>
         </div>
     </div>
+
     
 </div>
+
+<script src="/js/admin.js"></script>
 {% endblock %}
