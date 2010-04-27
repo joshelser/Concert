@@ -113,8 +113,8 @@ a {color:#333;}
 }
 
 
-body {
-  margin-top:150px;
+#header_push {
+  height:150px;
 }
 
 #links {
