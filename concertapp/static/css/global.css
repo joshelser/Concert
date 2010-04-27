@@ -206,10 +206,10 @@ a {color:#333;}
 
 #waveform_editor {
     height: 585px;
-    width: 800px;
-    background-color: black;
-    overflow: hidden;
+    min-width: 800px;
+    overflow: auto;
     z-index: 5;
+    position: absolute;
 }
 
 #editor_image {z-index: 0;}
