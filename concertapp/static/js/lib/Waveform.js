@@ -60,6 +60,8 @@ Waveform.prototype.watch_audio_behavior = function(){
     $(this.audioElement).bind('play', function(waveformObject){ return function(){ waveformObject.play(); } }(this));
     /* Same for pause */
     $(this.audioElement).bind('pause', function(waveformObject){ return function(){ waveformObject.pause(); } }(this));
+    /* When current time of audio file changes */
+    $(this.audioElement).bind('timeupdate', function(waveformObject){ return function(){ waveformObject.draw_animation(); }}(this));
 }
 
 
