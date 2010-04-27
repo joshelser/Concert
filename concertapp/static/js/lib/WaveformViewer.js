@@ -125,8 +125,7 @@ WaveformViewer.prototype.draw_animation = function(){
 /**
  *  clicked
  *  Behavior for a WaveformViewer whenever the container is clicked.
- *  This seeks to the time in the audio file relative to the click, and updates
- *  the interface accordingly.
+ *  This seeks to the time in the audio file relative to the click.
  *
  *  @param          event           The click event.
  **/
@@ -146,12 +145,4 @@ WaveformViewer.prototype.clicked = function(event) {
     
     /* move current time of audio file to clicked location */
     audioElement.currentTime = newTime;
-    
-    /* If song is not playing */
-    if(audioElement.paused)
-    {
-        /* animate once */
-        this.draw_animation();
-    }
-    /* If song is playing, viewer will animate automatically in animation.speed ms */
 }
