@@ -141,16 +141,17 @@ def download_segment(request, segment_id, group_id, type):
     newFileName = tempFile[1]
 
     # Crop the parent file and write it to the newly created file
-    parentWav.crop(newFileName, segment.begin, segment.end)
+    parentWav.crop(newFileName, int(segment.beginning), int(segment.end))
 
     if type == 'mp3':
         newWav = audioFormats.Wav(newFileName)
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
-        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.mp3'
-        filePrefix = settings.MEDIA_ROOT + 'temp/'
-        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.mp3'
+
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
 
         proc = newWav.mp3Encode(filePrefix + newName)
 
@@ -163,9 +164,9 @@ def download_segment(request, segment_id, group_id, type):
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
-        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.ogg'
-        filePrefix = settings.MEDIA_ROOT + 'temp/'
-        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.ogg'
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
 
         proc = newWav.oggEncode(filePrefix + newName)
 
