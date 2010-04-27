@@ -15,7 +15,7 @@ from django.conf import settings
 from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
 
-from concertapp.audio.audioFormats import *
+from concertapp.audio import audioFormats
 import tempfile, os
 
 @login_required
@@ -132,7 +132,7 @@ def download_segment(request, segment_id, group_id, type):
     parent = segment.audio
 
     # Make a wav object
-    parentWav = Wav(os.path.join(settings.MEDIA_ROOT, str(parent.wavfile)))
+    parentWav = audioFormats.Wav(os.path.join(settings.MEDIA_ROOT, str(parent.wavfile)))
 
     # Make a temporary file
     tempFile = tempfile.mkstemp(suffix = '.wav', prefix = parent.filename)
@@ -144,7 +144,7 @@ def download_segment(request, segment_id, group_id, type):
     parentWav.crop(newFileName, segment.begin, segment.end)
 
     if type == 'mp3':
-        newWav = Wav(newFileName)
+        newWav = audioFormats.Wav(newFileName)
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
@@ -159,7 +159,7 @@ def download_segment(request, segment_id, group_id, type):
         return render_to_response('download_segment.html', {'newName': newName,
             'urlPrefix': urlPrefix}, RequestContext(request));
     elif type == 'ogg':
-        newWav = Wav(newFileName)
+        newWav = audioFormats.Wav(newFileName)
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
