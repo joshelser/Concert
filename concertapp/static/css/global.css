@@ -205,7 +205,7 @@ a {color:#333;}
 .waveform {width: 800px;}
 
 #waveform_editor {
-    height: 585px;
+    /*height: 585px;*/
     min-width: 800px;
     overflow: auto;
     z-index: 5;
@@ -226,12 +226,16 @@ a {color:#333;}
     position: relative;
     margin-left: 0px;
     width: 100%;
-    height: 100%;
+    height: 585px;
     background-color:#00FFFF;
     border-left: 1px solid #FFFAFA; 
 	border-right: 1px solid #FFFAFA;
 	opacity: 0.25;
 	
+}
+
+#editor_highlight {
+    height: ;
 }
 
 #editor_highlight_highlight {
@@ -240,18 +244,43 @@ a {color:#333;}
 
 #editor_highlight_static_highlight {
     z-index: 2;
+    height: 553px;
 }
 
 #editor_highlight_static_tags {
     z-index: 4;
+    height: 20px;
 }
 
 
 .editor_highlight_container {
     position: absolute;
     width: inherit;
-    height: inherit;
 }
+
+.highlight_static_tags {
+    font-size: 50%!important;
+    color: white !important;
+    border: 1px solid black !important;
+    /** Rounded corners **/
+    -moz-border-radius: 5px !important; /* FF1+ */
+    -webkit-border-radius: 5px !important; /* Saf3+, Chrome */
+    border-radius: 5px !important; /* Opera 10.5, IE 9 */
+    /** gradient **/
+    background-color: black !important;
+    background-image: -moz-linear-gradient(top, #CC0000, #000000)!important; /* FF3.6 */
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #CC0000),color-stop(1, #000000)) !important; /* Saf4+, Chrome */
+              filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#CC0000', EndColorStr='#000000') !important; /* IE6,IE7 */
+          -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#CC0000', EndColorStr='#000000')" !important; /* IE8 */
+          
+    /*opacity: 1.0 !important;*/
+    display: block !important;
+    z-index: 3;
+    position: relative;
+    padding: 5px;
+}
+
+
 
 
 .waveform_image {
@@ -630,28 +659,6 @@ div.dataTables_paginate {
 }
 
 
-.highlight_static_tags {
-    font-size: 50%!important;
-    color: white !important;
-    border: 1px solid black !important;
-    /** Rounded corners **/
-    -moz-border-radius: 5px !important; /* FF1+ */
-    -webkit-border-radius: 5px !important; /* Saf3+, Chrome */
-    border-radius: 5px !important; /* Opera 10.5, IE 9 */
-    /** gradient **/
-    background-color: black !important;
-    background-image: -moz-linear-gradient(top, #CC0000, #000000)!important; /* FF3.6 */
-    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #CC0000),color-stop(1, #000000)) !important; /* Saf4+, Chrome */
-              filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#CC0000', EndColorStr='#000000') !important; /* IE6,IE7 */
-          -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#CC0000', EndColorStr='#000000')" !important; /* IE8 */
-          
-    /*opacity: 1.0 !important;*/
-    display: block !important;
-    z-index: 3;
-    position: relative;
-    padding: 5px;
-}
-
 .float_left {
     float: left;
 }
@@ -662,4 +669,8 @@ div.dataTables_paginate {
 
 .clear_both {
     clear: both;
+}
+
+.vertical-align_middle {
+    vertical-align: middle;
 }
