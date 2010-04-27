@@ -38,20 +38,34 @@ var WaveformEditor = function(containerID, audioID, tags) {
         throw new Error('WaveformEditor: Could not get waveform image width.');
     }
     
+    /** Static highlight element must be watched for highlighting behavior **/
+    var staticHighlightElement = $('#editor_highlight_static').get(0);
+    if(typeof(staticHighlightElement) == 'undefined') {
+        throw new Error('WaveformEditor: Could not get static highlight element.');
+    }
+    
+    /** image container must also be watched for highlighting **/
+    var imageContainerElement = $('#editor_image').get(0);
+    if(typeof(imageContainerElement) == 'undefined') {
+        throw new Error('WaveformEditor: Could not get image container element.')
+    }
+    
     /* The highlight object */
     this.highlighter = new Highlighter({
         highlightElement: this.highlightElement, 
         container: this.container, 
         waveformElement: this.waveformElement,
         waveformWidth: this.waveformWidth,
-        audioElement: this.audioElement
+        audioElement: this.audioElement,
+        staticHighlightElement: staticHighlightElement,
+        imageContainerElement: imageContainerElement
     });
     
     /* Static highlighter on viewer */
     this.set_highlight_viewer({
-        highlightElement: $('#editor_highlight_static').get(0),
+        highlightElement: staticHighlightElement,
         waveformElement: this.waveformElement,
-        tags: tags
+        tags: tags,
     });
     
     /* Highlight behavior */
@@ -59,6 +73,7 @@ var WaveformEditor = function(containerID, audioID, tags) {
     
     /* Watch audio element for playback */
     this.watch_audio_behavior();
+    
     
     return this;
     

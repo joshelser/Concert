@@ -50,12 +50,18 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
       throw new Error('WaveformViewer: Unable to set timecode element.');
     }
     
+    /* The highlight element */
+    var highlightElement = $(this.container).children('#viewer_highlight').get(0);
+    if(typeof(highlightElement) == 'undefined') {
+        throw new Error('WaveformViewer: Unable to set highlightElement.');
+    }
+    
     /* container width */
     this.waveformWidth = 800;
     
     /* Highlighter on viewer */
     this.highlighter = new Highlighter({
-        highlightElement: $(this.container).children('#viewer_highlight'), 
+        highlightElement: highlightElement, 
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
@@ -66,7 +72,8 @@ WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
     this.set_highlight_viewer({
         highlightElement: $(this.container).children('#viewer_highlight_static'), 
         waveformElement : $(this.container).children('#viewer_image'), 
-        tags: tags
+        tags: tags,
+        eventElement: highlightElement
     });
     
     

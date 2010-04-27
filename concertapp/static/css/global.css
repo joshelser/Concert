@@ -222,7 +222,6 @@ a {color:#333;}
 }
 
 .editor_highlight { 
-    z-index: 2;
     position: relative;
     margin-left: 0px;
     width: 100%;
@@ -233,6 +232,19 @@ a {color:#333;}
 	opacity: 0.25;
 	
 }
+
+#editor_highlight_highlight {
+    z-index: 3;
+}
+
+#editor_highlight_static_highlight {
+    z-index: 2;
+}
+
+#editor_highlight_static_tags {
+    z-index: 4;
+}
+
 
 .editor_highlight_container {
     position: absolute;
