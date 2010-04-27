@@ -207,7 +207,7 @@ a {color:#333;}
 #waveform_editor {
     /*height: 585px;*/
     min-width: 800px;
-    overflow: auto;
+    overflow: hidden;
     z-index: 5;
     position: absolute;
 }
@@ -218,7 +218,7 @@ a {color:#333;}
 #editor_playhead {
     margin-left: 400px;
     position: absolute;
-    height: inherit;
+    height: 585px;
     z-index: 1;
 }
 
