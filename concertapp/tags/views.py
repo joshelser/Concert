@@ -254,9 +254,7 @@ def comment(request,tagID, groupID):
             #save the comment
             comment.save()
                 
-            response = HttpResponse(mimetype='text/plain')
-            response.write('success')
-            return response
+            return HttpResponseRedirect('/?selected_tag_id=' + str(tag.id))
         else:
             response = HttpResponse(mimetype='text/plain')
             response.write(form.errors)

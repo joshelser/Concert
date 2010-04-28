@@ -68,11 +68,11 @@ def index(request):
                     # Move on to next segment
                     break
     
+    comments = Comment.objects.filter(tag = selected_tag)
     commentForm = CreateCommentForm()
 
 
     return render_to_response('index.html', {
-
     'no_show' : "no_show",
     'group_list': group_list, 
     'selected_group': selected_group, 
@@ -80,7 +80,7 @@ def index(request):
     'selected_tag' : selected_tag,
     'segment_list' : segment_list,
     'commentForm': commentForm,
-    
+    'comments' : comments,
     }, RequestContext(request))
 
 
@@ -457,6 +457,7 @@ def comment(request,segment_id, group_id):
             
             #save the comment
             comment.save()
+                
                 
             response = HttpResponse(mimetype='text/plain')
             response.write('success')

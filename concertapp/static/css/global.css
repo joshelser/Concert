@@ -546,6 +546,22 @@ div.dataTables_paginate {
     width: 50px;
 }
 
+#comment_container{
+    margin-top:50px;
+}
+
+.comment {
+    margin:20px 5px;
+
+}
+.comment h2 {
+    font-size:14px;
+    margin-bottom:10px;
+}
+#comment_form {
+    margin-top:5px;
+}
+
 
 
 
