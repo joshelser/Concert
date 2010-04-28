@@ -13,7 +13,7 @@ from django.http import Http404
 from django.conf import settings
 
 from concertapp.models import *
-from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm,CreateSegmentCommentForm
+from concertapp.forms  import UploadFileForm, CreateSegmentForm, RenameSegmentForm, CreateCommentForm
 from django.core.servers.basehttp import FileWrapper
 
 from concertapp.settings import MEDIA_ROOT
@@ -68,15 +68,19 @@ def index(request):
                     # Move on to next segment
                     break
     
+    commentForm = CreateCommentForm()
 
 
     return render_to_response('index.html', {
+
     'no_show' : "no_show",
     'group_list': group_list, 
     'selected_group': selected_group, 
     'tag_list' : tag_list, 
     'selected_tag' : selected_tag,
-    'segment_list' : segment_list
+    'segment_list' : segment_list,
+    'commentForm': commentForm,
+    
     }, RequestContext(request))
 
 
@@ -425,9 +429,9 @@ def comment(request,segment_id, group_id):
     if request.method == 'POST':
         
         # Create the form
-        form = CreateSegmentCommentForm(request.POST)
+        form = CreateCommentForm(request.POST)
         
-        if form.is_valid: 
+        if form.is_valid() : 
             
             # Get the group
             group = Group.objects.get(pk = group_id)
