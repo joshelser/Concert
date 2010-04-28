@@ -66,7 +66,7 @@ def request_to_join_group(request):
 
         ug_request.save()
 
-        url = '/admin/' + str(request.user.id) + '/?message=Group request sent successfully'
+        url = '/admin/?message=Group request sent successfully'
 
         return HttpResponseRedirect(url)
     else:
