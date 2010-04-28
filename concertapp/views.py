@@ -283,12 +283,12 @@ def delete_segment(request,segment_id, group_id):
     # Get the group
     group = Group.objects.get(pk = group_id)
 
-
+    
     # Make sure the current user is a member of this group
     try:
         groupAdministrator = GroupAdmin.objects.get(group = group, 
             admin = request.user)
-    except groupAdministrator.DoesNotExist:
+    except GroupAdmin.DoesNotExist:
         raise Http404
 
     # Get the segment
