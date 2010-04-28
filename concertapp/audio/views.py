@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -267,10 +267,13 @@ def get_duration(audio):
 
 def delete_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
-    if audio.delete_wavfile():
-        audio = Audio.objects.all()
-        return render_to_response("audio.html", {'audio': audio}, RequestContext(request))
-    else:
-        return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
+    # Bounce user if not the owner
+    if int(request.user.id) != int(audio.user.id):
+        return Http404
+
+    audio.delete()
+
+    audio = Audio.objects.all()
+    return render_to_response("audio.html", {'audio': audio}, RequestContext(request))
 
