@@ -142,15 +142,13 @@ function edit_new_submit_handler(event, data) {
  **/
 function edit_rename_submit_handler(event, data) {
 
-    var label = $('#rename_segment #id_label_field').val();
-    var segment_id = $('#id_segment_id').val();
+    var action = $("#rename_segment").attr("action");
+    var label = $("#id_name").val();
     /* Submit form via ajax */
     $.ajax({
-        url: '/rename_segment/',
+        url: action,
         type: 'POST',
-        data: {     label_field: label, 
-                    id_field: segment_id
-                    },
+        data: {'name': label,},
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 if(data == 'success') {

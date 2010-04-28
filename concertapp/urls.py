@@ -21,7 +21,7 @@ urlpatterns = patterns('concertapp.views',
     url(r'^delete_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
         'delete_segment', name='delete_segment'),
     #rename
-    url(r'^rename_segment/$', 'rename_segment', name='rename_segment'),
+    url(r'^rename_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'rename_segment', name='rename_segment'),
     #comment
     url(r'^comment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
         'comment', name='comment'),
