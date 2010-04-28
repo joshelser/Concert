@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group, User
 from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment
 
 class CreateGroupForm(ModelForm):
-    group_name = forms.CharField(label="group_name", max_length=80,
+    group_name = forms.CharField(label="Group name", max_length=80,
             required=True)
 
     class Meta:
