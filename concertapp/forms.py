@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import Group, User
 #from django.core import validators
 
-from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment
+from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment, Comment
 
 class CreateGroupForm(ModelForm):
     group_name = forms.CharField(label="group_name", max_length=80,
@@ -48,7 +48,6 @@ class RegistrationForm(ModelForm):
                 username)
 
 class UploadFileForm(ModelForm):
-    wavfile = forms.FileField(label='Audio File')
     class Meta:
         model = Audio
         fields = ('wavfile', )
@@ -104,19 +103,15 @@ class CreateSegmentForm(ModelForm):
 
     
 class RenameSegmentForm(ModelForm):
-    label_field = forms.CharField(label='Label', max_length=80)
-    id_field = forms.HiddenInput()
-    
-    
     class Meta:
         model = AudioSegment
-        fields = ['label_field']
+        fields = ['name']
+        
+        
     
-    
-    
-    
-    
-    
-    
-    
-    
+class CreateSegmentCommentForm(ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['comment','segment']
+

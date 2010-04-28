@@ -211,6 +211,9 @@ a {color:#333;}
     z-index: 5;
     position: absolute;
 }
+#waveform_editor_push {
+    height: 800px;
+}
 
 #editor_image {z-index: 0;}
 #waveform_editor_image {left: 400px;}

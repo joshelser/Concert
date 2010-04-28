@@ -13,7 +13,7 @@ from django.http import Http404
 from django.conf import settings
 
 from concertapp.models import *
-from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
+from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm,CreateSegmentCommentForm
 from django.core.servers.basehttp import FileWrapper
 
 from concertapp.settings import MEDIA_ROOT
@@ -101,12 +101,14 @@ def edit(request, segment_id, group_id):
     
     createSegmentForm = CreateSegmentForm()
     renameSegmentForm = RenameSegmentForm()
+    commentForm = CreateSegmentCommentForm()
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
         'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
         'createSegmentForm' : createSegmentForm,
         'renameSegmentForm' : renameSegmentForm,
+        'commentForm':commentForm,
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
         'segment_id': segment_id,
@@ -264,9 +266,7 @@ def new_segment_submit(request):
             return response
 
 
-    response = HttpResponse(mimetype='text/plain')
-    response.write('failure')
-    return response
+    raise Http404
 
 
 
@@ -283,7 +283,6 @@ def delete_segment(request,segment_id, group_id):
     # Get the group
     group = Group.objects.get(pk = group_id)
 
-    
     # Make sure the current user is a member of this group
     try:
         groupAdministrator = GroupAdmin.objects.get(group = group, 
@@ -337,6 +336,22 @@ def rename_segment(request):
         form = RenameSegmentForm(request.POST)
         
         if form.is_valid():
+        
+            # Get the group
+            group = Group.objects.get(pk = group_id)
+
+            # Make sure the current user is a member of this group
+            try:
+                groupAdministrator = GroupAdmin.objects.get(group = group, 
+                    admin = request.user)
+            except GroupAdmin.DoesNotExist:
+                raise Http404
+
+            # Get the segment
+            try:
+                audioSegment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                raise Http404
 
             the_id = request.cleaned_data['id_field']
 
@@ -353,9 +368,7 @@ def rename_segment(request):
             response.write('Error: validating form')
             return response
     
-    response = HttpResponse(mimetype='text/plain')
-    response.write('shouldn\'t be renaming a via anything but post')
-    return response
+    raise Http404
 
 
 
@@ -405,23 +418,40 @@ def admin(request):
 #   Comment
 #   The admin page for a user
 #
+#   @param  segment_id
+#   @param  group_id
 ###
 @login_required
 def comment(request,segment_id, group_id):
-    # Get the group
-    group = Group.objects.get(pk = group_id)
-
-    # Make sure the current user is a member of this group
-    if group not in request.user.groups.all():
-        raise Http404
-
-    # Get the segment
-    try:
-        segment = AudioSegment.objects.get(pk = segment_id)
-    except AudioSegment.DoesNotExist:
-        raise Http404
+    if request.method == 'POST':
+        # Create the form
+        form = CreateSegmentForm(request.POST)
         
-    #
-    
+        # Get the group
+        group = Group.objects.get(pk = group_id)
+
+        # Make sure the current user is a member of this group
+        if group not in request.user.groups.all():
+            raise Http404
+
+        # Get the segment
+        try:
+            segment = AudioSegment.objects.get(pk = segment_id)
+        except AudioSegment.DoesNotExist:
+            raise Http404
+            
+        
+        if request.POST['comment']:
+            comment = Comment(comment = request['comment'],
+                segment = segment, user = request.user)
+            comment.save()
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else:
+            response = HttpResponse(mimetype='text/html')
+            response.write(form.errors)
+            return response
+            
     
     

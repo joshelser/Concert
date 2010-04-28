@@ -36,15 +36,10 @@
             <br />
             <form id = "rename_segment">
                 <h1>Rename "{{ audioSegment.name }}"</h1>
-                <table>
-                    {{ renameSegmentForm.as_table }}
-                    <tr>
-                        <td></td>
-                        <td ><input type="button" id="rename_submit_button" value="Submit" /></td>
-                    </tr>
-                </table>
-            
-            </form>
+                {{ renameSegmentForm.as_p }}
+                <p><input type="button" id="rename_submit_button" value="Submit" /></p>
+                    
+             </form>
             <div>
                 <span><a href="{% url download segment_id group_id "mp3" %}">Download as Mp3</a></span><br />
                 <span><a href="{% url download segment_id group_id "ogg" %}">Download as Ogg</a></span>
@@ -66,7 +61,16 @@
                 </div>
                 <div id="editor_playhead" class="playhead"></div>
                 <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_editor_image" src = "{{ waveformEditorSrc }}" /></div>
-            </div>     
+            </div>
+            <div id ="waveform_editor_push"></div>
+            
+            <form id = "comment" action="/comment/{{ audioSegment.id }}/{{ group_id }}/" Method = "POST">
+                <h1>Comment on "{{ audioSegment.name }}"</h1>
+                {{commentForm.as_p}}
+                <p><input type="submit" id="submit_comment_button" value="Submit" /></p>
+                    
+             </form>
+        
         </div>
         <br style = "clear:both;"/>
     </div>
