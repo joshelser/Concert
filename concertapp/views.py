@@ -301,8 +301,7 @@ def delete_segment(request,segment_id, group_id):
 
 
     # Requested audio segment
-    audioSegment = AudioSegment.objects.get(pk = segment_id)
-    otherChildren = Audio.objects.filter(audiosegment = audioSegment)
+    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
     
     # If they're no other segment's associated with this segment's parent audio
     # file then we delete the audio object, and all files/images associated with it
