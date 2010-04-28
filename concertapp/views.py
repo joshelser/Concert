@@ -22,6 +22,8 @@ import tempfile, os
 
 @login_required
 def index(request):
+    getGroup = False
+    getTag = False
 
     ###
     #   Groups
@@ -34,6 +36,7 @@ def index(request):
         # Use group if one was specified
         selected_group_id = request.GET['selected_group_id']
         selected_group = request.user.groups.get(id = selected_group_id)
+        getGroup = selected_group_id
     except KeyError:
         # Use user's default group
         selected_group = request.user.groups.get(name = request.user.username)
@@ -51,7 +54,8 @@ def index(request):
         selected_tag = Tag.objects.get(pk = selected_tag_id)
         # Get all of this tag's audio segments
         segment_list = selected_tag.segments.all()
-        # no tag was selected
+        getTag = selected_tag_id
+    # no tag was selected
     except KeyError:
         # Get all tags from this group
         selected_tag = Tag.objects.filter(group = selected_group)
@@ -65,8 +69,6 @@ def index(request):
                 if segment.tag_set.filter(id = tag.id).count() > 0 :
                     # Add to our segment list
                     segment_list.append(segment)
-                    # Move on to next segment
-                    break
     
     comments = Comment.objects.filter(tag = selected_tag)
     commentForm = CreateCommentForm()
@@ -81,6 +83,8 @@ def index(request):
     'segment_list' : segment_list,
     'commentForm': commentForm,
     'comments' : comments,
+    'getGroup' : getGroup,
+    'getTag' : getTag,
     }, RequestContext(request))
 
 
