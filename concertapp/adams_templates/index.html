@@ -35,10 +35,10 @@
                     
                         {% comment %} Add "selected" class to the currently selected tag. {% endcomment %}
                         
-                        {% ifequal tag selected_tag %}
+                        {% ifequal tag.id selected_tag.id %}
                             <li class="selected"><a href = "?selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
                         {% else %}
-                            <li><a href = "?selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
+                        <li><a href = "?{% if getGroup %}selected_group_id={{ getGroup }}&{% endif %}selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
                         {% endifequal %}
                     {% endfor %}
                 </ul>
