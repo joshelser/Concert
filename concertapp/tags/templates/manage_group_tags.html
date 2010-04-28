@@ -23,7 +23,7 @@
                     {% else %}
                         <td id="tagCount-{{ tag.id }}" class="tagCount closed"><span id="tagCountButton-{{ tag.id }}" class="tagCountButton button_text tags-label">{{ tag.segments.count }}</span></td>
                     {% endifequal %}
-                    <td id="tagDelete-{{ tag.id }}"><a id="tagDeleteButton-{{ tag.id }}" class="tagDeleteButton button cross" href="/tags/confirmdelete/{{ tag.id }}/"><!-- --></span></td>
+                    <td id="tagDelete-{{ tag.id }}"><a id="tagDeleteButton-{{ tag.id }}" class="tagDeleteButton button cross" href="/tags/confirmdelete/{{ tag.id }}/"><!-- --></a></td>
                 </tr>
             {% endfor %}
         </tbody>
