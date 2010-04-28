@@ -47,7 +47,9 @@ var $waveformPlayer = null;
         that can go here to modify the look and properties of the DOM 
         elements that are generated, I haven't looked into it too much. */
     $('table.segments_table').dataTable({
-        'sDom': '<"above_table"f>t<"below_table"ilp>', 
+        'sDom': '<"above_table"filp>t',
+        "bAutoWidth": false,
+
     });
 
     /*  since the search plugin above (datatables for jquery) doesn't have very good
@@ -58,6 +60,8 @@ var $waveformPlayer = null;
         $(".dataTables_filter>input").trigger("keyup"); 
     });
     
+
+    
     initialize_audio_player_behavior();
     
     /* Behavior for delete segment buttons */
@@ -65,6 +69,7 @@ var $waveformPlayer = null;
         var segmentID = get_object_id(this);
         delete_segment(segmentID);
     });
+    
     
     
 

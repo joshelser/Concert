@@ -393,13 +393,14 @@ a {color:#333;}
 #left_wrapper span {color:#999;}
 
 .dataTables_filter {display:none;}
+
 #search > input{
 
 	padding:0 8px 0 8px;
 	height:28px;
 	color:#CCC;
 	margin:30px 20px 0 20px;
-    width:210px;
+  width:210px;
 }
 
 #search > input:focus {color:#585859;}
@@ -414,10 +415,39 @@ a {color:#333;}
 	z-index:2;
 }
 
-table.segments_table {
-	width:100%;
-	z-index:2;
+div.above_table{
+  height:30px;
+  background-color:#ddd;
+  border:1px #c1c1c1 solid;
+  border-top:0;
+  border-right:0;
+  overflow:hidden;
+  vertical-align:middle;
+  height:40px;
+  
 }
+
+div.above_table > div {
+  overflow:hidden;
+  vertical-align:middle;
+  height:inherit;
+}
+
+div.above_table > div > * {
+  vertical-align:middle;
+}
+
+div.dataTables_paginate {
+  width:50px !important;
+}
+
+table.segments_table {
+  overflow:hidden;
+  width:100%;
+	z-index:2;
+	padding-left:250px;
+}
+
 
 table.segments_table tbody tr, table.segments_table tbody td {
     height:45px;
@@ -433,7 +463,7 @@ table.segments_table thead tr{
 }
 
 table.segments_table th, table.segments_table td {
-    width:20%;
+    width:14.28%;
     padding-left:20px;
 }
 

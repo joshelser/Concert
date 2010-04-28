@@ -370,21 +370,17 @@ def admin(request):
     myGroups = GroupAdmin.objects.filter(admin = request.user)
 
     return render_to_response('admin.html',{
-      'uploadFileForm':uploadFileForm,
-      'joinGroups': joinGroups,
-      'message': message,
-      'myGroups':myGroups,
-      'length':len(myGroups),
-      'user_id': user_id,
-      'show_create': True
-      
-      
-      
-      
-      });
+        'uploadFileForm':uploadFileForm,
+        'joinGroups': joinGroups,
+        'message': message,
+        'myGroups':myGroups,
+        'length':len(myGroups),
+        'user_id': user_id,
+        'show_create': True
+    });
     
     
-    
+
     
     
     
