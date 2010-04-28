@@ -110,8 +110,7 @@ class RenameSegmentForm(ModelForm):
         
     
 class CreateSegmentCommentForm(ModelForm):
-
     class Meta:
         model = Comment
-        fields = ['comment','segment']
+        fields = ['comment']
 

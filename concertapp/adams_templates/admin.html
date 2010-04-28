@@ -54,28 +54,6 @@
         <br class = "clear"/>
         
         
-        
-        <div class = "admin_module" id = "manage_tags">
-          <h1>Manage Tags</h1>
-          <h2>Click on a Group to Manage the Group's Tags</h2>
-          <ul id="group_list">
-          {% for g in myGroups %}
-            <li id="group-{{ g.group.id }}"><a href="/tags/group/{{ g.group.id }}">{{ g.group.name }}</a></li>
-          {% endfor %}
-          </ul>
-        </div>
-        
-        
-                
-        <div class = "admin_module" id = "manage_segments">
-          <h1>Manage Audio Segments</h1>
-          <h2>Click on a Group to Manage the Group's Segments</h2>
-          <ul id="group_list">
-          {% for g in myGroups %}
-            <li id="group-{{ g.group.id }}"><a href="/segments/group/{{ g.group.id }}">{{ g.group.name }}</a></li>
-          {% endfor %}
-          </ul>
-        </div>
     </div>
 
     

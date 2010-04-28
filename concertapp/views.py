@@ -423,34 +423,45 @@ def admin(request):
 @login_required
 def comment(request,segment_id, group_id):
     if request.method == 'POST':
+        
         # Create the form
-        form = CreateSegmentForm(request.POST)
+        form = CreateSegmentCommentForm(request.POST)
         
-        # Get the group
-        group = Group.objects.get(pk = group_id)
-
-        # Make sure the current user is a member of this group
-        if group not in request.user.groups.all():
-            raise Http404
-
-        # Get the segment
-        try:
-            segment = AudioSegment.objects.get(pk = segment_id)
-        except AudioSegment.DoesNotExist:
-            raise Http404
+        if form.is_valid: 
             
-        
-        if request.POST['comment']:
-            comment = Comment(comment = request['comment'],
-                segment = segment, user = request.user)
+            # Get the group
+            group = Group.objects.get(pk = group_id)
+             
+            # Make sure the current user is a member of this group
+            if group not in request.user.groups.all():
+                raise Http404
+
+            # Get the segment
+            try:
+                segment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                raise Http404
+                
+            #create the comment
+            comment = form.save(commit=False)
+            
+            #set the user
+            comment.user = request.user
+            
+            #set the segment
+            comment.segment = segment
+            
+            #save the comment
             comment.save()
+                
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
             return response
         else:
-            response = HttpResponse(mimetype='text/html')
+            response = HttpResponse(mimetype='text/plain')
             response.write(form.errors)
             return response
-            
-    
+    else:
+        return Http404
+           
     

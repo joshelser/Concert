@@ -363,7 +363,6 @@ a {color:#333;}
 	postion:absolute;
 	top:150px;
 	width:100%;	
-	height:100%;
 	position:absolute;
 	z-index:2;
 	min-width:1000px;
@@ -604,7 +603,6 @@ div.dataTables_paginate {
 
 #admin_container {
   overflow:visible;
-  height:100%;
   padding-bottom:400px;
 }
 
