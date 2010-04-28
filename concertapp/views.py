@@ -105,7 +105,7 @@ def edit(request, segment_id, group_id):
     
     createSegmentForm = CreateSegmentForm()
     renameSegmentForm = RenameSegmentForm()
-    commentForm = CreateSegmentCommentForm()
+    commentForm = CreateCommentForm()
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
