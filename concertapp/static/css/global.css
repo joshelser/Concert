@@ -392,6 +392,7 @@ a {color:#333;}
 
 #left_wrapper span {color:#999;}
 
+.dataTables_filter {display:none;}
 #search > input{
 
 	padding:0 8px 0 8px;

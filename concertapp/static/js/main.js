@@ -50,6 +50,13 @@ var $waveformPlayer = null;
         'sDom': '<"above_table"f>t<"below_table"ilp>', 
     });
 
+    /*  since the search plugin above (datatables for jquery) doesn't have very good
+        style options, we hack it by hiding the vendor provided search bar, providing 
+        our own, and transfering any data entered to our search bar into vender provided one*/
+    $("#search>input").bind("keyup",function() {
+        $(".dataTables_filter>input").val($(this).val());
+        $(".dataTables_filter>input").trigger("keyup"); 
+    });
     
     initialize_audio_player_behavior();
     
@@ -58,6 +65,8 @@ var $waveformPlayer = null;
         var segmentID = get_object_id(this);
         delete_segment(segmentID);
     });
+    
+    
 
 })();
 
