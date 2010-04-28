@@ -74,10 +74,25 @@
                             </tr>
                         {% endfor %}
                     {% else %}
-                        <tr><td colspan = "5">No audio found.</td></tr>
+                        <tr>
+                            <td>No audio found.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     {% endif %}
                 </tbody>
             </table>
+            {% if selected_tag.tag  %}
+            <form id = "comment" action="tags/comment/{{ selected_tag.id }}/{{ selected_group.id }}/" Method = "POST">
+                <h1>Comment on "{{ selected_tag.tag }}"</h1>
+                {{commentForm.as_p}}
+                <p><input type="submit" id="submit_comment_button" value="Submit" /></p> 
+            </form>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@ from django.forms.util import ValidationError
 from django.core.urlresolvers import reverse
 
 from concertapp.models  import *
-#from concertapp.forms   import RegistrationForm, CreateGroupForm
+from concertapp.forms   import CreateCommentForm
 #from django.contrib.auth.forms import PasswordChangeForm
 
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
@@ -209,4 +209,59 @@ def add_tag_to_segment(request, groupID, segmentID, tag):
     else :
         response.write('success')
     return response
+
+
+    
+    
+###
+#   Comment
+#   The admin page for a user
+#
+#   @param  segment_id
+#   @param  group_id
+###
+@login_required
+def comment(request,tagID, groupID):
+    if request.method == 'POST':
+        
+        # Create the form
+        form = CreateCommentForm(request.POST)
+        
+        if form.is_valid() : 
+            
+            # Get the group
+            group = Group.objects.get(pk = groupID)
+             
+            # Make sure the current user is a member of this group
+            if group not in request.user.groups.all():
+                raise Http404
+
+            # Get the tag
+            try:
+                tag = Tag.objects.get(pk = tagID)
+            except AudioSegment.DoesNotExist:
+                raise Http404
+                
+            #create the comment
+            comment = form.save(commit=False)
+            
+            #set the user
+            comment.user = request.user
+            
+            #set the segment
+            comment.tag = tag
+            
+            #save the comment
+            comment.save()
+                
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else:
+            response = HttpResponse(mimetype='text/plain')
+            response.write(form.errors)
+            return response
+    else:
+        return Http404
+           
     
