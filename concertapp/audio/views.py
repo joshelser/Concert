@@ -274,6 +274,5 @@ def delete_audio(request, audio_id):
 
     audio.delete()
 
-    audio = Audio.objects.all()
-    return render_to_response("audio.html", {'audio': audio}, RequestContext(request))
+    return HttpResponseRedirect('/audio/')
 
