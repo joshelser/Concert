@@ -283,10 +283,12 @@ def delete_segment(request,segment_id, group_id):
     # Get the group
     group = Group.objects.get(pk = group_id)
 
-    groupAdministrator = GroupAdmin.objects.get(group = group)
-    
+
     # Make sure the current user is a member of this group
-    if groupAdministrator.admin != request.user:
+    try:
+        groupAdministrator = GroupAdmin.objects.get(group = group, 
+            admin = request.user)
+    except groupAdministrator.DoesNotExist:
         raise Http404
 
     # Get the segment
@@ -303,14 +305,16 @@ def delete_segment(request,segment_id, group_id):
     audioSegment = AudioSegment.objects.get(pk = segment_id)
     otherChildren = Audio.objects.filter(audiosegment = audioSegment)
     
-    
+    # If they're no other segment's associated with this segment's parent audio
+    # file then we delete the audio object, and all files/images associated with it
     if len(otherChildren) == 1:
         os.remove(os.path.join(MEDIA_ROOT, str(parent.wavfile)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.oggfile)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformViewer)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformEditor))) 
         audioSegment.audio.delete()
-        
+    
+    # Delete segment
     audioSegment.delete()
     
     
@@ -397,7 +401,27 @@ def admin(request):
     });
     
     
+###
+#   Comment
+#   The admin page for a user
+#
+###
+@login_required
+def comment(request,segment_id, group_id):
+    # Get the group
+    group = Group.objects.get(pk = group_id)
 
+    # Make sure the current user is a member of this group
+    if group not in request.user.groups.all():
+        raise Http404
+
+    # Get the segment
+    try:
+        segment = AudioSegment.objects.get(pk = segment_id)
+    except AudioSegment.DoesNotExist:
+        raise Http404
+        
+    #
     
     
     
