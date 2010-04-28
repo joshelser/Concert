@@ -14,6 +14,7 @@ from django.conf import settings
 
 from concertapp.models import *
 from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
+from django.core.servers.basehttp import FileWrapper
 
 from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
@@ -114,6 +115,15 @@ def edit(request, segment_id, group_id):
         'user'     : request.user,
         },RequestContext(request));
     
+##
+# download_segment
+# Present the audio segment for download to the user
+# 
+# @param request
+# @param segment_id
+# @param group_id
+# @param type
+##
 @login_required
 def download_segment(request, segment_id, group_id, type):
     # Get the group
@@ -142,38 +152,62 @@ def download_segment(request, segment_id, group_id, type):
     newFileName = tempFile[1]
 
     # Crop the parent file and write it to the newly created file
-    parentWav.crop(newFileName, segment.begin, segment.end)
+    parentWav.crop(newFileName, int(segment.beginning), int(segment.end))
 
+    # Present mp3 download
     if type == 'mp3':
+        # Get the cropped wav file
         newWav = audioFormats.Wav(newFileName)
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
-        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.mp3'
-        filePrefix = settings.MEDIA_ROOT + 'temp/'
-        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.mp3'
 
+        # Get the file & url prefixes
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
+
+        # Convert it to mp3
         proc = newWav.mp3Encode(filePrefix + newName)
 
         proc.wait()
 
-        return render_to_response('download_segment.html', {'newName': newName,
-            'urlPrefix': urlPrefix}, RequestContext(request));
+        # Get the new filename
+        filename = os.path.splitext(parent.filename)[0] + '.mp3'
+
+        # Present the file to download
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/mp3')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
+    # Present ogg download
     elif type == 'ogg':
+        # Get the cropped wav file
         newWav = audioFormats.Wav(newFileName)
 
         basename = os.path.split(os.path.splitext(newFileName)[0])[1]
 
-        newName = basename + '_' + str(segment.begin) + '_' + str(segment.end) + '.ogg'
-        filePrefix = settings.MEDIA_ROOT + 'temp/'
-        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL + 'temp/'
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.ogg'
 
+        # Get the file & url prefixes
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
+
+        # Encode the wav as ogg
         proc = newWav.oggEncode(filePrefix + newName)
 
         proc.wait()
 
-        return render_to_response('download_segment.html', {'newName': newName,
-            'urlPrefix': urlPrefix}, RequestContext(request));
+        # Get the new filename
+        filename = os.path.splitext(parent.filename)[0] + '.ogg'
+
+        # Present the file to download
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/ogg')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
     else:
         return Http404
 

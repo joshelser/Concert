@@ -52,7 +52,7 @@ HighlightViewer.prototype.initialize = function(params) {
     if(typeof(this.audioElement) == 'undefined') {
         throw new Error('HighlightViewer: Could not initialize audioElement.');
     }
-    
+        
     /* JSON list of tag objects for this highlighted section */
     this.tags = params.tags;
     if(typeof(this.tags) != 'undefined') {

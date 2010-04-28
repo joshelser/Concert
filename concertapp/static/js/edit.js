@@ -49,7 +49,7 @@ var $waveformEditor = null;
 
     /* Bind highlight event on viewer or editor to handler */
     $('audio').bind('loop', function(event, data){ return edit_highlight_handler(event, data); });
-    
+    $('audio').bind('clear_loop', function(){ edit_clear_beginning_end_fields(); });
     
     /* Bind submit button for a new segment */
     $('#new_submit_button').bind('click', function(event, data){ return edit_new_submit_handler(event, data); });
@@ -77,6 +77,16 @@ function edit_highlight_handler(event, data) {
     /* Put start and end times into form fields */
     $('#id_beginning').attr('value', Math.round(data.start*100)/100);
     $('#id_end').attr('value', Math.round(data.end*100)/100);    
+}
+
+/**
+ *  clear_beginning_end_fields
+ *  This function should be called whenever a highlight is cleared, so the values
+ *  in the form clear as well.
+ **/
+function edit_clear_beginning_end_fields() {
+    $('#id_beginning').attr('value', '');
+    $('#id_end').attr('value', '');        
 }
 
 /**
