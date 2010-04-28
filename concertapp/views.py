@@ -268,6 +268,8 @@ def delete_segment(request,segment_id):
     return response 
     
     
+    
+    
 ###
 #   rename_segment
 #   Part of the manage segment use case.  renames a given segment 
