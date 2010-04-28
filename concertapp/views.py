@@ -279,19 +279,34 @@ def new_segment_submit(request):
 #   @param  segment_id      the id of the segment to be deleted
 ### 
 @login_required 
-def delete_segment(request,segment_id):
+def delete_segment(request,segment_id, group_id):
+    # Get the group
+    group = Group.objects.get(pk = group_id)
+
+    # Make sure the current user is a member of this group
+    if group not in request.user.groups.all():
+        raise Http404
+
+    # Get the segment
+    try:
+        audioSegment = AudioSegment.objects.get(pk = segment_id)
+    except AudioSegment.DoesNotExist:
+        raise Http404
+
+    # Get the parent audio
+    parent = audioSegment.audio
+
+
     # Requested audio segment
     audioSegment = AudioSegment.objects.get(pk = segment_id)
-    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
+    otherChildren = Audio.objects.filter(audiosegment = audioSegment)
     
     
     if len(otherChildren) == 1:
-        theAudio = Audio.objects.get(audiosegment = audioSegment)
-
-        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.wavfile)))
-        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.oggfile)))
-        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformViewer)))
-        os.remove(os.path.join(MEDIA_ROOT, str(theAudio.waveformEditor))) 
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.wavfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.oggfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformViewer)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformEditor))) 
         audioSegment.audio.delete()
         
     audioSegment.delete()

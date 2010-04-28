@@ -68,7 +68,7 @@
                                 <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
                                 <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
                                 <td id="segment_delete-{{ segment.id }}">
-                                    <span id="segmentDeleteButton-{{ segment.id }}" class="cross button segmentDeleteButton"><!-- --></span>
+                                    <span id="segmentDeleteButton-{{ segment.id }}-{{ selected_group.id }}" class="cross button segmentDeleteButton"><!-- --></span>
                                 </td>
                                 <td><a class="temp_edit_button" href="/edit/{{ segment.id }}/{{ selected_group.id }}/">Edit</a></td>
                             </tr>
@@ -81,6 +81,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="/js/main.js"></script>
 {% endblock %}

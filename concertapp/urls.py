@@ -18,7 +18,7 @@ urlpatterns = patterns('concertapp.views',
     #admin
     url(r'^admin/', 'admin', name='admin'),
     #delete
-    url(r'^delete_segment/(?P<segment_id>\d+)/$', 'delete_segment', 
+    url(r'^delete_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'delete_segment', 
         name='delete_segment'),
     #rename
     url(r'^rename_segment/$', 'rename_segment', 

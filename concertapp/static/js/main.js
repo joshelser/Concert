@@ -67,7 +67,8 @@ var $waveformPlayer = null;
     /* Behavior for delete segment buttons */
     $('.segmentDeleteButton').bind('click', function(){
         var segmentID = get_object_id(this);
-        delete_segment(segmentID);
+        var groupID = $(this).attr('id').split('-')[2];
+        delete_segment(segmentID,groupID);
     });
     
     
@@ -220,7 +221,7 @@ function main_draw_highlight(segmentID) {
  *
  *  @param              segmentID           The ID of the segment object to delete.
  **/
-function delete_segment(segmentID) {
+function delete_segment(segmentID, groupID) {
     
     /* Show confirm alert */
     var answer = confirm('Are you sure you want to delete this segment?');
@@ -230,7 +231,7 @@ function delete_segment(segmentID) {
         loading();
         /* Ajax call to delete segment */
         $.ajax({
-            url: '/delete_segment/'+segmentID,
+            url: '/delete_segment/'+segmentID +'/'+groupID,
             success: function(data, textStatus){
                 /* If request was successful */
                 if(textStatus == 'success' && data == 'success') {
