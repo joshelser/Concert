@@ -14,7 +14,6 @@ from concertapp.forms   import CreateCommentForm
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 ###
-#   manage_tags
 #   This is the initial screen for the manage tags interface where
 #   the user chooses a group.
 #
@@ -33,7 +32,6 @@ def manage_tags(request, message):
         },RequestContext(request));
 
 ###
-#   manage_group_tags
 #   This is the controller for the manage tags interface, after
 #   the user has selected a group whos tags to edit.
 #
@@ -60,7 +58,6 @@ def manage_group_tags(request, group_id):
         return HttpResponseRedirect('/tags/manage/%s/' % message)
 
 ###
-#   confirm_delete_tag
 #   This is the controller for the confirm page when you are deleting a tag.
 #
 #   @param              request         
@@ -79,7 +76,6 @@ def confirm_delete_tag(request, tagID):
         raise Http404
     
 ###
-#   delete_tag
 #   Delete a tag and all segments that only have this tag.
 #
 #   @param              request
@@ -99,7 +95,6 @@ def delete_tag(request, tagID):
 
     
 ###
-#   update_tag_name
 #   This controller can be called via ajax to change a tag name.
 #   tagID and newTagName are sent in via POST.  Checks to make sure
 #   name entered is not blank, and changes tag name.
@@ -136,7 +131,6 @@ def update_tag_name(request):
     return response
 
 ###
-#   get_tag_segments
 #   Retrieves the table of segments associated with the given tag.  Can be used
 #   whenever all segments for a tag need to be displayed.
 #
@@ -155,7 +149,6 @@ def get_tag_segments(request, tagID):
         raise Http404
 
 ###
-#   add_tag_to_segment
 #   Adds the given tag to the given segment, creating the tag if it does not exist.
 #
 #   @param                  request
@@ -210,8 +203,7 @@ def add_tag_to_segment(request, groupID, segmentID, tag):
     
     
 ###
-#   Comment
-#   The admin page for a user
+#   Leave a comment on a tag
 #
 #   @param  segment_id
 #   @param  group_id
@@ -258,4 +250,3 @@ def comment(request,tagID, groupID):
     else:
         return Http404
            
-    
