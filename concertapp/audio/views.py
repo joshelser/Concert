@@ -16,7 +16,6 @@ import os, tempfile
 CHUNKSIZE = 1024 * 32
 
 ##
-# audio
 # View all of the audio files you have uploaded
 #
 # @param request    HTTP Request
@@ -28,7 +27,6 @@ def audio(request):
             RequestContext(request))
 
 ##
-# view_audio
 # Views a single audio file
 #
 # @param request    HTTP Request
@@ -39,7 +37,6 @@ def view_audio(request, audio_id):
     return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
 ##
-# upload_audio
 # Takes an audio file, converts it to mp3, ogg, and wav, saving it to disk
 # 
 # @param request    HTTP Request
@@ -207,7 +204,6 @@ def upload_audio(request):
         return render_to_response('upload_audio.html', {'form': form})
 
 ##
-# view_waveform
 # Display the waveform for an audio object
 # 
 # @param request     HTTP Request
@@ -217,7 +213,6 @@ def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
 ###
-#   waveform_src
 #   responds in plain text with the audio waveform url for the requested
 #   audio object.
 #
@@ -241,7 +236,6 @@ def waveform_src(request, audio_id, type_waveform = 'viewer'):
     return response
     
 ###
-#   audio_src
 #   Responds in plain text with the path to the audiofile associated with
 #   the requested Audio object.
 #
@@ -257,7 +251,6 @@ def audio_src(request, audio_id):
     return response
 
 ##
-# generate_waveform
 # Given an audio object, generate all the waveforms for it, and save them to the
 # database
 #
@@ -283,7 +276,6 @@ def generate_waveform(audio):
     audio.save()
 
 ###
-# get_duration
 # Returns the duration of the audio file associated with the passed-in audio object.
 #
 # @param      audio     The audio object.
@@ -295,7 +287,6 @@ def get_duration(audio):
   return wavObj.getLength()
 
 ##
-# delete_audio
 # Delete the audio object and all objects referencing it, including files on
 # disk
 #
