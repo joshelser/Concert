@@ -70,11 +70,11 @@ def index(request):
                     # Add to our segment list
                     segment_list.append(segment)
     
+    comments = Comment.objects.filter(tag = selected_tag)
     commentForm = CreateCommentForm()
 
 
     return render_to_response('index.html', {
-
     'no_show' : "no_show",
     'group_list': group_list, 
     'selected_group': selected_group, 
@@ -82,6 +82,7 @@ def index(request):
     'selected_tag' : selected_tag,
     'segment_list' : segment_list,
     'commentForm': commentForm,
+    'comments' : comments,
     'getGroup' : getGroup,
     'getTag' : getTag,
     }, RequestContext(request))
@@ -110,6 +111,8 @@ def edit(request, segment_id, group_id):
     renameSegmentForm = RenameSegmentForm()
     commentForm = CreateCommentForm()
     
+    comments = Comment.objects.filter(segment = audioSegment)
+    
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
         'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
@@ -122,6 +125,7 @@ def edit(request, segment_id, group_id):
         'group_id' : group_id,
         'jsonTags' : jsonTags,
         'user'     : request.user,
+        'comments' : comments,
         },RequestContext(request));
     
 ##
@@ -322,7 +326,6 @@ def delete_segment(request,segment_id, group_id):
     # Delete segment
     audioSegment.delete()
     
-    
     response = HttpResponse(mimetype='text/plain')
     response.write('success')
     return response 
@@ -336,15 +339,20 @@ def delete_segment(request,segment_id, group_id):
 #
 ### 
 @login_required 
-def rename_segment(request):
+def rename_segment(request,segment_id, group_id):
+
+
     if request.method == 'POST':
 
         form = RenameSegmentForm(request.POST)
         
         if form.is_valid():
         
+
+            
             # Get the group
             group = Group.objects.get(pk = group_id)
+
 
             # Make sure the current user is a member of this group
             try:
@@ -355,23 +363,22 @@ def rename_segment(request):
 
             # Get the segment
             try:
-                audioSegment = AudioSegment.objects.get(pk = segment_id)
+                segment = AudioSegment.objects.get(pk = segment_id)
             except AudioSegment.DoesNotExist:
-                raise Http404
+                response = HttpResponse(mimetype='text/plain')
+                response.write('No such segment')
+                return response
 
-            the_id = request.cleaned_data['id_field']
-
-            segment = AudioSegment.objects.get(pk = the_id)
-            segment.name = request.cleaned_data['label_field']
+        
+            segment.name = form.cleaned_data['name']
             segment.save()
             
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
             return response
         else:
-            print 'invalid'+repr(form.errors)
             response = HttpResponse(mimetype='text/plain')
-            response.write('Error: validating form')
+            response.write('Error: validating form\n' + repr(form.errors))
             return response
     
     raise Http404
@@ -460,6 +467,7 @@ def comment(request,segment_id, group_id):
             
             #save the comment
             comment.save()
+                
                 
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
