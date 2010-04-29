@@ -1,18 +1,19 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
-
-from django import forms
 
 from django.conf import settings
 
 from concertapp.models  import *
 
+##
+# Returns all of the possible groups
+#
+# @param    request    HTTP Request
+# @param    message    Optional, The message to display at the top of the page
+##
 @login_required
 def groups(request, message = None):
     g = Group.objects.all()
@@ -32,12 +33,24 @@ def groups(request, message = None):
       'message': message},
       RequestContext(request))
 
+##
+# Creates a simple verification page to ensure the user wants to join the group
+#
+# @param    request    HTTP Request
+# @param    group_id   The id of the group to join
+##
 @login_required
 def join_group(request, group_id):
     group = Group.objects.get(pk = group_id)
     return render_to_response('join_group.html', {'group': group},
             RequestContext(request))
 
+##
+# Leaves a request for a user to join a group, ensures the user didn't already
+# leave a request for this group
+#
+# @param    request    HTTP Request
+##
 @login_required
 def request_to_join_group(request):
     if request.method == 'POST':

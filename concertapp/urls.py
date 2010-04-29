@@ -18,11 +18,15 @@ urlpatterns = patterns('concertapp.views',
     #admin
     url(r'^admin/$', 'admin', name='admin'),
     #delete
-    url(r'^delete_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'delete_segment', 
-        name='delete_segment'),
+    url(r'^delete_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
+        'delete_segment', name='delete_segment'),
     #rename
-    url(r'^rename_segment/$', 'rename_segment', 
-        name='rename_segment'),
+    url(r'^rename_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'rename_segment', name='rename_segment'),
+    #comment
+    url(r'^comment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
+        'comment', name='comment'),
+    
+    
     
     
     #nested
@@ -45,6 +49,8 @@ if settings.DEBUG:
             {'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'js')}),
         (r'^css/(?P<path>.*)$', 'django.views.static.serve', 
             {'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'css')}),
-        (r'^graphics/(?P<path>.*)$', 'django.views.static.serve', {'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'graphics')})
+        (r'^graphics/(?P<path>.*)$', 'django.views.static.serve', 
+            {'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 
+            'graphics')})
     )
 

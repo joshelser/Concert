@@ -13,15 +13,23 @@ from django.http import Http404
 from django.conf import settings
 
 from concertapp.models import *
-from concertapp.forms   import UploadFileForm, CreateSegmentForm,RenameSegmentForm
+from concertapp.forms  import UploadFileForm, CreateSegmentForm, RenameSegmentForm, CreateCommentForm
 from django.core.servers.basehttp import FileWrapper
 
 from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
 import tempfile, os
 
+##
+# Display the default page with a list of all groups, tags, and associated audio
+# segments
+#
+# @param request HTTP Request
+##
 @login_required
 def index(request):
+    getGroup = False
+    getTag = False
 
     ###
     #   Groups
@@ -34,6 +42,7 @@ def index(request):
         # Use group if one was specified
         selected_group_id = request.GET['selected_group_id']
         selected_group = request.user.groups.get(id = selected_group_id)
+        getGroup = selected_group_id
     except KeyError:
         # Use user's default group
         selected_group = request.user.groups.get(name = request.user.username)
@@ -51,7 +60,8 @@ def index(request):
         selected_tag = Tag.objects.get(pk = selected_tag_id)
         # Get all of this tag's audio segments
         segment_list = selected_tag.segments.all()
-        # no tag was selected
+        getTag = selected_tag_id
+    # no tag was selected
     except KeyError:
         # Get all tags from this group
         selected_tag = Tag.objects.filter(group = selected_group)
@@ -65,9 +75,9 @@ def index(request):
                 if segment.tag_set.filter(id = tag.id).count() > 0 :
                     # Add to our segment list
                     segment_list.append(segment)
-                    # Move on to next segment
-                    break
     
+    comments = Comment.objects.filter(tag = selected_tag)
+    commentForm = CreateCommentForm()
 
 
     return render_to_response('index.html', {
@@ -76,12 +86,15 @@ def index(request):
     'selected_group': selected_group, 
     'tag_list' : tag_list, 
     'selected_tag' : selected_tag,
-    'segment_list' : segment_list
+    'segment_list' : segment_list,
+    'commentForm': commentForm,
+    'comments' : comments,
+    'getGroup' : getGroup,
+    'getTag' : getTag,
     }, RequestContext(request))
 
 
 ###
-#   edit
 #   The edit page for an audio file.
 #
 #   @param          segment_id          The ID of the requested segment.
@@ -101,22 +114,26 @@ def edit(request, segment_id, group_id):
     
     createSegmentForm = CreateSegmentForm()
     renameSegmentForm = RenameSegmentForm()
+    commentForm = CreateCommentForm()
+    
+    comments = Comment.objects.filter(segment = audioSegment)
     
     return render_to_response('edit.html',{
         'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
         'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
         'createSegmentForm' : createSegmentForm,
         'renameSegmentForm' : renameSegmentForm,
+        'commentForm':commentForm,
         'audioSegment' : audioSegment,
         'audio_id' : audioSegment.audio.id,
         'segment_id': segment_id,
         'group_id' : group_id,
         'jsonTags' : jsonTags,
         'user'     : request.user,
+        'comments' : comments,
         },RequestContext(request));
     
 ##
-# download_segment
 # Present the audio segment for download to the user
 # 
 # @param request
@@ -264,15 +281,12 @@ def new_segment_submit(request):
             return response
 
 
-    response = HttpResponse(mimetype='text/plain')
-    response.write('failure')
-    return response
+    raise Http404
 
 
 
 
 ###
-#   delete_segment
 #   Part of the manage segment use case.  Deletes a given segment from the 
 #   system
 #
@@ -283,10 +297,11 @@ def delete_segment(request,segment_id, group_id):
     # Get the group
     group = Group.objects.get(pk = group_id)
 
-    groupAdministrator = GroupAdmin.objects.get(group = group)
-    
     # Make sure the current user is a member of this group
-    if groupAdministrator.admin != request.user:
+    try:
+        groupAdministrator = GroupAdmin.objects.get(group = group, 
+            admin = request.user)
+    except GroupAdmin.DoesNotExist:
         raise Http404
 
     # Get the segment
@@ -300,19 +315,19 @@ def delete_segment(request,segment_id, group_id):
 
 
     # Requested audio segment
-    audioSegment = AudioSegment.objects.get(pk = segment_id)
-    otherChildren = Audio.objects.filter(audiosegment = audioSegment)
+    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
     
-    
+    # If they're no other segment's associated with this segment's parent audio
+    # file then we delete the audio object, and all files/images associated with it
     if len(otherChildren) == 1:
         os.remove(os.path.join(MEDIA_ROOT, str(parent.wavfile)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.oggfile)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformViewer)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformEditor))) 
-        audioSegment.audio.delete()
-        
-    audioSegment.delete()
+        parent.delete()
     
+    # Delete segment
+    audioSegment.delete()
     
     response = HttpResponse(mimetype='text/plain')
     response.write('success')
@@ -322,44 +337,64 @@ def delete_segment(request,segment_id, group_id):
     
     
 ###
-#   rename_segment
 #   Part of the manage segment use case.  renames a given segment 
 #
+#   @param    request       HTTP Request
+#   @param    segment_id    The id of the segment used
+#   @param    group_id      The id of the group used
 ### 
 @login_required 
-def rename_segment(request):
+def rename_segment(request,segment_id, group_id):
+
+
     if request.method == 'POST':
 
         form = RenameSegmentForm(request.POST)
         
         if form.is_valid():
+        
 
-            the_id = request.cleaned_data['id_field']
+            
+            # Get the group
+            group = Group.objects.get(pk = group_id)
 
-            segment = AudioSegment.objects.get(pk = the_id)
-            segment.name = request.cleaned_data['label_field']
+
+            # Make sure the current user is a member of this group
+            try:
+                groupAdministrator = GroupAdmin.objects.get(group = group, 
+                    admin = request.user)
+            except GroupAdmin.DoesNotExist:
+                raise Http404
+
+            # Get the segment
+            try:
+                segment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                response = HttpResponse(mimetype='text/plain')
+                response.write('No such segment')
+                return response
+
+        
+            segment.name = form.cleaned_data['name']
             segment.save()
             
             response = HttpResponse(mimetype='text/plain')
             response.write('success')
             return response
         else:
-            print 'invalid'+repr(form.errors)
             response = HttpResponse(mimetype='text/plain')
-            response.write('Error: validating form')
+            response.write('Error: validating form\n' + repr(form.errors))
             return response
     
-    response = HttpResponse(mimetype='text/plain')
-    response.write('shouldn\'t be renaming a via anything but post')
-    return response
+    raise Http404
 
 
 
 
 ###
-#   admin
 #   The admin page for a user
 #
+#   @param    request    HTTP Request
 ###
 @login_required
 def admin(request):
@@ -397,7 +432,55 @@ def admin(request):
     });
     
     
+###
+#   Store a comment created by a user
+#
+#   @param  segment_id
+#   @param  group_id
+###
+@login_required
+def comment(request,segment_id, group_id):
+    if request.method == 'POST':
+        
+        # Create the form
+        form = CreateCommentForm(request.POST)
+        
+        if form.is_valid() : 
+            
+            # Get the group
+            group = Group.objects.get(pk = group_id)
+             
+            # Make sure the current user is a member of this group
+            if group not in request.user.groups.all():
+                raise Http404
 
-    
-    
+            # Get the segment
+            try:
+                segment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                raise Http404
+                
+            #create the comment
+            comment = form.save(commit=False)
+            
+            #set the user
+            comment.user = request.user
+            
+            #set the segment
+            comment.segment = segment
+            
+            #save the comment
+            comment.save()
+                
+                
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else:
+            response = HttpResponse(mimetype='text/plain')
+            response.write(form.errors)
+            return response
+    else:
+        return Http404
+           
     

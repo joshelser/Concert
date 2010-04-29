@@ -211,6 +211,9 @@ a {color:#333;}
     z-index: 5;
     position: absolute;
 }
+#waveform_editor_push {
+    height: 800px;
+}
 
 #editor_image {z-index: 0;}
 #waveform_editor_image {left: 400px;}
@@ -295,9 +298,7 @@ a {color:#333;}
 	border:1px #e4e4e4 solid;
 	overflow:hidden;
 	-moz-border-radius-topleft:15px;
-	-moz-border-radius-bottomright:15px;
 	-webkit-border-top-left-radius:15px;
-	-webkit-border-bottom-right-radius:15px;
 	background:url(/graphics/viewer_back.png) repeat-x;
 }
 
@@ -316,19 +317,19 @@ a {color:#333;}
 	text-align:right;
 	font-weight:bold;
 	height:20px;
-	z-index: 2;
+	z-index:2;
 }
 
 .viewer_highlight {
 	background-color:#00FFFF; 
-	z-index: 3;
-	opacity: .25;
+	z-index:3;
+	opacity:.25;
 	position: absolute; 
-	margin-left: 0px; 
+	margin-left: 0px;
 	width: 0px;
-	border-left: 1px solid #FFFAFA; 
-	border-right: 1px solid #FFFAFA;
-	height:110px;
+	height:106px;	
+	outline:1px #333 solid;
+	
 }
 
 
@@ -360,7 +361,6 @@ a {color:#333;}
 	postion:absolute;
 	top:150px;
 	width:100%;	
-	height:100%;
 	position:absolute;
 	z-index:2;
 	min-width:1000px;
@@ -406,6 +406,10 @@ a {color:#333;}
 #search > input:focus {color:#585859;}
 
 #groups ul li.selected {
+        font-weight: bold;
+}
+
+#tags ul li.selected {
         font-weight: bold;
 }
 
@@ -544,6 +548,22 @@ div.dataTables_paginate {
     width: 50px;
 }
 
+#comment_container{
+    margin-top:50px;
+}
+
+.comment {
+    margin:20px 5px;
+
+}
+.comment h2 {
+    font-size:14px;
+    margin-bottom:10px;
+}
+#comment_form {
+    margin-top:5px;
+}
+
 
 
 
@@ -601,7 +621,6 @@ div.dataTables_paginate {
 
 #admin_container {
   overflow:visible;
-  height:100%;
   padding-bottom:400px;
 }
 

@@ -1,24 +1,19 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django import forms
 from django.forms.util import ValidationError
 from django.core.urlresolvers import reverse
 
 from concertapp.models  import *
-#from concertapp.forms   import RegistrationForm, CreateGroupForm
-#from django.contrib.auth.forms import PasswordChangeForm
+from concertapp.forms   import CreateCommentForm
 
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 ###
-#   manage_tags
 #   This is the initial screen for the manage tags interface where
 #   the user chooses a group.
 #
@@ -37,7 +32,6 @@ def manage_tags(request, message):
         },RequestContext(request));
 
 ###
-#   manage_group_tags
 #   This is the controller for the manage tags interface, after
 #   the user has selected a group whos tags to edit.
 #
@@ -64,7 +58,6 @@ def manage_group_tags(request, group_id):
         return HttpResponseRedirect('/tags/manage/%s/' % message)
 
 ###
-#   confirm_delete_tag
 #   This is the controller for the confirm page when you are deleting a tag.
 #
 #   @param              request         
@@ -83,7 +76,6 @@ def confirm_delete_tag(request, tagID):
         raise Http404
     
 ###
-#   delete_tag
 #   Delete a tag and all segments that only have this tag.
 #
 #   @param              request
@@ -103,7 +95,6 @@ def delete_tag(request, tagID):
 
     
 ###
-#   update_tag_name
 #   This controller can be called via ajax to change a tag name.
 #   tagID and newTagName are sent in via POST.  Checks to make sure
 #   name entered is not blank, and changes tag name.
@@ -140,7 +131,6 @@ def update_tag_name(request):
     return response
 
 ###
-#   get_tag_segments
 #   Retrieves the table of segments associated with the given tag.  Can be used
 #   whenever all segments for a tag need to be displayed.
 #
@@ -159,7 +149,6 @@ def get_tag_segments(request, tagID):
         raise Http404
 
 ###
-#   add_tag_to_segment
 #   Adds the given tag to the given segment, creating the tag if it does not exist.
 #
 #   @param                  request
@@ -209,4 +198,55 @@ def add_tag_to_segment(request, groupID, segmentID, tag):
     else :
         response.write('success')
     return response
+
+
     
+    
+###
+#   Leave a comment on a tag
+#
+#   @param  segment_id
+#   @param  group_id
+###
+@login_required
+def comment(request,tagID, groupID):
+    if request.method == 'POST':
+        
+        # Create the form
+        form = CreateCommentForm(request.POST)
+        
+        if form.is_valid() : 
+            
+            # Get the group
+            group = Group.objects.get(pk = groupID)
+             
+            # Make sure the current user is a member of this group
+            if group not in request.user.groups.all():
+                raise Http404
+
+            # Get the tag
+            try:
+                tag = Tag.objects.get(pk = tagID)
+            except AudioSegment.DoesNotExist:
+                raise Http404
+                
+            #create the comment
+            comment = form.save(commit=False)
+            
+            #set the user
+            comment.user = request.user
+            
+            #set the segment
+            comment.tag = tag
+            
+            #save the comment
+            comment.save()
+                
+            return HttpResponseRedirect('/?selected_tag_id=' + str(tag.id))
+        else:
+            response = HttpResponse(mimetype='text/plain')
+            response.write(form.errors)
+            return response
+    else:
+        return Http404
+           

@@ -35,10 +35,10 @@
                     
                         {% comment %} Add "selected" class to the currently selected tag. {% endcomment %}
                         
-                        {% ifequal tag selected_tag %}
+                        {% ifequal tag.id selected_tag.id %}
                             <li class="selected"><a href = "?selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
                         {% else %}
-                            <li><a href = "?selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
+                        <li><a href = "?{% if getGroup %}selected_group_id={{ getGroup }}&{% endif %}selected_tag_id={{ tag.id }}">{{ tag.tag }}</a></li>
                         {% endifequal %}
                     {% endfor %}
                 </ul>
@@ -74,10 +74,42 @@
                             </tr>
                         {% endfor %}
                     {% else %}
-                        <tr><td colspan = "5">No audio found.</td></tr>
+                        <tr>
+                            <td>No audio found.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     {% endif %}
                 </tbody>
             </table>
+            {% if selected_tag.tag %}
+            <div id = "comment_container">
+                <h1>Comments on "{{ selected_tag.tag }}" Tag</h1>
+                {% if comments %}
+                    {% for comment in comments %}
+                    <div class = "comment">
+                        <h2>{{comment.user.username }} wrote:</h2>
+                        <p>{{ comment.comment }}</p>                          
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class = "comment">
+                        <h2>There aren't any comments on this tag</h2>
+                    </div>
+                {% endif %}
+
+                <form id = "comment_form" action="tags/comment/{{ selected_tag.id }}/{{ selected_group.id }}/" Method = "POST">
+                    <h1>Comment on "{{ selected_tag.tag }}" Tag</h1>
+                    {{commentForm.comment}}
+                    <p><input type="submit" id="submit_comment_button" value="Submit" /></p> 
+                </form>  
+            </div>
+
+            {% endif %}
         </div>
     </div>
 </div>

@@ -9,7 +9,7 @@ from concertapp.models import *
 import os
 
 class ConcertTest(TestCase):
-    fixtures = ['user.json']
+    #fixtures = ['user.json']
 
     def setUp(self):
         self.client = Client()
@@ -19,9 +19,9 @@ class ConcertTest(TestCase):
         #u.set_password('test')
         #u.save()
 
-    def login(self, password='test'):
+    def login(self, username = 'josh', password = 'josh'):
         response = self.client.post('/users/login/', {
-            'username': 'test',
+            'username': username,
             'password': password,
             'next': settings.LOGIN_REDIRECT_URL,
             }
@@ -63,9 +63,6 @@ class AudioTest(ConcertTest):
     def test_wav_upload_audio(self):
         # Login
         super(AudioTest, self).login()
-        #login = self.client.login(username = 'testuser', password = 'test')
-
-        #self.assertTrue(login)
 
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.wav'))
         response = self.client.post('/audio/upload/', {'wavfile': f})

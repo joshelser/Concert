@@ -298,6 +298,9 @@ class WaveformImage(object):
         self.image.save(filename,transparency=255)
  
  
+##
+# Actual driver function for creating the waveform image
+##
 def create_png(input_filename, output_filename_w, image_width, image_height, channels, fft_size, f_max, f_min):
     print "processing file %s:\n\t" % input_filename
  
@@ -337,6 +340,7 @@ def create_png(input_filename, output_filename_w, image_width, image_height, cha
     if channels > 1:
         combined = Image.new("RGBA", (image_width, image_height))
         
+        # Delete the segments
         for channel in range(channels):
             cur = Image.open(os.path.join(path_split[0], str(channel) +
                 path_split[1]))

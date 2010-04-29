@@ -21,7 +21,7 @@
                 <h1>New Segment (on this audio file)</h1>
                 <table>
                     {{ createSegmentForm.as_table }}
-                    <tr><td></td><td style="float:right"><input type="button" id="new_submit_button" value="Submit" /></td></tr>
+                    <tr><td></td><td style="float:right"><input type="button" id="new_submit_button" value="Create" /></td></tr>
                 </table>
                 <!--
                 <p><input type = "text" value = "Group" id = "group_field"/></p>
@@ -34,17 +34,11 @@
             </form>
             <br />
             <br />
-            <form id = "rename_segment">
+            <form id = "rename_segment" action = "/rename_segment/{{audioSegment.id}}/{{group_id}}/" method = "POST">
                 <h1>Rename "{{ audioSegment.name }}"</h1>
-                <table>
-                    {{ renameSegmentForm.as_table }}
-                    <tr>
-                        <td></td>
-                        <td ><input type="button" id="rename_submit_button" value="Submit" /></td>
-                    </tr>
-                </table>
-            
-            </form>
+                {{ renameSegmentForm.as_p }}
+                <p><input type="button" id="rename_submit_button" value="Rename"  /></p>
+             </form>
             <div>
                 <span><a href="{% url download segment_id group_id "mp3" %}">Download as Mp3</a></span><br />
                 <span><a href="{% url download segment_id group_id "ogg" %}">Download as Ogg</a></span>
@@ -66,7 +60,29 @@
                 </div>
                 <div id="editor_playhead" class="playhead"></div>
                 <div id="editor_image"><img class="waveform_image {{ no_show }}" id="waveform_editor_image" src = "{{ waveformEditorSrc }}" /></div>
-            </div>     
+            </div>
+            <div id ="waveform_editor_push"></div>
+            <div id = "comment_container">
+                <h1>Comments on "{{ audioSegment.name }}" Segment</h1>
+                {% if comments %}
+                    {% for comment in comments %}
+                    <div class = "comment">
+                        <h2>{{comment.user.username }} wrote:</h2>
+                        <p>{{ comment.comment }}</p>                          
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class = "comment">
+                        <h2>There aren't any comments on this tag</h2>
+                    </div>
+                {% endif %}
+
+                <form id = "comment_form" action="/comment/{{ audioSegment.id }}/{{ group_id }}/" Method = "POST">
+                    <h1>Comment on "{{ audioSegment.name }}" Tag</h1>
+                    {{commentForm.comment}}
+                    <p><input type="submit" id="submit_comment_button" value="Submit" /></p> 
+                </form>  
+            </div>
         </div>
         <br style = "clear:both;"/>
     </div>
