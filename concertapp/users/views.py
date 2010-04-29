@@ -1,34 +1,45 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django import forms
-
+from django.contrib.auth.forms import PasswordChangeForm
 from django.http import Http404
 
 from concertapp.models  import *
 from concertapp.forms   import RegistrationForm, CreateGroupForm
-from django.contrib.auth.forms import PasswordChangeForm
-
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
-
     
+##
+#   Returns all of the users
+#
+#   @param    request    HTTP request
+##
 def users(request):
     users = User.objects.all()
 
     return render_to_response("users.html", {'users': users},
             RequestContext(request))
 
+##
+#   Returns a specific user
+#
+#   @param    request    HTTP request
+#   @param    user_id    The id of the user to view
+##
 def view_user(request, user_id):
     user = User.objects.get(pk = user_id)
 
     return render_to_response('view_user.html', {'user': user},
             RequestContext(request))
 
+##
+#   Creates a user in the system
+#
+#   @param    request    HTTP request
+##
 def create_user(request):
     # if request.user.is_authenticated():
     # They already have an account; don't let them register again
@@ -61,6 +72,11 @@ def create_user(request):
         form = RegistrationForm()
     return render_to_response('register.html', {'form': form})
 
+##
+#    Logs in the requested user
+#
+#    @param    request    HTTP request
+##
 def login_user(request):
     error = ''
     if request.method == 'POST':
@@ -89,10 +105,20 @@ def login_user(request):
     # Render the login page with the appropriate page
     return render_to_response('login.html', {'next': url, 'error': error})
 
+##
+#    Logs out the current user
+#
+#    @param    request     HTTP request
+##
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('/users/login/')
 
+##
+#    Changes the current user's password
+#
+#    @param    request    HTTP request
+##
 @login_required
 def change_password(request):
     if request.method == 'POST':
@@ -117,7 +143,12 @@ def change_password(request):
     return render_to_response('change_password.html', {'form': f},
             RequestContext(request))
 
-
+##
+#    Gets all of the groups of the user
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the current user
+##
 @login_required
 def groups(request, user_id):
     if request.user.id != int(user_id):
@@ -139,6 +170,12 @@ def groups(request, user_id):
         len(groups), 'user_id': user_id, 'show_create': show_create},
         RequestContext(request))
 
+##
+#    Create a group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the user
+##
 @login_required
 def create_group(request, user_id):
     if request.user.id != int(user_id):
@@ -159,6 +196,12 @@ def create_group(request, user_id):
     return render_to_response('create_group.html', {'form': form,
         'user_id': user_id})
 
+##
+#    Choose a group to manage
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the user
+##
 @login_required
 def choose_group(request, user_id):
     if request.user.id != int(user_id):
@@ -168,6 +211,14 @@ def choose_group(request, user_id):
     return render_to_response('choose_group.html', {'groups': groups, 'user_id':
         user_id, 'length': len(groups)}, RequestContext(request))
 
+##
+#    Accepts another user's request to join a group
+#
+#    @param    request      HTTP request
+#    @param    user_id      The id of the user
+#    @param    group_id     The id of the group
+#    @param    new_user_id  The id of the user joining the group
+##
 @login_required
 def accept_request(request, user_id, group_id, new_user_id):
     if request.user.id != int(user_id):
@@ -176,6 +227,13 @@ def accept_request(request, user_id, group_id, new_user_id):
     return render_to_response('accept_request.html', {'user_id':user_id,
         'group_id': group_id, 'new_user_id': new_user_id}, RequestContext(request))
 
+##
+#    Manage the selected group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the user
+#    @param    group_id   The id of the group
+##
 @login_required
 def manage_group(request, user_id, group_id):
     if request.user.id != int(user_id):
@@ -191,6 +249,13 @@ def manage_group(request, user_id, group_id):
     return render_to_response('manage_group.html', {'group_id': group_id,
         'user_id':user_id}, RequestContext(request))
 
+##
+#    Choose a user to remove from the group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the logged in user
+#    @param    group_name The name of the group
+##
 @login_required
 def remove_user(request, user_id, group_name):
     if request.user.id != int(user_id):
@@ -200,6 +265,14 @@ def remove_user(request, user_id, group_name):
     return render_to_response('remove_user.html', {'group':group_name,
         'user_id':user_id, 'users': users}, RequestContext(request))
 
+##
+#    Verification page to remove a user from a group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the logged in user
+#    @param    group_name The name of the group
+#    @param    user       The user to remove from the group
+##
 @login_required
 def remove(request, user_id, group_name, user):
     if request.user.id != int(user_id):
@@ -208,6 +281,14 @@ def remove(request, user_id, group_name, user):
     return render_to_response('delete_user.html', {'user_id':user_id,
         'group': group_name, 'user': user}, RequestContext(request))
 
+##
+#    Remove the user from the desired group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the logged in user
+#    @param    group_name The name of the group
+#    @param    user       The user to remove from the group
+##
 def remove_from_group(request,user_id, group_name, user):
     if request.user.id != int(user_id):
         raise Http404
@@ -216,6 +297,13 @@ def remove_from_group(request,user_id, group_name, user):
     url = '/users/'+user_id+'/groups/manage/'+group_name+'/remove_user/'
     return HttpResponseRedirect(url)
 
+##
+#    Confirmation page to delete a group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the current user
+#    @param    group_id   The id of the group to delete
+##
 def delete_confirm(request,user_id, group_id):
     if request.user.id != int(user_id):
         raise Http404
@@ -223,6 +311,13 @@ def delete_confirm(request,user_id, group_id):
     return render_to_response('delete_confirm.html', {'user_id':user_id,
         'group_id':group_id}, RequestContext(request))
 
+##
+#    Delete the actual group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the current user
+#    @param    group_id   The id of the group to delete
+##
 def delete(request,user_id, group_id):
     if request.user.id != int(user_id):
         raise Http404
@@ -232,7 +327,13 @@ def delete(request,user_id, group_id):
     url = '/users/'+user_id+'/groups/manage/'
     return HttpResponseRedirect(url)
     
-
+##
+#    List out all of the pending requests to join a group
+#
+#    @param    request    HTTP request
+#    @param    user_id    The id of the current user
+#    @param    group_id   The id of the group
+##
 @login_required
 def pending_requests(request, user_id, group_id):
     if request.user.id != int(user_id):
@@ -248,7 +349,15 @@ def pending_requests(request, user_id, group_id):
     requests = UserGroupRequest.objects.filter(group = group_admin.group)
     return render_to_response('pending_requests.html', {'group_id':group_id,
         'user_id':user_id, 'requests': requests}, RequestContext(request))
-
+    
+##
+#    Add a user to the group
+#
+#    @param    request     HTTP request
+#    @param    user_id     The id of the current user
+#    @param    group_id    The id of the current group
+#    @param    new_user_id The id of the user to add to the group
+##
 def add_to_group(request, user_id, group_id, new_user_id):
     if request.user.id != int(user_id):
         raise Http404
@@ -267,8 +376,4 @@ def add_to_group(request, user_id, group_id, new_user_id):
 
         url = '/users/'+user_id+'/groups/manage/'+group_id+'/pending_requests/'
         return HttpResponseRedirect(url)
-
-    
-
-
 

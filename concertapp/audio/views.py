@@ -1,16 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
-from django.contrib.auth import authenticate, login, logout
-from django import forms
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.models  import *
-from concertapp.forms   import RegistrationForm, UploadFileForm
+from concertapp.forms   import UploadFileForm
 
 from concertapp.audio import audioFormats
 from concertapp.audio.waveform import *
@@ -23,7 +18,7 @@ CHUNKSIZE = 1024 * 32
 ##
 # View all of the audio files you have uploaded
 #
-# @param request
+# @param request    HTTP Request
 ##
 def audio(request):
     audio = Audio.objects.all()
@@ -34,8 +29,8 @@ def audio(request):
 ##
 # Views a single audio file
 #
-# @param request
-# @param audio_id
+# @param request    HTTP Request
+# @param audio_id   The audio object id
 ##
 def view_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
@@ -44,7 +39,7 @@ def view_audio(request, audio_id):
 ##
 # Takes an audio file, converts it to mp3, ogg, and wav, saving it to disk
 # 
-# @param request
+# @param request    HTTP Request
 ##
 @login_required
 def upload_audio(request):
@@ -208,11 +203,16 @@ def upload_audio(request):
     else:
         return render_to_response('upload_audio.html', {'form': form})
 
+##
+# Display the waveform for an audio object
+# 
+# @param request     HTTP Request
+# @param audio_id    The audio object id
+##
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
 ###
-#   waveform_src
 #   responds in plain text with the audio waveform url for the requested
 #   audio object.
 #
@@ -236,7 +236,6 @@ def waveform_src(request, audio_id, type_waveform = 'viewer'):
     return response
     
 ###
-#   audio_src
 #   Responds in plain text with the path to the audiofile associated with
 #   the requested Audio object.
 #
@@ -251,6 +250,11 @@ def audio_src(request, audio_id):
     response.write(audio.wavfile.url)
     return response
 
+##
+# Given an audio object, generate all the waveforms for it, and save them to the
+# database
+#
+# @param audio    The audio object to generate waveforms from
 def generate_waveform(audio):
     # Create the wav object
     wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
@@ -267,10 +271,11 @@ def generate_waveform(audio):
     # Save the path relative to the media_dir
     audio.waveformViewer = viewerImgPath    
     audio.waveformEditor = editorImgPath
+
+    # Save the audio object
     audio.save()
 
 ###
-# get_duration
 # Returns the duration of the audio file associated with the passed-in audio object.
 #
 # @param      audio     The audio object.
@@ -281,6 +286,13 @@ def get_duration(audio):
   # Get duration
   return wavObj.getLength()
 
+##
+# Delete the audio object and all objects referencing it, including files on
+# disk
+#
+# @param request    HTTP Request
+# @param audio_id   The id of the audio object to delete
+##
 def delete_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
 

@@ -1,10 +1,12 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import Group, User
-#from django.core import validators
 
 from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment, Comment
 
+##
+# A form used to create a new group
+##
 class CreateGroupForm(ModelForm):
     group_name = forms.CharField(label="group_name", max_length=80,
             required=True)
@@ -13,6 +15,9 @@ class CreateGroupForm(ModelForm):
         model = GroupAdmin
         exclude = ('admin', 'group')
  
+##
+# A form used to register a new user in the system
+##
 class RegistrationForm(ModelForm):
     username = forms.CharField(label='username',
                         max_length=30,
@@ -34,6 +39,11 @@ class RegistrationForm(ModelForm):
              'is_staff', 'is_active', 'is_superuser', 'last_login', 
              'date_joined', 'groups', 'user_permissions')
 
+    ##
+    # Validates the username field to ensure that the username is unique
+    #
+    # @param    self   The RegistrationForm object
+    ##
     def clean_username(self):
         username = self.cleaned_data['username']
         try:
@@ -47,12 +57,20 @@ class RegistrationForm(ModelForm):
         raise forms.ValidationError('The username "%s" is already taken.' %
                 username)
 
+##
+# The form uploads an audio file to the system
+##
 class UploadFileForm(ModelForm):
     class Meta:
         model = Audio
         fields = ('wavfile', )
         #exclude = ('user', 'waveform', 'filename', 'oggfile')
 
+    ##
+    # Ensures that the wavfile has a valid extension
+    #
+    # @param    self    The UploadFileForm object
+    ##
     def clean_wavFile(self):
         # Get the content-type of the file
         filetype = self.cleaned_data['wavfile'].content_type
@@ -66,6 +84,9 @@ class UploadFileForm(ModelForm):
         # Always return the data from the clean_* function
         return self.cleaned_data['wavfile']
 
+##
+# Allows the user to create a segment from an audio file or another segment
+##
 class CreateSegmentForm(ModelForm):
     tag_field = forms.CharField(label='Tag', max_length=80)
     label_field = forms.CharField(label='Label', max_length=80)
@@ -76,6 +97,11 @@ class CreateSegmentForm(ModelForm):
         model = AudioSegment
         fields = ['label_field', 'tag_field', 'beginning', 'end', ]
 
+    ##
+    # Ensures that the beginning value is a number and greater than zero
+    # 
+    # @param    self    The CreateSegmentForm object
+    ##
     def clean_beginning(self):
         # Ensure valid numeric data
         try:
@@ -89,6 +115,11 @@ class CreateSegmentForm(ModelForm):
 
         return self.cleaned_data['beginning']
 
+    ##
+    # Ensures that the end value is a number and greater than beginning
+    # 
+    # @param    self    The CreateSegmentForm object
+    ##
     def clean_end(self):
         try:
             val = float(self.cleaned_data['end'])
@@ -99,16 +130,18 @@ class CreateSegmentForm(ModelForm):
             raise forms.ValidationError('Must be larger than beginning value')
 
         return self.cleaned_data['end']
-        
 
-    
+##
+# A simple form for renaming an audio segment
+##
 class RenameSegmentForm(ModelForm):
     class Meta:
         model = AudioSegment
         fields = ['name']
         
-        
-    
+##
+# A simple form for creating a comment
+##
 class CreateCommentForm(ModelForm):
     class Meta:
         model = Comment

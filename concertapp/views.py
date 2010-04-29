@@ -20,6 +20,12 @@ from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
 import tempfile, os
 
+##
+# Display the default page with a list of all groups, tags, and associated audio
+# segments
+#
+# @param request HTTP Request
+##
 @login_required
 def index(request):
     getGroup = False
@@ -89,7 +95,6 @@ def index(request):
 
 
 ###
-#   edit
 #   The edit page for an audio file.
 #
 #   @param          segment_id          The ID of the requested segment.
@@ -129,7 +134,6 @@ def edit(request, segment_id, group_id):
         },RequestContext(request));
     
 ##
-# download_segment
 # Present the audio segment for download to the user
 # 
 # @param request
@@ -283,7 +287,6 @@ def new_segment_submit(request):
 
 
 ###
-#   delete_segment
 #   Part of the manage segment use case.  Deletes a given segment from the 
 #   system
 #
@@ -334,9 +337,11 @@ def delete_segment(request,segment_id, group_id):
     
     
 ###
-#   rename_segment
 #   Part of the manage segment use case.  renames a given segment 
 #
+#   @param    request       HTTP Request
+#   @param    segment_id    The id of the segment used
+#   @param    group_id      The id of the group used
 ### 
 @login_required 
 def rename_segment(request,segment_id, group_id):
@@ -387,9 +392,9 @@ def rename_segment(request,segment_id, group_id):
 
 
 ###
-#   admin
 #   The admin page for a user
 #
+#   @param    request    HTTP Request
 ###
 @login_required
 def admin(request):
@@ -428,8 +433,7 @@ def admin(request):
     
     
 ###
-#   Comment
-#   The admin page for a user
+#   Store a comment created by a user
 #
 #   @param  segment_id
 #   @param  group_id
