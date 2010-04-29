@@ -73,12 +73,12 @@
                     {% endfor %}
                 {% else %}
                     <div class = "comment">
-                        <h2>There aren't any comments on this tag</h2>
+                        <h2>There aren't any comments on this segment</h2>
                     </div>
                 {% endif %}
 
                 <form id = "comment_form" action="/comment/{{ audioSegment.id }}/{{ group_id }}/" Method = "POST">
-                    <h1>Comment on "{{ audioSegment.name }}" Tag</h1>
+                    <h1>Comment on "{{ audioSegment.name }}" Segment</h1>
                     {{commentForm.comment}}
                     <p><input type="submit" id="submit_comment_button" value="Submit" /></p> 
                 </form>  
