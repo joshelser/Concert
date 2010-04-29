@@ -75,6 +75,8 @@ def index(request):
                 if segment.tag_set.filter(id = tag.id).count() > 0 :
                     # Add to our segment list
                     segment_list.append(segment)
+                    # Don't add this tag again
+                    break
     
     comments = Comment.objects.filter(tag = selected_tag)
     commentForm = CreateCommentForm()
