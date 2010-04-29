@@ -9,7 +9,7 @@ from concertapp.models import *
 import os
 
 class ConcertTest(TestCase):
-    fixtures = ['user.json']
+    #fixtures = ['user.json']
 
     def setUp(self):
         self.client = Client()
