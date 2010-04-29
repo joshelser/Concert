@@ -321,7 +321,7 @@ def delete_segment(request,segment_id, group_id):
         os.remove(os.path.join(MEDIA_ROOT, str(parent.oggfile)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformViewer)))
         os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformEditor))) 
-        audioSegment.audio.delete()
+        parent.delete()
     
     # Delete segment
     audioSegment.delete()
