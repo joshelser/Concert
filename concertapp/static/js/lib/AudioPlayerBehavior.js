@@ -54,7 +54,7 @@ function initialize_audio_player_behavior(callback) {
     $(document).bind('keypress', function(event){
         if(event.keyCode == 32) {
             /* If the space bar was pressed inside an input element, don't handle event */
-            if(event.target.toString().match(/HTMLInputElement/)) {
+            if(eventTargetString.match(/HTMLInputElement/) || eventTargetString.match(/HTMLTextAreaElement/)) {
                 /* Do nothing */
             }
             else {
