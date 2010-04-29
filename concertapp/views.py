@@ -473,9 +473,7 @@ def comment(request,segment_id, group_id):
             comment.save()
                 
                 
-            response = HttpResponse(mimetype='text/plain')
-            response.write('success')
-            return response
+            return HttpResponseRedirect('/edit/'+str(segment_id)+'/'+str(group_id))
         else:
             response = HttpResponse(mimetype='text/plain')
             response.write(form.errors)
