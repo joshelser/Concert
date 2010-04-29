@@ -1,16 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
-from django.contrib.auth import authenticate, login, logout
-from django import forms
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.models  import *
-from concertapp.forms   import RegistrationForm, UploadFileForm
+from concertapp.forms   import UploadFileForm
 
 from concertapp.audio import audioFormats
 from concertapp.audio.waveform import *
