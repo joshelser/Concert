@@ -16,9 +16,10 @@ import os, tempfile
 CHUNKSIZE = 1024 * 32
 
 ##
+# audio
 # View all of the audio files you have uploaded
 #
-# @param request
+# @param request    HTTP Request
 ##
 def audio(request):
     audio = Audio.objects.all()
@@ -27,19 +28,21 @@ def audio(request):
             RequestContext(request))
 
 ##
+# view_audio
 # Views a single audio file
 #
-# @param request
-# @param audio_id
+# @param request    HTTP Request
+# @param audio_id   The audio object id
 ##
 def view_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
 ##
+# upload_audio
 # Takes an audio file, converts it to mp3, ogg, and wav, saving it to disk
 # 
-# @param request
+# @param request    HTTP Request
 ##
 @login_required
 def upload_audio(request):
@@ -203,6 +206,13 @@ def upload_audio(request):
     else:
         return render_to_response('upload_audio.html', {'form': form})
 
+##
+# view_waveform
+# Display the waveform for an audio object
+# 
+# @param request     HTTP Request
+# @param audio_id    The audio object id
+##
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
@@ -246,6 +256,12 @@ def audio_src(request, audio_id):
     response.write(audio.wavfile.url)
     return response
 
+##
+# generate_waveform
+# Given an audio object, generate all the waveforms for it, and save them to the
+# database
+#
+# @param audio    The audio object to generate waveforms from
 def generate_waveform(audio):
     # Create the wav object
     wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
@@ -262,6 +278,8 @@ def generate_waveform(audio):
     # Save the path relative to the media_dir
     audio.waveformViewer = viewerImgPath    
     audio.waveformEditor = editorImgPath
+
+    # Save the audio object
     audio.save()
 
 ###
@@ -276,6 +294,14 @@ def get_duration(audio):
   # Get duration
   return wavObj.getLength()
 
+##
+# delete_audio
+# Delete the audio object and all objects referencing it, including files on
+# disk
+#
+# @param request    HTTP Request
+# @param audio_id   The id of the audio object to delete
+##
 def delete_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
 
