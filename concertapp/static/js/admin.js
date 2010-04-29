@@ -14,7 +14,6 @@
         resetForm: true,
         success:    function(statusText, responseText) {
             var responseMessage;
-            alert(responseText);
             if(responseText == 'success')
                 responseMessage = "File Uploaded Successfully";
             else
