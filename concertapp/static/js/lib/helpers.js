@@ -14,6 +14,10 @@
  **/
 function sec_to_timecode($seconds)
 {
+    if($seconds < 0) {
+        throw new Error('sec_to_timecode: Error: Seconds cannot be negative.');
+    }
+    
     var $hours = Math.floor($seconds/3600);
     var $rem = $seconds % 3600;
     var $minutes = Math.floor($rem/60);
