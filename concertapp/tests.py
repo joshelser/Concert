@@ -54,17 +54,25 @@ class UserTest(ConcertTest):
 
 class GroupTest(ConcertTest):
     def test_view_all_groups(self):
+        # Login
+        super(GroupTest, self).login()
+
+        # Request the page
         response = self.client.get('/groups/')
 
+        # Should get a 200 OK response
         self.assertEquals(response.status_code, 200)
 
     def test_view_join_group_page(self):
-        response = self.client.get('/groups/join/2')
+        super(GroupTest, self).login()
+        response = self.client.get('/groups/join/2/')
 
         self.assertEquals(response.status_code, 200)
 
     def test_request_to_join_group(self):
-        response = self.client.post('/groups/join/2/', {
+        super(GroupTest, self).login()
+
+        response = self.client.post('/groups/join/submit/', {
             'group_id': 2
             }
         )
@@ -74,10 +82,12 @@ class GroupTest(ConcertTest):
         test_user = User.objects.get(username = 'josh')
         test_group = Group.objects.get(pk = 2)
         try:
-            request = UserGroupRequest.objects.filter(user = test_user,
+            ugRequest = UserGroupRequest.objects.filter(user = test_user,
                     group = test_group)
         except UserGroupRequest.DoesNotExist:
             self.fail('There is no matching request in the database')
+
+        self.failUnlessEqual(len(ugRequest), 1)
 
 
 
