@@ -5,6 +5,7 @@ from django.test.client import Client
 from django.conf import settings
 
 from concertapp.models import *
+from django.contrib.auth.models import Group, User
 
 import os
 
@@ -50,6 +51,34 @@ class UserTest(ConcertTest):
 
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
+
+class GroupTest(ConcertTest):
+    def test_view_all_groups(self):
+        response = self.client.get('/groups/')
+
+        self.assertEquals(response.status_code, 200)
+
+    def test_view_join_group_page(self):
+        response = self.client.get('/groups/join/2')
+
+        self.assertEquals(response.status_code, 200)
+
+    def test_request_to_join_group(self):
+        response = self.client.post('/groups/join/2/', {
+            'group_id': 2
+            }
+        )
+
+        self.assertEquals(response.status_code, 302)
+
+        test_user = User.objects.get(username = 'josh')
+        test_group = Group.objects.get(pk = 2)
+        try:
+            request = UserGroupRequest.objects.filter(user = test_user,
+                    group = test_group)
+        except UserGroupRequest.DoesNotExist:
+            self.fail('There is no matching request in the database')
+
 
 
 class AudioTest(ConcertTest):
