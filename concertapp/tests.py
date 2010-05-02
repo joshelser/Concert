@@ -132,7 +132,7 @@ class GroupTest(ConcertTest):
     #   Accept a request that was left on one of your groups
     ##
     def test_accept_user_request(self):
-        # Create a request from Josh to Jason (group_id = 2)
+        # Create a request from Josh to group Jason (group_id = 2)
         self.test_request_to_join_group()
 
         # Logout the user
@@ -156,6 +156,27 @@ class GroupTest(ConcertTest):
         # Should have no requests as we processed them
         self.assertEqual(len(requests), 0)
 
+    ##
+    #   Remove a user from a group
+    ##
+    def test_remove_user_from_group(self):
+        # Insert the user into the group
+        self.test_accept_user_request()
+
+        # Remove the user
+        response = self.client.post(
+            '/users/2/groups/manage/2/remove/1/submit/')
+
+        # Verify the http
+        self.assertEqual(response.status_code, 302)
+        self.assert_(response['Location'].endswith(
+            '/users/2/groups/manage/2/remove_user/'))
+
+        # Get the groups of id = 2 for user of id = 1
+        user_groups = User.objects.get(pk = 1).groups.filter(pk = 2)
+
+        # We should have no such groups
+        self.assertEquals(len(user_groups), 0)
 
 
 ##
