@@ -14,6 +14,19 @@ class CreateGroupForm(ModelForm):
     class Meta:
         model = GroupAdmin
         exclude = ('admin', 'group')
+
+    ##
+    #   Makes sure a duplicate name doesn't exist
+    ##
+    def clean_group_name(self):
+        gname = self.cleaned_data['group_name']
+        
+        groups = Group.objects.filter(name = gname)
+
+        if len(groups) > 0:
+            raise forms.ValidationError('That name is already taken')
+
+        return gname
  
 ##
 # A form used to register a new user in the system
