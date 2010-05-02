@@ -168,6 +168,12 @@ class AudioTest(ConcertTest):
         # Make sure we can view the audio file
         self.assertEquals(response.status_code, 200)
 
+        # Get the audio object just uploaded
+        songs = Audio.objects.all()
+
+        # Make sure there's an audio song in the db
+        self.assertEquals(len(songs), 1)
+
     ##
     #   Upload an ogg file and make sure it made it into the system
     ##
@@ -189,3 +195,10 @@ class AudioTest(ConcertTest):
 
         # File should be available for viewing
         self.assertEquals(response.status_code, 200)
+
+        # Get the audio object just uploaded
+        songs = Audio.objects.all()
+
+        # Make sure there's an audio song in the db
+        self.assertEquals(len(songs), 1)
+
