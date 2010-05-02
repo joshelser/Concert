@@ -9,9 +9,13 @@ from django.contrib.auth.models import Group, User
 
 import os
 
+##
+#    Generic class for testing Concert
+##
 class ConcertTest(TestCase):
-    #fixtures = ['user.json']
-
+    ##
+    #   Gets called upon creation of a ConcertTest object
+    ##
     def setUp(self):
         self.client = Client()
 
@@ -20,6 +24,9 @@ class ConcertTest(TestCase):
         #u.set_password('test')
         #u.save()
 
+    ##
+    #   Logs the user in. Defaults to 'josh':'josh' if no password is given
+    ##
     def login(self, username = 'josh', password = 'josh'):
         response = self.client.post('/users/login/', {
             'username': username,
@@ -32,15 +39,22 @@ class ConcertTest(TestCase):
         self.assert_(response['Location'].endswith(settings.LOGIN_REDIRECT_URL))
 
 
+##
+#    Tests out generic user functionality
+##
 class UserTest(ConcertTest):
-    #fixtures = ['users.json']
-
+    ##
+    #   Makes sure that the login_required decorator is working
+    ##
     def test_login_needed(self):
         response = self.client.get('/')
 
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('?next=/'))
     
+    ##
+    #   Tests logging into the system
+    ##
     def test_login(self):
         response = self.client.get('/')
 
@@ -52,7 +66,13 @@ class UserTest(ConcertTest):
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
 
+##
+#   Tests out the group functionality
+##
 class GroupTest(ConcertTest):
+    ##
+    #   Make sure we can see all of the groups
+    ##
     def test_view_all_groups(self):
         # Login
         super(GroupTest, self).login()
@@ -63,74 +83,109 @@ class GroupTest(ConcertTest):
         # Should get a 200 OK response
         self.assertEquals(response.status_code, 200)
 
+    ##
+    #   Make sure we can view a group's join page
+    ##
     def test_view_join_group_page(self):
+        # Login
         super(GroupTest, self).login()
+
+        # GET the page
         response = self.client.get('/groups/join/2/')
 
+        # Make sure we got a 200 OK
         self.assertEquals(response.status_code, 200)
 
+    ##
+    #   Join a group and make sure the request exists in the system
+    ##
     def test_request_to_join_group(self):
+        # Login
         super(GroupTest, self).login()
 
+        # POST the data
         response = self.client.post('/groups/join/submit/', {
             'group_id': 2
             }
         )
 
+        # Make sure we get redirected to the right page
         self.assertEquals(response.status_code, 302)
+        self.assert_(response['Location'].endswith(
+            '/admin/?message=Group%20request%20sent%20successfully'))
 
+        # Get the user and the group
         test_user = User.objects.get(username = 'josh')
         test_group = Group.objects.get(pk = 2)
+
+        # Try to pull the request from the database
         try:
             ugRequest = UserGroupRequest.objects.filter(user = test_user,
                     group = test_group)
         except UserGroupRequest.DoesNotExist:
             self.fail('There is no matching request in the database')
 
+        # Make sure we got our result
         self.failUnlessEqual(len(ugRequest), 1)
 
 
-
+##
+#   Test the audio functionality of the system
+##
 class AudioTest(ConcertTest):
-    #fixtures = ['users.json']
-    
+    ##
+    #   Make sure we can view the audio page
+    ##
     def test_view_audio(self):
+        # Login
+        super(AudioTest, self).login()
+
+        # GET the list of audio files uploaded
         response = self.client.get('/audio/')
 
+        # Make sure we got a 200 OK
         self.assertEquals(response.status_code, 200)
 
+    ##
+    #   Upload a wav file and make sure it made it into the system
+    ##
     def test_wav_upload_audio(self):
         # Login
         super(AudioTest, self).login()
 
+        # Get the wav file
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.wav'))
         response = self.client.post('/audio/upload/', {'wavfile': f})
         f.close()
 
+        # Make sure we get redirected to the right place
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
         # View the audio file
         response = self.client.get('/audio/1/')
 
+        # Make sure we can view the audio file
         self.assertEquals(response.status_code, 200)
 
+    ##
+    #   Upload an ogg file and make sure it made it into the system
+    ##
     def test_ogg_upload_audio(self):
         # Login
         super(AudioTest, self).login()
 
-        #login = self.client.login(username = 'testuser', password = 'test')
-
-        #self.assertTrue(login)
-
+        # Send the ogg file to Concert
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.ogg'))
         response = self.client.post('/audio/upload/', {'wavfile': f})
         f.close()
 
+        # Make sure we get redirected to the right place
         self.assertEquals(response.status_code, 302)
         self.assert_(response['Location'].endswith('/audio/'))
 
         # View the audio file
         response = self.client.get('/audio/1/')
 
+        # File should be available for viewing
         self.assertEquals(response.status_code, 200)
