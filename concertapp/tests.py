@@ -84,9 +84,90 @@ class GroupTest(ConcertTest):
         self.assertEquals(response.status_code, 200)
 
     ##
-    #   Make sure we can view a group's join page
+    #   Make sure no one can view any of the other pages
     ##
-    def test_view_join_group_page(self):
+    def test_view_others_groups(self):
+        # Login
+        super(GroupTest, self).login()
+
+        # The pages of another user
+        pages = ('/users/2/groups/',
+                 '/users/2/groups/create/',
+                 '/users/2/groups/manage/',
+                 '/users/2/groups/2/',
+                 '/users/2/manage/2/pending_requests/',
+                 '/users/2/manage/2/remove_user/',
+                 '/users/2/manage/2/delete/')
+
+        # Should not be able to access any of these pages
+        for page in pages:
+            response = self.client.get(page)
+
+            self.assertEquals(response.status_code, 404)
+
+    ##
+    #   Create a new group
+    ##
+    def test_create_new_group(self):
+        groupName = 'laksjdflask389025'
+        # Login
+        super(GroupTest, self).login()
+
+        # Make sure we can view the add group page
+        response = self.client.get('/users/1/groups/create/')
+
+        # Ensure 200 OK
+        self.assertEquals(response.status_code, 200)
+
+        # POST the form
+        response = self.client.post(
+                '/users/1/groups/create/',
+                {'group_name': groupName})
+
+        # Should redirect back to the user's group page
+        self.assertEquals(response.status_code, 302)
+        self.assert_(response['Location'].endswith(
+            '/users/1/groups/'))
+
+        # Get the new group
+        groups = Group.objects.filter(name = groupName)
+        
+        # Should have one group
+        self.assertEquals(len(groups), 1)
+
+    ##
+    #   Try to create a group with a duplicate name
+    ##
+    def test_create_group_duplicate_name(self):
+        groupName = 'josh'
+
+        # Login
+        super(GroupTest, self).login()
+
+        # Make sure we can view the add group page
+        response = self.client.get('/users/1/groups/create/')
+
+        # Ensure 200 OK
+        self.assertEquals(response.status_code, 200)
+
+        # POST the form
+        response = self.client.post(
+                '/users/1/groups/create/',
+                {'group_name': groupName})
+
+        # Should redirect back to the user's group page
+        self.assertEquals(response.status_code, 200)
+
+        # Try the new group
+        groups = Group.objects.filter(name = groupName)
+        
+        # Should have the already created group
+        self.assertEquals(len(groups), 1)
+
+    ##
+    #   Join a group and make sure the request exists in the system
+    ##
+    def test_request_to_join_group(self):
         # Login
         super(GroupTest, self).login()
 
@@ -95,13 +176,6 @@ class GroupTest(ConcertTest):
 
         # Make sure we got a 200 OK
         self.assertEquals(response.status_code, 200)
-
-    ##
-    #   Join a group and make sure the request exists in the system
-    ##
-    def test_request_to_join_group(self):
-        # Login
-        super(GroupTest, self).login()
 
         # POST the data
         response = self.client.post('/groups/join/submit/', {
@@ -162,6 +236,11 @@ class GroupTest(ConcertTest):
     def test_remove_user_from_group(self):
         # Insert the user into the group
         self.test_accept_user_request()
+
+        # Make sure we can get to the proper page
+        response = self.client.get('/users/2/groups/manage/2/remove/1/')
+
+        self.assertEqual(response.status_code, 200)
 
         # Remove the user
         response = self.client.post(
@@ -224,6 +303,9 @@ class AudioTest(ConcertTest):
         # Make sure there's an audio song in the db
         self.assertEquals(len(songs), 1)
 
+        # Make sure we can view the segment
+        self.view_audio_segment(songs[0].id, 1) 
+
     ##
     #   Upload an ogg file and make sure it made it into the system
     ##
@@ -252,3 +334,10 @@ class AudioTest(ConcertTest):
         # Make sure there's an audio song in the db
         self.assertEquals(len(songs), 1)
 
+        # Make sure we can get there to view it
+        self.view_audio_segment(songs[0].id, 1)
+
+    def view_audio_segment(self, segment_id, group_id):
+        response = self.client.get('/edit/'+str(segment_id)+'/'+str(group_id)+'/')
+
+        self.assertEquals(response.status_code, 200)
