@@ -128,6 +128,35 @@ class GroupTest(ConcertTest):
         # Make sure we got our result
         self.failUnlessEqual(len(ugRequest), 1)
 
+    ##
+    #   Accept a request that was left on one of your groups
+    ##
+    def test_accept_user_request(self):
+        # Create a request from Josh to Jason (group_id = 2)
+        self.test_request_to_join_group()
+
+        # Logout the user
+        self.client.logout()
+
+        # Log in as the owner of that group
+        super(GroupTest, self).login(username = 'jason', password = 'jason')
+
+        # Accept the request
+        response = self.client.post(
+            '/users/2/groups/manage/2/accept_request/1/submit/')
+
+        # Check the redirection
+        self.assertEqual(response.status_code, 302)
+        self.assert_(response['Location'].endswith(
+            '/users/2/groups/manage/2/pending_requests/'))
+
+        # Get all the requests for that user and group
+        requests = UserGroupRequest.objects.filter(user__id = 1, group__id = 2)
+
+        # Should have no requests as we processed them
+        self.assertEqual(len(requests), 0)
+
+
 
 ##
 #   Test the audio functionality of the system
