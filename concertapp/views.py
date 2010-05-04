@@ -431,7 +431,7 @@ def admin(request):
         'length':len(myGroups),
         'user_id': user_id,
         'show_create': True
-    });
+    }, RequestContext(request));
     
     
 ###

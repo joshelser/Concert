@@ -20,8 +20,9 @@ CHUNKSIZE = 1024 * 32
 #
 # @param request    HTTP Request
 ##
+@login_required
 def audio(request):
-    audio = Audio.objects.all()
+    audio = Audio.objects.filter(user = request.user)
 
     return render_to_response("audio.html", {'audio': audio},
             RequestContext(request))

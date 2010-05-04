@@ -254,15 +254,15 @@ def manage_group(request, user_id, group_id):
 #
 #    @param    request    HTTP request
 #    @param    user_id    The id of the logged in user
-#    @param    group_name The name of the group
+#    @param    group_id   The id of the group being managed
 ##
 @login_required
-def remove_user(request, user_id, group_name):
+def remove_user(request, user_id, group_id):
     if request.user.id != int(user_id):
         raise Http404
 
-    users = User.objects.filter(groups__name=group_name).exclude(id = user_id)
-    return render_to_response('remove_user.html', {'group':group_name,
+    users = User.objects.filter(groups__id=group_id).exclude(id = user_id)
+    return render_to_response('remove_user.html', {'group':group_id,
         'user_id':user_id, 'users': users}, RequestContext(request))
 
 ##
@@ -271,30 +271,35 @@ def remove_user(request, user_id, group_name):
 #    @param    request    HTTP request
 #    @param    user_id    The id of the logged in user
 #    @param    group_name The name of the group
-#    @param    user       The user to remove from the group
+#    @param    g_user_id  The user to remove from the group
 ##
 @login_required
-def remove(request, user_id, group_name, user):
+def remove(request, user_id, group_name, g_user_id):
     if request.user.id != int(user_id):
         raise Http404
 
     return render_to_response('delete_user.html', {'user_id':user_id,
-        'group': group_name, 'user': user}, RequestContext(request))
+        'group': group_name, 'g_user_id': g_user_id}, RequestContext(request))
 
 ##
 #    Remove the user from the desired group
 #
 #    @param    request    HTTP request
 #    @param    user_id    The id of the logged in user
-#    @param    group_name The name of the group
-#    @param    user       The user to remove from the group
+#    @param    group_id   The id of the group
+#    @param    g_user_id  The user to remove from the group
 ##
-def remove_from_group(request,user_id, group_name, user):
+def remove_from_group(request,user_id, group_id, g_user_id):
     if request.user.id != int(user_id):
         raise Http404
 
-    User.objects.get(username = user).groups.remove(Group.objects.get(name = group_name))
-    url = '/users/'+user_id+'/groups/manage/'+group_name+'/remove_user/'
+    # Get the user's groups and remove the group with the id equal to group_id
+    User.objects.get(pk = g_user_id).groups.remove(Group.objects.get(pk =
+        group_id))
+
+    # Redirect URL
+    url = '/users/'+user_id+'/groups/manage/'+group_id+'/remove_user/'
+
     return HttpResponseRedirect(url)
 
 ##
@@ -363,9 +368,6 @@ def add_to_group(request, user_id, group_id, new_user_id):
         raise Http404
 
     if request.method == 'POST':
-        #group_id = request.POST['group_id']
-        #user_id = request.POST['user_id']
-
         UserGroupRequest.objects.get(group = Group.objects.get(pk = group_id),
                 user = User.objects.get(pk = new_user_id)).delete()
 

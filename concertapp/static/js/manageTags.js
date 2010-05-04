@@ -165,7 +165,7 @@ function hide_tag_segments(tagID) {
     /* hide sibling of this tag row */
     $('#tag-'+tagID).next().hide();
     /* Change class to hidden */
-    $('#tagCount-'+tagID).removeClass('open').addClass('hidden');
+    $('#tagCount-'+tagID).removeClass('open').addClass('closed');
     /* Change button */
     $('#tagCountButton-'+tagID).removeClass('tags').addClass('tags-label');
 }
