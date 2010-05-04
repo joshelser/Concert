@@ -309,8 +309,9 @@ class AudioTest(ConcertTest):
     ##
     #   Upload an ogg file and make sure it made it into the system
     ##
+    """
     def test_ogg_upload_audio(self):
-        # Login
+        # Logintest_wav_upload_audio
         super(AudioTest, self).login()
 
         # Send the ogg file to Concert
@@ -336,8 +337,76 @@ class AudioTest(ConcertTest):
 
         # Make sure we can get there to view it
         self.view_audio_segment(songs[0].id, 1)
+    """
 
     def view_audio_segment(self, segment_id, group_id):
         response = self.client.get('/edit/'+str(segment_id)+'/'+str(group_id)+'/')
 
         self.assertEquals(response.status_code, 200)
+        
+        
+    ##
+    #   Test renaming of an audio segment
+    ##
+    def rename_audio_segment(self):        
+        # Upload an audio segment
+        self.test_wav_upload_audio()
+        
+        # get the segment
+        try:            
+            segment = AudioSegment.objects.get(pk = 1)
+        except AudioSegment.DoesNotExist:
+            self.fail('There is no matching segment in the database')
+        
+        # get the old segment name for future comparison
+        old_segment_name = segment.name     
+        
+        # rename the segment
+        response = self.client.post('/rename_segment/' + 
+            str(segment.id)+'/'+str(1)+'/',{"name": str(old_segment_name) + "_different"})
+            
+        # get the segment again after we rename it
+        segment = AudioSegment.objects.get(pk = 1)
+        
+        # get the new segment name
+        new_segment_name = segment.name 
+        
+        # make sure the name is 
+        self.assertNotEquals(old_segment_name, new_segment_name)
+    
+    
+    ##
+    #   Test deleting of an audio segment
+    ##
+    def delete_audio_segment(self):        
+        # Upload an audio segment
+        self.test_wav_upload_audio()
+        
+        # get the segment
+        try:            
+            segment = AudioSegment.objects.get(pk = 1)
+        except AudioSegment.DoesNotExist:
+            self.fail('There is no matching segment in the database')
+
+        # delete the segment
+        response = self.client.get('/delete_segment/' + 
+            str(segment.id)+'/'+str(1)+'/')
+            
+        # get the segment again after we rename it
+        segments = AudioSegment.objects.all()
+        
+        # make sure the segment is gone
+        self.assertEquals(len(segments), 0)
+        
+        # TODO check if audio files are gone...
+    
+    # TODO tests for comment on tag
+    
+    
+    
+    #TODO  and comment on segment
+    
+    
+    
+    
+    
