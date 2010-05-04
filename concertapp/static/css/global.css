@@ -467,7 +467,7 @@ table.segments_table thead tr{
 }
 
 table.segments_table th, table.segments_table td {
-    width:14.28%;
+    /*width:14.28%;*/
     padding-left:20px;
 }
 
@@ -675,6 +675,7 @@ div.dataTables_paginate {
     height: 16px;
     width: 16px;
     display: block;
+    cursor: pointer;
 }
 
 .button_text {
@@ -706,6 +707,10 @@ div.dataTables_paginate {
 
 .cross {
     background-image: url('/graphics/icons/cross.png');
+}
+
+.music-pencil {
+    background-image: url('/graphics/icons/music--pencil.png');
 }
 
 

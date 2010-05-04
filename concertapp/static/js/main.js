@@ -14,9 +14,8 @@ var $waveformPlayer = null;
     *  When segment row is clicked, load waveform into waveform viewer.
     **/
     $('.segment_row').click(function(event) {
-        
-        /* If a delete button was clicked */
-        if($(event.target).hasClass('segmentDeleteButton') || $(event.target).hasClass('temp_edit_button')) {
+        /* If a button was clicked */
+        if($(event.target).hasClass('button')) {
             /* Do nothing */
             return;
         }
