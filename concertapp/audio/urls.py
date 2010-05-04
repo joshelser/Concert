@@ -9,4 +9,5 @@ urlpatterns = patterns('concertapp.audio.views',
     url(r'^(\d+)/(viewer|editor)/waveformsrc/$', 'waveform_src', name='waveform_src'), 
     url(r'^(\d+)/waveformsrc/$', 'waveform_src', name='waveform_src'), 
     url(r'^(\d+)/audiosrc/$', 'audio_src', name='audio_src'),
+    url(r'^addsegmenttogroup/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'add_segment_to_group', name='add_segment_to_group'),
 )

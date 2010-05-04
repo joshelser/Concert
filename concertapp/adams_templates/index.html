@@ -68,11 +68,11 @@
                                 <td>{{ segment.audio.user.username }}</td>
                                 <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
                                 <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
-                                <td><span id="segmentShareButton-{{ segment.id }}" class="segmentShareButton button "><!-- --></span></td>
+                                <td><span id="segmentShareButton-{{ segment.id }}" class="segmentShareButton button hand-share" title="Share this segment with a group"><!-- --></span></td>
                                 <td id="segment_delete-{{ segment.id }}">
-                                    <span id="segmentDeleteButton-{{ segment.id }}-{{ selected_group.id }}" class="cross button segmentDeleteButton"><!-- --></span>
+                                    <span id="segmentDeleteButton-{{ segment.id }}-{{ selected_group.id }}" class="cross button segmentDeleteButton" title="Delete this segment"><!-- --></span>
                                 </td>
-                                <td><a class="segmentEditButton button music-pencil" href="/edit/{{ segment.id }}/{{ selected_group.id }}/"><!-- --></a></td>
+                                <td><a class="segmentEditButton button music-pencil" href="/edit/{{ segment.id }}/{{ selected_group.id }}/" title="Edit this segment"><!-- --></a></td>
                             </tr>
                         {% endfor %}
                     {% else %}

@@ -379,3 +379,19 @@ def add_to_group(request, user_id, group_id, new_user_id):
         url = '/users/'+user_id+'/groups/manage/'+group_id+'/pending_requests/'
         return HttpResponseRedirect(url)
 
+##
+#   Return the groups associated with a given user, excluding that user's
+#   default group.  This will be used to generate a select box so the 
+#   user can add a segment to a group.
+#
+#   @param      request     HTTP request
+#   @param      user_id     The id of the user object.  This may not be needed if you can
+#                           extract it from the request, i'm not sure.
+##
+def user_group_select(request, user_id) :
+    
+    return render_to_response('user_group_select.html', {
+    # The list of group objects
+    'groups' : 
+    
+    }, RequestContext(request))

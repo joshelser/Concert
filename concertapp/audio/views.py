@@ -305,3 +305,25 @@ def delete_audio(request, audio_id):
 
     return HttpResponseRedirect('/audio/')
 
+##
+#   Add the specified segment to the specified group.  This means
+#   creating a new segment object for this group, as well as 
+#   new tag objects for any of the specified segment's tags
+#   unless there is a tag in the new group that is named the same.
+#
+#   @param      request         HTTP request
+#   @param      segment_id      The id of the specified segment
+#   @param      group_id        the id of the specified group
+###
+def add_segment_to_group(request, segment_id, group_id) :
+    
+    
+    
+    # We will return plaintext response
+    response = HttpResponse(mimetype='text/plain')
+    # If an error variable was defined in this scope
+    if 'error' in locals() :
+        response.write(error)
+    else :
+        response.write('success')
+    return response

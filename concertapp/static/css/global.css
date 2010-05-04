@@ -713,6 +713,10 @@ div.dataTables_paginate {
     background-image: url('/graphics/icons/music--pencil.png');
 }
 
+.hand-share {
+    background-image: url('/graphics/icons/hand-share.png');
+}
+
 
 .float_left {
     float: left;
