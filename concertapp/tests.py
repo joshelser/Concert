@@ -309,9 +309,8 @@ class AudioTest(ConcertTest):
     ##
     #   Upload an ogg file and make sure it made it into the system
     ##
-    """
     def test_ogg_upload_audio(self):
-        # Logintest_wav_upload_audio
+        # Login
         super(AudioTest, self).login()
 
         # Send the ogg file to Concert
@@ -337,7 +336,6 @@ class AudioTest(ConcertTest):
 
         # Make sure we can get there to view it
         self.view_audio_segment(songs[0].id, 1)
-    """
 
     def view_audio_segment(self, segment_id, group_id):
         response = self.client.get('/edit/'+str(segment_id)+'/'+str(group_id)+'/')
@@ -348,7 +346,7 @@ class AudioTest(ConcertTest):
     ##
     #   Test renaming of an audio segment
     ##
-    def rename_audio_segment(self):        
+    def test_rename_audio_segment(self):        
         # Upload an audio segment
         self.test_wav_upload_audio()
         
@@ -378,7 +376,7 @@ class AudioTest(ConcertTest):
     ##
     #   Test deleting of an audio segment
     ##
-    def delete_audio_segment(self):        
+    def test_delete_audio_segment(self):        
         # Upload an audio segment
         self.test_wav_upload_audio()
         
