@@ -51,11 +51,11 @@ function initialize_audio_player_behavior(callback) {
     });
     
     /** Space bar plays and pauses **/
-    $(document).bind('keypress', function(event){
+/*    $(document).bind('keypress', function(event){
         if(event.keyCode == 32) {
-            /* If the space bar was pressed inside an input element, don't handle event */
-            if(eventTargetString.match(/HTMLInputElement/) || eventTargetString.match(/HTMLTextAreaElement/)) {
-                /* Do nothing */
+            /* If the space bar was pressed inside an input element, don't handle event 
+            if(event.target == '[object HTMLInputElement]' || event.target == '[object HTMLTextAreaElement]') {
+                /* Do nothing 
             }
             else {
                 event.preventDefault();
@@ -67,7 +67,7 @@ function initialize_audio_player_behavior(callback) {
                 }                
             }
         }
-    });
+    });*/
     
     $('#pause_button').live('click', function(event) {
         event.preventDefault();
