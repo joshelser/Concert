@@ -298,19 +298,20 @@ def new_segment_submit(request):
 def delete_segment(request,segment_id, group_id):
     # Get the group
     group = Group.objects.get(pk = group_id)
-
+    # Get the user
+    user = request.user
+    
     # Make sure the current user is a member of this group
     try:
-        groupAdministrator = GroupAdmin.objects.get(group = group, 
-            admin = request.user)
-    except GroupAdmin.DoesNotExist:
-        raise Http404
+        user.groups.get(pk = group.id)
+    except Group.DoesNotExist:
+        error = 'You are not a member of this group'
 
     # Get the segment
     try:
         audioSegment = AudioSegment.objects.get(pk = segment_id)
     except AudioSegment.DoesNotExist:
-        raise Http404
+        error = 'This audio segment does not exist'
 
     # Get the parent audio
     parent = audioSegment.audio
@@ -332,8 +333,12 @@ def delete_segment(request,segment_id, group_id):
     audioSegment.delete()
     
     response = HttpResponse(mimetype='text/plain')
-    response.write('success')
-    return response 
+    # If an error variable was defined in this scope
+    if 'error' in locals() :
+        response.write(error)
+    else :
+        response.write('success')
+    return response
     
     
     
