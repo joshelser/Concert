@@ -315,7 +315,9 @@ class AudioTest(ConcertTest):
 
         # Send the ogg file to Concert
         f = open(os.path.join(settings.BASE_DIR, '../web/media/Oddity.ogg'))
+        print "before error"
         response = self.client.post('/audio/upload/', {'wavfile': f})
+        print "response: " + response
         f.close()
 
         # Make sure we get redirected to the right place
@@ -386,23 +388,88 @@ class AudioTest(ConcertTest):
         except AudioSegment.DoesNotExist:
             self.fail('There is no matching segment in the database')
 
+
+        files = [ 
+            segment.audio.wavfile,
+            segment.audio.oggfile,
+            segment.audio.waveformViewer,
+            segment.audio.waveformEditor,]
+
+
         # delete the segment
         response = self.client.get('/delete_segment/' + 
-            str(segment.id)+'/'+str(1)+'/')
+           str(segment.id)+'/'+str(1)+'/')
             
-        # get the segment again after we rename it
+        # try and get the segment again after we delete it
         segments = AudioSegment.objects.all()
         
         # make sure the segment is gone
-        self.assertEquals(len(segments), 0)
+        #self.assertEquals(len(segments), 0)        
+        for x in files:
+            x = os.path.join(settings.MEDIA_ROOT,str(x))
+            self.assertEquals(os.path.isfile(x),False)
+              
         
-        # TODO check if audio files are gone...
-    
-    # TODO tests for comment on tag
     
     
+    ##
+    #   tests for comment on segment
+    ##
+    def test_comment_on_segment(self):     
+        # Upload an audio segment
+        self.test_wav_upload_audio()
+        
+        # get the segment
+        try:            
+            segment = AudioSegment.objects.get(pk = 1)
+        except AudioSegment.DoesNotExist:
+            self.fail('There is no matching segment in the database')
+            
+        # post a comment the segment
+        response = self.client.post('/comment/' + 
+           str(segment.id)+'/'+str(1)+'/',{"comment": 'test'})
+           
+        # get the comment
+        try:            
+            comment = Comment.objects.get(pk = 1)
+        except Comment.DoesNotExist:
+            self.fail('There is no matching comment in the database')
+        
+        # make sure the comment equals what we posted
+        self.assertEquals(str(comment.comment), "test")
+        
+        # make sure the comment is on the correct segment
+        self.assertEquals(comment.segment, segment)   
     
-    #TODO  and comment on segment
+    
+    ##
+    #   tests for comment on tag
+    ##
+    def test_comment_on_tag(self):     
+        # Upload an audio segment
+        self.test_wav_upload_audio()
+        
+        # get the segment
+        try:            
+            tag = Tag.objects.get(pk = 1)
+        except AudioSegment.DoesNotExist:
+            self.fail('There is no matching tag in the database')
+            
+        # post a comment the segment
+        response = self.client.post('/tags/comment/' + 
+           str(tag.id)+'/'+str(1)+'/',{"comment": 'test'})
+           
+        # get the comment
+        try:            
+            comment = Comment.objects.get(pk = 1)
+        except Comment.DoesNotExist:
+            self.fail('There is no matching comment in the database')
+        
+        # make sure the comment equals what we posted
+        self.assertEquals(str(comment.comment), "test")
+        
+        # make sure the comment is on the correct segment
+        self.assertEquals(comment.tag, tag)   
     
     
     
