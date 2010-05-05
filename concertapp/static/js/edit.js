@@ -148,17 +148,12 @@ function edit_rename_submit_handler(event, data) {
         type: 'POST',
         data: {'name': label,},
         success: function(data, textStatus) {
-            if(textStatus == 'success') {
-                if(data == 'success') {
-                    alert('Your segment was renamed successfully');
-                    window.location = '/';
-                }
-                else{
-                    alert(data);
-                }
+            if(textStatus == 'success' && data == 'success') {
+                alert('Your segment was renamed successfully');
+                window.location = '/';
             }
             else {
-                alert('failure');
+                alert('Error: '+data);
             }
         }
     });
