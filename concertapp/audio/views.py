@@ -317,7 +317,26 @@ def delete_audio(request, audio_id):
 ###
 def add_segment_to_group(request, segment_id, group_id) :
     
-    
+    segment_tags = tag.objects.filter(tag_segments__audiosegment_id__exact = segment_id);
+    group_tags = tag.objects.filter(group_id = group_id);
+    new_tags = list()
+    old_tags = list()
+    for stag in segment_tags:
+        for gtag in group_tags:
+            if(gtag.tag==stag.tag):
+                old_tags.append(gtag)
+            else:
+                new_tags.append(gtag)
+    for t in new_tags:
+        new_tag = tag(group_id = group_id, tag = t.tag, isProject = t.isProject, isFixture = t.isFixture)
+        new_tag.save()
+        new_tag = tag.objects.get(group_id = group_id, tag = t.tag)
+        new_tag_segment = tag_segments(tag_id = new_tag.id, audiosegment_id = segment_id)
+        new_tag_segment.save()
+    for t in old_tags:
+        new_tag = tag.objects.get(group_id = group_id, tag = t.tag)
+        new_tag_segment = tag_segments(tag_id = new_tag.id, audiosegment_id = segment_id)
+        new_tag_segment.save()
     
     # We will return plaintext response
     response = HttpResponse(mimetype='text/plain')
