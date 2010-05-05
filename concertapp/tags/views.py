@@ -227,7 +227,7 @@ def comment(request,tagID, groupID):
             # Get the tag
             try:
                 tag = Tag.objects.get(pk = tagID)
-            except AudioSegment.DoesNotExist:
+            except Tag.DoesNotExist:
                 raise Http404
                 
             #create the comment
@@ -241,6 +241,7 @@ def comment(request,tagID, groupID):
             
             #save the comment
             comment.save()
+            
                 
             return HttpResponseRedirect('/?selected_tag_id=' + str(tag.id))
         else:
@@ -249,4 +250,5 @@ def comment(request,tagID, groupID):
             return response
     else:
         return Http404
+        
            
