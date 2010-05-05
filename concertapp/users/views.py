@@ -388,6 +388,7 @@ def add_to_group(request, user_id, group_id, new_user_id):
 #   @param      user_id     The id of the user object.  This may not be needed if you can
 #                           extract it from the request, i'm not sure.
 ##
+'''
 def user_group_select(request, user_id) :
     
     return render_to_response('user_group_select.html', {
@@ -395,3 +396,6 @@ def user_group_select(request, user_id) :
     'groups' : 
     
     }, RequestContext(request))
+'''
+
+
