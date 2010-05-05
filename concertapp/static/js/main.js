@@ -140,7 +140,12 @@ function share_segment_finalize(segmentID, groupID, groupName) {
         url: '/audio/addsegmenttogroup/'+segmentID+'/'+groupID+'/',
         success: function(data, textStatus) {
             if(textStatus == 'success' && data == 'success') {
+                /* Notify user */
                 alert('Your segment was shared with\n\n"'+groupName+'"\n\nsuccessfully.');
+                /* Remove group select box */
+                $('td#segment_share-'+segmentID).find('.segment_group_select').remove();
+                /* Show 'share' button */
+                $('#segmentShareButton-'+segmentID).show();
             }
             else {
                 alert(data);
