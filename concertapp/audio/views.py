@@ -316,27 +316,46 @@ def delete_audio(request, audio_id):
 #   @param      group_id        the id of the specified group
 ###
 def add_segment_to_group(request, segment_id, group_id) :
+
+    # Get the specified segment
+    old_segment = AudioSegment.objects.get(pk = segment_id)
     
-    segment_tags = tag.objects.filter(tag_segments__audiosegment_id__exact = segment_id);
-    group_tags = tag.objects.filter(group_id = group_id);
-    new_tags = list()
-    old_tags = list()
-    for stag in segment_tags:
-        for gtag in group_tags:
-            if(gtag.tag==stag.tag):
-                old_tags.append(gtag)
-            else:
-                new_tags.append(gtag)
-    for t in new_tags:
-        new_tag = tag(group_id = group_id, tag = t.tag, isProject = t.isProject, isFixture = t.isFixture)
-        new_tag.save()
-        new_tag = tag.objects.get(group_id = group_id, tag = t.tag)
-        new_tag_segment = tag_segments(tag_id = new_tag.id, audiosegment_id = segment_id)
-        new_tag_segment.save()
-    for t in old_tags:
-        new_tag = tag.objects.get(group_id = group_id, tag = t.tag)
-        new_tag_segment = tag_segments(tag_id = new_tag.id, audiosegment_id = segment_id)
-        new_tag_segment.save()
+    # First we need to create the new audio segment with the properties of the old one
+    new_segment = AudioSegment(name = old_segment.name, beginning = old_segment.beginning, end = old_segment.end, audio = old_segment.audio)
+    new_segment.save()
+    
+    #   Next, we need to add all of the tags from the old segment/group, to the new segment/group, but 
+    #   not if a tag with the same name already exists for the new group.
+    
+    # Get all of the specified segment's tags (except for Uploads)
+    old_segment_tags = old_segment.tag_set.all().exclude(tag = 'Uploads')
+    
+    # Get specified group
+    group = Group.objects.get(pk = group_id)
+    
+    # Get all tags associated with this group (except for uploads tag)
+    group_tags = Tag.objects.filter(group = group).exclude(tag = 'Uploads')
+    
+    # For each of the old segment's tags
+    for old_tag in old_segment_tags :
+        
+        # If the new group has a tag that is named the same
+        try :
+            other_version_of_tag = group_tags.get(tag = old_tag.tag)
+            
+            # Add the new segment to this group's version of the tag
+            other_version_of_tag.segments.add(new_segment)
+            other_version_of_tag.save()
+            
+        # If the new group does not have a tag matching this name
+        except Tag.DoesNotExist:
+            # Create the tag within the group
+            new_tag = Tag(tag = old_tag.tag, group = group, isProject = 0, isFixture = 0)
+            new_tag.save()
+            # Add the segment to the newly created tag
+            new_tag.segments.add(new_segment)
+            new_tag.save()
+            
     
     # We will return plaintext response
     response = HttpResponse(mimetype='text/plain')

@@ -14,8 +14,9 @@ var $waveformPlayer = null;
     *  When segment row is clicked, load waveform into waveform viewer.
     **/
     $('.segment_row').click(function(event) {
-        /* If a button was clicked */
-        if($(event.target).hasClass('button')) {
+
+        /* If a button, or select was clicked */
+        if(event.target != '[object HTMLTableCellElement]') {
             /* Do nothing */
             return;
         }
@@ -70,13 +71,86 @@ var $waveformPlayer = null;
         delete_segment(segmentID,groupID);
     });
     
+    /* Behavior for share segment button */
+    $('.segmentShareButton').bind('click', function(){
+        var segmentID = get_object_id(this);
+        share_segment_initiate(segmentID);
+    });
+    /* Behavior for group pulldown when share segment button is pushed */
+    $('.segment_group_select').live('change', function(){
+        var segmentID = get_object_id($(this).parent());
+        var selectedGroupID = $(this).val();
+        var selectedGroupName = $(this).children('[value='+selectedGroupID+']').html();
+        share_segment_finalize(segmentID, selectedGroupID, selectedGroupName);
+    });
+    
     
     
 
 })();
 
 /**
-*  load_waveform
+ *  Called when "share segment" button is pressed.
+ *
+ *  @param          segmentID           the ID of the AudioSegment object
+ **/
+function share_segment_initiate(segmentID) {
+    
+    /*  Make ajax call to retrieve select box with group to share with.  
+        Load this into the table cell */
+    $.ajax({
+        url: '/users/1/groupselect/',
+        success: function(data, textStatus) {
+            if(textStatus == 'success') {
+                /* Put select box next to share button */
+                $('#segmentShareButton-'+segmentID).before(data);
+                /* Hide share button */
+                $('#segmentShareButton-'+segmentID).hide();
+            }
+        }
+    });   
+}
+
+/**
+ *  Called after the share segment button is pressed, and a group
+ *  with which to share the segment is selected.
+ *
+ *  @param              segmentID           The ID of the AudioSegment object.
+ *  @param              groupID             The ID of the Group object.
+ *  @param              groupName           The Name of the Group object (used for notifications)
+ **/
+function share_segment_finalize(segmentID, groupID, groupName) {
+    
+    /* Validate input */
+    if(groupID < 0) {
+        alert('Please select a group to share this segment with.');
+        return;
+    }
+    
+    /*  Confirm  */
+    var answer = confirm('Are you sure you want to share this segment with group:\n\n"'+groupName+'"');
+    
+    /* If they declined, do nothing */
+    if(!answer) {
+        return;
+    }
+    
+    /* Continue */
+    $.ajax({
+        url: '/audio/addsegmenttogroup/'+segmentID+'/'+groupID+'/',
+        success: function(data, textStatus) {
+            if(textStatus == 'success' && data == 'success') {
+                alert('Your segment was shared with\n\n"'+groupName+'"\n\nsuccessfully.');
+            }
+            else {
+                alert(data);
+            }
+        }
+    });
+    
+}
+
+/**
 *  Takes a segmentID, checks to see if this waveform is already loaded.
 *  Retrieves the waveform and loads it into the viewer.
 *
@@ -132,7 +206,6 @@ function load_waveform(segmentID) {
 }
 
 /**
-*  load_audio
 *   Takes an Audio object id, and changes the <audio> element's src to that audio
 *   objects audio file.
 *
@@ -195,7 +268,6 @@ function load_audio(audioID, segmentID, callBackFunction) {
 }
 
 /**
- *  main_draw_highlight
  *  Draws a highlight on the waveform viewer using the times from the segment whose ID
  *  is sent as an argument.
  *
@@ -215,7 +287,6 @@ function main_draw_highlight(segmentID) {
 }
 
 /**
- *  delete_segment
  *  Deletes a specified segment.
  *
  *  @param              segmentID           The ID of the segment object to delete.

@@ -385,23 +385,13 @@ def add_to_group(request, user_id, group_id, new_user_id):
 #   user can add a segment to a group.
 #
 #   @param      request     HTTP request
-#   @param      user_id     The id of the user object.  This may not be needed if you can
-#                           extract it from the request, i'm not sure.
 ##
-def user_group_select(request, user_id) :
-    g = Group.objects.all()
-    groups = list()
-    if request.user.id != int(user_id):
-        raise Http404
+def user_group_select(request) :
+    # Get all of this user's groups except for the default group
+    groups = request.user.groups.all().exclude(name = request.user.username)
 
-    for group in g:
-        try:
-            request.user.groups.get(name = group.name)
-        except Group.DoesNotExist:
-            if group.name != request.user.name:
-                groups.append(group)
     return render_to_response('user_group_select.html', {
     # The list of group objects
     'groups' : groups
-    
+        
     }, RequestContext(request))

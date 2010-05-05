@@ -22,6 +22,6 @@ urlpatterns = patterns('concertapp.users.views',
     url(r'^(\d+)/groups/manage/(\d+)/delete/submit/$', 'delete', name='delete'),
     url(r'^(\d+)/groups/manage/(\d+)/$', 'manage_group', name='manage_group'),
     #ajax
-    #url(r'^(\d+)/groupselect/$', 'user_group_select', name='user_group_select')
+    url(r'groupselect/$', 'user_group_select', name='user_group_select')
 
 )
