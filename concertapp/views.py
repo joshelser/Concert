@@ -256,7 +256,7 @@ def new_segment_submit(request):
 
             # Get or make the tag
             try:
-                tag = Tag.objects.get(tag = tag_name)
+                tag = Tag.objects.get(group = group, tag = tag_name)
             except Tag.DoesNotExist:
                 # Doesn't exist, create tag 
                 tag = Tag(group = group, tag = tag_name, isProject = 0,
