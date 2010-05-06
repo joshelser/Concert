@@ -256,7 +256,7 @@ def new_segment_submit(request):
 
             # Get or make the tag
             try:
-                tag = Tag.objects.get(group = group, tag = tag_name)
+                tag = Tag.objects.get(group = group,    tag = tag_name)
             except Tag.DoesNotExist:
                 # Doesn't exist, create tag 
                 tag = Tag(group = group, tag = tag_name, isProject = 0,
@@ -368,9 +368,8 @@ def rename_segment(request,segment_id, group_id):
 
             # Make sure the current user is a member of this group
             try:
-                groupAdministrator = GroupAdmin.objects.get(group = group, 
-                    admin = request.user)
-            except GroupAdmin.DoesNotExist:
+                request.user.groups.get(pk = group.id)
+            except Group.DoesNotExist:
                 raise Http404
 
             # Get the segment
