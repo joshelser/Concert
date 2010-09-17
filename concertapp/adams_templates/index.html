@@ -50,7 +50,6 @@
                     <tr id = "title_bar">
                         <th>Tags</th>
                         <th>Label</th>
-                        <th>Uploaded By</th>
                         <th>In</th>
                         <th>Out</th>
                         <th>Share</th>
@@ -65,7 +64,6 @@
                             <tr id="segment_row-{{ segment.id }}" class="segment_row" data-audioid="{{ segment.audio.id }}">
                                 <td>{{ segment.tag_list }}</td>
                                 <td>{{ segment.name }}</td>
-                                <td>{{ segment.audio.user.username }}</td>
                                 <td id="segment_start-{{ segment.id }}">{{ segment.beginning }}</td>
                                 <td id="segment_end-{{ segment.id }}">{{ segment.end }}</td>
                                 <td id="segment_share-{{ segment.id }}"><span id="segmentShareButton-{{ segment.id }}" class="segmentShareButton button hand-share" title="Share this segment with a group"><!-- --></span></td>
@@ -78,7 +76,6 @@
                     {% else %}
                         <tr>
                             <td>No audio found.</td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>

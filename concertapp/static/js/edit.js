@@ -119,14 +119,12 @@ function edit_new_submit_handler(event, data) {
                     group_id: groupID
                     },
         success: function(data, textStatus) {
-            if(textStatus == 'success') {
-                if(data == 'success') {
-                    alert('Your tag was saved successfully');
-                    window.location = '/';
-                }
+            if(textStatus == 'success' && data == 'success') {
+                alert('Your tag was saved successfully');
+                window.location = '/';
             }
             else {
-                alert('failure');
+                alert('Error: '+data);
             }
         }
     });
@@ -150,17 +148,12 @@ function edit_rename_submit_handler(event, data) {
         type: 'POST',
         data: {'name': label,},
         success: function(data, textStatus) {
-            if(textStatus == 'success') {
-                if(data == 'success') {
-                    alert('Your segment was renamed successfully');
-                    window.location = '/';
-                }
-                else{
-                    alert(data);
-                }
+            if(textStatus == 'success' && data == 'success') {
+                alert('Your segment was renamed successfully');
+                window.location = '/';
             }
             else {
-                alert('failure');
+                alert('Error: '+data);
             }
         }
     });
