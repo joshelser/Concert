@@ -8,13 +8,20 @@
  *  Global variable for volume slider.
  **/
  var $volumeSlider = null;
+ /**
+  * Global variable for current loop interval
+  **/
+ var $loopInterval = null;
+ 
 
 
 /**
  *  initialize_audio_player_behavior
  *  Binds all interface events to the functions to be run when those events occur.
+ *
+ *  @param              callback                The function to execute when initialization is over.
  **/
-function initialize_audio_player_behavior() {
+function initialize_audio_player_behavior(callback) {
     
     /**
      *  When change_volume event is triggered on audio element,
@@ -23,6 +30,12 @@ function initialize_audio_player_behavior() {
     $('audio').live('change_volume', function(event, data){
         $(this).get(0).volume = data.volume;
     });
+    
+    /**
+     *  When looping events are triggered on an audio element.
+     **/
+    $('audio').live('loop', function(event, data){ return start_audio_loop(event, data); });
+    $('audio').live('clear_loop', function(event, data){ return clear_audio_loop(event, data); });
     
     /**
     *   Playback functionality
@@ -38,11 +51,11 @@ function initialize_audio_player_behavior() {
     });
     
     /** Space bar plays and pauses **/
-    $(document).bind('keypress', function(event){
+/*    $(document).bind('keypress', function(event){
         if(event.keyCode == 32) {
-            /* If the space bar was pressed inside an input element, don't handle event */
-            if(event.target.toString().match(/HTMLInputElement/)) {
-                /* Do nothing */
+            /* If the space bar was pressed inside an input element, don't handle event 
+            if(event.target == '[object HTMLInputElement]' || event.target == '[object HTMLTextAreaElement]') {
+                /* Do nothing 
             }
             else {
                 event.preventDefault();
@@ -54,7 +67,7 @@ function initialize_audio_player_behavior() {
                 }                
             }
         }
-    });
+    });*/
     
     $('#pause_button').live('click', function(event) {
         event.preventDefault();
@@ -82,6 +95,9 @@ function initialize_audio_player_behavior() {
         }
     });
     
+    if(typeof(callback) != 'undefined') {
+        callback();
+    }
     
 }
 
@@ -153,4 +169,78 @@ function initialize_volume_slider(params) {
         handleID: params.handleID,
         audioID: params.audioID
     });
+}
+
+/**
+ *  start_audio_loop
+ *  Begins the requested audio loop.  This means that the audio starts at the given start time,
+ *  and when it reaches the end time, it goes back to the start time.  This should
+ *  be called whenever a section of the waveform is highlighted.
+ *
+ *  @param          event                This is an event handler
+ *  @param          data              {start, end} (times in seconds)
+ **/
+function start_audio_loop(event, data) {
+    /* Get audio element */
+    var audioElement = $('audio').get(0);
+
+    /* if loop is already running */
+    if($loopInterval != null) {
+        /* stop loop, and then come back */
+        clear_audio_loop(event, data);
+    }
+    else {
+        /* Move audio to start time */
+        audioElement.currentTime = data.start;
+
+        /* Check again in animation speed ms */
+        $loopInterval = setInterval(function(timedata){ return function(){ continue_audio_loop(timedata); }}(data), com.concertsoundorganizer.animation.speed);
+
+        /* trigger highlight event */
+        $(audioElement).trigger('highlight', data);
+    }    
+}
+
+/**
+ *  continue_audio_loop
+ *  Continues the requested audio loop.  This will get called every animation.speed seconds, to make sure that the audio doesn't
+ *  go past the requested time.
+ *
+ *  @param          data              {start, end} (times in seconds)
+ **/
+function continue_audio_loop(data) {
+    /* Get audio element */
+    var audioElement = $('audio').get(0);
+    
+    /* If we are still looping */
+    if($loopInterval != null) { 
+        /* If we should restart the loop */
+        if(audioElement.currentTime >= data.end) {
+            /* restart */
+            audioElement.currentTime = data.start;
+        }
+        
+    }
+}
+
+/**
+ *  clear_audio_loop
+ *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
+ *  whenever the highlighted area is cleared.
+ **/
+function clear_audio_loop(event, data) {
+    
+    if($loopInterval != null) {
+        /* Clear interval */
+        clearInterval($loopInterval);
+        $loopInterval = null;      
+    }
+    
+    /* Set as no longer looping */
+    $('audio').attr('data-looping', '0');
+    
+    /* If data was sent in, we are supposed to start another loop after clearing */
+    if(typeof(data) != 'undefined') {
+        start_audio_loop(event, data);
+    }
 }

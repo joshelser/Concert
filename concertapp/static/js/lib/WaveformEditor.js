@@ -9,9 +9,10 @@
  *
  *  @param          containerID         The ID of the container element on the DOM.
  *  @param          audioID             The id of the audio element on the DOM.
+ *  @param          tags                The list of JSON Tag objects.
  *  @return         this                Constructor.
  **/
-var WaveformEditor = function(containerID, audioID) {
+var WaveformEditor = function(containerID, audioID, tags) {
     
     /* Set container members */
     this.set_container(containerID);
@@ -19,22 +20,34 @@ var WaveformEditor = function(containerID, audioID) {
     this.set_audio(audioID);
     
     /* The object to animate is actual waveform image */
-    this.waveformElement = $('#'+this.id+' > img.waveform_image').get(0);
+    this.waveformElement = $('#'+this.id+' > div#editor_image').children('img.waveform_image').get(0);
     if(typeof(this.waveformElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get waveformElement.');
     }
     
     /* The highlight element on the page */
-    this.highlightElement = $('#'+this.id+' > div#highlight').get(0);
+    this.highlightElement = $('#'+this.id+' > div#editor_highlight').get(0);
     if(typeof(this.highlightElement) == 'undefined') {
         throw new Error('WaveformEditor: Could not get highlightElement.');
     }
     
     /* get waveform image width from end of waveform image file name */
-    this.waveformWidth = $(this.waveformElement).attr('src').split('_')[1].match(/[\d]+/)*1;
+    this.waveformWidth = $(this.waveformElement).attr('src').match(/_[\d]+.png$/)[0].match(/[\d]+/)*1;
     if(typeof(this.waveformWidth) != 'number')
     {
         throw new Error('WaveformEditor: Could not get waveform image width.');
+    }
+    
+    /** Static highlight element must be watched for highlighting behavior **/
+    var staticHighlightElement = $('#editor_highlight_static').get(0);
+    if(typeof(staticHighlightElement) == 'undefined') {
+        throw new Error('WaveformEditor: Could not get static highlight element.');
+    }
+    
+    /** image container must also be watched for highlighting **/
+    var imageContainerElement = $('#editor_image').get(0);
+    if(typeof(imageContainerElement) == 'undefined') {
+        throw new Error('WaveformEditor: Could not get image container element.')
     }
     
     /* The highlight object */
@@ -43,17 +56,27 @@ var WaveformEditor = function(containerID, audioID) {
         container: this.container, 
         waveformElement: this.waveformElement,
         waveformWidth: this.waveformWidth,
-        audioElementDuration: this.audioElement.duration
+        audioElement: this.audioElement,
+        staticHighlightElement: staticHighlightElement,
+        imageContainerElement: imageContainerElement
     });
     
-    /* behavior if highlight is drawn on waveform viewer */
-    $('#waveform_viewer').bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));    
-    /* behavior if waveform viewer highlight is cleared */
-    $('#waveform_viewer').bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
-    /* behavior if highlight occurs on editor */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); $waveformPlayers['waveform_viewer'].animate({once: true}); } }(this));
-    /* behavior if highlight clear occurs on self */
-    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
+    /* Static highlighter on viewer */
+    this.set_highlight_viewer({
+        highlightElement: staticHighlightElement,
+        waveformElement: this.waveformElement,
+        tags: tags,
+    });
+    
+    /* Highlight behavior */
+    this.initialize_highlight_behavior();
+    
+    /* Watch audio element for playback */
+    this.watch_audio_behavior();
+    
+    /* Behavior when container is clicked */
+    $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
+    
     
     return this;
     
@@ -63,20 +86,13 @@ var WaveformEditor = function(containerID, audioID) {
  **/
 WaveformEditor.prototype = new Waveform();
 
-/**
- *  animate
- *  Begins the animation for a waveform editor object.  Should be called
- *  when animation is to start.
- **/
-WaveformEditor.prototype.animate = function(params) {
 
-    /* set default arguments */
-    if(typeof(params) == 'undefined') {
-        params = {
-            once: false
-        };
-    }
-    
+/**
+ *  draw_animation
+ *  Draws one step of animation for a waveform editor object.  Should be called
+ *  every animationspeed ms if we are animating.
+ **/
+WaveformEditor.prototype.draw_animation = function() {    
     /* Percentage of song we are currently on */
     var actualPercent = this.audioElement.currentTime/this.audioElement.duration;
     
@@ -91,13 +107,43 @@ WaveformEditor.prototype.animate = function(params) {
     this.highlighter.set_waveform_left(newLeft);
     /* Move highlight to proper position */
     this.highlighter.draw_highlight();
+    /* Same for highlight viewer */
+    this.highlightViewer.set_waveform_left(newLeft);
+    this.highlightViewer.draw_highlight();
     
-    /* make sure audio element is still playing, and we weren't just supposed to animate once */
-    if($(this.audioElement).hasClass('playing') && !params.once ) {
-        /* if so, go again in animation.speed ms  */
-        setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
+}
+
+/**
+ *  clicked
+ *  Behavior for a WaveformEditor whenever the container is clicked.
+ *  This seeks to the time in the audio file relative to the click.
+ *
+ *  @param          event           The click event.
+ **/
+WaveformEditor.prototype.clicked = function(event) {
+    
+    /* make some vars local for quicker access */
+    var $ = jQuery;
+    var audioElement = this.audioElement;
+    var container = this.container;
+    
+    /* X coordinate of click relative to element */
+    var clickX = get_event_x(container, event);
+    /* subtract left offset */
+    clickX -= $(this.waveformElement).css('left').match(/[-]{0,1}[\d]+/)*1;
+    /* percent of waveform image width width */
+    var clickPerc = clickX/this.waveformWidth;
+    /* new time in audio file */
+    var newTime = clickPerc*audioElement.duration;
+    
+    /* Normalize in case out of bounds area was clicked. */
+    if(newTime < 0) {
+        newTime = 0;
     }
-    else {
-        this.set_paused();
+    if(newTime > audioElement.duration) {
+        newTime = audioElement.duration;
     }
+    
+    /* move current time of audio file to clicked location */
+    audioElement.currentTime = newTime;
 }

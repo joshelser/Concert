@@ -10,10 +10,10 @@
  *  @param              audioID                 The id of the associated audio element.
  *  @return             this                    Constructor
  **/
-var WaveformViewer = function(containerID, audioID) {
+var WaveformViewer = function(containerID, audioID, tags) {
     
     if(typeof(containerID) != 'undefined' && typeof(audioID) != 'undefined') {
-        this.initialize(containerID, audioID);
+        this.initialize(containerID, audioID, tags);
     }    
     
     
@@ -32,7 +32,7 @@ WaveformViewer.prototype = new Waveform();
  *  @param          containerID             The id of the container element.
  *  @param          audioID                 The id of the associated audio element.
  **/
-WaveformViewer.prototype.initialize = function(containerID, audioID) {
+WaveformViewer.prototype.initialize = function(containerID, audioID, tags) {
     /* Set container members */
     this.set_container(containerID);
     /* Set audio members */
@@ -50,17 +50,40 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
       throw new Error('WaveformViewer: Unable to set timecode element.');
     }
     
+    /* The highlight element */
+    var highlightElement = $(this.container).children('#viewer_highlight').get(0);
+    if(typeof(highlightElement) == 'undefined') {
+        throw new Error('WaveformViewer: Unable to set highlightElement.');
+    }
+    
+    /** Static highlight element must be watched for highlighting behavior **/
+    var staticHighlightElement = $('#viewer_highlight_static').get(0);
+    if(typeof(staticHighlightElement) == 'undefined') {
+        throw new Error('WaveformViewer: Could not get static highlight element.');
+    }
+    
+    
     /* container width */
     this.waveformWidth = 800;
     
     /* Highlighter on viewer */
     this.highlighter = new Highlighter({
-        highlightElement: $(this.container).children('#viewer_highlight'), 
+        highlightElement: highlightElement, 
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
-        audioElementDuration: this.audioElement.duration
+        audioElement: this.audioElement,
+        staticHighlightElement: staticHighlightElement
     });
+
+    /* Static highlighter on viewer */
+    this.set_highlight_viewer({
+        highlightElement: $(this.container).children('#viewer_highlight_static'), 
+        waveformElement : $(this.container).children('#viewer_image'), 
+        tags: tags,
+        eventElement: highlightElement
+    });
+    
     
     /* Behavior when audio element is played and paused */
     this.watch_audio_behavior(); 
@@ -69,31 +92,8 @@ WaveformViewer.prototype.initialize = function(containerID, audioID) {
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     
-    /* behavior if highlight occurs on viewer */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); obj.waveformEditor.draw_animation(); } }(this));
-    /* behavior if highlight clear occurs on self */
-    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
-}
-
-/**
- *  set_waveform_editor
- *  Initializes the associated WaveformEditor object with this WaveformViewer object.
- *  Should be called after the WaveformViewer and WaveformEditor are instantiated.
- *
- *  @param              waveformEditor          The WaveformEditor object.
- **/
-WaveformViewer.prototype.set_waveform_editor = function(waveformEditor){
-    /* set reference to waveformEditor object */
-    this.waveformEditor = waveformEditor;
-    if(typeof(this.waveformEditor) == 'undefined') {
-        throw new Error('WaveformViewer: Unable to get waveformEditor object.');
-    }
-    
-    /* Initialize waveform editor behavior */
-    /* behavior if highlight is drawn on waveform editor */
-    $(this.waveformEditor.container).bind('highlight', function(obj){ return function(e, data){ obj.highlighter.set_highlight_time(data); } }(this));
-    /* behavior if waveform editor highlight is cleared */
-    $(this.waveformEditor.container).bind('clear_highlight', function(obj){ return function(e){ obj.highlighter.initialize_highlight(); obj.clear_loop(); } }(this));
+    /* Highlight behavior */
+    this.initialize_highlight_behavior();
 }
 
 
@@ -125,8 +125,7 @@ WaveformViewer.prototype.draw_animation = function(){
 /**
  *  clicked
  *  Behavior for a WaveformViewer whenever the container is clicked.
- *  This seeks to the time in the audio file relative to the click, and updates
- *  the interface accordingly.
+ *  This seeks to the time in the audio file relative to the click.
  *
  *  @param          event           The click event.
  **/
@@ -146,12 +145,4 @@ WaveformViewer.prototype.clicked = function(event) {
     
     /* move current time of audio file to clicked location */
     audioElement.currentTime = newTime;
-    
-    /* If song is not playing */
-    if(audioElement.paused)
-    {
-        /* animate once */
-        this.draw_animation();
-    }
-    /* If song is playing, viewer will animate automatically in animation.speed ms */
 }

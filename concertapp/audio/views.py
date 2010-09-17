@@ -1,16 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.generic.create_update  import create_object
-from django.views.generic.simple import direct_to_template
-from django.contrib.auth import authenticate, login, logout
-from django import forms
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from concertapp.models  import *
-from concertapp.forms   import RegistrationForm, UploadFileForm
+from concertapp.forms   import UploadFileForm
 
 from concertapp.audio import audioFormats
 from concertapp.audio.waveform import *
@@ -20,19 +15,36 @@ import os, tempfile
 
 CHUNKSIZE = 1024 * 32
 
+##
+# View all of the audio files you have uploaded
+#
+# @param request    HTTP Request
+##
+@login_required
 def audio(request):
-    audio = Audio.objects.all()
+    audio = Audio.objects.filter(user = request.user)
 
     return render_to_response("audio.html", {'audio': audio},
             RequestContext(request))
 
+##
+# Views a single audio file
+#
+# @param request    HTTP Request
+# @param audio_id   The audio object id
+##
 def view_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
+##
+# Takes an audio file, converts it to mp3, ogg, and wav, saving it to disk
+# 
+# @param request    HTTP Request
+##
 @login_required
 def upload_audio(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and "wavfile" in request.FILES:
         # Need to add the user to the audio instance
         user = request.user
 
@@ -170,20 +182,38 @@ def upload_audio(request):
             default_tag.segments.add(first_segment)
             default_tag.save()
             
-
-            return HttpResponseRedirect('/audio/')
+            if "ajax" in request.POST:
+                response = HttpResponse(mimetype='text/plain', responseText = 'success');
+                response.write("sucess")
+                return response
+            else:
+                return HttpResponseRedirect('/audio/')
         else:
-            print repr(form.errors) + "sadsaD"
+            if "ajax" in request.POST:
+                response = HttpResponse(mimetype='text/plain', responseText = 'failure')
+                response.write("failure")
+                return response
+            else:          
+                print repr(form.errors)
+    
+    form = UploadFileForm()
+    if "ajax" in request.POST:
+        response = HttpResponse(mimetype='text/plain',responseText = 'failure')
+        response.write("failure")
+        return response
     else:
-        form = UploadFileForm()
+        return render_to_response('upload_audio.html', {'form': form})
 
-    return render_to_response('upload_audio.html', {'form': form})
-
+##
+# Display the waveform for an audio object
+# 
+# @param request     HTTP Request
+# @param audio_id    The audio object id
+##
 def view_waveform(request, audio_id):
     return render_to_response('view_waveform.html', {'audio': a}, RequestContext(request))
 
 ###
-#   waveform_src
 #   responds in plain text with the audio waveform url for the requested
 #   audio object.
 #
@@ -207,7 +237,6 @@ def waveform_src(request, audio_id, type_waveform = 'viewer'):
     return response
     
 ###
-#   audio_src
 #   Responds in plain text with the path to the audiofile associated with
 #   the requested Audio object.
 #
@@ -222,6 +251,11 @@ def audio_src(request, audio_id):
     response.write(audio.wavfile.url)
     return response
 
+##
+# Given an audio object, generate all the waveforms for it, and save them to the
+# database
+#
+# @param audio    The audio object to generate waveforms from
 def generate_waveform(audio):
     # Create the wav object
     wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
@@ -238,10 +272,11 @@ def generate_waveform(audio):
     # Save the path relative to the media_dir
     audio.waveformViewer = viewerImgPath    
     audio.waveformEditor = editorImgPath
+
+    # Save the audio object
     audio.save()
 
 ###
-# get_duration
 # Returns the duration of the audio file associated with the passed-in audio object.
 #
 # @param      audio     The audio object.
@@ -252,12 +287,81 @@ def get_duration(audio):
   # Get duration
   return wavObj.getLength()
 
+##
+# Delete the audio object and all objects referencing it, including files on
+# disk
+#
+# @param request    HTTP Request
+# @param audio_id   The id of the audio object to delete
+##
 def delete_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
-    if audio.delete_wavfile():
-        audio = Audio.objects.all()
-        return render_to_response("audio.html", {'audio': audio}, RequestContext(request))
-    else:
-        return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
 
+    # Bounce user if not the owner
+    if int(request.user.id) != int(audio.user.id):
+        return Http404
 
+    audio.delete()
+
+    return HttpResponseRedirect('/audio/')
+
+##
+#   Add the specified segment to the specified group.  This means
+#   creating a new segment object for this group, as well as 
+#   new tag objects for any of the specified segment's tags
+#   unless there is a tag in the new group that is named the same.
+#
+#   @param      request         HTTP request
+#   @param      segment_id      The id of the specified segment
+#   @param      group_id        the id of the specified group
+###
+def add_segment_to_group(request, segment_id, group_id) :
+
+    # Get the specified segment
+    old_segment = AudioSegment.objects.get(pk = segment_id)
+    
+    # First we need to create the new audio segment with the properties of the old one
+    new_segment = AudioSegment(name = old_segment.name, beginning = old_segment.beginning, end = old_segment.end, audio = old_segment.audio)
+    new_segment.save()
+    
+    #   Next, we need to add all of the tags from the old segment/group, to the new segment/group, but 
+    #   not if a tag with the same name already exists for the new group.
+    
+    # Get all of the specified segment's tags (except for Uploads)
+    old_segment_tags = old_segment.tag_set.all().exclude(tag = 'Uploads')
+    
+    # Get specified group
+    group = Group.objects.get(pk = group_id)
+    
+    # Get all tags associated with this group (except for uploads tag)
+    group_tags = Tag.objects.filter(group = group).exclude(tag = 'Uploads')
+    
+    # For each of the old segment's tags
+    for old_tag in old_segment_tags :
+        
+        # If the new group has a tag that is named the same
+        try :
+            other_version_of_tag = group_tags.get(tag = old_tag.tag)
+            
+            # Add the new segment to this group's version of the tag
+            other_version_of_tag.segments.add(new_segment)
+            other_version_of_tag.save()
+            
+        # If the new group does not have a tag matching this name
+        except Tag.DoesNotExist:
+            # Create the tag within the group
+            new_tag = Tag(tag = old_tag.tag, group = group, isProject = 0, isFixture = 0)
+            new_tag.save()
+            # Add the segment to the newly created tag
+            new_tag.segments.add(new_segment)
+            new_tag.save()
+            
+    
+    # We will return plaintext response
+    response = HttpResponse(mimetype='text/plain')
+    # If an error variable was defined in this scope
+    if 'error' in locals() :
+        response.write(error)
+    else :
+        response.write('success')
+    return response

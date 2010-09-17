@@ -10,9 +10,11 @@
 
     <br />
 
-    <p><a href="{% url choose_group user_id %}">Manage my owned groups</a></p>
-
+    <a href="{% url choose_group user_id %}">Manage my owned groups</a>
+    <br/>
     {% if show_create %}
-        <p><a href='{% url create_group user_id %}'>Add Group</a></p>
+    <a href='{% url create_group user_id %}'>Add Group</a>
     {% endif %} 
+    <br/>
+    
 {% endblock %}

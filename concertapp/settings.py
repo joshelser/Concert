@@ -79,6 +79,9 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'adams_templates'),
+    os.path.join(BASE_DIR, 'adams_templates/base'),
+    os.path.join(BASE_DIR, 'tags/templates'),
+    os.path.join(BASE_DIR, 'users/templates'),
     os.path.join(BASE_DIR, 'templates'),
 )
 
@@ -102,7 +105,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = '/users/login/'
 LOGOUT_URL = '/users/logout/'
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 # Make all uploaded files write to disk
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0

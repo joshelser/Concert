@@ -2,7 +2,7 @@
 *.pyc
 documentation
 *~
-concertapp/media/audio/*
+concertapp/media/audio/*.*
 concertapp/media/images/*
 !concertapp/media/audio/.gitignore
 !concertapp/media/images/.gitignore

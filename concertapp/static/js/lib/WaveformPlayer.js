@@ -59,7 +59,7 @@ WaveformPlayer.prototype.initialize = function(containerID, audioID) {
         container: this.container, 
         waveformElement: $(this.container).children('#viewer_image'),
         waveformWidth: this.waveformWidth,
-        audioElementDuration: this.audioElement.duration
+        audioElement: this.audioElement
     });
     
     /* Behavior when audio element is played and paused */
@@ -68,9 +68,5 @@ WaveformPlayer.prototype.initialize = function(containerID, audioID) {
     /* Behavior when container is clicked */
     $(this.container).click(function(obj){ return function(event) { obj.clicked(event); } }(this));
     
-    /* behavior if highlight occurs on viewer */
-    $(this.container).bind('highlight', function(obj){ return function(e, data){ obj.start_loop(data); } }(this));
-    /* behavior if highlight clear occurs on self */
-    $(this.container).bind('clear_highlight', function(obj){ return function(e){ obj.clear_loop(); }}(this));
-    
+    this.initialize_highlight_behavior();    
 }

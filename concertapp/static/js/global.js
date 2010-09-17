@@ -1,3 +1,13 @@
+
+/**
+ *  Global variables are in a namespace data structure.  A feature that will soon be 
+ *  implemented in the Javascript language natively.
+ **/
+if(!com) var com = {};
+if(!com.concertsoundorganizer) com.concertsoundorganizer = {};
+if(!com.concertsoundorganizer.animation) com.concertsoundorganizer.animation = {};
+
+
   // Closure for the main app.
 (function() {
   // Handle placeholder text for input fields.  
@@ -27,6 +37,12 @@
   images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
   
   
+  /**
+   *    Set default animation speed.
+   **/
+   com.concertsoundorganizer.animation = {
+       speed: 200,
+   }
   
   
 

@@ -13,6 +13,44 @@ var Waveform = function() {
 }
 
 /**
+ *  set_partner
+ *  Initializes the associated WaveformViewer object with this WaveformEditor object. (or vice versa)
+ *  Should be called after both objects are instantiated.
+ *
+ *  @param              partner             The partner object.
+ **/
+Waveform.prototype.set_partner = function(partner){
+    /* set reference to partner object */
+    this.partner = partner;
+    if(typeof(this.partner) == 'undefined') {
+        throw new Error('Waveform.prototype.set_partner: Unable to get partner object.');
+    }
+}
+
+/**
+ *  initialize_highlight_behavior
+ *  This is the behavior when a highlight or clear_loop event is triggered on the associated audio
+ *  element.
+ **/
+Waveform.prototype.initialize_highlight_behavior = function(){
+    
+    /* If loop event is triggered on audio element, draw highlight and animate self */
+    $(this.audioElement).bind('highlight', function(obj){ return function(e, data){
+        data.noTrigger = true;
+        /* Draw new highlight based on loop data */
+        obj.highlighter.set_highlight_time(data);
+        /* animate */
+        obj.animate();
+    }}(this));
+    
+    /* If clear loop event is triggered on audio element from somewhere else, clear highlight */
+    $(this.audioElement).bind('clear_loop', function(obj){ return function(e, data){
+        /* Clear highlight */
+        obj.highlighter.initialize_highlight();
+    }}(this));
+}
+
+/**
  *  watch_audio_behavior
  *  Watches the audio element, and runs the play or pause method when audio element
  *  is played or paused, respectively.
@@ -22,6 +60,8 @@ Waveform.prototype.watch_audio_behavior = function(){
     $(this.audioElement).bind('play', function(waveformObject){ return function(){ waveformObject.play(); } }(this));
     /* Same for pause */
     $(this.audioElement).bind('pause', function(waveformObject){ return function(){ waveformObject.pause(); } }(this));
+    /* When current time of audio file changes */
+    $(this.audioElement).bind('timeupdate', function(waveformObject){ return function(){ waveformObject.draw_animation(); }}(this));
 }
 
 
@@ -77,58 +117,6 @@ Waveform.prototype.pause = function() {
     /* Does nothing right now */
 }
 
-
-
-/**
- *  start_loop
- *  Begins the requested audio loop.  This means that the audio starts at the given start time,
- *  and when it reaches the end time, it goes back to the start time.  This should
- *  be called whenever a section of the waveform is highlighted.
- *
- *  @param          params              {start, end} (times in seconds)
- **/
-Waveform.prototype.start_loop = function(params) {
-    /* Move audio to start time */
-    this.audioElement.currentTime = params.start;
-    
-    /* animate once to update interface */
-    this.animate({once: true});
-    
-    /* if loop is already running */
-    if(this.loopInterval != null) {
-        /* stop loop */
-        this.clear_loop();
-    }
-    
-    /* Send interval out to keep checking on loop */
-    this.loopInterval = setInterval(function(obj, params){ return function(){ obj.continue_loop(params); } }(this, params), com.concertsoundorganizer.animation.speed);
-}
-
-/**
- *  continue_loop
- *  Continues the requested audio loop.  This will get called every animation.speed seconds, to make sure that the audio doesn't
- *  go past the requested time.
- *
- *  @param          params              {start, end} (times in seconds)
- **/
-Waveform.prototype.continue_loop = function(params) {
-    /* If we should restart the loop */
-    if(this.audioElement.currentTime >= params.end) {
-        /* restart */
-        this.audioElement.currentTime = params.start;
-    }
-}
-
-/**
- *  clear_loop
- *  This will clear the loop interval that is running every animation.speed seconds.  This should be called
- *  whenever the highlighted area is cleared.
- **/
-Waveform.prototype.clear_loop = function() {
-    clearInterval(this.loopInterval);
-    this.loopInterval = null;
-}
-
 /**
  *  animate
  *  Begins the animation for a Waveform object.  Should be called
@@ -146,4 +134,26 @@ Waveform.prototype.animate = function() {
         /* if so, go again in animation.speed ms */
         setTimeout(function(obj){ return function(){ obj.animate(); } }(this), com.concertsoundorganizer.animation.speed);
     }
+}
+
+/**
+ *  set_highlight_viewer
+ *  Sets the static highlight viewer for this Waveform object.  This is used
+ *  if we are currently viewing a segment, and want to display the segment's
+ *  location on the audio element at all times.
+ *
+ *  @param              params             {    highlightElement : The element to use for highlighting,
+ *                                              waveformElement: The element that is the waveform image,
+ *                                              tags:           The Tag JSON objects. }
+ **/
+Waveform.prototype.set_highlight_viewer = function(params) {
+    /* Static highlighter on viewer */
+    this.highlightViewer = new HighlightViewer({
+        highlightElement: params.highlightElement, 
+        container: this.container, 
+        waveformElement: params.waveformElement,
+        waveformWidth: this.waveformWidth,
+        audioElement: this.audioElement,
+        tags: params.tags
+    });    
 }

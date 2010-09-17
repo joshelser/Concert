@@ -19,9 +19,9 @@ class AudioSegment(models.Model):
       # Get all tags associated with this audio segment
       tags = self.tag_set.all()
       output = tags[0].tag
-      if len(tags) > 1 :
-        for i in range(len(tags))+1 :
-          output += ', '+tags[i]
+      if tags.count() > 1 :
+        for i in range(len(tags)-1) :
+            output += ', '+tags[i+1].tag
       return output
         
 
@@ -39,13 +39,32 @@ class Tag(models.Model):
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
+    
+    def delete(self, *args, **kwargs):
+        # Do not delete if this is a permanent tag
+        if self.isFixture :
+            return
+        
+        # Get all segments with this tag
+        segments = self.segments.all()
+        
+        # For each segment
+        for segment in segments :
+            # If segment only has one tag, it is this one, so we can delete segment as well
+            if segment.tag_set.count() == 1 :
+                # delete segment
+                segment.delete()
+        
+        # Delete tag using built-in delete method
+        super(Tag, self).delete(*args, **kwargs)
+        return
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.OneToOneField(User, related_name = 'author')
+    user = models.ForeignKey(User, related_name = 'author')
     time = models.DateTimeField(auto_now_add = True)
-    segment = models.OneToOneField('AudioSegment', null = True)
-    tag = models.OneToOneField('Tag', null = True)
+    segment = models.ForeignKey('AudioSegment', null = True)
+    tag = models.ForeignKey('Tag', null = True)
  
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
@@ -168,15 +187,39 @@ class Audio(models.Model):
 
         return newName
 
-   # Delete the current audio file from the filesystem
-    def delete_wavfile(self):
-        print self.wavfile
-        fullpath = os.path.join(MEDIA_ROOT, str(self.wavfile))
-        if os.path.exists(fullpath):
-            os.remove(fullpath)
-            return True
-        else:
-            return False
+    # Delete the current audio file from the filesystem
+    def delete(self, *args, **kwargs):
+        # Remove wavfile
+        path = os.path.join(settings.MEDIA_ROOT, str(self.wavfile))
+        if os.path.exists(path):
+            os.remove(path)
+
+        # Remove oggfile
+        path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
+        if os.path.exists(path):
+            os.remove(path)
+
+        # Remove viewer
+        path = os.path.join(settings.MEDIA_ROOT, str(self.waveformViewer))
+        if os.path.exists(path):
+            os.remove(path)
+
+        # Remove oggfile
+        path = os.path.join(settings.MEDIA_ROOT, str(self.waveformEditor))
+        if os.path.exists(path):
+            os.remove(path)
+
+        # Get all segments who have this audio object as its parent
+        segments = AudioSegment.objects.filter(audio = self)
+
+        # Delete all of the segments
+        for segment in segments:
+            segment.delete()
+
+        # Send delete up
+        super(Audio, self).delete(*args, **kwargs)
+
+        return
 
 ##
 # Given a user, it creates the corresponding group

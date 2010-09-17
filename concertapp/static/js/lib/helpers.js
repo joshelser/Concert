@@ -3,17 +3,7 @@
  *  This file contains helper functions that may be used throughout the client-side code.
  **/
 
-/**
- *  Global variables are in a namespace data structure.  A feature that will soon be 
- *  implemented in the Javascript language natively.
- **/
-if(!com) var com = {};
-if(!com.concertsoundorganizer) com.concertsoundorganizer = {};
-if(!com.concertsoundorganizer.animation) com.concertsoundorganizer.animation = {};
 
-com.concertsoundorganizer.animation = {
-    speed: 200,
-}
 
 /**
  *  sec_to_timecode
@@ -24,6 +14,10 @@ com.concertsoundorganizer.animation = {
  **/
 function sec_to_timecode($seconds)
 {
+    if($seconds < 0) {
+        throw new Error('sec_to_timecode: Error: Seconds cannot be negative.');
+    }
+    
     var $hours = Math.floor($seconds/3600);
     var $rem = $seconds % 3600;
     var $minutes = Math.floor($rem/60);
@@ -64,3 +58,13 @@ function get_event_x($element, $e){
     return clickX;
 }
 
+/**
+ *  get_object_id
+ *  Given an element, retrieves the number at the end of the id attribute
+ *  (of that element) after the '-' character.
+ *
+ *  @param          element             The DOM (jQuery) object.
+ **/
+function get_object_id(element) {
+    return $(element).attr('id').split('-')[1]*1;
+}
