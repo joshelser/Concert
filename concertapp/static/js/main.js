@@ -211,8 +211,8 @@ function load_waveform(segmentID) {
 }
 
 /**
-*   Takes an Audio object id, and changes the <audio> element's src to that audio
-*   objects audio file.
+*   Takes an Audio object id, removes the old <audio> element, and adds a new one to the page with 
+*   the new source.
 *
 *   @param              audioID             the Audio object id
 *   @param              segmentID           the AudioSegment object id
@@ -229,14 +229,16 @@ function load_audio(audioID, segmentID, callBackFunction) {
 
                 /* Remove audio element from page */
                 $('audio').remove();
+                
+                var $audioElementID = 'audio_element';
+                
                 /* Create new audio element */
-                var audioElement = $('<audio>').attr('id', 'audio_element').attr('class', 'audio_element');
+                var audioElement = $('<audio>').attr('id', $audioElementID).attr({'class': 'audio_element', 'preload' : 'auto'});
                 /* Add source to audio element */
                 $('<source>').attr('src', data).appendTo(audioElement);
                 /* Add audio element to page */
                 $('#audio_container').append(audioElement);
                 
-                var $audioElementID = $('audio').attr('id');
               
                 /* Wait for audio element to become available before finishing load */
                 $(audioElement).one('canplaythrough', function(){
