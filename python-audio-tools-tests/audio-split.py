@@ -20,5 +20,8 @@ parts = audiotools.pcm_split(wav, [startSample, amountOfSamples])
 part = parts.next()
 # Second part is what we need
 part = parts.next()
-# output to file
+# output to temporary file
 audiotools.WaveAudio.from_pcm('segment.wav', part)
+
+# From here we can use the audio class to generate the new audio object
+# from this temporary file, creating all the formats necessary.
