@@ -6,6 +6,7 @@ from django.core.files.base import ContentFile
 
 from django.conf import settings
 from concertapp.audio import audioFormats
+from concertapp.settings import MEDIA_ROOT
 
 import os, tempfile
 
@@ -73,7 +74,28 @@ class Audio(models.Model):
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
-
+    
+    #   Takes as input, a user who this audio object belongs to, and an 
+    #   input filename which is the name of the initially uploaded file.
+    #
+    #   @param  user
+    #   @param  inputFileName
+    #   @return new instance of Audio object
+    #   @throws audiotools.UnsupportedFile  - if filetype is unsupported
+    #   @throws IOError                     - if there was a problem opening
+    def create(user, inputFileName):
+        
+        #   Send the input file to be processed, and receive back an object
+        #   from which we can get the file names of the encoded versions.
+        #   Errors can be thrown here.
+        audioUtilityObject = audioFormats.Audio(inputFileName)
+        
+        return Audio(user = user)
+        
+    #   This is sort of like a helper function that must be used when an Audio
+    #   object is created.
+    create = staticmethod(create)
+    
     def mp3_to_wav(self, originalFile):
         # Use the original filename as a prefix
         prefixName = str(originalFile)
@@ -204,7 +226,7 @@ class Audio(models.Model):
         if os.path.exists(path):
             os.remove(path)
 
-        # Remove oggfile
+        # Remove editor image
         path = os.path.join(settings.MEDIA_ROOT, str(self.waveformEditor))
         if os.path.exists(path):
             os.remove(path)

@@ -17,8 +17,11 @@
             if(responseText == 'success')
                 responseMessage = "File Uploaded Successfully";
             else
-                responseMessage = "You either didn't provide a file or it was of the wrong type";
+                responseMessage = "ERROR: "+responseText;
             alert(responseMessage);
+        }
+        error:  function(statusText) {
+            alert('ERROR: '+statusText)
         }
     };  
     $('#upload_audio > form').ajaxForm(options);

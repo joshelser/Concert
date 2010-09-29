@@ -75,6 +75,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
+DEBUG_PROPOGATE_EXCEPTIONS = False
+
 ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
