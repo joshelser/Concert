@@ -172,18 +172,27 @@ def waveform_src(request, audio_id, type_waveform = 'viewer'):
     return response
     
 ###
-#   Responds in plain text with the path to the audiofile associated with
-#   the requested Audio object.
+#   Responds in plain text with the path to the file associated with
+#   the requested Audio object, at the requested type
 #
 #   @param          request         HTTP request
 #   @param          audio_id        The Audio object id
+#   @param          audio_type      'wav', 'mp3', or 'ogg'.
 ###/    
-def audio_src(request, audio_id):
+def audio_src(request, audio_id, audio_type):
     audio = Audio.objects.get(pk = audio_id)
     
     #return audio src in plaintext
     response = HttpResponse(mimetype='text/plain')
-    response.write(audio.wavfile.url)
+    
+    # Return only audio type requested
+    if(audio_type == 'wav'):
+        response.write(audio.wavfile.url)
+    elif(audio_type == 'mp3'):
+        response.write(audio.mp3file.url)
+    elif(audio_type == 'ogg'):
+        response.write(audio.oggfile.url)
+        
     return response
 
 ##
