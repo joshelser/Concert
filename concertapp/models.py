@@ -108,7 +108,7 @@ class Audio(models.Model):
         ogg = audiotools.VorbisAudio.from_pcm(oggFilePath,
             audiotools.open(wavFilePath).to_pcm())
         os.chmod(oggFilePath, 0755)
-            
+        
         self.oggfile = oggFile
         
     ##
@@ -145,7 +145,7 @@ class Audio(models.Model):
         path = os.path.join(settings.MEDIA_ROOT, str(self.wavfile))
         if os.path.exists(path):
             os.remove(path)
-
+            
         # Remove oggfile
         path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
         if os.path.exists(path):

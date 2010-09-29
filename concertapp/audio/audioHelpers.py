@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+## @package audioHelpers
+
+import os
+import audiotools
+
+from waveform import *
+
+###
+#   Takes as input a file of any format, and creates a wav file in the desired
+#   format, making sure to throw errors along the way.
+#
+#   @param inputFilePath    String  The path of an audio file (any format)
+#   @param outputFilePath   String  The path to the file to output to
+#                                       (including .wav)
+#
+#   @throws   audiotools.UnsupportedFile  - if filetype is unsupported
+#   @throws   IOError                     - if there was a problem opening
+#   @throws   audiotools.PCMReaderError   - if there was an error decoding
+#   @throws   Exception                   - unsupported audio channel config
+#   @throws   Exception                   - unsupported bit-depth
+#   @throws   audiotools.EncodingError    - encoding error
+def toNormalizedWav(inputFilePath, outputFilePath):
+    # open file (can raise errors)
+    orig = audiotools.open(inputFilePath)
+
+    ## Decode file to raw audio (PCM)
+    origPCM = orig.to_pcm()
+
+    # If this is a surround sound file, or if there is no channel mask
+    # we shall error for now.  This will probably not happen.
+    channel_mask = origPCM.channel_mask
+    if channel_mask < 2 or channel_mask > 3:
+      raise Exception ('Unsupported audio channel configuration')
+  
+    # Make sure bit depth is not > 16bit.
+    # If it is, error for now.  I tried to convert the file, but I
+    # get the following error: "data chunk ends prematurely"
+    bits_per_sample = origPCM.bits_per_sample
+    if bits_per_sample > 16:
+        # Uncomment this line to try changing the bit depth:
+        #bits_per_sample = 16
+        # Comment this line to try changing the bit depth:
+        raise Exception(
+            'Unsupported bit depth, try converting file to 16bit.'
+        )
+    
+    # Make sure sample rate is not > 44100
+    sample_rate = origPCM.sample_rate
+    # If original sample rate was greater than 44100
+    if sample_rate > 44100:
+      # Convert to 44100
+      sample_rate = 44100
+
+
+    # Create new PCM stream at 44100, with 2 channels
+    normalizedPCM = audiotools.PCMConverter(origPCM, 44100, 2,
+        channel_mask, bits_per_sample)
+    
+
+    # Output normalized audio to wav (Can raise error)
+    wav = audiotools.WaveAudio.from_pcm(outputFilePath,
+        normalizedPCM)
+    os.chmod(outputFilePath, 0755)        
+

@@ -11,7 +11,7 @@ from concertapp.audio import audioFormats
 from concertapp.audio.waveform import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
-import os, tempfile, audiotools
+import os, tempfile, audiotools, audioHelpers
 
 CHUNKSIZE = 1024 * 32
 
@@ -50,34 +50,32 @@ def upload_audio(request):
         
         # grab the filename of the temporary uploaded file
         inputFilePath = request.FILES['wavfile'].temporary_file_path()
+
         #   Upload a dummy file (just containing 'a'), just so we can get a 
         #   unique filename.  This will be the actual .wav file soon.
         fileName = os.path.split(str(request.FILES['wavfile']))[-1]
         wavFile = SimpleUploadedFile(fileName+'.wav', 'a')
         
         #   Audio object with dummy wav file in it
-        audio = Audio(user = user, wavfile = wavFile)
+        audio = Audio(user = user, wavfile = wavFile, filename = fileName)
         
         form = UploadFileForm(request.POST, instance = audio)
         if form.is_valid():
             #   Save the form, copies the dummy file to the proper location
             audio = form.save()
             
-            #   Now we can get the new dummy file location
+            #   Now we can get the new dummy file location with the
+            #   auto-generated name
             outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
-            print "outputFilePath:\n"+str(outputFilePath)
+
             try:
                 # Create the normalized .wav file at the location specified
                 # above.  This will overwrite the dummy file we created.
-                # Also we must handle errors here
-
-                #   Send the input file to be processed, and receive back an object
-                #   which will include the path to a normalized wav file version 
-                audioUtilityObject = audioFormats.NormalizedWav(
+                # Also we must handle errors here.
+                audioUtilityObject = audioHelpers.toNormalizedWav(
                     inputFilePath, 
                     outputFilePath
                 )
-
             except (
                 audiotools.UnsupportedFile, 
                 #IOError, 
@@ -90,7 +88,7 @@ def upload_audio(request):
                 response.write(errorText)
                 return response
             
-            #Create ogg and mp3 versions (can throw errors)
+            #Create ogg and mp3 versions of the audio (and handle errors)
             try:
                 audio.create_ogg_and_mp3()
             except(
@@ -105,8 +103,28 @@ def upload_audio(request):
                 response.write(errorText)
                 return response
                 
+            audio.save()
         
-        
+            # Generate the waveform onto disk
+            generate_waveform(audio)
+
+            # Get audio duration in seconds
+            duration = get_duration(audio)
+
+            # Get user's default group
+            default_group = user.groups.get(name = user.username)
+
+            # Determine name of segment and tag
+            name = audio.filename
+
+            # Create the initial audio segment
+            first_segment = AudioSegment(name = name, beginning = 0, end = duration, audio = audio)
+            first_segment.save()
+
+            # Tag segment with default tag
+            default_tag = Tag.objects.get(group = default_group, tag = 'Uploads')
+            default_tag.segments.add(first_segment)
+            default_tag.save()
         
         
     
