@@ -26,19 +26,45 @@ class Audio(object):
     ## Constructor
     #
     # @param self Class Object
-    # @param inputFileName The path of an audio file
+    def __init__(self):
+        return self
+        
+    ## Initialize member variables relating to paths.
+    def initializePaths(self, filePath):
+        self.filePath = filePath
+
+        self.fileName = os.path.basename(filePath)
+
+        self.fileType = os.path.splitext(self.fileName)[1].lower()[1:]
+
+
+
+## NormalizedWav Class
+# @class normalizedWav
+#
+# Inherits from the Audio class, takes as input a file of any format, and
+# creates a wav file in the desired format, making sure to throw errors
+# along the way.
+class NormalizedWav(Audio):
+    ## Constructor
+    #
+    # @param self Class Object
+    # @param inputFilePath      The path of an audio file, in any format
+    # @param outputFilePath     The path to the file to output to
     #
     # @throws   audiotools.UnsupportedFile  - if filetype is unsupported
     # @throws   IOError                     - if there was a problem opening
     # @throws   audiotools.PCMReaderError   - if there was an error decoding
     # @throws   Exception                   - unsupported audio channel config
     # @throws   Exception                   - unsupported bit-depth
-    def __init__(self, inputFileName):
+    # @throws   audiotools.EncodingError    - encoding error
+    #
+    # @return   self, the newly created Audio object
+    def __init__(self, inputFilePath, outputFilePath):
+        
+        
         # open file (can raise errors)
-        try:
-            orig = audiotools.open(inputFileName)
-        except IOError, e:
-            raise IOError(str(e))
+        orig = audiotools.open(inputFilePath)
         
         ## Decode file to raw audio (PCM)
         origPCM = orig.to_pcm()
@@ -74,20 +100,13 @@ class Audio(object):
             channel_mask, bits_per_sample)
             
         
-            
+        # Output normalized audio to wav (Can raise error)
+        wav = audiotools.WaveAudio.from_pcm(outputFilePath,
+            normalizedPCM)
         
+        self.initializePaths(outputFilePath)
         
-        
-        
-        self.filePath = inputFileName
 
-        self.fileName = os.path.basename(inputFileName)
-
-        self.fileType = os.path.splitext(self.fileName)[1].lower()[1:]
-
-        # Ensure a file was uploaded in a known audio file format
-        #if not self.fileType in fileTypes:
-        #    raise NameError('Unknown audio file format')
 
 ## WAV class
 # @class wav

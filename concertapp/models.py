@@ -79,17 +79,21 @@ class Audio(models.Model):
     #   input filename which is the name of the initially uploaded file.
     #
     #   @param  user
-    #   @param  inputFileName
+    #   @param  inputFilePath
     #   @return new instance of Audio object
     #   @throws audiotools.UnsupportedFile  - if filetype is unsupported
     #   @throws IOError                     - if there was a problem opening
-    def create(user, inputFileName):
+    def create(user, inputFilePath, outputFilePath):
         
         #   Send the input file to be processed, and receive back an object
-        #   from which we can get the file names of the encoded versions.
-        #   Errors can be thrown here.
-        audioUtilityObject = audioFormats.Audio(inputFileName)
-        
+        #   which will include the path to a normalized wav file version 
+        #   which will be located in our MEDIA_ROOT folder
+        audioUtilityObject = audioFormats.NormalizedWav(
+            inputFilePath, 
+            outputFilePath
+        )
+                
+        #   now we can copy the normalized wav version into our uploads folder
         return Audio(user = user)
         
     #   This is sort of like a helper function that must be used when an Audio

@@ -48,22 +48,47 @@ def upload_audio(request):
         # Need to add the user to the audio instance
         user = request.user
         
-        # grab the filename of the uploaded file
-        inputFileName = request.FILES['wavfile'].temporary_file_path()
+        # grab the filename of the temporary uploaded file
+        inputFilePath = request.FILES['wavfile'].temporary_file_path()
+        #   Upload a dummy file (just containing 'a'), just so we can get a 
+        #   unique filename.  This will be the actual .wav file soon.
+        fileName = os.path.split(str(request.FILES['wavfile']))[-1]
+        wavFile = SimpleUploadedFile(fileName+'.wav', 'a')
+        
+        outputFilePath = os.path.join(MEDIA_ROOT, 'audio', str(wavFile))
+        
         try:
-            # Create the audio object.  Handle errors.
-            audio = Audio.create(user, inputFileName)
+            # Create the normalized .wav file at the location specified
+            # above.  This will overwrite the dummy file we created.
+            # Also we must handle errors here
+            
+            #   Send the input file to be processed, and receive back an object
+            #   which will include the path to a normalized wav file version 
+            audioUtilityObject = audioFormats.NormalizedWav(
+                inputFilePath, 
+                outputFilePath
+            )
+            
         except (
             audiotools.UnsupportedFile, 
             IOError, 
             audiotools.PCMReaderError,
-            Exception
+            #Exception
         ), e:
+            # Right now we have no better way to handle errors
             errorText = 'Error: '+str(e)
             response = HttpResponse(mimetype='text/plain')
             response.write(errorText)
             return response
-                
+        
+        audio = Audio(user = user, wavfile = wavFile)
+        
+        form = UploadFileForm(request.POST, instance = audio)
+        if form.is_valid():
+            audio = form.save()
+            
+        
+        
     
     if "ajax" in request.POST:
         response = HttpResponse(mimetype='text/plain', responseText = 'success');
