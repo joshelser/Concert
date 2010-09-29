@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-import sys
+import sys, os
 import audiotools
 
 BUFFER_SIZE = 1024
@@ -11,7 +11,7 @@ BUFFER_SIZE = 1024
 # open file
 #print 'opening file'
 try:
-  orig = audiotools.open('input4800016bit.wav')
+  orig = audiotools.open('out4410016bit.ogg')
 except audiotools.UnsupportedFile, e:
   print 'ERROR: '+str(e)
 except IOError, e:
@@ -66,24 +66,25 @@ print 'outputting to wav'
 # Output normalized audio to wav
 try:
   wav = audiotools.WaveAudio.from_pcm(outputFileName+'.wav', normalizedPCM)
+  os.chmod(outputFileName+'.wav', 0755)
 except audiotools.EncodingError, e:
   print 'ERROR: '+str(e)
   
 
 ### Now open wav we just created, and save it as mp3 and ogg
 print 'output to mp3'
-try:
-  mp3 = audiotools.MP3Audio.from_pcm(outputFileName+'.mp3',
-    audiotools.open(outputFileName+'.wav').to_pcm())
-except audiotools.EncodingError, e:
-  print 'ERROR: '+str(e)
+#try:
+#  mp3 = audiotools.MP3Audio.from_pcm(outputFileName+'.mp3',
+#    audiotools.open(outputFileName+'.wav').to_pcm())
+#except audiotools.EncodingError, e:
+#  print 'ERROR: '+str(e)
 
-print 'output to ogg'
-try:
-  ogg = audiotools.VorbisAudio.from_pcm(outputFileName+'.ogg',
-    audiotools.open(outputFileName+'.wav').to_pcm())
-except audiotools.EncodingError, e:
-  print 'ERROR: '+str(e)
+#print 'output to ogg'
+#try:
+#  ogg = audiotools.VorbisAudio.from_pcm(outputFileName+'.ogg',
+#    audiotools.open(outputFileName+'.wav').to_pcm())
+#except audiotools.EncodingError, e:
+#  print 'ERROR: '+str(e)
 
 #print 'Exiting...'
 

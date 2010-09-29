@@ -55,38 +55,58 @@ def upload_audio(request):
         fileName = os.path.split(str(request.FILES['wavfile']))[-1]
         wavFile = SimpleUploadedFile(fileName+'.wav', 'a')
         
-        outputFilePath = os.path.join(MEDIA_ROOT, 'audio', str(wavFile))
-        
-        try:
-            # Create the normalized .wav file at the location specified
-            # above.  This will overwrite the dummy file we created.
-            # Also we must handle errors here
-            
-            #   Send the input file to be processed, and receive back an object
-            #   which will include the path to a normalized wav file version 
-            audioUtilityObject = audioFormats.NormalizedWav(
-                inputFilePath, 
-                outputFilePath
-            )
-            
-        except (
-            audiotools.UnsupportedFile, 
-            IOError, 
-            audiotools.PCMReaderError,
-            #Exception
-        ), e:
-            # Right now we have no better way to handle errors
-            errorText = 'Error: '+str(e)
-            response = HttpResponse(mimetype='text/plain')
-            response.write(errorText)
-            return response
-        
+        #   Audio object with dummy wav file in it
         audio = Audio(user = user, wavfile = wavFile)
         
         form = UploadFileForm(request.POST, instance = audio)
         if form.is_valid():
+            #   Save the form, copies the dummy file to the proper location
             audio = form.save()
             
+            #   Now we can get the new dummy file location
+            outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
+            print "outputFilePath:\n"+str(outputFilePath)
+            try:
+                # Create the normalized .wav file at the location specified
+                # above.  This will overwrite the dummy file we created.
+                # Also we must handle errors here
+
+                #   Send the input file to be processed, and receive back an object
+                #   which will include the path to a normalized wav file version 
+                audioUtilityObject = audioFormats.NormalizedWav(
+                    inputFilePath, 
+                    outputFilePath
+                )
+
+            except (
+                audiotools.UnsupportedFile, 
+                #IOError, 
+                audiotools.PCMReaderError,
+                #Exception
+            ), e:
+                # Right now we have no better way to handle errors
+                errorText = 'Error: '+str(e)
+                response = HttpResponse(mimetype='text/plain')
+                response.write(errorText)
+                return response
+            
+            #Create ogg and mp3 versions (can throw errors)
+            try:
+                audio.create_ogg_and_mp3()
+            except(
+                audiotools.UnsupportedFile, 
+                #IOError, 
+                audiotools.PCMReaderError,
+                #Exception
+            ), e:
+                # Right now we have no better way to handle errors
+                errorText = 'Error: '+str(e)
+                response = HttpResponse(mimetype='text/plain')
+                response.write(errorText)
+                return response
+                
+        
+        
         
         
     

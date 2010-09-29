@@ -3,10 +3,14 @@ from django.contrib.auth.models import User, Group
 from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 
 from django.conf import settings
 from concertapp.audio import audioFormats
 from concertapp.settings import MEDIA_ROOT
+
+import audiotools
 
 import os, tempfile
 
@@ -71,147 +75,69 @@ class Audio(models.Model):
     filename = models.CharField(max_length = 100)
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
+    mp3file = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
+
+    def create_ogg_and_mp3(self):
+        self.create_ogg()
+        self.create_mp3()
     
-    #   Takes as input, a user who this audio object belongs to, and an 
-    #   input filename which is the name of the initially uploaded file.
+    ###
+    #   Create ogg file from .wav
+    #   
+    #   @throws     audiotools.EncodingError    -   Upon encoding error
+    def create_ogg(self):
+        # Get name of wav file
+        wavFileName = str(self.wavfile)
+        
+        # take .wav off end, and replace with .ogg
+        oggFileName = wavFileName.split('.')[:-1]
+        oggFileName = '.'.join(oggFileName)+'.ogg'
+        
+        # Destination of ogg file
+        oggFilePath = os.path.join(MEDIA_ROOT, oggFileName)
+        # Input wav file path
+        wavFilePath = os.path.join(MEDIA_ROOT, wavFileName)
+        
+        # Create dummy Django file object
+        oggFile = SimpleUploadedFile(oggFileName, 'a')
+        
+        # Convert file to ogg.  Can throw EncodingError.
+        ogg = audiotools.VorbisAudio.from_pcm(oggFilePath,
+            audiotools.open(wavFilePath).to_pcm())
+        os.chmod(oggFilePath, 0755)
+            
+        self.oggfile = oggFile
+        
+    ##
+    #   Create mp3 file from .wav
     #
-    #   @param  user
-    #   @param  inputFilePath
-    #   @return new instance of Audio object
-    #   @throws audiotools.UnsupportedFile  - if filetype is unsupported
-    #   @throws IOError                     - if there was a problem opening
-    def create(user, inputFilePath, outputFilePath):
+    #   @throws audiotools.EncodingError        - Upon encoding error        
+    def create_mp3(self):
+        # Get name of wav file
+        wavFileName = str(self.wavfile)
         
-        #   Send the input file to be processed, and receive back an object
-        #   which will include the path to a normalized wav file version 
-        #   which will be located in our MEDIA_ROOT folder
-        audioUtilityObject = audioFormats.NormalizedWav(
-            inputFilePath, 
-            outputFilePath
-        )
-                
-        #   now we can copy the normalized wav version into our uploads folder
-        return Audio(user = user)
+        # take .wav off end and replace with .mp3
+        mp3FileName = wavFileName.split('.')[:-1]
+        mp3FileName = '.'.join(mp3FileName)+'.mp3'
         
-    #   This is sort of like a helper function that must be used when an Audio
-    #   object is created.
-    create = staticmethod(create)
-    
-    def mp3_to_wav(self, originalFile):
-        # Use the original filename as a prefix
-        prefixName = str(originalFile)
-
-        # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(suffix = '.wav', prefix = prefixName)
-
-        # Save the name of the new file
-        newName = tempFile[1]
-
-        # Create an mp3 object
-        mp3Obj = audioFormats.Mp3(originalFile.temporary_file_path())
-
-        # Decode the mp3 into wav
-        proc = mp3Obj.mp3Decode(newName)
-
-        proc.wait()
-
-        print 'Finished converting mp3 to wav'
-
-        return newName
-
-    def ogg_to_wav(self, originalFile):
-        # Use the original filename as a prefix
-        prefixName = str(originalFile)
-
-        # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(suffix = '.wav', prefix = prefixName)
-
-        # Save the name of the new file
-        newName = tempFile[1]
-
-        # Create an mp3 object
-        oggObj = audioFormats.Ogg(originalFile.temporary_file_path())
-
-        # Decode the mp3 into wav
-        proc = oggObj.oggDecode(newName)
-
-        proc.wait()
-
-        print 'Finished converting ogg to wav'
-
-        return newName
-
-    def mp3_to_ogg(self, originalFile):
-        # Convert from mp3 to wav
-        wavFileName = self.mp3_to_wav(originalFile)
-
-        # Use the original filename as a prefix
-        prefixName = os.path.split(wavFileName)[-1]
-
-        # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
-
-        # Save the name of the new file
-        newName = tempFile[1]
-
-        # Create an wav object
-        wavObj = audioFormats.Wav(wavFileName)
-
-        # Encode the wav into ogg
-        proc = wavObj.oggEncode(newName)
-
-        proc.wait()
-
-        print 'Finished converting wav to ogg'
-
-        return newName
-
-    def wavfilename_to_ogg(self, wavFileName):
-        # Use the original filename as a prefix
-        prefixName = os.path.split(wavFileName)[-1]
-
-        # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
-
-        # Save the name of the new file
-        newName = tempFile[1]
-
-        # Create an wav object
-        wavObj = audioFormats.Wav(wavFileName)
-
-        # Encode the wav into ogg
-        proc = wavObj.oggEncode(newName)
-
-        proc.wait()
-
-        print 'Finished converting wav to ogg'
-
-        return newName
-
-    def wav_to_ogg(self, originalFile):
-         # Use the original filename as a prefix
-        prefixName = str(originalFile)
-
-        # Create a random file for the created wav file
-        tempFile = tempfile.mkstemp(suffix = '.ogg', prefix = prefixName)
-
-        # Save the name of the new file
-        newName = tempFile[1]
-
-        # Create an wav object
-        wavObj = audioFormats.Wav(originalFile.temporary_file_path())
-
-        # Encode the wav into ogg
-        proc = wavObj.oggEncode(newName)
-
-        proc.wait()
-
-        print 'Finished converting wav to ogg'
-
-        return newName
+        # Destination of mp3 file
+        mp3FilePath = os.path.join(MEDIA_ROOT, mp3FileName)
+        # Input wav file path
+        wavFilePath = os.path.join(MEDIA_ROOT, wavFileName)
+        
+        # Create dummy Django file object
+        mp3File = SimpleUploadedFile(mp3FileName, 'a')
+        
+        # Convert file to mp3.  Can throw EncodingError
+        mp3 = audiotools.MP3Audio.from_pcm(mp3FilePath,
+            audiotools.open(wavFilePath).to_pcm())
+        os.chmod(mp3FilePath, 0755)
+        
+        self.mp3file = mp3File
+        
 
     # Delete the current audio file from the filesystem
     def delete(self, *args, **kwargs):
@@ -222,6 +148,11 @@ class Audio(models.Model):
 
         # Remove oggfile
         path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
+        if os.path.exists(path):
+            os.remove(path)
+        
+        # Remove mp3file
+        path = os.path.join(settings.MEDIA_ROOT, str(self.mp3file))
         if os.path.exists(path):
             os.remove(path)
 

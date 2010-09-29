@@ -103,6 +103,8 @@ class NormalizedWav(Audio):
         # Output normalized audio to wav (Can raise error)
         wav = audiotools.WaveAudio.from_pcm(outputFilePath,
             normalizedPCM)
+        os.chmod(outputFilePath, 0755)
+        
         
         self.initializePaths(outputFilePath)
         
@@ -282,29 +284,4 @@ class Mp3(Audio):
         sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         return sub
 
-
-## Ogg
-# @class ogg
-#
-# @extends audio
-class Ogg(Audio):
-    ## Constructor
-    #
-    # @param self wav object
-    #
-    def __init__(self, inputFileName):
-        super(Ogg, self).__init__(inputFileName)
-
-    ## Decode an OGG file
-    #
-    # @param self
-    # @param outputFileName
-    #
-    # @return A subprocess object
-    def oggDecode(self, outputFileName):
-        command = "oggdec '%s' -o '%s' -Q" % (self.filePath, outputFileName)
-
-        sub = subprocess.Popen(command, shell=True, env=environ, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-
-        return sub
 
