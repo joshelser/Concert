@@ -206,6 +206,25 @@ class Audio(models.Model):
         # Save the path relative to the media_dir
         self.waveformViewer = viewerImgPath    
         self.waveformEditor = editorImgPath
+        
+    ###
+    #   This needs to be overridden so when we are saving ogg or mp3 files,
+    #   so that the file is not given a random name.  We've already come up
+    #   with a unique name for the .wav file, and since we are using that
+    #   to generate the .ogg and .mp3 filenames, there is no need to attempt
+    #   to make them unique.
+    def _save_FIELD_file(self, field, filename, raw_contents, save=True):
+        print '_save_FIELD_file'
+        original_upload_to = field.upload_to
+        
+        if(field.name == 'oggfile' or field.name == 'mp3file'):
+            field.upload_to = os.path.join(field.upload_to, filename)
+            print 'modifying field.upload_to to: '+str(field.upload_to)
+        
+        super(Audio, self)._save_FIELD_file(
+            field, filename, raw_contents, save
+        )
+        field.upload_to = original_upload_to
     
     
 ##
