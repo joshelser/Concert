@@ -7,6 +7,9 @@ import audiotools
 
 from waveform import *
 
+# The permissions (chmod) for new files that are created
+NEW_FILE_PERMISSIONS = 0755
+
 ###
 #   Takes as input a file of any format, and creates a wav file in the desired
 #   format, making sure to throw errors along the way.
@@ -62,5 +65,43 @@ def toNormalizedWav(inputFilePath, outputFilePath):
     # Output normalized audio to wav (Can raise error)
     wav = audiotools.WaveAudio.from_pcm(outputFilePath,
         normalizedPCM)
-    os.chmod(outputFilePath, 0755)        
+    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)        
 
+
+###
+#   Takes as input an audio file of any format, and creates an ogg file at
+#   the specified location.
+#
+#   @param  inputFilePath   String  The path to the input audio file (any
+#                                       format)
+#   @param  outputFilePath  String  The path to the output audio file (should
+#                                       end in .ogg)
+#
+#   @throws audiotools.UnsupportedFile  If input filetype is not supported
+#   @throws IOError                     If input file cannot be opened
+#   @throws audiotools.EncodingError    Problems during encoding to PCM or ogg
+def toOgg(inputFilePath, outputFilePath):
+    ogg = audiotools.VorbisAudio.from_pcm(outputFilePath,
+        audiotools.open(inputFilePath).to_pcm())
+    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)
+    
+###
+#   Takes as input an audio file of any format, and creates an mp3 file
+#   at the specified location.
+#
+#   @param  inputFilePath   String  The path to the input audio file (any
+#                                       format)
+#   @param  outputFilePath  String  The path to the output audio file (should
+#                                       end in .mp3)
+#
+#   @throws audiotools.UnsupportedFile  If input filetype is not supported
+#   @throws IOError                     If input file cannot be opened
+#   @throws audiotools.EncodingError    Problems during encoding to PCM or mp3
+def toMp3(inputFilePath, outputFilePath):
+    mp3 = audiotools.MP3Audio.from_pcm(outputFilePath,
+        audiotools.open(inputFilePath).to_pcm())
+    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)    
+    
+    
+    
+    

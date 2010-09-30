@@ -7,11 +7,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from concertapp.models  import *
 from concertapp.forms   import UploadFileForm
 
-from concertapp.audio import audioFormats
+from concertapp.audio import audioFormats, audioHelpers
 from concertapp.audio.waveform import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
-import os, tempfile, audiotools, audioHelpers
+import os, tempfile, audiotools
 
 CHUNKSIZE = 1024 * 32
 
@@ -78,9 +78,9 @@ def upload_audio(request):
                 )
             except (
                 audiotools.UnsupportedFile, 
-                IOError, 
+                #IOError, 
                 audiotools.PCMReaderError,
-                Exception
+                #Exception
             ), e:
                 # Right now we have no better way to handle errors
                 errorText = 'Error: '+str(e)
@@ -94,9 +94,9 @@ def upload_audio(request):
                 audio.create_ogg_and_mp3()
             except(
                 audiotools.UnsupportedFile, 
-                IOError, 
+                #IOError, 
                 audiotools.PCMReaderError,
-                Exception
+                #Exception
             ), e:
                 # Right now we have no better way to handle errors
                 errorText = 'Error: '+str(e)

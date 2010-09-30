@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 from django.conf import settings
-from concertapp.audio import audioFormats
+from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 
 import commands #debugging
@@ -75,9 +75,9 @@ class Comment(models.Model):
  
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
-    wavfile = models.FileField(upload_to = 'audio/wav/')
-    oggfile = models.FileField(upload_to = 'audio/ogg/')
-    mp3file = models.FileField(upload_to = 'audio/mp3/')
+    wavfile = models.FileField(upload_to = 'audio/wav')
+    oggfile = models.FileField(upload_to = 'audio/ogg')
+    mp3file = models.FileField(upload_to = 'audio/mp3')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
@@ -92,26 +92,24 @@ class Audio(models.Model):
     #   @throws     audiotools.EncodingError    -   Upon encoding error
     def create_ogg(self):
         # Get name of wav file
-        wavFileName = str(self.wavfile)
+        wavFileName = os.path.split(str(self.wavfile))[-1]
         
         # take .wav off end, and replace with .ogg
         oggFileName = wavFileName.split('.')[:-1]
         oggFileName = '.'.join(oggFileName)+'.ogg'
         
         # Destination of ogg file
-        oggFilePath = os.path.join(MEDIA_ROOT, oggFileName)
+        oggFilePath = os.path.join(MEDIA_ROOT, 'audio', 'ogg', oggFileName)
 
         # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, wavFileName)
+        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', 'wav', wavFileName)
                 
         # Create dummy Django file object
         oggFile = SimpleUploadedFile(oggFileName, 'a')
 
         
         # Convert file to ogg.  Can throw EncodingError.
-        ogg = audiotools.VorbisAudio.from_pcm(oggFilePath,
-            audiotools.open(wavFilePath).to_pcm())
-        os.chmod(oggFilePath, 0755)
+        audioHelpers.toOgg(wavFilePath, oggFilePath)
         
         self.oggfile = oggFile
         
@@ -121,24 +119,22 @@ class Audio(models.Model):
     #   @throws audiotools.EncodingError        - Upon encoding error        
     def create_mp3(self):
         # Get name of wav file
-        wavFileName = str(self.wavfile)
-        
+        wavFileName = os.path.split(str(self.wavfile))[-1]
+
         # take .wav off end and replace with .mp3
         mp3FileName = wavFileName.split('.')[:-1]
         mp3FileName = '.'.join(mp3FileName)+'.mp3'
-        
+
         # Destination of mp3 file
-        mp3FilePath = os.path.join(MEDIA_ROOT, mp3FileName)
+        mp3FilePath = os.path.join(MEDIA_ROOT, 'audio', 'mp3', mp3FileName)
         # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, wavFileName)
-        
+        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', 'wav', wavFileName)
+
         # Create dummy Django file object
         mp3File = SimpleUploadedFile(mp3FileName, 'a')
         
         # Convert file to mp3.  Can throw EncodingError
-        mp3 = audiotools.MP3Audio.from_pcm(mp3FilePath,
-            audiotools.open(wavFilePath).to_pcm())
-        os.chmod(mp3FilePath, 0755)
+        audioHelpers.toMp3(wavFilePath, mp3FilePath)
         
         self.mp3file = mp3File
         
@@ -187,13 +183,13 @@ class Audio(models.Model):
         return
 
     ##
-    # Generate all the waveforms for the audio, and save them to the
-    # database
+    # Generate all the waveforms for this audio object.  Should transition
+    # these audioFormats calls to the new audio library.
     #
     def generate_waveform(self):
         wavPath = str(self.wavfile)
         print "wavPath:\n"+str(wavPath)
-        wavName = os.path.splitext(wavPath)[-1]
+        wavName = os.path.split(wavPath)[-1]
         print "wavName:\n"+str(wavName)
         # Create the wav object
         wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, wavPath))
