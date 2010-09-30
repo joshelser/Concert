@@ -10,6 +10,8 @@ from django.conf import settings
 from concertapp.audio import audioFormats
 from concertapp.settings import MEDIA_ROOT
 
+import commands #debugging
+
 import audiotools
 
 import os, tempfile
@@ -73,9 +75,9 @@ class Comment(models.Model):
  
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
-    wavfile = models.FileField(upload_to = 'audio/')
-    oggfile = models.FileField(upload_to = 'audio/')
-    mp3file = models.FileField(upload_to = 'audio/')
+    wavfile = models.FileField(upload_to = 'audio/wav/')
+    oggfile = models.FileField(upload_to = 'audio/ogg/')
+    mp3file = models.FileField(upload_to = 'audio/mp3/')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
@@ -98,11 +100,13 @@ class Audio(models.Model):
         
         # Destination of ogg file
         oggFilePath = os.path.join(MEDIA_ROOT, oggFileName)
+
         # Input wav file path
         wavFilePath = os.path.join(MEDIA_ROOT, wavFileName)
-        
+                
         # Create dummy Django file object
         oggFile = SimpleUploadedFile(oggFileName, 'a')
+
         
         # Convert file to ogg.  Can throw EncodingError.
         ogg = audiotools.VorbisAudio.from_pcm(oggFilePath,
@@ -146,25 +150,29 @@ class Audio(models.Model):
         if os.path.exists(path):
             os.remove(path)
             
-        # Remove oggfile
-        path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
-        if os.path.exists(path):
-            os.remove(path)
+        # Remove oggfile if one still exists
+        if(len(str(self.oggfile))):
+            path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
+            if os.path.exists(path):
+                os.remove(path)
         
         # Remove mp3file
-        path = os.path.join(settings.MEDIA_ROOT, str(self.mp3file))
-        if os.path.exists(path):
-            os.remove(path)
+        if(len(str(self.mp3file))):
+            path = os.path.join(settings.MEDIA_ROOT, str(self.mp3file))
+            if os.path.exists(path):
+                os.remove(path)
 
         # Remove viewer
-        path = os.path.join(settings.MEDIA_ROOT, str(self.waveformViewer))
-        if os.path.exists(path):
-            os.remove(path)
+        if(len(str(self.waveformViewer))):
+            path = os.path.join(settings.MEDIA_ROOT, str(self.waveformViewer))
+            if os.path.exists(path):
+                os.remove(path)
 
         # Remove editor image
-        path = os.path.join(settings.MEDIA_ROOT, str(self.waveformEditor))
-        if os.path.exists(path):
-            os.remove(path)
+        if(len(str(self.waveformEditor))):
+            path = os.path.join(settings.MEDIA_ROOT, str(self.waveformEditor))
+            if os.path.exists(path):
+                os.remove(path)
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audio = self)
@@ -178,6 +186,32 @@ class Audio(models.Model):
 
         return
 
+    ##
+    # Generate all the waveforms for the audio, and save them to the
+    # database
+    #
+    def generate_waveform(self):
+        wavPath = str(self.wavfile)
+        print "wavPath:\n"+str(wavPath)
+        wavName = os.path.splitext(wavPath)[-1]
+        print "wavName:\n"+str(wavName)
+        # Create the wav object
+        wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, wavPath))
+        length = wavObj.getLength()
+
+        # Name of the image for the waveform viewer (small waveform image) 
+        viewerImgPath = 'images/viewers/'+wavName + '_800.png'    
+        wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 110)
+
+        # Name of the image for the waveform editor (large waveform image)
+        editorImgPath = 'images/editors/'+wavName + '_' + str(5 * length) + '.png'
+        wavObj.generateWaveform(os.path.join(MEDIA_ROOT, editorImgPath), 5 * length, 585)
+
+        # Save the path relative to the media_dir
+        self.waveformViewer = viewerImgPath    
+        self.waveformEditor = editorImgPath
+    
+    
 ##
 # Given a user, it creates the corresponding group
 #

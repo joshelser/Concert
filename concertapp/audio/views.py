@@ -78,14 +78,15 @@ def upload_audio(request):
                 )
             except (
                 audiotools.UnsupportedFile, 
-                #IOError, 
+                IOError, 
                 audiotools.PCMReaderError,
-                #Exception
+                Exception
             ), e:
                 # Right now we have no better way to handle errors
                 errorText = 'Error: '+str(e)
                 response = HttpResponse(mimetype='text/plain')
                 response.write(errorText)
+                audio.delete()
                 return response
             
             #Create ogg and mp3 versions of the audio (and handle errors)
@@ -93,20 +94,28 @@ def upload_audio(request):
                 audio.create_ogg_and_mp3()
             except(
                 audiotools.UnsupportedFile, 
-                #IOError, 
+                IOError, 
                 audiotools.PCMReaderError,
-                #Exception
+                Exception
             ), e:
                 # Right now we have no better way to handle errors
                 errorText = 'Error: '+str(e)
                 response = HttpResponse(mimetype='text/plain')
                 response.write(errorText)
+                audio.delete()
                 return response
-                
-            audio.save()
+            
+            print "audio.oggfile:\n"+str(audio.oggfile)
+            print "audio.mp3file:\n"+str(audio.mp3file)            
+            
         
             # Generate the waveform onto disk
-            generate_waveform(audio)
+            audio.generate_waveform()
+
+            audio.save() ## HERE
+            print "audio.oggfile:\n"+str(audio.oggfile)
+            print "audio.mp3file:\n"+str(audio.mp3file)
+            
 
             # Get audio duration in seconds
             duration = get_duration(audio)
@@ -195,30 +204,6 @@ def audio_src(request, audio_id, audio_type):
         
     return response
 
-##
-# Given an audio object, generate all the waveforms for it, and save them to the
-# database
-#
-# @param audio    The audio object to generate waveforms from
-def generate_waveform(audio):
-    # Create the wav object
-    wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, str(audio.wavfile)))
-    length = wavObj.getLength()
-    
-    # Name of the image for the waveform viewer (small waveform image) 
-    viewerImgPath = 'images/viewers/'+str(audio.wavfile) + '_800.png'    
-    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 110)
-
-    # Name of the image for the waveform editor (large waveform image)
-    editorImgPath = 'images/editors/'+str(audio.wavfile) + '_' + str(5 * length) + '.png'
-    wavObj.generateWaveform(os.path.join(MEDIA_ROOT, editorImgPath), 5 * length, 585)
-
-    # Save the path relative to the media_dir
-    audio.waveformViewer = viewerImgPath    
-    audio.waveformEditor = editorImgPath
-
-    # Save the audio object
-    audio.save()
 
 ###
 # Returns the duration of the audio file associated with the passed-in audio object.
