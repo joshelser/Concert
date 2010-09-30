@@ -79,9 +79,9 @@ def upload_audio(request):
                 
             except (
                 audiotools.UnsupportedFile, 
-                #IOError, 
+                IOError, 
                 audiotools.PCMReaderError,
-                #Exception
+                Exception
             ), e:
                 # Right now we have no better way to handle errors
                 errorText = 'Error: '+str(e)
