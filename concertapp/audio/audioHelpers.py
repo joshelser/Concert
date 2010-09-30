@@ -73,9 +73,9 @@ def toNormalizedWav(inputFilePath, outputFilePath):
 #   the specified location.
 #
 #   @param  inputFilePath   String  The path to the input audio file (any
-#                                       format)
+#                                   format)
 #   @param  outputFilePath  String  The path to the output audio file (should
-#                                       end in .ogg)
+#                                   end in .ogg)
 #
 #   @throws audiotools.UnsupportedFile  If input filetype is not supported
 #   @throws IOError                     If input file cannot be opened
@@ -90,9 +90,9 @@ def toOgg(inputFilePath, outputFilePath):
 #   at the specified location.
 #
 #   @param  inputFilePath   String  The path to the input audio file (any
-#                                       format)
+#                                   format)
 #   @param  outputFilePath  String  The path to the output audio file (should
-#                                       end in .mp3)
+#                                   end in .mp3)
 #
 #   @throws audiotools.UnsupportedFile  If input filetype is not supported
 #   @throws IOError                     If input file cannot be opened

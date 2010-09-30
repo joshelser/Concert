@@ -219,9 +219,11 @@ function load_waveform(segmentID) {
 *   @param              callBackFunction    the function to be executed after the audio has been loaded
 **/
 function load_audio(audioID, segmentID, callBackFunction) {
+    
+    var audiotype = com.concertsoundorganizer.compatibility.audiotype;
     /* Load audio element into audio container */
     $.ajax({
-        url: '/audio/'+audioID+'/audiosrc/',
+        url: '/audio/'+audioID+'/audiosrc/'+audiotype,
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* Clear audio loop */

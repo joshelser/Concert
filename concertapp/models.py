@@ -107,11 +107,8 @@ class Audio(models.Model):
         # Input wav file path
         wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
                 
-        # Create dummy Django file object so we can get the name that Django
-        #   wants to use for this file.
-        #   ( I tried getting around this by putting the ogg, mp3, and wav in
-        #   separate folders, but it seems the only way is to create your own
-        #   storage class. )
+        #   Create dummy Django file object, and save with self so we can
+        #   retain this filename.
         oggFile = SimpleUploadedFile(oggFileName, 'a')
         self.oggfile = oggFile
         self.save()
@@ -120,8 +117,9 @@ class Audio(models.Model):
         oggFilePath = os.path.join(MEDIA_ROOT, str(self.oggfile))
         
         
-        #   Convert .wav file to ogg and put it proper place.  Can throw
-        #   EncodingError.
+        #   Convert file to ogg and put it in proper place.  This will
+        #   overwrite dummy file, and will result in the self.oggfile property
+        #   pointing to the right place.  Can throw audiotools.EncodingError.
         audioHelpers.toOgg(wavFilePath, oggFilePath)
         
         
@@ -140,50 +138,38 @@ class Audio(models.Model):
         # Input wav file path
         wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
 
-        # Create dummy Django file object
+        #   Create dummy Django file object, and save with self so we can
+        #   retain this filename.
         mp3File = SimpleUploadedFile(mp3FileName, 'a')
-        # Save object with dummy file
+        # Save dummy file with self
         self.mp3file = mp3File
         self.save()
         
         # Destination of mp3 file
         mp3FilePath = os.path.join(MEDIA_ROOT, str(self.mp3file))
         
-        #   Convert file to mp3 and put it in proper place.  Can throw
-        #   EncodingError
+        #   Convert file to mp3 and put it in proper place.  This will
+        #   overwrite dummy file, and will result in the self.mp3file property
+        #   pointing to the right place.  Can throw audiotools.EncodingError.
         audioHelpers.toMp3(wavFilePath, mp3FilePath)
                 
 
     # Delete the current audio file from the filesystem
     def delete(self, *args, **kwargs):
-        # Remove wavfile
-        path = os.path.join(settings.MEDIA_ROOT, str(self.wavfile))
-        if os.path.exists(path):
-            os.remove(path)
+        # Remove wavfile from this object, and delete file on filesystem.
+        self.wavfile.delete(save=False)
             
-        # Remove oggfile if one still exists
-        if(len(str(self.oggfile))):
-            path = os.path.join(settings.MEDIA_ROOT, str(self.oggfile))
-            if os.path.exists(path):
-                os.remove(path)
+        # Remove oggfile
+        self.oggfile.delete(save=False)
         
         # Remove mp3file
-        if(len(str(self.mp3file))):
-            path = os.path.join(settings.MEDIA_ROOT, str(self.mp3file))
-            if os.path.exists(path):
-                os.remove(path)
+        self.mp3file.delete(save=False)
 
         # Remove viewer
-        if(len(str(self.waveformViewer))):
-            path = os.path.join(settings.MEDIA_ROOT, str(self.waveformViewer))
-            if os.path.exists(path):
-                os.remove(path)
+        self.waveformViewer.delete(save=False)
 
         # Remove editor image
-        if(len(str(self.waveformEditor))):
-            path = os.path.join(settings.MEDIA_ROOT, str(self.waveformEditor))
-            if os.path.exists(path):
-                os.remove(path)
+        self.waveformEditor.delete(save=False)
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audio = self)

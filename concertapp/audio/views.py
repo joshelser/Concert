@@ -90,15 +90,10 @@ def upload_audio(request):
                 audio.delete()
                 return response
             
-            print "audio.oggfile:\n"+str(audio.oggfile)
-            print "audio.mp3file:\n"+str(audio.mp3file)            
-                    
             # Generate the waveform onto disk
             audio.generate_waveform()
 
-            audio.save() ## HERE
-            print "audio.oggfile:\n"+str(audio.oggfile)
-            print "audio.mp3file:\n"+str(audio.mp3file)
+            audio.save()
             
 
             # Get audio duration in seconds
@@ -128,9 +123,6 @@ def upload_audio(request):
     else:
         return HttpResponseRedirect('/audio/')
                     
-
-
-
 
 ##
 # Display the waveform for an audio object
