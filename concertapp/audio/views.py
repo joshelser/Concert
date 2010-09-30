@@ -72,27 +72,12 @@ def upload_audio(request):
                 # Create the normalized .wav file at the location specified
                 # above.  This will overwrite the dummy file we created.
                 # Also we must handle errors here.
-                audioUtilityObject = audioHelpers.toNormalizedWav(
-                    inputFilePath, 
-                    outputFilePath
-                )
-            except (
-                audiotools.UnsupportedFile, 
-                #IOError, 
-                audiotools.PCMReaderError,
-                #Exception
-            ), e:
-                # Right now we have no better way to handle errors
-                errorText = 'Error: '+str(e)
-                response = HttpResponse(mimetype='text/plain')
-                response.write(errorText)
-                audio.delete()
-                return response
-            
-            #Create ogg and mp3 versions of the audio (and handle errors)
-            try:
+                audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
+                
+                #Create ogg and mp3 versions of the audio (and handle errors)
                 audio.create_ogg_and_mp3()
-            except(
+                
+            except (
                 audiotools.UnsupportedFile, 
                 #IOError, 
                 audiotools.PCMReaderError,
@@ -107,8 +92,7 @@ def upload_audio(request):
             
             print "audio.oggfile:\n"+str(audio.oggfile)
             print "audio.mp3file:\n"+str(audio.mp3file)            
-            
-        
+                    
             # Generate the waveform onto disk
             audio.generate_waveform()
 

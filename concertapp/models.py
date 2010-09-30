@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
+from django.core.files  import File
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -75,13 +76,17 @@ class Comment(models.Model):
  
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
-    wavfile = models.FileField(upload_to = 'audio/wav')
-    oggfile = models.FileField(upload_to = 'audio/ogg')
-    mp3file = models.FileField(upload_to = 'audio/mp3')
+    wavfile = models.FileField(upload_to = 'audio/')
+    oggfile = models.FileField(upload_to = 'audio/')
+    mp3file = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
 
+    ###
+    #   Create ogg and mp3 file from .wav
+    #
+    #   @throws     audiotools.EncodingError    -   Upon encoding error
     def create_ogg_and_mp3(self):
         self.create_ogg()
         self.create_mp3()
@@ -98,20 +103,27 @@ class Audio(models.Model):
         oggFileName = wavFileName.split('.')[:-1]
         oggFileName = '.'.join(oggFileName)+'.ogg'
         
-        # Destination of ogg file
-        oggFilePath = os.path.join(MEDIA_ROOT, 'audio', 'ogg', oggFileName)
 
         # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', 'wav', wavFileName)
+        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
                 
-        # Create dummy Django file object
+        # Create dummy Django file object so we can get the name that Django
+        #   wants to use for this file.
+        #   ( I tried getting around this by putting the ogg, mp3, and wav in
+        #   separate folders, but it seems the only way is to create your own
+        #   storage class. )
         oggFile = SimpleUploadedFile(oggFileName, 'a')
-
+        self.oggfile = oggFile
+        self.save()
         
-        # Convert file to ogg.  Can throw EncodingError.
+        # Destination of ogg file (Django probably changed the filename)
+        oggFilePath = os.path.join(MEDIA_ROOT, str(self.oggfile))
+        
+        
+        #   Convert .wav file to ogg and put it proper place.  Can throw
+        #   EncodingError.
         audioHelpers.toOgg(wavFilePath, oggFilePath)
         
-        self.oggfile = oggFile
         
     ##
     #   Create mp3 file from .wav
@@ -125,19 +137,22 @@ class Audio(models.Model):
         mp3FileName = wavFileName.split('.')[:-1]
         mp3FileName = '.'.join(mp3FileName)+'.mp3'
 
-        # Destination of mp3 file
-        mp3FilePath = os.path.join(MEDIA_ROOT, 'audio', 'mp3', mp3FileName)
         # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', 'wav', wavFileName)
+        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
 
         # Create dummy Django file object
         mp3File = SimpleUploadedFile(mp3FileName, 'a')
-        
-        # Convert file to mp3.  Can throw EncodingError
-        audioHelpers.toMp3(wavFilePath, mp3FilePath)
-        
+        # Save object with dummy file
         self.mp3file = mp3File
+        self.save()
         
+        # Destination of mp3 file
+        mp3FilePath = os.path.join(MEDIA_ROOT, str(self.mp3file))
+        
+        #   Convert file to mp3 and put it in proper place.  Can throw
+        #   EncodingError
+        audioHelpers.toMp3(wavFilePath, mp3FilePath)
+                
 
     # Delete the current audio file from the filesystem
     def delete(self, *args, **kwargs):
@@ -207,25 +222,6 @@ class Audio(models.Model):
         self.waveformViewer = viewerImgPath    
         self.waveformEditor = editorImgPath
         
-    ###
-    #   This needs to be overridden so when we are saving ogg or mp3 files,
-    #   so that the file is not given a random name.  We've already come up
-    #   with a unique name for the .wav file, and since we are using that
-    #   to generate the .ogg and .mp3 filenames, there is no need to attempt
-    #   to make them unique.
-    def _save_FIELD_file(self, field, filename, raw_contents, save=True):
-        print '_save_FIELD_file'
-        original_upload_to = field.upload_to
-        
-        if(field.name == 'oggfile' or field.name == 'mp3file'):
-            field.upload_to = os.path.join(field.upload_to, filename)
-            print 'modifying field.upload_to to: '+str(field.upload_to)
-        
-        super(Audio, self)._save_FIELD_file(
-            field, filename, raw_contents, save
-        )
-        field.upload_to = original_upload_to
-    
     
 ##
 # Given a user, it creates the corresponding group
