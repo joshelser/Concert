@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Manage Tags</h1>
+    <p>
+        {% ifequal message None %}
+            Choose a group to edit that group's tags.
+        {% else %}
+            {{ message }}
+        {% endifequal %}
+        <br />
+    </p>
+    
+    <ul id="group_list">
+        {% for group in groups %}
+            <li id="group-{{ group.id }}"><a href="/tags/group/{{ group.id }}">{{ group }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

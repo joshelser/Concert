@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Your Groups: {{ length }}</h1>
+    {% for g in groups %}
+        <div style="border: 1px dashed blue; margin-bottom: 15px; padding: 10px; width: auto;">
+            <p>{{ g }}</p>
+        </div>
+    {% endfor %}
+
+    <br />
+
+    <a href="{% url choose_group user_id %}">Manage my owned groups</a>
+    <br/>
+    {% if show_create %}
+    <a href='{% url create_group user_id %}'>Add Group</a>
+    {% endif %} 
+    <br/>
+    
+{% endblock %}

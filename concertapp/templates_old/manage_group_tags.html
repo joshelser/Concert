@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Manage {{group.name}} Tags</h1>
+    <p>{{ message }}<br /></p>
+    
+    <table id="tag_list">
+        <thead>
+            <tr>
+                <th>Tag</th>
+                <th>Rename</th>
+                <th>Tagged segments</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in tags %}
+                <tr id="tag-{{ tag.id }}">
+                    <td id="tagName-{{ tag.id }}">{{ tag.tag }}</td>
+                    <td><span id="tagRename-{{ tag.id }}" class="pencil button tagNameEdit" ><!-- --></span></td>
+                    {% ifequal tag.segments.count 0 %}
+                        <td id="tagCount-{{ tag.id }}" class="tagCount"><span id="tagCountButton-{{ tag.id }}" class="tagCountButton button_text tags">{{ tag.segments.count }}</span></td>
+                    {% else %}
+                        <td id="tagCount-{{ tag.id }}" class="tagCount closed"><span id="tagCountButton-{{ tag.id }}" class="tagCountButton button_text tags-label">{{ tag.segments.count }}</span></td>
+                    {% endifequal %}
+                    <td id="tagDelete-{{ tag.id }}"><a id="tagDeleteButton-{{ tag.id }}" class="tagDeleteButton button cross" href="/tags/confirmdelete/{{ tag.id }}/"><!-- --></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <script src="/js/manageTags.js"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1>{{ group }}</h1>
+    <p>Choose an action</p>
+    <div id="actions">
+        <ul>
+            <li><a href="{% url pending_requests user_id group_id %}">Pending Requests</a></li>
+            <li><a href="{% url remove_user user_id group_id %}">Remove a user</a></li>
+            <li><a href="{% url delete_confirm user_id group_id %}">Delete this group</a></li>
+        </ul>
+    </div>
+    <a href="{% url choose_group user_id %}">Back to all my owned groups</a>
+    <a href="/">Back to Main Page</a>
+    
+</div>
+{% endblock %}

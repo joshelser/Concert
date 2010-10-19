@@ -1,0 +1,22 @@
+<table id="tagSegments-{{ tag.id }}" class="tagSegments">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Audio</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for segment in segments %}
+            <tr id="tagSegment-{{ segment.id }}">
+                <td>{{ segment.name }}</td>
+                <td>{{ segment.audio.filename }}</td>
+                <td>{{ segment.beginning }}</td>
+                <td>{{ segment.end }}</td>
+                <td>{{ segment.tag_list }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

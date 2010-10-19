@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>User</h3>
+<p>User name: {{ user.username }}</p>
+<p><a href="{% url groups user.id %}">Groups</a></p>
+{% endblock %}

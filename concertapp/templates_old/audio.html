@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>Audio</h1>
+    {% for obj in audio %}
+    <h3>File Name: <a href="{% url view_audio obj.id %}">{{ obj.filename }}</a></h3>
+        <p>Owner: {{ obj.user.username }}</p>
+        <p>Delete: <a href="{% url delete_audio obj.id %}">Delete the file</a></p>
+    {% endfor %}
+        <a href="{% url upload_audio %}">Upload New Audio</a> 
+{% endblock %}
