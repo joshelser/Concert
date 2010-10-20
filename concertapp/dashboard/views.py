@@ -16,11 +16,8 @@ def dashboard(request):
     
     username = user.username
     
-    # If last time user logged on was not today
-    last_login = user.last_login
     
     return render_to_response('dashboard.html', {
-        'welcome_message': 'Welcome back to Concert, '+username+'.',
-        'page_name': 'Dashboard',
-        'last_login': last_login
+        'welcome_message': 'Welcome to Concert, '+username+'.',
+        'page_name': 'Dashboard'
     }, RequestContext(request));

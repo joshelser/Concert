@@ -9,42 +9,17 @@ admin.autodiscover()
 
 urlpatterns = patterns('concertapp.views',
 
-    # / just redirects to /dashboard
+    # / just redirects to /dashboard, that is the starting page for all users.
     url(r'^$', redirect_to, {'url': '/dashboard/'}),
-
-    #edit
-    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'edit', 
-        name='edit'),
-    url(r'^edit/submit$',
-        'new_segment_submit', name='submit'),
-    url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/download/(?P<type>(mp3|ogg))/$',
-        'download_segment', name='download'),
-    #admin
-    url(r'^admin/$', 'admin', name='admin'),
-    #delete
-    url(r'^delete_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
-        'delete_segment', name='delete_segment'),
-    #rename
-    url(r'^rename_segment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'rename_segment', name='rename_segment'),
-    #comment
-    url(r'^comment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
-        'comment', name='comment'),
+    
+    
+    # Dashboard urls
+    (r'^dashboard/', include('concertapp.dashboard.urls')),
+    # collection urls
+    (r'^collections/', include('concertapp.collection.urls'))
     
     
     
-    
-    #nested
-    # Users
-    (r'^users/', include('concertapp.users.urls')),
-    # Audio
-    (r'^audio/', include('concertapp.audio.urls')),
-    # Groups
-    (r'^groups/', include('concertapp.groups.urls')),
-    # Tag operations
-    (r'^tags/', include('concertapp.tags.urls')),
-    # Dashboard
-    (r'^dashboard/', include('concertapp.dashboard.urls'))
-
 )
 
 if settings.DEBUG:
