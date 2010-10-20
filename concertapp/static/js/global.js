@@ -21,13 +21,11 @@ if(!com.concertsoundorganizer.compatibility) {
 
 $(document).ready(function(){
     
-    /* This will throw a modal window to the user if there is a problem. */
-    detectBrowserCompatibility();
     
     /* Make all fields in the future that have the "autoClear" class on them    
         autoclear */
     initializeAutoClearFieldBehavior();
-
+    
     /* image urls put here will be loaded 
     preloadImages([
         '/graphics/ajax-loader.gif',
@@ -42,6 +40,18 @@ $(document).ready(function(){
         speed: 200,
     }
 
+    
+    
+    /* For each page, run JS corresponding to that page */
+    var pageInitializers = {
+        '/users/login/': initializeLoginPage, 
+    };
+    
+    /* Get URL of page (relative to server address) */
+    var pagePath = window.location.pathname;
+    
+    /* Initialize proper page function */
+    pageInitializers[pagePath]();
 
 
 });
