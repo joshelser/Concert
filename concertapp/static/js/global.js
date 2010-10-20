@@ -49,7 +49,8 @@ $(document).ready(function(){
     var pageInitializers = {
         '/users/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
-        '/collections/manage/': initializeCollectionsPage
+        '/collections/manage/': initializeCollectionsPage,
+        '/audio/upload/': initializeAudioUploadPage
     };
     
     /* Get URL of page (relative to server address) */

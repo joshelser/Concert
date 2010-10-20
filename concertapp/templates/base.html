@@ -31,6 +31,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/dashboard.js"></script>    
     <script src="/js/login.js"></script>    
     <script src="/js/collections.js"></script>    
+    <script src="/js/audio.js"></script>    
     <script src="/js/lib/UIHelpers.js"></script>
     <script src="/js/global.js"></script>
 
@@ -83,7 +84,7 @@ The base template for all pages.  All page templates will use this.
             {% endif %}
             
             {% if page_name != 'Upload Audio' %}
-                <a href="#" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
+                <a href="{% url upload_audio %}" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
             {% endif %}            
             
         </div>

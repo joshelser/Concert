@@ -15,8 +15,10 @@ urlpatterns = patterns('concertapp.views',
     
     # Dashboard urls
     (r'^dashboard/', include('concertapp.dashboard.urls')),
-    # collection urls
-    (r'^collections/', include('concertapp.collection.urls'))
+    # collection urls (manage collections and organize audio)
+    (r'^collections/', include('concertapp.collection.urls')),
+    # audio urls (upload_audio and audio utilities)
+    (r'^audio/', include('concertapp.audio.urls'))
     
     
     
