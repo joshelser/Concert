@@ -1,8 +1,14 @@
-
 /**
-*  Global variables are in a namespace data structure.  A feature that will soon be 
-*  implemented in the Javascript language natively.
-**/
+ *  @file       global.js
+ *  Contains the functionality that all pages must have.
+ *
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/
+ 
+ 
+/**
+ *  Global variables are in a namespace data structure.
+ **/
 if(!com) var com = {};
 if(!com.concertsoundorganizer) com.concertsoundorganizer = {};
 if(!com.concertsoundorganizer.animation) {
@@ -13,34 +19,17 @@ if(!com.concertsoundorganizer.compatibility) {
 }
 
 
-// Closure for the main app.
-(function() {
-    // Handle placeholder text for input fields.  
-    // Add focus and blur events to handle showing/hiding the placeholder.
-    $("input:text, input:password").bind('focus blur', function(event) {
-        if (event.type == 'focus') {
-            // Do we have a placeholder yet?
-            if (!$(this).data('placeholder')) {
-                $(this).data('placeholder', $(this).val());
-            }
-
-            if ($(this).val() == $(this).data('placeholder')) {
-                $(this).val('');
-            }
-        } else {
-            if ($.trim($(this).val()) == '') {
-                $(this).val($(this).data('placeholder'));
-            }
-        }
-    });
-
+$(document).ready(function(){
+    
+    initializeAutoClearFieldBehavior();
+    
     /**
-    *    Preload images
-    **/
+    *    Preload certain images
+    *
     var images = [];
     images.push($('<img />').attr('src', '/graphics/button_press.png'));
     images.push($('<img />').attr('src', '/graphics/ajax-loader.gif'));
-
+    */
 
     /**
     *    Set default animation speed.
@@ -70,7 +59,7 @@ if(!com.concertsoundorganizer.compatibility) {
     }
 
 
-    })();
+});
 
 /**
 *  loading

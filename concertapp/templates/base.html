@@ -1,0 +1,38 @@
+<!--
+
+@file base.html
+The base template for all pages.  All page templates will use this.
+
+-->
+
+<!DOCTYPE>
+
+<html>
+<head>
+    <title>Concert</title>
+    <link rel=StyleSheet href="/css/styles.css" type="text/css" media=screen>
+
+    <script src="/js/lib/vendor/jquery-nightly.min.js"></script>
+    <script src="/js/lib/vendor/modernizr-1.5.min.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 
+    <script src="/js/lib/Waveform.js"></script>
+    <script src="/js/lib/WaveformViewer.js"></script>
+    <script src="/js/lib/WaveformEditor.js"></script>
+    <script src="/js/lib/Highlighter.js"></script>
+    <script src="/js/lib/HighlightViewer.js"></script>
+    <script src="/js/lib/helpers.js"></script>
+    <script src="/js/lib/WaveformPlayer.js"></script>
+    <script src="/js/lib/VolumeSlider.js"></script>
+    <script src="/js/lib/AudioPlayerBehavior.js"></script>
+-->
+
+    <script src="/js/lib/UIHelpers.js"></script>
+    <script src="/js/global.js"></script>
+
+</head>
+<body>
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>
