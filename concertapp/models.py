@@ -1,21 +1,37 @@
-from django.db import models
-from django.contrib.auth.models import User, Group
-from django.contrib import admin
-from django.core.files.storage import FileSystemStorage
-from django.core.files  import File
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import SimpleUploadedFile
-
-
-from django.conf import settings
 from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
-
-import commands #debugging
-
+from django.conf import settings
+from django.contrib import admin
+from django.contrib.auth.models import User, Group
+from django.core.files  import File
+from django.core.files.base import ContentFile
+from django.core.files.storage import FileSystemStorage
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import models
 import audiotools
-
+import commands #debugging
 import os, tempfile
+
+
+class Event(models.Model):
+    time = models.DateTimeField(auto_now_add = True)
+    group = models.ForeignKey(Group)
+
+class TagCommentEvent(Event):
+    tag_comment = models.ForeignKey(TagComment)
+
+class SegmentCommentEvent(Event):
+    segment_comment = models.ForeignKey(SegmentComment)
+
+class TagCreatedEvent(Event):
+    tag = models.ForeignKey(Tag)
+
+class AudioSegCreatedEvent(Event):
+    segment = models.ForeignKey(Segment)
+
+class AudioSegmentTaggedEvent(Event):
+    segment = models.ForeignKey(Segment)
+    tag = models.ForeignKey(Tag)
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -32,7 +48,6 @@ class AudioSegment(models.Model):
             output += ', '+tags[i+1].tag
       return output
         
-
 class GroupAdmin(models.Model):
     group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
     admin = models.ForeignKey(User, related_name = 'administrator')
@@ -70,11 +85,30 @@ class Tag(models.Model):
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.ForeignKey(User, related_name = 'author')
+    user = models.ForeignKey(User)
     time = models.DateTimeField(auto_now_add = True)
-    segment = models.ForeignKey('AudioSegment', null = True)
-    tag = models.ForeignKey('Tag', null = True)
- 
+
+    def save(self):
+        if type(self)==Comment:
+            raise Exception("Comment is abstract in the traditional sense, but not through Django semantics (e.g., Class Meta: abstract = True).\nYou must use one of the Comment subclasses")
+        else:
+            super(Comment,self).save()        
+
+    def __unicode__(self):
+        return "Comment: " +self.comment[:10] + "..."
+
+class TagComment(Comment):
+    tag = models.ForeignKey(Tag)
+
+    def __unicode__(self):
+        return "Tag Comment: " + self.comment[:10] + "..."
+
+class SegmentComment(Comment):
+    segment = models.ForeignKey(Segment)
+
+    def __unicode__(self):
+        return "Segment Comment: " + self.comment[:10] + "..."
+
 class Audio(models.Model):
     filename = models.CharField(max_length = 100)
     wavfile = models.FileField(upload_to = 'audio/')

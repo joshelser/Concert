@@ -508,3 +508,17 @@ def events(request, group_id, num_to_return = 50):
     event_list = chain(tags,segment_comments,tag_comments)
 
     return HttpResponse(str(event_list))
+
+
+
+
+
+## Experimental stuff ##
+def comments(request):
+    comments = Comment.objects.all()
+    
+    return render_to_response("comments_experiment.html",{
+            "comments": comments,
+            })
+
+
