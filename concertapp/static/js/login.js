@@ -9,6 +9,4 @@ function initializeLoginPage() {
     /* This will throw a modal window to the user if there is a problem. */
     detectBrowserCompatibility();
 
-    
-    console.log('Login page initialized.');
 }

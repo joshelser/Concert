@@ -54,6 +54,8 @@ function preloadImages(urls) {
  *  there are problems.
  **/
 function detectBrowserCompatibility() {
+    var notifier = com.concertsoundorganizer.notifier;
+    
     /**
      *  Detect audio compatibility, and throw notifications to the user if necessary.
      **/
@@ -61,16 +63,16 @@ function detectBrowserCompatibility() {
         if(Modernizr.audio.ogg) {
             com.concertsoundorganizer.compatibility.audiotype = 'ogg';
         }
-        else if(Modernizer.audio.mp3) {
+        else if(Modernizr.audio.mp3) {
             com.concertsoundorganizer.compatibility.audiotype = 'mp3';
         }
         else {
             /* TODO: Handle this case */
-            alert('Site will not work.  Your browser says it doesn\'t support ogg or mp3 files, but that it supports the <audio> element.');
+            notifier.alert({content: 'Site will not work.  Your browser says it doesn\'t support ogg or mp3 files, but that it supports the "audio" element.<br />Try upgrading your browser, or try installing one of these free modern browsers:<br /><a href="http://www.google.com/chromeframe">Chrome Frame for IE</a><br /><a href="http://www.google.com/chrome">Google Chrome</a><br /><a href="http://www.mozilla.com/firefox/upgrade.html">Mozilla Firefox</a>'});
         }
     }
     else {
         /* TODO: Handle old browsers here */
-        alert('Site will not work.  Your browser does not support the HTML5 audio element.');
+        notifier.alert({content: 'Site will not work.  Your browser does not support the HTML5 audio element.<br />Try upgrading your browser, or try installing one of these free modern browsers:<br /><a href="http://www.google.com/chromeframe">Chrome Frame for IE</a><br /><a href="http://www.google.com/chrome">Google Chrome</a><br /><a href="http://www.mozilla.com/firefox/upgrade.html">Mozilla Firefox</a>'});
     }
 }
