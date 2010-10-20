@@ -12,8 +12,15 @@ from django.template import RequestContext
 ##
 @login_required
 def dashboard(request):
-    username = request.user.username
+    user = request.user
+    
+    username = user.username
+    
+    # If last time user logged on was not today
+    last_login = user.last_login
     
     return render_to_response('dashboard.html', {
-        'welcome_message': 'Welcome back to Concert, '+username+'.'
+        'welcome_message': 'Welcome back to Concert, '+username+'.',
+        'page_name': 'Dashboard',
+        'last_login': last_login
     }, RequestContext(request));
