@@ -48,8 +48,8 @@ $(document).ready(function(){
     /* For each page, run JS corresponding to that page */
     var pageInitializers = {
         '/users/login/': initializeLoginPage,
-        '/dashboard/': initializeDashboardPage
-//        '/collections/manage/': initializeCollectionsPage
+        '/dashboard/': initializeDashboardPage,
+        '/collections/manage/': initializeCollectionsPage
     };
     
     /* Get URL of page (relative to server address) */
