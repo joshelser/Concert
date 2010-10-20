@@ -733,3 +733,31 @@ div.dataTables_paginate {
 .vertical-align_middle {
     vertical-align: middle;
 }
+
+
+/** This stuff was in devel.css file ***/
+#user_container {
+  width:500px;
+  margin:auto;
+}
+
+.user {
+  margin-top:20px;
+
+}
+
+.add_user {
+  margin-top:50px;
+}
+
+.add_user > a {
+  text-decoration:underline;
+}
+
+#home_link {
+  margin-top:10px;
+  margin-bottom:10px;
+  text-decoration:underline;
+  font-weight:bold;
+  font-size:18px;
+}

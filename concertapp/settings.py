@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Fix up piston imports here. We would normally place piston in 
 # a directory accessible via the Django app, but this is an
 # example and we ship it a couple of directories up.
-sys.path.insert(0, os.path.join(BASE_DIR, '../../'))
+sys.path.insert(0, os.path.join(BASE_DIR, '..', '..'))
 
 #DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 #DATABASE_NAME = os.path.join(BASE_DIR, 'db')             # Or path to database file if using sqlite3.
@@ -81,7 +81,8 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, 'old_templates')
+    os.path.join(BASE_DIR, 'dashboard', 'templates'),    
+    os.path.join(BASE_DIR, 'templates_old')
 )
 
 INSTALLED_APPS = (

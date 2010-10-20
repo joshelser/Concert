@@ -20,14 +20,16 @@ from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
 import tempfile, os
 
+
+
+
 ##
-# Display the default page with a list of all groups, tags, and associated audio
-# segments
+# The organization page
 #
 # @param request HTTP Request
 ##
 @login_required
-def index(request):
+def organization(request):
     getGroup = False
     getTag = False
 
