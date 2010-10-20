@@ -70,6 +70,9 @@ The base template for all pages.  All page templates will use this.
             <label for="collection_selector">Organize:</label>
             <select id="collection_selector" class="collection_selector">
                 <option value="-1">Please select a collection</option>
+                {% for group in user.groups.all %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="page_header_right">
