@@ -28,7 +28,9 @@ urlpatterns = patterns('concertapp.views',
     url(r'^comment/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 
         'comment', name='comment'),
     
-    
+    url(r'events/(?P<group_id>\d+)/(?P<num_to_return>\d+){0,1}/$',
+         'events', name ='events'),
+
     
     
     #nested

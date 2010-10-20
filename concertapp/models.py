@@ -47,7 +47,8 @@ class Tag(models.Model):
     tag = models.CharField(max_length = 100)
     isProject = models.BooleanField()
     isFixture = models.BooleanField()
-    
+    time = models.DateTimeField(auto_now_add = True)
+
     def delete(self, *args, **kwargs):
         # Do not delete if this is a permanent tag
         if self.isFixture :
