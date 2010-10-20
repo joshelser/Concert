@@ -30,6 +30,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/Notifier.js"></script>        
     <script src="/js/dashboard.js"></script>    
     <script src="/js/login.js"></script>    
+    <script src="/js/collections.js"></script>    
     <script src="/js/lib/UIHelpers.js"></script>
     <script src="/js/global.js"></script>
 
@@ -45,7 +46,7 @@ The base template for all pages.  All page templates will use this.
                 <!-- This is where the content for a modal alert title goes -->
               </h2>
               <button id="modal-overlay-close-button" class="modal-overlay-close-button image-button cross"><!-- --></button>
-              <div class="clearfix"></div>
+              <div class="clear"></div>
             </div>
             <div id="modal-overlay-content" class="modal-overlay-content">
                <!-- This is where the modal content goes -->
@@ -53,10 +54,40 @@ The base template for all pages.  All page templates will use this.
             <div id="modal-overlay-confirm" class="modal-overlay-confirm corner-bottom">
               <button id="modal-overlay-confirm-ok" class="corner-all text-button blue control"></button>
               <button id="modal-overlay-confirm-cancel" class="corner-all text-button control blue"></button>
-              <div class="clearfix"></div>
+              <div class="clear"></div>
             </div>
           </div>
         </div>
+    </div>
+    
+    <div id="page_header">
+        <div class="page_header_left">
+            <h1>Concert</h1>
+            <h2>{{ page_name }}</h2>
+        </div>
+        <div class="page_header_middle">
+            <label for="collection_selector">Organize:</label>
+            <select id="collection_selector" class="collection_selector">
+                <option value="-1">Please select a collection</option>
+            </select>
+        </div>
+        <div class="page_header_right">
+            
+            {% if page_name != 'Dashboard' %}
+                <a href="{% url dashboard %}" id="dashboard_button" title="Concert dashboard">Cool "dashboard" icon</a>
+            {% endif %}
+            
+            
+            {% if page_name  != 'Collections' %}
+                <a href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="button">Cool "social" icon</a>
+            {% endif %}
+            
+            {% if page_name != 'Upload Audio' %}
+                <a href="#" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
+            {% endif %}            
+            
+        </div>
+        <div class="clear"></div>
     </div>
     
     {% block content %}

@@ -48,14 +48,25 @@ $(document).ready(function(){
     /* For each page, run JS corresponding to that page */
     var pageInitializers = {
         '/users/login/': initializeLoginPage,
-        '/dashboard/': initializeDashboardPage
+        '/dashboard/': initializeDashboardPage,
+        '/collections/manage/': initializeCollectionsPage
     };
     
     /* Get URL of page (relative to server address) */
     var pagePath = window.location.pathname;
     
     /* Initialize proper page function */
-    pageInitializers[pagePath]();
+    try {
+        pageInitializers[pagePath]();
+    }
+    catch(err) {
+        if(err.name == 'TypeError') {
+            throw new Error('Page is not initialized:\n'+err);
+        }
+        else {
+            throw err;
+        }
+    }
 
 
 });
