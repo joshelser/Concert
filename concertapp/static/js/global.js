@@ -26,6 +26,9 @@ $(document).ready(function(){
         autoclear */
     initializeAutoClearFieldBehavior();
     
+    /* Make global notifier object that we can use anywhere to notify the user */
+    com.concertsoundorganizer.notifier = new Notifier({});
+    
     /* image urls put here will be loaded 
     preloadImages([
         '/graphics/ajax-loader.gif',

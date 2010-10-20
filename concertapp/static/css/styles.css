@@ -1,5 +1,204 @@
 /**
- *  @file styles.css
- *  Global styles that all pages use.
+*  @file styles.css
+*  Global styles that all pages use.
+**/
+
+
+/**
+ *  Image Buttons
  **/
  
+button {
+    cursor: pointer;
+}
+
+button.image-button {
+    background-color: transparent;
+    width: 16px;
+    height: 16px;
+    border: 0;
+}
+button.text-button {
+    padding: 0.5em;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.2);    
+}
+button.cross {
+    background-image: url('/graphics/icons/cross.png');
+}
+
+/* blue */
+.blue {
+    color: #d9eef7;
+    border: solid 1px #0076a3;
+    background: #0095cd;
+    background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+    background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+}
+button.blue:hover {
+    background: #007ead;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+    background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+}
+button.blue:active {
+    color: #80bed6;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+    background: -moz-linear-gradient(top,  #0078a5,  #00adee);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
+}
+
+/** 
+ *  Overlay modal box
+ **/
+div.modal-overlay {
+    outline: 0 !important;
+    display: none;
+}
+
+div.modal-overlay-background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 999999;
+    background: rgba(230, 235, 209, .7);
+}
+
+
+div.modal-overlay-pane {
+    top: 40%;
+    left: 40%;
+    position: absolute;
+    z-index: 10000001;
+    min-width: 200px;
+    
+    -webkit-box-shadow: 0px 0px 4px #241F1B;
+    
+}
+
+div.modal-overlay-content {
+    background: #201913;
+    /*padding: 10% 15% 10% 15%;*/
+    padding: 0.8em;
+    color: white;
+    border-left: 2px solid #4D433B;
+    border-right: 2px solid #4D433B;
+    border-bottom: 2px solid #4D433B;
+}
+
+div.modal-overlay-header {
+    padding: 0.8em;
+    
+}
+
+h2.modal-overlay-header {
+    display: inline;
+    float: left;
+    
+}
+
+button.modal-overlay-close-button {
+    display: inline;
+    float: right;
+    margin-left: 1em;
+}
+
+div.modal-overlay-close-button {
+    float: right;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+div.modal-overlay-confirm {
+    background: -webkit-gradient(
+        linear, 
+        left top, 
+        left bottom, 
+        color-stop(0,#00adee), 
+        color-stop(0.2,#00adee), 
+        color-stop(1,#0078a5)
+    );
+    
+    border: solid 1px #0076a3;
+    
+    padding: 1em 0em;
+}
+
+div.modal-overlay-confirm button {
+    float: right;
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
+
+/**
+*  Misc visuals
+**/
+
+/* Corner radius */
+.corner-tl {
+    -moz-border-radius-topleft: 0.5em;
+    -webkit-border-top-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+}
+.corner-tr {
+    -moz-border-radius-topright: 0.5em;
+    -webkit-border-top-right-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+}
+.corner-bl {
+    -moz-border-radius-bottomleft: 0.5em;
+    -webkit-border-bottom-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+}
+.corner-br {
+    -moz-border-radius-bottomright: 0.5em;
+    -webkit-border-bottom-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+}
+.corner-top {
+    -moz-border-radius-topleft: 0.5em;
+    -webkit-border-top-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+    -moz-border-radius-topright: 0.5em;
+    -webkit-border-top-right-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+}
+.corner-bottom {
+    -moz-border-radius-bottomleft: 0.5em;
+    -webkit-border-bottom-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+    -moz-border-radius-bottomright: 0.5em;
+    -webkit-border-bottom-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+}
+.corner-right {
+    -moz-border-radius-topright: 0.5em;
+    -webkit-border-top-right-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    -moz-border-radius-bottomright: 0.5em;
+    -webkit-border-bottom-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+}
+.corner-left {
+    -moz-border-radius-topleft: 0.5em;
+    -webkit-border-top-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+    -moz-border-radius-bottomleft: 0.5em;
+    -webkit-border-bottom-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+}
+.corner-all {
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
+}
+
+/**
+ *  Utilities, hacks
+ **/
+ 
+.clearfix {
+    clear: both;
+}
