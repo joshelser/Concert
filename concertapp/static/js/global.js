@@ -47,7 +47,8 @@ $(document).ready(function(){
     
     /* For each page, run JS corresponding to that page */
     var pageInitializers = {
-        '/users/login/': initializeLoginPage, 
+        '/users/login/': initializeLoginPage,
+        '/dashboard/': initializeDashboardPage
     };
     
     /* Get URL of page (relative to server address) */
