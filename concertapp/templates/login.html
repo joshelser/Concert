@@ -1,21 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id = "login_container">
+<p class = "error">{{ error }}</p>
 
-  <p class = "error">{{ error }}</p>
-	<div id = "login_wrapper">
+<div id = "login_wrapper">
     <img id = "logo" src = "/graphics/logo_large.png"/>
+
     <form id = "login" method="POST" action="{% url login_user %}">
-        <input type = "text" name = "username" value = "User Name">
-        <input type = "password" name = "password" value = "Password" autocomplete="off">
+        <input type = "text" name = "username" value = "User Name" class="autoClear" />
+        <input type = "password" name = "password" value = "Password" autocomplete="off" class="autoClear" />
         <input type="hidden" name="next" value="{{ next }}" />
         <input type = "submit" name = "login" value = "Login">        
     </form>
-        
+
     <br class = "clear"/>
-       
-	</div>
+
 </div>
 
 <div id = "register_wrapper">

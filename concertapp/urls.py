@@ -3,13 +3,15 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.conf import settings
 
+from django.views.generic.simple import redirect_to
+
 admin.autodiscover()
 
 urlpatterns = patterns('concertapp.views',
-    #top_level
-    
-    #index
-    url(r'^$', 'index', name='index'),
+
+    # / just redirects to /dashboard
+    url(r'^$', redirect_to, {'url': '/dashboard/'}),
+
     #edit
     url(r'^edit/(?P<segment_id>\d+)/(?P<group_id>\d+)/$', 'edit', 
         name='edit'),
@@ -42,6 +44,8 @@ urlpatterns = patterns('concertapp.views',
     (r'^groups/', include('concertapp.groups.urls')),
     # Tag operations
     (r'^tags/', include('concertapp.tags.urls')),
+    # Dashboard
+    (r'^dashboard/', include('concertapp.dashboard.urls'))
 
 )
 
