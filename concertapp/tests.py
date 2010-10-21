@@ -1,13 +1,9 @@
-import unittest
-
+from concertapp.models import *
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import Client
-from django.conf import settings
-
-from concertapp.models import *
-from django.contrib.auth.models import Group, User
-
 import os
+import unittest
 
 ##
 #    Generic class for testing Concert

@@ -1,17 +1,16 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
-from django.template.loader import render_to_string
-from django.template import RequestContext
-from django.contrib.auth.models import Group, User
-from django import forms
-from django.forms.util import ValidationError
-from django.core.urlresolvers import reverse
-
-from concertapp.models  import *
+#from django.contrib.auth.models import Group, User
 from concertapp.forms   import CreateCommentForm
-
+from concertapp.models  import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
+from django import forms
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.forms.util import ValidationError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.template.loader import render_to_string
+
 
 ###
 #   This is the initial screen for the manage tags interface where

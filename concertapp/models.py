@@ -2,86 +2,137 @@ from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
 from django.core.files  import File
-from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 import audiotools
-import commands #debugging
+from django.contrib.auth.models import Group, User
 import os, tempfile
-
+        
+class UnreadEvents(models.Model):
+    user = models.ForeignKey(User)
+    events = models.ManyToManyField('Event')
 
 class Event(models.Model):
     time = models.DateTimeField(auto_now_add = True)
     group = models.ForeignKey(Group)
 
+    def save(self):
+        if type(self)==Event:
+            raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
+        else:
+            super(Event,self).save()
+            for user in self.group.user_set.all():
+                try:
+                    unread_events = UnreadEvents.objects.get(user = user)
+                except UnreadEvents.DoesNotExist:
+                    unread_events = UnreadEvents(user=user)
+                    unread_events.save()
+
+                unread_events.events.add(self)
+                unread_events.save()
+            
+
+class JoinGroupEvent(Event):
+    user = models.ForeignKey(User)
+
 class TagCommentEvent(Event):
-    tag_comment = models.ForeignKey(TagComment)
+    tag_comment = models.ForeignKey("TagComment")
 
 class SegmentCommentEvent(Event):
-    segment_comment = models.ForeignKey(SegmentComment)
+    segment_comment = models.ForeignKey("SegmentComment")
 
 class TagCreatedEvent(Event):
-    tag = models.ForeignKey(Tag)
+    tag = models.ForeignKey("Tag")
 
 class AudioSegCreatedEvent(Event):
-    segment = models.ForeignKey(Segment)
+    audio_segment = models.ForeignKey("AudioSegment")
 
 class AudioSegmentTaggedEvent(Event):
-    segment = models.ForeignKey(Segment)
-    tag = models.ForeignKey(Tag)
+    audio_segment = models.ForeignKey("AudioSegment")
+    tag = models.ForeignKey("Tag")
+
+class AudioUploadedEvent(Event):
+    audio = models.ForeignKey("Audio")
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
-    audio = models.ForeignKey('Audio') # An audio segment is associated with a single audio object
-    
+    audio = models.ForeignKey('Audio')
+    group = models.ForeignKey(Group)
+
+    def tag(self, tag_name):
+        try:
+            tag = Tag.objects.get(name = tag_name)
+        except Tag.DoesnNotExist:
+            tag = Tag(name = tag_name, group = self.group)
+            tag.save()
+
+        self.tags.add(tag)
+        AudoSegmentTaggedEvent(audio_segment = self, tag = tag).save()
+
     def tag_list(self):
-      # Get all tags associated with this audio segment
       tags = self.tag_set.all()
-      output = tags[0].tag
-      if tags.count() > 1 :
-        for i in range(len(tags)-1) :
-            output += ', '+tags[i+1].tag
-      return output
+      return ', '.join(tags)
+      
+    def save(self):
+        super(AudioSegment,self).save()
+        event = AudioSegmentCreatedEvent(audio_segment = self, group = self.group)
+        event.save()
+
+    def delete(self):
+        events = AudioSegCreatedEvent.objects.filter(audio_segment = self)
+        UnreadEvents.objects.filter(event__in=events).delete()
+
+        events = AudioSegmentTaggedEvent.objects.filter(audio_segment = self)
+        UnreadEvents.objects.filter(event__in=events).delete()
+
+        super(AudioSegment,self).delete()
         
 class GroupAdmin(models.Model):
     group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
-    admin = models.ForeignKey(User, related_name = 'administrator')
+    admin = models.ForeignKey(User)
 
 class UserGroupRequest(models.Model):
-    user = models.ForeignKey(User, related_name = 'group_member')
+    user = models.ForeignKey(User)
     group = models.ForeignKey(Group) 
 
 class Tag(models.Model):
-    segments = models.ManyToManyField('AudioSegment')
+    segments = models.ManyToManyField('AudioSegment', related_name = "tags")
     group = models.ForeignKey(Group)
-    tag = models.CharField(max_length = 100)
-    isProject = models.BooleanField()
-    isFixture = models.BooleanField()
+    name = models.CharField(max_length = 100)
     time = models.DateTimeField(auto_now_add = True)
 
-    def delete(self, *args, **kwargs):
-        # Do not delete if this is a permanent tag
-        if self.isFixture :
-            return
-        
+    def save(self):
+        super(Tag, self).save()
+        event = TagCreatedEvent(tag = self, group = self.group)
+        event.save()
+
+
+    def delete(self):
         # Get all segments with this tag
         segments = self.segments.all()
         
         # For each segment
         for segment in segments :
-            # If segment only has one tag, it is this one, so we can delete segment as well
+            # If segment only has one tag, it is this one, so we can delete segment
             if segment.tag_set.count() == 1 :
                 # delete segment
                 segment.delete()
         
+        #Make all unread TagCreatedEvents read
+        events = TagCreatedEvent.objects.filter(tag = self)
+        UnreadEvents.objects.filter(event__in=events).delete()
+
+        #Make all unread TagCommentEvent read
+        events = TagCommentEvent.objects.filter(tag =self)
+        UnreadEvents.objects.filter(event__in=events).delete()
+        
+
         # Delete tag using built-in delete method
         super(Tag, self).delete(*args, **kwargs)
-        return
  
 class Comment(models.Model):
     comment = models.TextField()
@@ -90,33 +141,63 @@ class Comment(models.Model):
 
     def save(self):
         if type(self)==Comment:
-            raise Exception("Comment is abstract in the traditional sense, but not through Django semantics (e.g., Class Meta: abstract = True).\nYou must use one of the Comment subclasses")
+            raise Exception("Comment is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set ).\nYou must use one of the Comment subclasses")
         else:
             super(Comment,self).save()        
+
+    def delete(self):
+        if type(self)==Comment:
+            raise Exception("Comment is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set ).\nYou must use one of the Comment subclasses")
+        else:
+            super(Comment,self).delete()
+
 
     def __unicode__(self):
         return "Comment: " +self.comment[:10] + "..."
 
 class TagComment(Comment):
-    tag = models.ForeignKey(Tag)
+    tag = models.ForeignKey('Tag')
 
     def __unicode__(self):
         return "Tag Comment: " + self.comment[:10] + "..."
 
+    def save(self):
+        super(TagComment,self).save()
+        event = TagCommentEvent(tag_comment = self,group = self.tag.group)
+        event.save()
+
+
+    def delete(self):
+        events = TagCommentEvent.objects.filter(tag_comment = self)
+        UnreadEvents.objects.filter(event__in = events).delete()
+
+    
+
 class SegmentComment(Comment):
-    segment = models.ForeignKey(Segment)
+    segment = models.ForeignKey("AudioSegment")
 
     def __unicode__(self):
         return "Segment Comment: " + self.comment[:10] + "..."
 
+    def save(self):
+        super(SegmentComment,self).save()
+        event = SegmentCommentEvent(segment_comment = self,group = self.segment.group)
+        event.save()
+
+    def delete(self):
+        events = SegmentCommentEvent.objects.filter(segment_comment = self)
+        UnreadEvents.objects.filter(event__in = events).delete()
+
+
 class Audio(models.Model):
-    filename = models.CharField(max_length = 100)
+    name = models.CharField(max_length = 100)
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
     mp3file = models.FileField(upload_to = 'audio/')
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
+    group = models.ForeignKey(Group)
 
     ###
     #   Create ogg and mp3 file from .wav
@@ -190,7 +271,7 @@ class Audio(models.Model):
                 
 
     # Delete the current audio file from the filesystem
-    def delete(self, *args, **kwargs):
+    def delete(self):
         # Remove wavfile from this object, and delete file on filesystem.
         self.wavfile.delete(save=False)
             
@@ -213,10 +294,13 @@ class Audio(models.Model):
         for segment in segments:
             segment.delete()
 
-        # Send delete up
-        super(Audio, self).delete(*args, **kwargs)
+        #Delete the Events directly associated with the audio object
+        events = AudioUploadedEvents.objects.filter(audio=self)
+        UnreadEvents.objects.filter(event__in=events).delete()
 
-        return
+
+        # Send delete up
+        super(Audio, self).delete()
 
     ##
     # Generate all the waveforms for this audio object.  Should transition
@@ -224,9 +308,7 @@ class Audio(models.Model):
     #
     def generate_waveform(self):
         wavPath = str(self.wavfile)
-        print "wavPath:\n"+str(wavPath)
         wavName = os.path.split(wavPath)[-1]
-        print "wavName:\n"+str(wavName)
         # Create the wav object
         wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, wavPath))
         length = wavObj.getLength()
@@ -243,33 +325,10 @@ class Audio(models.Model):
         self.waveformViewer = viewerImgPath    
         self.waveformEditor = editorImgPath
         
-    
-##
-# Given a user, it creates the corresponding group
-#
-# @param user The user object of the creator
-# @param group_name The name of the group (optional)
-# @param tag_is_fixture If the tag should be a fixture
-#
-def create_group_all(user, group_name = '', tag_is_fixture = 0):
-    if group_name == '':
-        group_name = user.username
 
-    # Create user's default group
-    new_group = Group(name = group_name)
-    new_group.save()
-
-    # Make the user the admin
-    new_group_admin = GroupAdmin(group = new_group, admin = user)
-    new_group_admin.save()
-            
-    # Add this user as a member of the new_group
-    user.groups.add(new_group)
-
-    # Create the default tag for all audio files uploaded by this user 
-    # (fixture because it will not be able to be deleted)
-    tag = Tag(group = new_group, isProject = 0, isFixture = tag_is_fixture, tag
-            = 'Uploads')
-    tag.save()
-
-    return new_group
+    def save(self):
+        super(Audio,self).save()
+        event = AudioUploadedEvent(audio = self, group = group)
+        event.save()
+        
+        
