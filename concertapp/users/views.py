@@ -1,39 +1,15 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from concertapp.forms   import RegistrationForm, CreateGroupForm
+from concertapp.models  import *
+from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
+from django import forms
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import Group, User
+from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group, User
-from django import forms
-from django.contrib.auth.forms import PasswordChangeForm
-from django.http import Http404
-
-from concertapp.models  import *
-from concertapp.forms   import RegistrationForm, CreateGroupForm
-from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
-    
-##
-#   Returns all of the users
-#
-#   @param    request    HTTP request
-##
-def users(request):
-    users = User.objects.all()
-
-    return render_to_response("users.html", {'users': users},
-            RequestContext(request))
-
-##
-#   Returns a specific user
-#
-#   @param    request    HTTP request
-#   @param    user_id    The id of the user to view
-##
-def view_user(request, user_id):
-    user = User.objects.get(pk = user_id)
-
-    return render_to_response('view_user.html', {'user': user},
-            RequestContext(request))
 
 ##
 #   Creates a user in the system
