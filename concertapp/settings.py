@@ -84,7 +84,9 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates', 'dashboard'),
     os.path.join(BASE_DIR, 'templates', 'collections'),
     os.path.join(BASE_DIR, 'templates', 'audio'),
-    os.path.join(BASE_DIR, 'templates_old')
+    os.path.join(BASE_DIR, 'templates_old'),
+    os.path.join(BASE_DIR, 'templates_experiment')
+
 )
 
 INSTALLED_APPS = (

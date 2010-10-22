@@ -2,6 +2,33 @@
 
 {% block content %}
 
-<p>You will be able to upload audio here<p>
+<p>You will be able to upload audio here</p>
 
+<form>
+    <label for="file_uploader">Select one or more audio files to upload: </label>
+    <input type="file" multiple="true" id="file_uploader" accept="audio/*" />
+    <div id="files_table" class="table"></div>
+
+    <input type="submit" value="Upload" />
+</form>
+
+
+
+<!-- Client side templates -->
+<script id="selected_file" type="text/x-jquery-tmpl">
+    <div class="file table-row">
+        <div class="file_name table-cell" id="file_name-${jsid}">${filename}</div>
+        <div class="file_collection table-cell">
+            <select id="file_collection_selector-${jsid}" class="file_collection_selector">
+                <option value="-1">Please select a collection</option>
+                {% for group in user.groups.all %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class=" table-cell">
+            <progress id="file_upload_progress-${jsid}" class="file_upload_progress" max=100 value=0 />
+       </div>
+    </div>
+</script>
 {% endblock %}

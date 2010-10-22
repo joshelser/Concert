@@ -19,6 +19,7 @@ from django.core.servers.basehttp import FileWrapper
 from concertapp.settings import MEDIA_ROOT
 from concertapp.audio import audioFormats
 import tempfile, os
+from itertools import chain
 
 
 
@@ -490,3 +491,34 @@ def comment(request,segment_id, group_id):
         return Http404
            
     
+@login_required
+def events(request, group_id, num_to_return = 50):
+    try:
+        group = Group.objects.get(pk = group_id)
+    except Group.DoesNotExist:
+        raise Http404
+
+    if group not in request.user.groups.all():
+        raise Http404
+
+    tags = list(Tag.object.filter(group = group))
+    segment_comments = list(Comment.object.filter(segment__group = group))
+    tag_comments = list(Comment.object.filter(tag__group = group))
+
+    event_list = chain(tags,segment_comments,tag_comments)
+
+    return HttpResponse(str(event_list))
+
+
+
+
+
+## Experimental stuff ##
+def comments(request):
+    comments = Comment.objects.all()
+    
+    return render_to_response("comments_experiment.html",{
+            "comments": comments,
+            })
+
+
