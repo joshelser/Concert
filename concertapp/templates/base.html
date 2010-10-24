@@ -90,8 +90,7 @@ The base template for all pages.  All page templates will use this.
             
             
                 {% if page_name  != 'Collections' %}
-                    <a href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="">Settings
-                    </a>
+                    <a href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="">Settings icon</a>
                 {% endif %}
             
                 {% if page_name != 'Upload Audio' %}
