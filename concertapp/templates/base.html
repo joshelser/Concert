@@ -1,9 +1,9 @@
-<!--
+{% comment %}
 
 @file base.html
 The base template for all pages.  All page templates will use this.
 
--->
+{% endcomment %}
 
 <!DOCTYPE>
 
@@ -63,39 +63,45 @@ The base template for all pages.  All page templates will use this.
         </div>
     </div>
     
-    <div id="page_header">
-        <div class="page_header_left">
-            <h1>Concert</h1>
-            <h2>{{ page_name }}</h2>
+    {% comment %}
+        If user is not logged in, don't display navigation and stuffs.
+    {% endcomment %}
+    
+    {% if user %}
+        <div id="page_header">
+            <div class="page_header_left">
+                <h1>Concert</h1>
+                <h2>{{ page_name }}</h2>
+            </div>
+            <div class="page_header_middle">
+                <label for="collection_selector">Organize:</label>
+                <select id="collection_selector" class="collection_selector">
+                    <option value="-1">Please select a collection</option>
+                    {% for group in user.groups.all %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="page_header_right">
+            
+                {% if page_name != 'Dashboard' %}
+                    <a href="{% url dashboard %}" id="dashboard_button" title="Concert dashboard">Cool "dashboard" icon</a>
+                {% endif %}
+            
+            
+                {% if page_name  != 'Collections' %}
+                    <a href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="">Settings
+                    </a>
+                {% endif %}
+            
+                {% if page_name != 'Upload Audio' %}
+                    <a href="{% url upload_audio %}" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
+                {% endif %}            
+            
+            </div>
+            <div class="clear"></div>
         </div>
-        <div class="page_header_middle">
-            <label for="collection_selector">Organize:</label>
-            <select id="collection_selector" class="collection_selector">
-                <option value="-1">Please select a collection</option>
-                {% for group in user.groups.all %}
-                    <option value="{{ group.id }}">{{ group.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="page_header_right">
-            
-            {% if page_name != 'Dashboard' %}
-                <a href="{% url dashboard %}" id="dashboard_button" title="Concert dashboard">Cool "dashboard" icon</a>
-            {% endif %}
-            
-            
-            {% if page_name  != 'Collections' %}
-                <button data-href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="">
-                </button>
-            {% endif %}
-            
-            {% if page_name != 'Upload Audio' %}
-                <a href="{% url upload_audio %}" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
-            {% endif %}            
-            
-        </div>
-        <div class="clear"></div>
-    </div>
+    {% endif %}
     
     {% block content %}
 
