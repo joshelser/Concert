@@ -9,4 +9,6 @@ function initializeLoginPage() {
     /* This will throw a modal window to the user if there is a problem. */
     detectBrowserCompatibility();
 
+    /* Test */
+    $('#manage_collections_button').append
 }

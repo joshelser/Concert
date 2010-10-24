@@ -1,8 +1,7 @@
-from django.forms import ModelForm
+#from django.contrib.auth.models import Group, User
+from concertapp.models import Audio, GroupAdmin, Ta
 from django import forms
-from django.contrib.auth.models import Group, User
-
-from concertapp.models import Audio, GroupAdmin, Tag, AudioSegment, Comment
+from django.forms import ModelFormg, AudioSegment, Comment, User, Group
 
 ##
 # A form used to create a new group

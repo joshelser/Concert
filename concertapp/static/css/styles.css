@@ -33,6 +33,8 @@ div.page_header_right {
  
 button {
     cursor: pointer;
+    background-color: transparent;
+    border: 0;
 }
 
 .button.disabled {
@@ -53,6 +55,13 @@ button.text-button {
 }
 button.cross {
     background-image: url('/graphics/icons/cross.png');
+}
+button.settings {
+/*    background-image: url('/paths/settings.svg');*/
+    background-size: 1000%;
+    background-position: 50% 50%;
+    height: 50px;
+    width: 50px;
 }
 
 /* blue */
