@@ -11,6 +11,10 @@ function initializeCollectionsPage() {
     
 }
 
+/**
+ *  Completely encapsulates all functionality associated with the "create/join"
+ *  box.  Should make this re-usable code next time we need to do something similar.
+ **/
 function initializeCreateJoinAutocompleteBehavior() {
     
     var resultsContainer = $('#create_join_results');
@@ -22,38 +26,66 @@ function initializeCreateJoinAutocompleteBehavior() {
         return function(data, term) {
             /* results were found! */
             if(data.length) {
-                resultsContainer.html('');
+                /* Temporary structure for results */
+                var frag = document.createDocumentFragment();
+
+                /* For each result */
                 for(i = 0, il = data.length; i < il; i++) {
                     var obj = data[i].fields
-                    resultsContainer.append(resultTemplate.tmpl({
+                    /* Add to fragment */
+                    frag.appendChild(resultTemplate.tmpl({
                         name: obj.name, 
                         id: obj.pk
-                    }));
+                    }).get(0));
                 }
+                /* empty results container */
+                resultsContainer.empty();
+                /* Put results in container */
+                resultsContainer.append(frag);
             }
             /* No results :( */
-            else {
+            else if(term != '') {
+                /* results container will just be "create new" option */
                 resultsContainer.html(createNewTemplate.tmpl({
                     query: term, 
                 }));
+            }
+            /* No search term */
+            else {
+                resultsContainer.empty();
             }
         };
     }(resultsContainer, createNewTemplate, resultTemplate);
     
     
+    /* The actual jQuery UI autocomplete call */
     $('#create_join_input').autocomplete({
-        minLength: 2,
+        minLength: 0,
         source: function(resultsContainer, myResponse) {
             
             return function(request, response) {
-                                
+                /* Our search term */
                 var term = request.term;
-                lastXhr = $.getJSON('search/'+term, {}, function(data, status, xhr) {
-                    if(xhr === lastXhr) {
-                        myResponse(data, term);                         
-                    }
+                
+                /* If there is something to search for */
+                if(term && term != '') {
                     
-                })
+                    /* Search for it */
+                    com.concertsoundorganizer.ajax.lastCreateJoinXhr = $.getJSON(
+                        'search/'+term, 
+                        {}, 
+                        function(data, status, xhr) {
+                            if(xhr === com.concertsoundorganizer.ajax.lastCreateJoinXhr) {
+                                myResponse(data, term);                         
+                            }
+                        }
+                    );
+                    
+                }
+                /* Search is empty */
+                else {
+                    myResponse([], term);
+                }
             };
 
         }(resultsContainer, autoCompleteResponse),
@@ -84,9 +116,15 @@ function initializeCreateJoinAutocompleteBehavior() {
             url: 'add/',
             data: { name: collection_name },
             success: function(data, status, xhr) {
-                console.log('data:');
-                console.log(data);
+                if(data == 'success') {
+                    com.concertsoundorganizer.notifier.alert({
+                        'title': 'Success!', 
+                        'content': 'Your collection was created succesfully.'
+                    });
+                }
             }
         });
     });
+    
+    
 }

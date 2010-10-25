@@ -17,6 +17,9 @@ if(!com.concertsoundorganizer.animation) {
 if(!com.concertsoundorganizer.compatibility) {
     com.concertsoundorganizer.compatibility = {};
 }
+if(!com.concertsoundorganizer.ajax) {
+    com.concertsoundorganizer.ajax = {};
+}
 
 
 $(document).ready(function(){
