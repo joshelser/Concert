@@ -1,31 +1,8 @@
 #from django.contrib.auth.models import Group, User
-from concertapp.models import Audio, GroupAdmin, Ta
+from concertapp.models import Audio, GroupAdmin
 from django import forms
-from django.forms import ModelFormg, AudioSegment, Comment, User, Group
+from django.forms import ModelForm, AudioSegment, Comment, User, Group
 
-##
-# A form used to create a new group
-##
-class CreateGroupForm(ModelForm):
-    group_name = forms.CharField(label="Group name", max_length=80,
-            required=True)
-
-    class Meta:
-        model = GroupAdmin
-        exclude = ('admin', 'group')
-
-    ##
-    #   Makes sure a duplicate name doesn't exist
-    ##
-    def clean_group_name(self):
-        gname = self.cleaned_data['group_name']
-        
-        groups = Group.objects.filter(name = gname)
-
-        if len(groups) > 0:
-            raise forms.ValidationError('That name is already taken')
-
-        return gname
  
 ##
 # A form used to register a new user in the system

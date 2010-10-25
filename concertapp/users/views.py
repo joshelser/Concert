@@ -146,31 +146,7 @@ def groups(request, user_id):
         len(groups), 'user_id': user_id, 'show_create': show_create},
         RequestContext(request))
 
-##
-#    Create a group
-#
-#    @param    request    HTTP request
-#    @param    user_id    The id of the user
-##
-@login_required
-def create_group(request, user_id):
-    if request.user.id != int(user_id):
-        raise Http404
 
-    if request.method == 'POST':
-        form = CreateGroupForm(request.POST)
-        if form.is_valid():
-            gname = form.cleaned_data['group_name']
-
-            # Create the group, groupadmin, and tag
-            create_group_all(request.user, gname, 1)
-
-            return HttpResponseRedirect('/users/'+user_id+'/groups/')
-    else:
-        form = CreateGroupForm()
-
-    return render_to_response('create_group.html', {'form': form,
-        'user_id': user_id})
 
 ##
 #    Choose a group to manage

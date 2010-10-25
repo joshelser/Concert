@@ -11,9 +11,15 @@ admin.autodiscover()
 ## "collections" is a reserved word.
 
 urlpatterns = patterns('concertapp.collection.views',
-    # /collections goes to /collections/manage
-    url(r'^$', redirect_to, {'url': '/collections/manage/'}),
+    # /collections goes to Manage collections
+    url(r'^$', 'manage_collections', name='manage_collections'),
 
-    # Manage collections
-    url(r'^manage/$', 'manage_collections', name='manage_collections')
+    # Add new collection (group)
+    url(r'^add/$', 'create_collection', name='create_collection'),
+    
+    ###
+    #   JSON
+    ###
+    # Search collections
+    url(r'^search/(?P<query>.+)/$', 'search_collections', name='search_collections'),
 )

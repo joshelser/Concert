@@ -16,14 +16,14 @@ class UnreadEvents(models.Model):
 
 class Event(models.Model):
     time = models.DateTimeField(auto_now_add = True)
-    group = models.ForeignKey(Group)
+    collection = models.ForeignKey('Collection')
 
     def save(self):
         if type(self)==Event:
             raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
         else:
             super(Event,self).save()
-            for user in self.group.user_set.all():
+            for user in self.collection.user_set.all():
                 try:
                     unread_events = UnreadEvents.objects.get(user = user)
                 except UnreadEvents.DoesNotExist:
@@ -34,7 +34,7 @@ class Event(models.Model):
                 unread_events.save()
             
 
-class JoinGroupEvent(Event):
+class JoinCollectionEvent(Event):
     user = models.ForeignKey(User)
 
 class TagCommentEvent(Event):
@@ -61,13 +61,13 @@ class AudioSegment(models.Model):
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio')
-    group = models.ForeignKey(Group)
+    collection = models.ForeignKey('Collection')
 
     def tag(self, tag_name):
         try:
             tag = Tag.objects.get(name = tag_name)
         except Tag.DoesnNotExist:
-            tag = Tag(name = tag_name, group = self.group)
+            tag = Tag(name = tag_name, collection = self.collection)
             tag.save()
 
         self.tags.add(tag)
@@ -79,7 +79,7 @@ class AudioSegment(models.Model):
       
     def save(self):
         super(AudioSegment,self).save()
-        event = AudioSegmentCreatedEvent(audio_segment = self, group = self.group)
+        event = AudioSegmentCreatedEvent(audio_segment = self, collection = self.collection)
         event.save()
 
     def delete(self):
@@ -90,24 +90,28 @@ class AudioSegment(models.Model):
         UnreadEvents.objects.filter(event__in=events).delete()
 
         super(AudioSegment,self).delete()
-        
-class GroupAdmin(models.Model):
-    group = models.ForeignKey(Group) #models.CharField(max_length = 80, unique = True)
-    admin = models.ForeignKey(User)
 
-class UserGroupRequest(models.Model):
+###
+#   A collection is a group of users that manage audio files together.  It is a 
+#   subclass of Django's Group, because it is basically just a group.
+###     
+class Collection(Group):
+    admin = models.ForeignKey(User)
+    
+    
+class UserCollectionRequest(models.Model):
     user = models.ForeignKey(User)
-    group = models.ForeignKey(Group) 
+    collection = models.ForeignKey('Collection') 
 
 class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment', related_name = "tags")
-    group = models.ForeignKey(Group)
+    collection = models.ForeignKey('Collection')
     name = models.CharField(max_length = 100)
     time = models.DateTimeField(auto_now_add = True)
 
     def save(self):
         super(Tag, self).save()
-        event = TagCreatedEvent(tag = self, group = self.group)
+        event = TagCreatedEvent(tag = self, collection = self.collection)
         event.save()
 
 
@@ -163,7 +167,7 @@ class TagComment(Comment):
 
     def save(self):
         super(TagComment,self).save()
-        event = TagCommentEvent(tag_comment = self,group = self.tag.group)
+        event = TagCommentEvent(tag_comment = self,collection = self.tag.collection)
         event.save()
 
 
@@ -181,7 +185,7 @@ class SegmentComment(Comment):
 
     def save(self):
         super(SegmentComment,self).save()
-        event = SegmentCommentEvent(segment_comment = self,group = self.segment.group)
+        event = SegmentCommentEvent(segment_comment = self,collection = self.segment.collection)
         event.save()
 
     def delete(self):
@@ -197,7 +201,7 @@ class Audio(models.Model):
     user = models.ForeignKey(User, related_name = 'uploader')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
-    group = models.ForeignKey(Group)
+    collection = models.ForeignKey('Collection')
 
     ###
     #   Create ogg and mp3 file from .wav
@@ -328,7 +332,7 @@ class Audio(models.Model):
 
     def save(self):
         super(Audio,self).save()
-        event = AudioUploadedEvent(audio = self, group = group)
+        event = AudioUploadedEvent(audio = self, collection = collection)
         event.save()
         
         

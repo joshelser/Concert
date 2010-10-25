@@ -49,7 +49,7 @@ $(document).ready(function(){
     var pageInitializers = {
         '/users/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
-        '/collections/manage/': initializeCollectionsPage,
+        '/collections/': initializeCollectionsPage,
         '/audio/upload/': initializeAudioUploadPage
     };
     

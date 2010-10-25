@@ -4,4 +4,31 @@
 
 <p>You will be able to manage/create your collections here, as well as see facebook friend information, and be able to join your friends collections.</p>
 
+<div id="create_join_container">
+    <h3>Create/Join a collection</h3>
+    <label for="create_join_input">Collection Name: </label>
+    <input type="text" id="create_join_input" />
+    <div id="create_join_results"><!-- The search results go here --></div>
+</div>
+
+
+{# Client side templates #}
+
+{#  an auto complete result when searching for a group #}
+<script id="create_join_result" type="text/x-jquery-tmpl">
+    <div class="create_join_result" id="create_join_result-${id}">
+        ${name}
+    </div>
+</script>
+
+{#  the first "create collection" result when no groups are found. #}
+<script id="create_new_result" type="text/x-jquery-tmpl">
+    <div class="create_join_result create_new_result" id="create_new_result">
+        <a href="#" id="create_new_collection" data-collection_name="${query}">
+            Create collection "${query}"
+        </a>
+    </div>
+</script>
+
+
 {% endblock %}
