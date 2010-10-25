@@ -8,6 +8,8 @@ from django import forms
 from django.contrib.auth.models import Group, User
 from concertapp.models import Collection
 from concertapp.collection.forms import CreateCollectionForm
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 ##
@@ -45,10 +47,10 @@ def search_collections(request, query):
     #   But we don't need the collection objects right now because there are no 
     #   attributes of interest
     #all_objects = list(Collection.objects.all()) + list(Group.objects.all())
-    all_objects = list(Group.objects.all())
+    all_objects = list(Group.objects.filter(name__icontains=query))
+        
     json_serializer = serializers.get_serializer('json')()
     serializers.serialize('json', all_objects, fields=('name'), stream=response)
-    print response
     
     return response
     
