@@ -39,37 +39,37 @@ def search_collections(request, query):
     
     # Create response object
     response = HttpResponse(mimetype='application/json')
-    
-    #   Serialize results into JSON response (must also serialize parent classes as
-    #   described here:
-    #   http://docs.djangoproject.com/en/dev/topics/serialization/#inherited-models)
-    
-    #   But we don't need the collection objects right now because there are no 
-    #   attributes of interest
-    #all_objects = list(Collection.objects.all()) + list(Group.objects.all())
-    all_objects = list(Group.objects.filter(name__icontains=query))
-        
+
+    #   Get collections that match criteria
+    results = Collection.objects.filter(name__icontains=query)
+
+    #   Serialize results into JSON response        
     json_serializer = serializers.get_serializer('json')()
-    serializers.serialize('json', all_objects, fields=('name'), stream=response)
+    serializers.serialize('json', results, fields=('name'), stream=response)
     
     return response
     
 ##
 #    Create a collection
 #
-#   @param  request.POST['collection_name']        String  - The name of the new collection.
+#   @param  request.POST['name']        String  - The name of the new collection.
 ##
 @login_required
 def create_collection(request):
     
     # Create new collection with current user as the admin
     col = Collection(admin=request.user)
+    
     # Create form so we can validate collection name
     form = CreateCollectionForm(request.POST, instance=col)
     if form.is_valid():
         colname = form.cleaned_data['name']
         
         col = form.save()
+        
+        #   Add current user to collection
+        col.users.add(request.user)
+        
 
         
 

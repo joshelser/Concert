@@ -122,6 +122,12 @@ function initializeCreateJoinAutocompleteBehavior() {
                         'content': 'Your collection was created succesfully.'
                     });
                 }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        'title': 'Error',
+                        'content': 'Your collection was not created.'
+                    });
+                }
             }
         });
     });

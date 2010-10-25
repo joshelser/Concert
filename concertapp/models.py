@@ -92,13 +92,19 @@ class AudioSegment(models.Model):
         super(AudioSegment,self).delete()
 
 ###
-#   A collection is a group of users that manage audio files together.  It is a 
-#   subclass of Django's Group, because it is basically just a group.
+#   A collection is a group of users that manage audio files together.  This is 
+#   basically just a group, with an admin user.
 ###     
-class Collection(Group):
+class Collection(models.Model):
+    name = models.CharField(max_length = 100, unique=True)
     admin = models.ForeignKey(User)
+    users = models.ManyToManyField(User, related_name='collections')
     
-    
+
+###
+#   These objects are instantiated when a user makes a request to join a collection.
+#   This should really just be a member of a "user" object.
+##
 class UserCollectionRequest(models.Model):
     user = models.ForeignKey(User)
     collection = models.ForeignKey('Collection') 
