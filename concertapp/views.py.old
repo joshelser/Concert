@@ -1,0 +1,500 @@
+from concertapp.audio import audioFormats
+from concertapp.forms  import UploadFileForm, CreateSegmentForm, RenameSegmentForm, CreateCommentForm
+from concertapp.models import *
+from concertapp.settings import MEDIA_ROOT
+from django import forms
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.core.servers.basehttp import FileWrapper
+from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+import tempfile, os
+
+
+##
+# The organization page
+#
+# @param request HTTP Request
+##
+@login_required
+def organization(request):
+    getGroup = False
+    getTag = False
+
+    ###
+    #   Groups
+    ###
+    # Get all groups for which the current user is a member
+    group_list = request.user.groups.all()
+
+    # Get selected group, or just user's default group
+    try:
+        # Use group if one was specified
+        selected_group_id = request.GET['selected_group_id']
+        selected_group = request.user.groups.get(id = selected_group_id)
+        getGroup = selected_group_id
+    except KeyError:
+        # Use user's default group
+        selected_group = request.user.groups.get(name = request.user.username)
+
+    ###
+    #   Tags
+    ###
+    # Get all of this group's tags
+    tag_list = Tag.objects.filter(group = selected_group)
+
+    # Get selected tag, or just use default tag
+    try:
+        # use selected tag if one was specified
+        selected_tag_id = request.GET['selected_tag_id']
+        selected_tag = Tag.objects.get(pk = selected_tag_id)
+        # Get all of this tag's audio segments
+        segment_list = selected_tag.segments.all()
+        getTag = selected_tag_id
+    # no tag was selected
+    except KeyError:
+        # Get all tags from this group
+        selected_tag = Tag.objects.filter(group = selected_group)
+        segment_list = []
+        all_segments = AudioSegment.objects.all()
+        # For each segment
+        for segment in all_segments :
+            # For each of the selected tags
+            for tag in selected_tag:
+                # If this tag is one of the segment's tags
+                if segment.tag_set.filter(id = tag.id).count() > 0 :
+                    # Add to our segment list
+                    segment_list.append(segment)
+                    # Don't add this tag again
+                    break
+    
+    comments = Comment.objects.filter(tag = selected_tag)
+    commentForm = CreateCommentForm()
+
+
+    return render_to_response('index.html', {
+    'no_show' : "no_show",
+    'group_list': group_list, 
+    'selected_group': selected_group, 
+    'tag_list' : tag_list, 
+    'selected_tag' : selected_tag,
+    'segment_list' : segment_list,
+    'commentForm': commentForm,
+    'comments' : comments,
+    'getGroup' : getGroup,
+    'getTag' : getTag,
+    }, RequestContext(request))
+
+
+###
+#   The edit page for an audio file.
+#
+#   @param          segment_id          The ID of the requested segment.
+#   @param          group_id            The ID of the group whose tags and segments we're currently viewing.
+###
+@login_required
+def edit(request, segment_id, group_id):
+    # Requested audio segment
+    audioSegment = AudioSegment.objects.get(pk = segment_id)
+    # Other audio segments associated with this audio file
+    otherAudioSegments = AudioSegment.objects.filter(audio = audioSegment.audio)
+    # Group
+    group = Group.objects.get(pk = group_id)
+
+    # Tags for the requested segment in json format
+    jsonTags = serializers.serialize('json', audioSegment.tag_set.all())
+    
+    createSegmentForm = CreateSegmentForm()
+    renameSegmentForm = RenameSegmentForm()
+    commentForm = CreateCommentForm()
+    
+    comments = Comment.objects.filter(segment = audioSegment)
+    
+    return render_to_response('edit.html',{
+        'waveformEditorSrc' : audioSegment.audio.waveformEditor.url,
+        'waveformViewerSrc' : audioSegment.audio.waveformViewer.url,
+        'createSegmentForm' : createSegmentForm,
+        'renameSegmentForm' : renameSegmentForm,
+        'commentForm':commentForm,
+        'audioSegment' : audioSegment,
+        'audio_id' : audioSegment.audio.id,
+        'segment_id': segment_id,
+        'group_id' : group_id,
+        'jsonTags' : jsonTags,
+        'user'     : request.user,
+        'comments' : comments,
+        },RequestContext(request));
+    
+##
+# Present the audio segment for download to the user
+# 
+# @param request
+# @param segment_id
+# @param group_id
+# @param type
+##
+@login_required
+def download_segment(request, segment_id, group_id, type):
+    # Get the group
+    group = Group.objects.get(pk = group_id)
+
+    # Make sure the current user is a member of this group
+    if group not in request.user.groups.all():
+        raise Http404
+
+    # Get the segment
+    try:
+        segment = AudioSegment.objects.get(pk = segment_id)
+    except AudioSegment.DoesNotExist:
+        raise Http404
+
+    # Get the parent audio
+    parent = segment.audio
+
+    # Make a wav object
+    parentWav = audioFormats.Wav(os.path.join(settings.MEDIA_ROOT, str(parent.wavfile)))
+
+    # Make a temporary file
+    tempFile = tempfile.mkstemp(suffix = '.wav', prefix = parent.filename)
+
+    # Get the name
+    newFileName = tempFile[1]
+
+    # Crop the parent file and write it to the newly created file
+    parentWav.crop(newFileName, int(segment.beginning), int(segment.end))
+
+    # Present mp3 download
+    if type == 'mp3':
+        # Get the cropped wav file
+        newWav = audioFormats.Wav(newFileName)
+
+        basename = os.path.split(os.path.splitext(newFileName)[0])[1]
+
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.mp3'
+
+        # Get the file & url prefixes
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
+
+        # Convert it to mp3
+        proc = newWav.mp3Encode(filePrefix + newName)
+
+        proc.wait()
+
+        # Get the new filename
+        filename = os.path.splitext(parent.filename)[0] + '.mp3'
+
+        # Present the file to download
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/mp3')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
+    # Present ogg download
+    elif type == 'ogg':
+        # Get the cropped wav file
+        newWav = audioFormats.Wav(newFileName)
+
+        basename = os.path.split(os.path.splitext(newFileName)[0])[1]
+
+        newName = basename + '_' + str(segment.beginning) + '_' + str(segment.end) + '.ogg'
+
+        # Get the file & url prefixes
+        filePrefix = settings.MEDIA_ROOT + '/audio/temp/'
+        urlPrefix = settings.ADMIN_MEDIA_PREFIX + settings.MEDIA_URL[1:] + 'audio/temp/'
+
+        # Encode the wav as ogg
+        proc = newWav.oggEncode(filePrefix + newName)
+
+        proc.wait()
+
+        # Get the new filename
+        filename = os.path.splitext(parent.filename)[0] + '.ogg'
+
+        # Present the file to download
+        wrapper = FileWrapper(file(filePrefix + newName))
+        response = HttpResponse(wrapper, content_type='audio/ogg')
+        response['Content-Length'] = os.path.getsize(filePrefix + newName)
+        response['Content-Disposition'] = 'attachment; filename='+filename
+        return response
+    else:
+        return Http404
+
+@login_required
+def new_segment_submit(request):
+    if request.method == 'POST':
+        # Create the form
+        form = CreateSegmentForm(request.POST)
+        
+        if form.is_valid():
+            # Get the tag name
+            tag_name = form.cleaned_data['tag_field']
+
+            # Save the form/segment
+            segment = form.save(commit=False)
+
+            # Explicitly set name
+            segment.name = form.cleaned_data['label_field']
+            group_id = request.POST['group_id']
+            audio_id = request.POST['audio_id']
+
+            # Set parent audio file
+            segment.audio = Audio.objects.get(pk = audio_id)
+            
+            # Get the specified group
+            group = Group.objects.get(pk = group_id)
+
+            # Get or make the tag
+            try:
+                tag = Tag.objects.get(group = group,    tag = tag_name)
+            except Tag.DoesNotExist:
+                # Doesn't exist, create tag 
+                tag = Tag(group = group, tag = tag_name, isProject = 0,
+                        isFixture = 0)
+
+            segment.save()
+
+            tag.save()
+
+            newTag = Tag.objects.get(pk = tag.id)
+
+            newTag.segments.add(segment)
+
+            newTag.save()
+
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else :
+            
+            print 'invalid'+repr(form.errors)
+            response = HttpResponse(mimetype='text/plain')
+            response.write('Error: validating form')
+            return response
+
+
+    raise Http404
+
+
+
+
+###
+#   Part of the manage segment use case.  Deletes a given segment from the 
+#   system
+#
+#   @param  segment_id      the id of the segment to be deleted
+### 
+@login_required 
+def delete_segment(request,segment_id, group_id):
+    # Get the group
+    group = Group.objects.get(pk = group_id)
+    # Get the user
+    user = request.user
+    
+    # Make sure the current user is a member of this group
+    try:
+        user.groups.get(pk = group.id)
+    except Group.DoesNotExist:
+        error = 'You are not a member of this group'
+
+    # Get the segment
+    try:
+        audioSegment = AudioSegment.objects.get(pk = segment_id)
+    except AudioSegment.DoesNotExist:
+        error = 'This audio segment does not exist'
+
+    # Get the parent audio
+    parent = audioSegment.audio
+
+
+    # Requested audio segment
+    otherChildren = AudioSegment.objects.filter(audio = audioSegment.audio)
+    
+    # If they're no other segment's associated with this segment's parent audio
+    # file then we delete the audio object, and all files/images associated with it
+    if len(otherChildren) == 1:
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.wavfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.oggfile)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformViewer)))
+        os.remove(os.path.join(MEDIA_ROOT, str(parent.waveformEditor))) 
+        parent.delete()
+    
+    # Delete segment
+    audioSegment.delete()
+    
+    response = HttpResponse(mimetype='text/plain')
+    # If an error variable was defined in this scope
+    if 'error' in locals() :
+        response.write(error)
+    else :
+        response.write('success')
+    return response
+    
+    
+    
+    
+###
+#   Part of the manage segment use case.  renames a given segment 
+#
+#   @param    request       HTTP Request
+#   @param    segment_id    The id of the segment used
+#   @param    group_id      The id of the group used
+### 
+@login_required 
+def rename_segment(request,segment_id, group_id):
+
+
+    if request.method == 'POST':
+
+        form = RenameSegmentForm(request.POST)
+        
+        if form.is_valid():
+        
+
+            
+            # Get the group
+            group = Group.objects.get(pk = group_id)
+
+
+            # Make sure the current user is a member of this group
+            try:
+                request.user.groups.get(pk = group.id)
+            except Group.DoesNotExist:
+                raise Http404
+
+            # Get the segment
+            try:
+                segment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                response = HttpResponse(mimetype='text/plain')
+                response.write('No such segment')
+                return response
+
+        
+            segment.name = form.cleaned_data['name']
+            segment.save()
+            
+            response = HttpResponse(mimetype='text/plain')
+            response.write('success')
+            return response
+        else:
+            response = HttpResponse(mimetype='text/plain')
+            response.write('Error: validating form\n' + repr(form.errors))
+            return response
+    
+    raise Http404
+
+
+
+
+###
+#   The admin page for a user
+#
+#   @param    request    HTTP Request
+###
+@login_required
+def admin(request):
+
+    user_id = request.user.id
+    
+    #upload file
+    uploadFileForm = UploadFileForm()
+    
+    #list joinable groups
+    g = Group.objects.all()
+    joinGroups = list()
+    inGroup = False
+    for group in g:
+        try:
+            request.user.groups.get(name = group.name)
+        except Group.DoesNotExist:
+            joinGroups.append(group)
+        
+    message = None
+    if request.GET.__contains__('message'):
+        message = request.GET['message']    
+    
+    #list requests to join this groups
+    myGroups = GroupAdmin.objects.filter(admin = request.user)
+
+    return render_to_response('admin.html',{
+        'uploadFileForm':uploadFileForm,
+        'joinGroups': joinGroups,
+        'message': message,
+        'myGroups':myGroups,
+        'length':len(myGroups),
+        'user_id': user_id,
+        'show_create': True
+    }, RequestContext(request));
+    
+    
+###
+#   Store a comment created by a user
+#
+#   @param  segment_id
+#   @param  group_id
+###
+@login_required
+def comment(request,segment_id, group_id):
+    if request.method == 'POST':
+        
+        # Create the form
+        form = CreateCommentForm(request.POST)
+        
+        if form.is_valid() : 
+            
+            # Get the group
+            group = Group.objects.get(pk = group_id)
+             
+            # Make sure the current user is a member of this group
+            if group not in request.user.groups.all():
+                raise Http404
+
+            # Get the segment
+            try:
+                segment = AudioSegment.objects.get(pk = segment_id)
+            except AudioSegment.DoesNotExist:
+                raise Http404
+                
+            #create the comment
+            comment = form.save(commit=False)
+            
+            #set the user
+            comment.user = request.user
+            
+            #set the segment
+            comment.segment = segment
+            
+            #save the comment
+            comment.save()
+                
+                
+            return HttpResponseRedirect('/edit/'+str(segment_id)+'/'+str(group_id))
+        else:
+            response = HttpResponse(mimetype='text/plain')
+            response.write(form.errors)
+            return response
+    else:
+        return Http404
+           
+    
+
+## Experimental stuff ##
+def comments(request):
+    comments = Comment.objects.all()
+    
+    return render_to_response("comments_experiment.html",{
+            "comments": comments,
+            })
+
+def user(request):
+    comments = User.objects.all()
+    
+    return render_to_response("comments_experiment.html",{
+            "comments": comments,
+            })
+
+

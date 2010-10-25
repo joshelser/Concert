@@ -1,25 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p class = "error">{{ error }}</p>
 
-<div id = "login_wrapper">
-    <img id = "logo" src = "/graphics/logo_large.png"/>
+{% if form.errors %}
+<p class = 'error'>Your username and password didn't match. Please try again.</p>
+{% endif %}
 
-    <form id = "login" method="POST" action="{% url login_user %}">
-        <input type = "text" name = "username" value = "User Name" class="autoClear" />
-        <input type = "password" name = "password" value = "Password" autocomplete="off" class="autoClear" />
-        <input type="hidden" name="next" value="{{ next }}" />
-        <input type = "submit" name = "login" value = "Login">        
-    </form>
-
-    <br class = "clear"/>
-
-</div>
-
-<div id = "register_wrapper">
-    <p>Not a user yet? <a href = "/users/add/"> Register </a></p>
-</div>
+<form method="post" action="{% url django.contrib.auth.views.login %}">
+  {% csrf_token %}
+  {{ form.username.label_tag }}
+  {{ form.username }}
+  {{ form.password.label_tag }}
+  {{ form.password }}
+  
+  <input type="submit" value="login" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
 
 {% endblock %}
 
