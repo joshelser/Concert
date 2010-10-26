@@ -81,6 +81,13 @@ nav.page_header_right {
     text-align: right;
 }
 
+/**
+ *  Page-specific layout
+ **/
+div#manage_collections_container {
+    width: 100%;
+}
+
 
 /**
  *  Buttons
@@ -285,6 +292,19 @@ div.modal-overlay-confirm button {
     -moz-border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
     border-radius: 0.5em;
+}
+
+/**
+ *  Div-tables
+ **/
+.table {
+    display: table;
+}
+.table-row {
+    display: table-row;
+}
+.table-cell {
+    display: table-cell;
 }
 
 /**

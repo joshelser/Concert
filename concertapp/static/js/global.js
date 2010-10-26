@@ -17,6 +17,9 @@ if(!com.concertsoundorganizer.animation) {
 if(!com.concertsoundorganizer.compatibility) {
     com.concertsoundorganizer.compatibility = {};
 }
+if(!com.concertsoundorganizer.ajax) {
+    com.concertsoundorganizer.ajax = {};
+}
 
 
 $(document).ready(function(){
@@ -49,7 +52,7 @@ $(document).ready(function(){
     var pageInitializers = {
         '/users/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
-        '/collections/manage/': initializeCollectionsPage,
+        '/collections/': initializeCollectionsPage,
         '/audio/upload/': initializeAudioUploadPage
     };
     
