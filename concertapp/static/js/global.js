@@ -24,6 +24,8 @@ if(!com.concertsoundorganizer.ajax) {
 
 $(document).ready(function(){
     
+    /* Make $ a local variable for performance */
+    var $ = jQuery;
     
     /* Make all fields in the future that have the "autoClear" class on them    
         autoclear */
@@ -45,6 +47,55 @@ $(document).ready(function(){
     com.concertsoundorganizer.animation = {
         speed: 200,
     }
+    
+    /**
+     *  Create global widgets and buttons for the globalOptionsPanel
+     **/
+    var globalOptionsParams = {
+        container: $('#page_header'), 
+        collectionSelector: $('#collection_selector')
+    }; 
+    
+    /* Get upload button */
+    var uploadButtonContainer = $('#upload_button_container');
+    /* If this page has an upload button */
+    if(uploadButtonContainer.length) {
+        /* Create UploadLinkLargeIconButton object */
+        globalOptionsParams.uploadButton = new UploadLinkLargeIconButton({
+            container: uploadButtonContainer, 
+            icon: $('#upload_button_icon'), 
+            label: $('#upload_button_label')
+        });        
+    }
+    
+    /* Get dashboard button */
+    var dashboardButtonContainer = $('#dashboard_button_container');
+    /* If this page has a dashboard button */
+    if(dashboardButtonContainer.length) {
+        /* Create dashboard button */
+        globalOptionsParams.dashboardButton = new DashboardLinkLargeIconButton({
+            container: dashboardButtonContainer,
+            icon: $('#dashboard_button_icon'),
+            label: $('#dashboard_button_label')
+        });        
+    }
+    
+    /* get settings button */
+    var settingsButtonContainer = $('#settings_button_container');
+    /* if this page has a settings button */
+    if(settingsButtonContainer.length) {
+        /* Create settings Button */
+        globalOptionsParams.settingsButton = new SettingsLinkLargeIconButton({
+            container: settingsButtonContainer, 
+            icon: $('#settings_button_icon'), 
+            label: $('#settings_button_label'),
+        });
+    }
+    
+    /**
+     *  Create globalOptionsPanel
+     **/
+    var globalOptionsPanel = new GlobalOptionsPanel(globalOptionsParams);
 
     
     

@@ -71,6 +71,27 @@ button.settings {
     width: 50px;
 }
 
+/**     Large Icon Buttons      **/
+/* Container */
+div.large-icon-button {
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+}
+/* Icon */
+button.large-icon-button-icon {
+    height: 40px;
+    width: 40px;
+}
+/* Label */
+label.large-icon-button-label {
+    visibility: hidden;
+    cursor: pointer;
+}
+label.large-icon-button-label.hover {
+    visibility: visible;
+}
+
 /* blue */
 .blue {
     color: #d9eef7;
