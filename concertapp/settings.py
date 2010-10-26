@@ -110,7 +110,7 @@ APPEND_SLASH = True
 # Make all uploaded files write to disk
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 
-AUTH_PROFILE_MODULE = 'concertapp.models.ConcertUser'
+AUTH_PROFILE_MODULE = 'concertapp.ConcertUser'
 
 DEFAULT_FROM_EMAIL = 'apg552@gmail.com'
 
