@@ -2,8 +2,20 @@
 
 {% block content %}
 
-<p>{{ welcome_message }}</p>
-
+<p>Welcome to Concert, {{user}}</p>
+<br/>
 <p>Show all unread events and stuff!<br />Recent shits!</p>
+<br /><br />
+<section id = "events">
+  <ul>
+    {% if user.unread_events.all %}
+    {% for event in user.unread_events.all %}
+    <li>{{ event }}</li>
+    {% endfor %}
+    {% else %}
+    <li>No new events</li>
+    {% endif %}
+  </ul>
+</section>
 
 {% endblock %}
