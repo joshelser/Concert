@@ -82,13 +82,9 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, 'templates', 'dashboard'),
-    os.path.join(BASE_DIR, 'templates', 'collections'),
-    os.path.join(BASE_DIR, 'templates', 'audio'),
     os.path.join(BASE_DIR, 'templates_old'),
     os.path.join(BASE_DIR, 'templates_experiment')
-
-)
+    )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -115,3 +111,7 @@ APPEND_SLASH = True
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 
 AUTH_PROFILE_MODULE = 'concertapp.models.ConcertUser'
+
+DEFAULT_FROM_EMAIL = 'apg552@gmail.com'
+
+SITE_ID = 1

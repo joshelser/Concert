@@ -2,7 +2,7 @@ from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.core.files  import File
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -12,7 +12,7 @@ import os, tempfile
 
 class ConcertUser(models.Model):
     unread_events = models.ManyToManyField('Event')
-    collection_requests = models.ManyToManyField(Group)
+    collection_join_requests = models.ManyToManyField('Collection')
 
 class Event(models.Model):
     time = models.DateTimeField(auto_now_add = True)
@@ -23,27 +23,60 @@ class Event(models.Model):
             raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
         else:
             super(Event,self).save()
-            for user in self.group.user_set.all():
+            for user in self.collection.users.all():
                 user.get_profile().unread_events.add(self)
 
 class TagCommentEvent(Event):
     tag_comment = models.ForeignKey("TagComment")
 
+    def __unicode__(self):
+        author = self.tag_comment.author
+        tag = self.tag_comment.tag.name
+
+        return str(author) + " commented on tag '" + str(tag) + "'."
+
+
 class SegmentCommentEvent(Event):
     segment_comment = models.ForeignKey("SegmentComment")
+
+    def __unicode__(self):
+        author = self.segment_comment.author
+        segment = self.segment_comment.segment.name
+
+        return str(author) + " commented on segment '" + str(segment) + "'."
 
 class TagCreatedEvent(Event):
     tag = models.ForeignKey("Tag")
 
+    def __unicode__(self):
+        creator = self.tag.creator
+        tag = self.tag.name
+        
+        return str(creator) + " created tag '" + str(tag) + "'."
+
 class AudioSegCreatedEvent(Event):
     audio_segment = models.ForeignKey("AudioSegment")
+
+    def __unicode__(self):
+        creator = self.audio_segment.creator
+        audio_segment = self.audio_segment.name
+
+        return str(creator) + " created segment '" + str(audio_segment) + "'."
+    
 
 class AudioSegmentTaggedEvent(Event):
     audio_segment = models.ForeignKey("AudioSegment")
     tag = models.ForeignKey("Tag")
+    tagging_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(tagging_user) + " tagged '" + str(audio_segment.name) + "' with tag '" + str(tag.name)
 
 class AudioUploadedEvent(Event):
     audio = models.ForeignKey("Audio")
+
+    def __unicode__(self):
+        return str(audio.uploader) + " uploaded file '" + audio.name + "'."
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -51,8 +84,9 @@ class AudioSegment(models.Model):
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio')
     collection = models.ForeignKey('Collection')
+    creator = models.ForeignKey(User)
 
-    def tag(self, tag_name):
+    def tag(self, tag_name, user):
         try:
             tag = Tag.objects.get(name = tag_name)
         except Tag.DoesnNotExist:
@@ -60,7 +94,7 @@ class AudioSegment(models.Model):
             tag.save()
 
         self.tags.add(tag)
-        AudoSegmentTaggedEvent(audio_segment = self, tag = tag).save()
+        AudoSegmentTaggedEvent(audio_segment = self, tag = tag, tagging_user = user).save()
 
     def tag_list(self):
       tags = self.tag_set.all()
@@ -103,6 +137,7 @@ class Tag(models.Model):
     collection = models.ForeignKey('Collection')
     name = models.CharField(max_length = 100)
     time = models.DateTimeField(auto_now_add = True)
+    creator = models.ForeignKey(User)
 
     def save(self):
         super(Tag, self).save()
@@ -135,7 +170,7 @@ class Tag(models.Model):
  
 class Comment(models.Model):
     comment = models.TextField()
-    user = models.ForeignKey(User)
+    author = models.ForeignKey(User)
     time = models.DateTimeField(auto_now_add = True)
 
     def save(self):
@@ -165,7 +200,6 @@ class TagComment(Comment):
         event = TagCommentEvent(tag_comment = self,collection = self.tag.collection)
         event.save()
 
-
     def delete(self):
         events = TagCommentEvent.objects.filter(tag_comment = self)
         UnreadEvents.objects.filter(event__in = events).delete()
@@ -193,7 +227,7 @@ class Audio(models.Model):
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
     mp3file = models.FileField(upload_to = 'audio/')
-    user = models.ForeignKey(User, related_name = 'uploader')
+    uploader = models.ForeignKey(User)
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
     collection = models.ForeignKey('Collection')
