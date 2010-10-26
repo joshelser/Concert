@@ -11,16 +11,3 @@ class CreateCollectionForm(ModelForm):
         model = Collection
         # We don't need to validate the group admin, or the user list
         exclude = ('admin', 'users')
-
-    ##
-    #   Makes sure a duplicate name doesn't exist
-    #
-#    def clean_collection_name(self):
-#        cname = self.cleaned_data['collection_name']
-#        
-#        collectionsWithSameName = Collection.objects.filter(name = cname)
-#
-#        if len(collectionsWithSameName) > 0:
-#            raise forms.ValidationError('That name is already taken')
-#
-#        return cname

@@ -6,6 +6,7 @@ from django.core import serializers
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.models import Group, User
+from django.utils import simplejson
 from concertapp.models import Collection
 from concertapp.collection.forms import CreateCollectionForm
 from django.core.exceptions import ObjectDoesNotExist
@@ -56,7 +57,9 @@ def search_collections(request, query):
 ##
 @login_required
 def create_collection(request):
-    
+    if not(request.POST):
+        return HttpResponseRedirect('/collections/')
+        
     # Create new collection with current user as the admin
     col = Collection(admin=request.user)
     
@@ -70,12 +73,64 @@ def create_collection(request):
         #   Add current user to collection
         col.users.add(request.user)
         
-
-        
-
         return HttpResponse('success')
     else:
         return HttpResponse('failure')
         
+
+###
+#   Delete a collection
+#
+#   @param  request.POST['id']        String  - The id of the collection to delete.
+###
+@login_required
+def delete_collection(request):
+    if not(request.POST):
+        return HttpResponseRedirect('/collections/')
+    
+    col = Collection.objects.get(pk=request.POST['id'])
+    
+    col.delete()
+    
+    return HttpResponse('success')
+    
+###
+#   Retrieve a JSON list of the collections this user is associated with.
+#
+###
+@login_required
+def user_collections(request):
+    
+    user = request.user
+    
+    # Get all collections this user is a member of
+    collections = user.collection_set.all()
+    
+    results = list()
+    
+    # For each of these collections
+    for col in collections:
+        
+        # If the current user is the admin
+        if col.admin == user:
+            admin = 1
+        else:
+            admin = 0
+        
+        # Build json results
+        results.append(dict({
+            'name': col.name,
+            'id': col.id,
+            'num_users': col.users.all().count(),
+            'admin': admin
+        }))
+        
+    
+    #   Serialize results into JSON response        
+    return HttpResponse(
+        simplejson.dumps(results),
+        content_type = 'application/json'
+    )
+    
     
     

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load extra_template_tags %}
+
 {% block content %}
 
 <p>You will be able to manage/create your collections here, as well as see facebook friend information, and be able to join your friends collections.</p>
@@ -9,6 +11,10 @@
     <label for="create_join_input">Collection Name: </label>
     <input type="text" id="create_join_input" class="autoClear" value="Enter a new or existing collection name" size="50" />
     <div id="create_join_results"><!-- The search results go here --></div>
+</div>
+
+<h3>Manage collections</h3>
+<div id="manage_collections_container" class="table">    
 </div>
 
 
@@ -30,5 +36,10 @@
     </div>
 </script>
 
+<script id="user_collection" type="text/x-jquery-tmpl">
+    {% include_raw "../templates/collections/user_collection_template.html" %}
+</script>
+
 
 {% endblock %}
+
