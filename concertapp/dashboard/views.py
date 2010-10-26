@@ -17,7 +17,7 @@ def dashboard(request):
     username = user.username
     
     
-    return render_to_response('dashboard.html', {
+    return render_to_response('dashboard/dashboard.html', {
         'welcome_message': 'Welcome to Concert, '+username+'.',
         'page_name': 'Dashboard'
     }, RequestContext(request));

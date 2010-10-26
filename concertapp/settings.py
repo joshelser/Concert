@@ -110,3 +110,7 @@ APPEND_SLASH = True
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 
 AUTH_PROFILE_MODULE = 'concertapp.models.ConcertUser'
+
+DEFAULT_FROM_EMAIL = 'apg552@gmail.com'
+
+SITE_ID = 1

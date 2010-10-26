@@ -7,8 +7,15 @@ import os
 urlpatterns = patterns('',
 
                        url(r'^$', redirect_to, {'url': '/dashboard/'}),
-                       (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+                       (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'users/login.html'}),
                        (r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
+
+                       (r'^reset_password/$', 'django.contrib.auth.views.password_reset',
+                        {'template_name': 'users/reset_password.html', 
+                         'post_reset_redirect':'/login/',
+                         }),
+
+                       (r'^reset_pass_confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
                        
                        # Dashboard urls
                        (r'^dashboard/', include('concertapp.dashboard.urls')),
@@ -18,7 +25,7 @@ urlpatterns = patterns('',
 
                        # audio urls (upload_audio and audio utilities)
                        (r'^audio/', include('concertapp.audio.urls')), 
-                      
+                       
                        )
 
 

@@ -47,49 +47,6 @@ def create_user(request):
     else:
         form = RegistrationForm()
     return render_to_response('register.html', {'form': form})
-
-##
-#    Logs in the requested user
-#
-#    @param    request    HTTP request
-##
-def login_user(request):
-    error = ''
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        redirect_url = request.POST['next']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-
-                # Redirect to the requested page
-                return HttpResponseRedirect(redirect_url)
-            else:
-                return HttpResponse('<h1>Not Active</h1>')
-        else:
-            error = "Either the username doesn't exist, or the password you gave us isn't correct.  Give it another try.";
-
-    # Use the default post login redirect
-    url = LOGIN_REDIRECT_URL
-
-    # Check to see if a post login page was requested
-    if request.GET.__contains__('next'):
-        url = request.GET['next']
-        
-    # Render the login page with the appropriate page
-    return render_to_response('login.html', {'next': url, 'error': error})
-
-##
-#    Logs out the current user
-#
-#    @param    request     HTTP request
-##
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect('/users/login/')
-
 ##
 #    Changes the current user's password
 #

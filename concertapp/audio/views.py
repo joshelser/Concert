@@ -17,6 +17,6 @@ def upload_audio(request):
     username = user.username
     
     
-    return render_to_response('upload_audio.html', {
+    return render_to_response('audio/upload_audio.html', {
         'page_name': 'Upload Audio'
     }, RequestContext(request));
