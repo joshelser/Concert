@@ -2,17 +2,17 @@ from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.models import Group, User
 from django.core.files  import File
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 import audiotools
-from django.contrib.auth.models import Group, User
 import os, tempfile
-        
-class UnreadEvents(models.Model):
-    user = models.ForeignKey(User)
-    events = models.ManyToManyField('Event')
+
+class ConcertUser(models.Model):
+    unread_events = models.ManyToManyField('Event')
+    collection_requests = models.ManyToManyField(Group)
 
 class Event(models.Model):
     time = models.DateTimeField(auto_now_add = True)
@@ -23,19 +23,8 @@ class Event(models.Model):
             raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
         else:
             super(Event,self).save()
-            for user in self.collection.user_set.all():
-                try:
-                    unread_events = UnreadEvents.objects.get(user = user)
-                except UnreadEvents.DoesNotExist:
-                    unread_events = UnreadEvents(user=user)
-                    unread_events.save()
-
-                unread_events.events.add(self)
-                unread_events.save()
-            
-
-class JoinCollectionEvent(Event):
-    user = models.ForeignKey(User)
+            for user in self.group.user_set.all():
+                user.get_profile().unread_events.add(self)
 
 class TagCommentEvent(Event):
     tag_comment = models.ForeignKey("TagComment")

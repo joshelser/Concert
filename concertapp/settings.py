@@ -98,7 +98,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.markup',
     'concertapp',
-    #'concertapp.api',
 )
 
 FIXTURE_DIRS = (
@@ -107,10 +106,12 @@ FIXTURE_DIRS = (
 
 # registration
 LOGIN_REDIRECT_URL = "/"
-LOGIN_URL = '/users/login/'
-LOGOUT_URL = '/users/logout/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
 
 APPEND_SLASH = True
 
 # Make all uploaded files write to disk
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
+
+AUTH_PROFILE_MODULE = 'concertapp.models.ConcertUser'
