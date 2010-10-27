@@ -1,35 +1,41 @@
-<header id="page_header">
-  <aside class="page_header_left">
-    <h1>Concert</h1>
-    <h2>{{ page_name }}</h2>
-  </aside>
-  <nav class="page_header_middle">
-    <label for="collection_selector">Organize:</label>
-    <select id="collection_selector" class="collection_selector">
-      <option value="-1">Please select a collection</option>
-      {% for group in user.groups.all %}
-      <option value="{{ group.id }}">{{ group.name }}</option>
-      {% endfor %}
-    </select>
-  </nav>
-  <nav class="page_header_right">
+<div id="page_header">
+    <div class="page_header_left">
+        <h1>Concert</h1>
+        <h2>{{ page_name }}</h2>
+    </div>
+    <div class="page_header_middle">
+        <label for="collection_selector">Organize:</label>
+        <select id="collection_selector" class="collection_selector">
+            <option value="-1">Please select a collection</option>
+            {% for collection in user.collections.all %}
+                <option value="{{ group.id }}">{{ collection.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="page_header_right">
     
-    {% comment %}
-    I think the nav for this part should be consistent on all pages.  i.e., the dashboard button should be viewable from the dashboard page, but highlighted in some way to signify that you're on that page.  
-    {% endcomment %}
-
-    {% if page_name != 'Dashboard' %}
-    <a href="{% url dashboard %}" id="dashboard_button" title="Concert dashboard">Cool "dashboard" icon</a>
-    {% endif %}
+        {% if page_name != 'Dashboard' %}
+            <div id="dashboard_button_container" data-href="{% url dashboard %}" class="large-icon-button">
+                <button id="dashboard_button_icon" title="Concert dashboard" class="large-icon-button-icon">D</button>
+                <label for="dashboard_button_icon" id="dashboard_button_label" class="large-icon-button-label">Dashboard</label>
+            </div>
+        {% endif %}
     
-    {% if page_name  != 'Collections' %}
-    <a href="{% url manage_collections %}" id="manage_collections_button" title="Manage collections, connect with friends" class="">Settings icon</a>
-    {% endif %}
     
-    {% if page_name != 'Upload Audio' %}
-    <a href="{% url upload_audio %}" id="upload_audio_button" title="Upload audio to one of your collections">Cool "upload" icon</a>
-    {% endif %}            
+        {% if page_name  != 'Settings' %}
+            <div id="settings_button_container" data-href="{% url manage_collections %}" class="large-icon-button">
+                <button id="settings_button_icon" title="Manage collections, connect with friends" class="large-icon-button-icon">S</button>
+                <label for="settings_button_icon" id="settings_button_label" class="large-icon-button-label">Settings</label>
+            </div>
+        {% endif %}
     
-  </nav>
-  <div class="clear"></div>
-</header>
+        {% if page_name != 'Upload Audio' %}
+            <div id="upload_button_container" class="large-icon-button" data-href="{% url upload_audio %}">
+                <button id="upload_button_icon" title="Upload audio to one of your collections" class="large-icon-button-icon">U</button>
+                <label for="upload_button" class="large-icon-button-label" id="upload_button_label">Upload Audio</label>
+            </div>
+        {% endif %}            
+    
+    </div>
+    <div class="clear"></div>
+</div>
