@@ -16,42 +16,42 @@ CreateJoinCollectionPanel.prototype = new Panel();
 *  Initialize all stuffs.  We have an element for the input, as well as for the
 *  results.
 *
-*  @param  createJoinInputElement          jQuery HTMLInputElement for the input
+*  @param  inputElement          jQuery HTMLInputElement for the input
 *                                          text box.
-*  @param  createJoinResultsElement        jQuery HTMLDivElement for the results
+*  @param  resultsElement        jQuery HTMLDivElement for the results
 *                                          dropdown.
-*  @param  createJoinResultTemplate        jQuery tmpl script element.  The template
+*  @param  resultTemplate        jQuery tmpl script element.  The template
 *                                          for results in the auto-complete dropdown
-*  @param  createJoinCreateNewTemplate     jQuery tmpl - the template for the 
+*  @param  createNewTemplate     jQuery tmpl - the template for the 
 *                                          "Create new collection"  button in the
 *                                          auto complete dropdown.
 **/
 CreateJoinCollectionPanel.prototype.init = function(params) {
     Panel.prototype.init.call(this, params);
 
-    var createJoinInputElement = params.createJoinInputElement;
-    if(typeof(createJoinInputElement) == 'undefined') {
-        throw new Error('params.createJoinInputElement is undefined');
+    var inputElement = params.inputElement;
+    if(typeof(inputElement) == 'undefined') {
+        throw new Error('params.inputElement is undefined');
     }
-    this.createJoinInputElement = createJoinInputElement;
+    this.inputElement = inputElement;
 
-    var createJoinResultsElement = params.createJoinResultsElement;
-    if(typeof(createJoinResultsElement) == 'undefined') {
-        throw new Error('params.createJoinResultsElement is undefined');
+    var resultsElement = params.resultsElement;
+    if(typeof(resultsElement) == 'undefined') {
+        throw new Error('params.resultsElement is undefined');
     }
-    this.createJoinResultsElement = createJoinResultsElement;
+    this.resultsElement = resultsElement;
 
-    var createJoinResultTemplate = params.createJoinResultTemplate;
-    if(typeof(createJoinResultTemplate) == 'undefined') {
-        throw new Error('params.createJoinResultTemplate is undefined');
+    var resultTemplate = params.resultTemplate;
+    if(typeof(resultTemplate) == 'undefined') {
+        throw new Error('params.resultTemplate is undefined');
     }
-    this.createJoinResultTemplate = createJoinResultTemplate;
+    this.resultTemplate = resultTemplate;
 
-    var createJoinCreateNewTemplate = params.createJoinCreateNewTemplate;
-    if(typeof(createJoinCreateNewTemplate) == 'undefined') {
-        throw new Error('params.createJoinCreateNewTemplate is undefined');
+    var createNewTemplate = params.createNewTemplate;
+    if(typeof(createNewTemplate) == 'undefined') {
+        throw new Error('params.createNewTemplate is undefined');
     }
-    this.createJoinCreateNewTemplate = createJoinCreateNewTemplate;
+    this.createNewTemplate = createNewTemplate;
 
     /* This will hold a reference so we can keep track of the last Xhr */
     this.lastCreateJoinXhr = null;
@@ -70,6 +70,9 @@ CreateJoinCollectionPanel.prototype.init = function(params) {
             });
         };
     }(this));
+    
+    /* Reference to ManageCollectionsPanel so we can run methods on there */
+    this.manageCollectionsPanel = null;
 }
 
 /**
@@ -78,7 +81,7 @@ CreateJoinCollectionPanel.prototype.init = function(params) {
  **/
 CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
     /* The actual jQuery UI autocomplete call */
-    this.createJoinInputElement.autocomplete({
+    this.inputElement.autocomplete({
         minLength: 0,
         source: function(me) {
             return function(request, response) {
@@ -128,9 +131,9 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
 *                                  results.
 **/
 CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
-    var resultsContainer = this.createJoinResultsElement;
-    var createNewTemplate = this.createJoinCreateNewTemplate;
-    var resultTemplate = this.createJoinResultTemplate;
+    var resultsContainer = this.resultsElement;
+    var createNewTemplate = this.createNewTemplate;
+    var resultTemplate = this.resultTemplate;
     var term = this.currentTerm;
     /* results were found! */
     if(data.length) {
@@ -188,7 +191,7 @@ CreateJoinCollectionPanel.prototype.createNewCollection = function(params) {
                     });
 
                     /* Update collection table */
-                    updateManageCollectionsList();
+                    me.manageCollectionsPanel.retrieveAndUpdateCollections();
 
                 }
                 /* an error occurred */
@@ -198,7 +201,7 @@ CreateJoinCollectionPanel.prototype.createNewCollection = function(params) {
                         'content': 'Your collection was not created.'
                     });
 
-                    this.createJoinResultsElement.empty();
+                    this.resultsElement.empty();
                 }
             };
         }(this)

@@ -59,16 +59,16 @@ GlobalOptionsPanel.prototype.init = function(params) {
  *  defined, we will update the dropdown with those objects.  If not, we will
  *  retrieve the collections first.
  *
- *  @param  params.collections        Array - of collection objects (from backend)  
+ *  @param  data        Array  -    response data from backend (collection objs)
  **/
-GlobalOptionsPanel.prototype.updateCollectionSelector = function(params) {
-    if(typeof(params.collections) == 'undefined') {
+GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
+    if(typeof(data) == 'undefined') {
         this.retrieveAndUpdateCollectionSelector();
     }
     
     this.collectionSelector.html(
         this.collectionSelectorOptionsTemplate.tmpl({
-            collections: params.collections, 
+            collections: data, 
         })
     );
     
