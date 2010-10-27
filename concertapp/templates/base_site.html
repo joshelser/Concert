@@ -1,11 +1,13 @@
 {% comment %}
 
 @file base.html
-The base template for all pages.
+The base template for all pages.  All page templates will use this.
 
 {% endcomment %}
 
-<!DOCTYPE html>
+
+
+<!DOCTYPE>
 
 <html>
   <head>
@@ -17,7 +19,9 @@ The base template for all pages.
 
     <script src="/js/lib/vendor/jquery-nightly.min.js"></script>
     <script src="/js/lib/vendor/jquery.tmpl.min.js"></script>
+    <script src="/js/lib/vendor/jquery-ui-1.8.5.custom.min.js"></script>
     <script src="/js/lib/vendor/modernizr-1.5.min.js"></script>
+    
     <!-- 
        <script src="/js/lib/Waveform.js"></script>
        <script src="/js/lib/WaveformViewer.js"></script>
@@ -28,10 +32,23 @@ The base template for all pages.
        <script src="/js/lib/WaveformPlayer.js"></script>
        <script src="/js/lib/VolumeSlider.js"></script>
        <script src="/js/lib/AudioPlayerBehavior.js"></script>
-    -->
+       -->
     <script src="/js/lib/ModalAlert.js"></script>        
     <script src="/js/lib/ConfirmModalAlert.js"></script>        
-    <script src="/js/lib/Notifier.js"></script>        
+    <script src="/js/lib/Notifier.js"></script>
+
+    <script src="/js/lib/Button.js"></script>
+    <script src="/js/lib/IconButton.js"></script>
+    <script src="/js/lib/LargeIconButton.js"></script>
+    <script src="/js/lib/LinkLargeIconButton.js"></script>
+    <script src="/js/lib/UploadLinkLargeIconButton.js"></script>
+    <script src="/js/lib/DashboardLinkLargeIconButton.js"></script>
+    <script src="/js/lib/SettingsLinkLargeIconButton.js"></script>
+
+    <script src="/js/lib/Panel.js"></script>
+    <script src="/js/lib/GlobalOptionsPanel.js"></script>
+    
+
     <script src="/js/dashboard.js"></script>    
     <script src="/js/login.js"></script>    
     <script src="/js/collections.js"></script>    
@@ -44,7 +61,7 @@ The base template for all pages.
   </head>
   <body>
     {% include "global_client_side_templates.html" %}
-        
+    
     {% if user %}
     {% include "header.html" %}
     {% endif %}
