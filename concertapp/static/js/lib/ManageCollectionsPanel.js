@@ -82,3 +82,22 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
     /* Update dropdown */
     this.globalOptionsPanel.updateCollectionSelector(data);
 }
+
+/**
+ *  This method deletes a collection from the manage collections panel, then
+ *  informs the global options panel that we should remove the collection from there.
+ *
+ *  @param  collection_id        Number  -  The id of the collection to delete.
+ **/
+ManageCollectionsPanel.prototype.deleteCollection = function(collection_id) {
+    var collection = this.collections[collection_id];
+    
+    /* Remove row from manage table */
+    collection.container.remove();
+    /* Remove reference to self from manageCollectionsPanel */
+    delete this.collections[collection_id];
+    
+    /* Tell global options panel to delete collection */
+    this.globalOptionsPanel.removeCollectionFromSelector(collection_id);
+};
+

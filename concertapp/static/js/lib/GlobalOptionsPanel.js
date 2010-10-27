@@ -84,3 +84,12 @@ GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
     /* TODO */
 }
 
+/**
+ *  This will remove a collection from the collection selector.
+ *
+ *  @param  collection_id        Number  -  The id of the collection
+ **/
+GlobalOptionsPanel.prototype.removeCollectionFromSelector = function(collection_id) {
+    $('#collection_option-'+collection_id).remove();
+}
+

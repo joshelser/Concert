@@ -6,27 +6,32 @@ import os
 
 urlpatterns = patterns('',
 
-                       url(r'^$', redirect_to, {'url': '/dashboard/'}),
-                       (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'users/login.html'}),
-                       (r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
+    # The default page is the dashboard
+    url(r'^$', redirect_to, {'url': '/dashboard/'}),
+    
+    # Login/logout pages
+    (r'^login/$', 'django.contrib.auth.views.login', 
+        {'template_name': 'users/login.html'}
+    ),
+    (r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
 
-                       (r'^reset_password/$', 'django.contrib.auth.views.password_reset',
+    (r'^reset_password/$', 'django.contrib.auth.views.password_reset',
                         {'template_name': 'users/reset_password.html', 
                          'post_reset_redirect':'/login/',
                          }),
 
-                       (r'^reset_pass_confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
-                       
-                       # Dashboard urls
-                       (r'^dashboard/', include('concertapp.dashboard.urls')),
-
-                       # collection urls (manage collections and organize audio)
-                       (r'^collections/', include('concertapp.collection.urls')),
-
-                       # audio urls (upload_audio and audio utilities)
-                       (r'^audio/', include('concertapp.audio.urls')), 
-                       
-                       )
+    (r'^reset_pass_confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
+    
+    # Dashboard urls
+    (r'^dashboard/', include('concertapp.dashboard.urls')),
+    
+    # collection urls (manage collections and organize audio)
+    (r'^collections/', include('concertapp.collection.urls')),
+    
+    # audio urls (upload_audio and audio utilities)
+    (r'^audio/', include('concertapp.audio.urls')), 
+   
+)
 
 
 

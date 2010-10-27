@@ -192,6 +192,12 @@ CreateJoinCollectionPanel.prototype.createNewCollection = function(params) {
 
                     /* Update collection table */
                     me.manageCollectionsPanel.retrieveAndUpdateCollections();
+                    
+                    /* Clear text field */
+                    me.inputElement.val('');
+                    me.currentTerm = '';
+                    /* Clear auto complete */
+                    me.autoCompleteResponse([]);
 
                 }
                 /* an error occurred */

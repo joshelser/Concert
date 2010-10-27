@@ -8,7 +8,7 @@
         <select id="collection_selector" class="collection_selector">
             <option value="-1">Please select a collection</option>
             {% for collection in user.collections.all %}
-                <option value="{{ group.id }}">{{ collection.name }}</option>
+                <option id="collection_option-{{group.id}}" value="{{ group.id }}">{{ collection.name }}</option>
             {% endfor %}
         </select>
     </div>
@@ -22,7 +22,7 @@
         {% endif %}
     
     
-        {% if page_name  != 'Settings' %}
+        {% if page_name  != 'Collections' %}
             <div id="settings_button_container" data-href="{% url manage_collections %}" class="large-icon-button">
                 <button id="settings_button_icon" title="Manage collections, connect with friends" class="large-icon-button-icon">S</button>
                 <label for="settings_button_icon" id="settings_button_label" class="large-icon-button-label">Settings</label>

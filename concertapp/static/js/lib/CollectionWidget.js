@@ -119,10 +119,8 @@ CollectionWidget.prototype.deleteCollection = function() {
                         content: 'The collection has been deleted.'
                     });
 
-                    /* Remove row from manage table */
-                    me.container.remove();
-                    /* Remove reference to self from manageCollectionsPanel */
-                    delete manageCollectionsPanel.collections[me.id];
+                    /* Remove me from manageCollectionsPanel */
+                    me.manageCollectionsPanel.deleteCollection(me.collection_id);
                 }
                 else {
                     com.concertsoundorganizer.notifier.alert({
