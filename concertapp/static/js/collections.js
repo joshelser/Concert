@@ -4,19 +4,29 @@
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
-function initializeCollectionsPage() {
+function initializeCollectionsPage(params) {
     
     
-    initializeCreateJoinAutocompleteBehavior();
+    /**
+     *  Create "create/join collection panel"
+     **/
+    var createJoinCollectionPanel = new CreateJoinCollectionPanel({
+        container: $('#create_join_container'), 
+        createJoinInputElement: $('#create_join_input'), 
+        createJoinResultsElement: $('#create_join_results'),
+        createJoinResultTemplate: $('#create_join_result'),
+        createJoinCreateNewTemplate: $('#create_join_create_new')
+    });
     
-    initializeDeleteCollectionButtonBehavior();
     
-    updateManageCollectionsList();
+    initializeDeleteCollectionButtonBehavior(params);
+    
+    updateManageCollectionsList(params);
     
 }
 
 
-function updateManageCollectionsList() {
+function updateManageCollectionsList(params) {
     
     var container = $('#manage_collections_container');
     var userCollectionTemplate = $('#user_collection');
@@ -24,7 +34,7 @@ function updateManageCollectionsList() {
     var userCollectionLeaveTemplate = $('#user_collection_leave');
     
     /* Retrieve JSON data for manage collections list */
-    $.getJSON('user/', function(container, userCollectionTemplate, userCollectionDeleteTemplate, userCollectionLeaveTemplate) {
+    $.getJSON('user/', function(container, userCollectionTemplate, userCollectionDeleteTemplate, userCollectionLeaveTemplate, globalOptionsPanel) {
         return function(data, status) {
         
             /* Temporary fragment for all DOM additions */
@@ -44,9 +54,14 @@ function updateManageCollectionsList() {
             
             }
             
+            /* Update manage collections list */
             container.empty().append(frag);
+            
+            /* Update dropdown */
+            globalOptionsPanel.updateCollectionSelector(data);
+            
         };
-    }(container, userCollectionTemplate, userCollectionDeleteTemplate, userCollectionLeaveTemplate));
+    }(container, userCollectionTemplate, userCollectionDeleteTemplate, userCollectionLeaveTemplate, params.globalOptionsPanel));
 }
 
 
@@ -105,135 +120,4 @@ function deleteCollection(col_id) {
             };
         }(col_id)
     });
-}
-
-
-/**
- *  Completely encapsulates all functionality associated with the "create/join"
- *  box.  Should make this re-usable code next time we need to do something similar.
- **/
-function initializeCreateJoinAutocompleteBehavior() {
-    
-    var resultsContainer = $('#create_join_results');
-    var createNewTemplate = $('#create_new_result');
-    var resultTemplate = $('#create_join_result');
-    
-    /* This function is called when auto complete runs, and data is retrieved */
-    var autoCompleteResponse = function(resultsContainer, createNewTemplate, resultTemplate) {
-        return function(data, term) {
-            /* results were found! */
-            if(data.length) {
-                /* Temporary structure for results */
-                var frag = document.createDocumentFragment();
-
-                /* For each result */
-                for(i = 0, il = data.length; i < il; i++) {
-                    var obj = data[i].fields
-                    /* Add to fragment */
-                    frag.appendChild(resultTemplate.tmpl({
-                        name: obj.name, 
-                        id: obj.pk
-                    }).get(0));
-                }
-                /* empty results container */
-                resultsContainer.empty();
-                /* Put results in container */
-                resultsContainer.append(frag);
-            }
-            /* No results :( */
-            else if(term != '') {
-                /* results container will just be "create new" option */
-                resultsContainer.html(createNewTemplate.tmpl({
-                    query: term, 
-                }));
-            }
-            /* No search term */
-            else {
-                resultsContainer.empty();
-            }
-        };
-    }(resultsContainer, createNewTemplate, resultTemplate);
-    
-    
-    /* The actual jQuery UI autocomplete call */
-    $('#create_join_input').autocomplete({
-        minLength: 0,
-        source: function(resultsContainer, myResponse) {
-            
-            return function(request, response) {
-                /* Our search term */
-                var term = request.term;
-                
-                /* If there is something to search for */
-                if(term && term != '') {
-                    
-                    /* Search for it */
-                    com.concertsoundorganizer.ajax.lastCreateJoinXhr = $.getJSON(
-                        'search/'+term, 
-                        {}, 
-                        function(data, status, xhr) {
-                            if(xhr === com.concertsoundorganizer.ajax.lastCreateJoinXhr) {
-                                myResponse(data, term);                         
-                            }
-                        }
-                    );
-                    
-                }
-                /* Search is empty */
-                else {
-                    myResponse([], term);
-                }
-            };
-
-        }(resultsContainer, autoCompleteResponse),
-        
-        open: function(event, ui) {
-        },
-        
-        change: function(event, ui) {
-        },
-        
-        search: function(event, ui) {
-        }
-    })
-    .data('autocomplete')._renderItem = function(resultsContainer) {
-        return function(ul, item) {
-            if(item.value == 'null' && item.label == 'null') {
-                var createNewResult = 'Create group "'+$('create_join_input').val()+'"';
-                resultsContainer.append(createNewResult);
-            }
-        }
-    }(resultsContainer);
-    
-    /* When 'create collection' button is pressed */
-    $('#create_new_collection').live('click', function(resultsContainer) {
-        return function(event) {
-            var collection_name = $(this).attr('data-collection_name');
-            $.ajax({
-                type: 'POST',
-                url: 'add/',
-                data: { name: collection_name },
-                success: function(data, status, xhr) {
-                    if(data == 'success') {
-                        com.concertsoundorganizer.notifier.alert({
-                            'title': 'Success!', 
-                            'content': 'Your collection was created succesfully.'
-                        });
-                        
-                        /* Update collection table */
-                        updateManageCollectionsList();
-                        
-                    }
-                    else {
-                        com.concertsoundorganizer.notifier.alert({
-                            'title': 'Error',
-                            'content': 'Your collection was not created.'
-                        });
-                        
-                        resultsContainer.empty();
-                    }
-                }
-            });
-        };
-    }(resultsContainer));
 }

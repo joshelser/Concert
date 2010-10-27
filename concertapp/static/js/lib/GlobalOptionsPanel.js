@@ -31,6 +31,12 @@ GlobalOptionsPanel.prototype.init = function(params) {
     /* Save as member */
     this.collectionSelector = collectionSelector;
     
+    var collectionSelectorOptionsTemplate = params.collectionSelectorOptionsTemplate;
+    if(typeof(collectionSelectorOptionsTemplate) == 'undefined') {
+        throw new Error('params.collectionSelectorOptionsTemplate is undefined');
+    }
+    this.collectionSelectorOptionsTemplate = collectionSelectorOptionsTemplate;
+    
     
     var uploadButton = params.uploadButton;
     if(typeof(uploadButton) != 'undefined') {
@@ -46,11 +52,35 @@ GlobalOptionsPanel.prototype.init = function(params) {
     if(typeof(dashboardButton) != 'undefined') {
         this.dashboardButton = dashboardButton;
     }
+}
+
+/**
+ *  This will update the collectionSelector dropdown.  If params.collections is 
+ *  defined, we will update the dropdown with those objects.  If not, we will
+ *  retrieve the collections first.
+ *
+ *  @param  params.collections        Array - of collection objects (from backend)  
+ **/
+GlobalOptionsPanel.prototype.updateCollectionSelector = function(params) {
+    if(typeof(params.collections) == 'undefined') {
+        this.retrieveAndUpdateCollectionSelector();
+    }
     
-    
-    
-    
-    
+    this.collectionSelector.html(
+        this.collectionSelectorOptionsTemplate.tmpl({
+            collections: params.collections, 
+        })
+    );
     
     
 }
+
+/**
+ *  This will retrieve the collections from the backend, then update the collection
+ *  dropdown.
+ **/
+GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
+    /* retrieve the collections */
+    /* TODO */
+}
+

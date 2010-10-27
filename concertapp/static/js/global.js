@@ -49,11 +49,17 @@ $(document).ready(function(){
     }
     
     /**
+     *  This parameter will be sent to the page controller
+     **/
+    var params = {};
+    
+    /**
      *  Create global widgets and buttons for the globalOptionsPanel
      **/
     var globalOptionsParams = {
         container: $('#page_header'), 
-        collectionSelector: $('#collection_selector')
+        collectionSelector: $('#collection_selector'),
+        collectionSelectorOptionsTemplate: $('#collection_dropdown_options')
     }; 
     
     /* Get upload button */
@@ -95,7 +101,7 @@ $(document).ready(function(){
     /**
      *  Create globalOptionsPanel
      **/
-    var globalOptionsPanel = new GlobalOptionsPanel(globalOptionsParams);
+    params.globalOptionsPanel = new GlobalOptionsPanel(globalOptionsParams);
 
     
     
@@ -111,9 +117,9 @@ $(document).ready(function(){
     var pagePath = window.location.pathname;
     
     /* Initialize proper page function */
-    try {
-        pageInitializers[pagePath]();
-    }
+//    try {
+        pageInitializers[pagePath](params);
+/*    }
     catch(err) {
         if(err.name == 'TypeError') {
             throw new Error('Page is not initialized:\n'+err);
@@ -121,7 +127,7 @@ $(document).ready(function(){
         else {
             throw err;
         }
-    }
+    }*/
 
 
 });

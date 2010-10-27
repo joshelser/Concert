@@ -27,7 +27,4 @@ Panel.prototype.init = function(params) {
         throw new Error('params.container is undefined');
     }
     this.container = container;
-    
-    
-    
 }
