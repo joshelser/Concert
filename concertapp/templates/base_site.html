@@ -88,7 +88,7 @@ The base template for all pages.  All page templates will use this.
     </div>
     
     {% if user %}
-        {% include header.html %}
+        {% include 'header.html' %}
     {% endif %}
     
     {% block content %}

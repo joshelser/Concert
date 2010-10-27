@@ -118,7 +118,7 @@ class AudioSegment(models.Model):
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio')
     collection = models.ForeignKey('Collection')
-    creator = models.ForeignKey('User')
+    creator = models.ForeignKey(User)
 
     def tag(self, tag_name, user):
         try:
