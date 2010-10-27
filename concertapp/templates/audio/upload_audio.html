@@ -2,15 +2,22 @@
 
 {% block content %}
 
-<p>You will be able to upload audio here</p>
+<h3>Upload</h3>
 
-<form id="upload_form" action="/audio/upload/" method="POST">
-    <label for="file_uploader">Select one or more audio files to upload: </label>
-    <input type="file" multiple="true" id="file_uploader" accept="audio/*" />
+{#  Form that user sees #}
+<div id="upload_panel_container">
+    <label for="file_uploader">Select a file to upload: </label>
+    {# This will be populated client-side with the actual '<input>' element #}
+    <div id="choose_file_container"></div>
+    {# This is the listing of files that the user has chosen #}
     <div id="files_table" class="table"></div>
+    <button id="upload_submit_button">Upload</button>
 
-    <input type="submit" value="Upload" id="upload_submit_button" />
-</form>
+    {# Form that is actually used to send data to server #}
+    <form id="server_upload_form" action="/audio/upload/" method="POST" class="hidden">
+        {# Each file that needs to be uploaded will get injected into here #}
+    </form>    
+</div>
 
 
 
@@ -30,5 +37,9 @@
             <progress id="file_upload_progress-${jsid}" class="file_upload_progress" max=100 value=0 />
        </div>
     </div>
+</script>
+
+<script id="file_chooser_template" type="text/x-jquery-tmpl">
+    <input type="file" multiple="false" id="file_chooser-${id}" accept="audio/*" />
 </script>
 {% endblock %}

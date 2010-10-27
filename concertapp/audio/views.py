@@ -22,7 +22,7 @@ def upload_audio(request):
     
     if request.method == 'POST':
         # The file being uploaded.
-        print "request.FILES:\n"+str(request.FILES)
+        print "request.FILES['audio']:\n"+str(request.FILES['audio'])
         
         # Generate a unique upload id so we can track progress of the upload
         upload_id = hashlib.sha224(os.urandom(16)).hexdigest()

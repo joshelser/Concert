@@ -6,11 +6,17 @@
  **/
  
 function initializeUploadPage() {
-    console.log('Audio upload page initialized.');
     
-    /* Handle file upload box */
-    uploadFileBehavior();
-    
+    /**
+     *  Create UploadPanel
+     **/
+    var uploadPanel = new UploadPanel({
+        container: $('#upload_panel_container'), 
+        fileChooserContainer: $('#choose_file_container'), 
+        fileChooserTemplate: $('#file_chooser_template'), 
+        uploadFormElement: $('#server_upload_form'),
+        fileCount: 0, 
+    });
     
 }
 
@@ -42,28 +48,29 @@ function uploadFileBehavior() {
         $('#files_table').html('').append(out);
     });
     
-    var options = {
-        dataType: 'xml',
-        beforeSubmit: function(arr, form, options) {
-            console.log('beforeSubmit');
-            console.log('arr:');
-            console.log(arr);
-            console.log('form:');
-            console.log(form);
-            console.log('options:');
-            console.log(options);
-        },
-        success: function(data, status, xhr) {
-            console.log('success');
-            console.log('data:');
-            console.log(data);
-            console.log('status:');
-            console.log(status);
-            console.log('xhr:');
-            console.log(xhr);
-        }
-    };
+    $('#upload_submit_button').click(function() {
+        /* Put first chosen file in hidden form */
+        var files = $('#file_uploader').attr('files');
+        
+        var serverFiles = $('#server_upload_file').attr('files');
+        serverFiles.push(files[0]);
+        
+        files = $('#server_upload_file').attr('files');
+        console.log('files:');
+        console.log(files);
+        
+        var options = {
+            dataType: 'xml',
+            beforeSubmit: function(arr, form, options) {
+                console.log('beforeSubmit');
+            },
+            success: function(data, status, xhr) {
+                console.log('success');
+            }
+        };
+
+        $('#server_upload_form').ajaxSubmit(options);
+    });    
     
-    $('#upload_form').ajaxSubmit(options);
     
 }
