@@ -8,8 +8,8 @@
 <br /><br />
 <section id = "events">
   <ul>
-    {% if user.unread_events.all %}
-    {% for event in user.unread_events.all %}
+    {% if user.get_profile.unread_events.all %}
+    {% for event in user.get_profile.unread_events.all %}
     <li>{{ event }}</li>
     {% endfor %}
     {% else %}
