@@ -14,48 +14,47 @@ function CollectionWidget(params) {
 CollectionWidget.prototype = new Widget();
 
 /**
- *  @param  nameElement         jQuery HTMLDivElement - the element that holds the 
- *                              name of the collection
- *  @param  membersElement      jQuery HTMLDivElement - the element that holds
- *                              the link for the number of members
- *  @param  deleteButton        jQuery HTMLButtonElement  - The button that will 
- *                              delete the group.  THis is OPTIONAL because the user
- *                              might not have permissions to delete the group.
- *  @param  leaveButton         jQuery HTMLButtonElement - the button that will allow
- *                              the user to leave the group.  This is OPTIONAL 
- *                              because if the user is an admin they can't leave.
- *  @param  params.collectionTemplate        jQuery tmpl - for the collection row.  
+ *  @param  manageCollectionsPanel        ManageCollectionsPanel - that we are a
+ *                                          member of.
  **/
 CollectionWidget.prototype.init = function(params) {
     Widget.prototype.init.call(this, params);
 
-    var nameElement = params.nameElement;
-    if(typeof(nameElement) == 'undefined') {
-        throw new Error('params.nameElement is undefined');
+    var container = this.container;
+    
+    var collection_id = params.context.id;
+    this.collection_id = collection_id;
+    
+    var nameElement = container.find('#user_collection_name-'+collection_id);
+    if(nameElement.length == 0) {
+        throw new Error('Element #user_collection_name-'+collection_id+' does not exist!');
     }
     this.nameElement = nameElement;
     
-    var membersElement = params.membersElement;
-    if(typeof(membersElement) == 'undefined') {
-        throw new Error('params.membersElement is undefined');
+    
+    var membersElement = container.find('#user_collection_members-'+collection_id)
+    if(membersElement.length == 0) {
+        throw new Error('Element #user_collection_members-'+collection_id+' does not exist!');
     }
     this.membersElement = membersElement;
     
-    var deleteButton = params.deleteButton;
-    if(typeof(deleteButton) != 'undefined') {
+    
+    
+    var deleteButton = container.find('#delete_collection-'+collection_id);
+    if(deleteButton.length) {
         this.deleteButton = deleteButton;
         
         /* Initialize delete behavior here, because this will not change 
             dynamically */
         deleteButton.click(function(me){
             return function() {
-                me.deleteCollection();
+                me.deleteCollectionConfirm();
             };
         }(this));
     }
     
-    var leaveButton = params.leaveButton;
-    if(typeof(leaveButton) != 'undefined') {
+    var leaveButton = container.find('#leave_collection-'+collection_id);
+    if(leaveButton.length) {
         this.leaveButton = leaveButton;
         
         /* Initialize leave behavior here, because this will not change */
@@ -66,11 +65,72 @@ CollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
-    var collectionTemplate = params.collectionTemplate;
-    if(typeof(collectionTemplate) == 'undefined') {
-        throw new Error('params.collectionTemplate is undefined');
+    if(leaveButton.length == 0 && deleteButton.length == 0) {
+        throw new Error('leaveButton or deleteButton must be defined');
+    }    
+    
+    /* We need a reference to the manageCollectionsPanel object that we are a
+        part of */
+    var manageCollectionsPanel = params.manageCollectionsPanel;
+    if(typeof(manageCollectionsPanel) == 'undefined') {
+        throw new Error('params.manageCollectionsPanel is undefined');
     }
-    this.collectionTemplate = collectionTemplate;
+    this.manageCollectionsPanel = manageCollectionsPanel;
     
-    
+}
+
+/**
+ *  This should be called when user presses the delete button for a collection.
+ *  Just prompts them "Are you sure?" about deleting the collection.
+ **/
+CollectionWidget.prototype.deleteCollectionConfirm = function() {
+    /* Confirm with user */
+    com.concertsoundorganizer.notifier.confirm({
+        'title': 'Are you sure?',
+        'content': 'Are you sure you want to delete collection "'+this.nameElement.html()+'"?<br />All related content will be removed from Concert.',
+        'confirmCallback': function(me) {
+            return function() {
+                me.deleteCollection();
+            };
+        }(this)/*,
+        'cancelCallback': function(collection_id) {
+            return function() {
+
+            };
+        }(collection_id)*/
+    });
+}
+
+/**
+ *  Should be called when collection is actually to be deleted.  This is serious 
+ *  stuff, and will error on backend if user doesn't have proper permissions.
+ **/
+CollectionWidget.prototype.deleteCollection = function() {
+    /* we are serious about deleting this collection. */
+    $.ajax({
+        url: 'delete/',
+        data: { id: this.collection_id },
+        type: 'POST',
+        success: function(me) {
+            return function(data, status, xhr) {
+                if(data == 'success') {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Success!',
+                        content: 'The collection has been deleted.'
+                    });
+
+                    /* Remove row from manage table */
+                    me.container.remove();
+                    /* Remove reference to self from manageCollectionsPanel */
+                    delete manageCollectionsPanel.collections[me.id];
+                }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Error', 
+                        content: 'An error has occurred.'
+                    });
+                }
+            };
+        }(this)
+    });
 }

@@ -91,9 +91,13 @@ def delete_collection(request):
     
     col = Collection.objects.get(pk=request.POST['id'])
     
-    col.delete()
+    # Only the admin can delete the collection
+    if(request.user == col.admin):    
+        col.delete()
     
-    return HttpResponse('success')
+        return HttpResponse('success')
+    else:
+        return HttpResponse('error')
     
 ###
 #   Retrieve a JSON list of the collections this user is associated with.
