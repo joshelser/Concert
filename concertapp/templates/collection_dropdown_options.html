@@ -1,4 +1,4 @@
 <option value="-1">Please select a collection</option>
 {{each(i, collection) collections}}
-    <option value="${collection.id}">${collection.name}</option>
+    <option id="collection_option-${collection.id}" value="${collection.id}">${collection.name}</option>
 {{/each}}

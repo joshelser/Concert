@@ -8,7 +8,7 @@
         <select id="collection_selector" class="collection_selector">
             <option value="-1">Please select a collection</option>
             {% for collection in user.collections.all %}
-                <option value="{{ group.id }}">{{ collection.name }}</option>
+                <option id="collection_option-{{group.id}}" value="{{ group.id }}">{{ collection.name }}</option>
             {% endfor %}
         </select>
     </div>
