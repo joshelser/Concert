@@ -1,21 +1,22 @@
 from concertapp.models import *
 
 user = User.objects.get(pk=1)
+Collection.objects.all().delete()
+
+collection = Collection(admin = user, name = "Collection 1")
+collection.save()
 
 try:
-    group = Group.objects.get(pk=1)
-except Group.DoesNotExist:
-    group = Group(name = "georga5")
-    user.groups.add(group)
-    user.save()
+    user = User.objects.get(username = "adam")
+    user.delete()
+except User.DoesNotExist:
+    pass
 
-try:
-    tag = Tag.objects.get(pk=1)
-except Tag.DoesNotExist:
-    tag = Tag(group = group, name = "TAG1")
-    tag.save()
+user = User(username = "adam")
+user.save()
+user.get_profile().collection_join_requests.add(collection)
+collection.add_user(user)
 
-TagComment.objects.all().delete()
-for i in range(1,10):
-    tag_comment = TagComment(user=user, comment=str(i), tag=tag)
-    tag_comment.save()
+#user = User(username = "bob")
+#user.save()
+#collection.add_user(user)

@@ -8,9 +8,11 @@
 <br /><br />
 <section id = "events">
   <ul>
-    {% if user.get_profile.unread_events.all %}
+    {% if user.get_profile.unread_events.count > 0 %}
     {% for event in user.get_profile.unread_events.all %}
+    {% if event.active %}
     <li>{{ event }}</li>
+    {% endif %}
     {% endfor %}
     {% else %}
     <li>No new events</li>

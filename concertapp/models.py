@@ -8,18 +8,29 @@ from django.core.files  import File
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 import audiotools
 import os, tempfile
 
 
+
+###
+# An extension to the User model accomplished through the Django supported
+# AUTH_PROFILE_MODULE.  Each 'ConcertUser' is linked to a django User      
+# via a ForeginKey, thus allowing ConcertUser to hold extra attributes,    
+# accessable via <User>.get_profile().<ConcertUser>.attribute              
+###
 class ConcertUser(models.Model):
     user = models.ForeignKey(User, unique = True)
     unread_events = models.ManyToManyField('Event')
-    collection_join_requests = models.ManyToManyField('Collection')
+    collection_join_requests = models.ManyToManyField('Collection')    
 
 
-def create_concert_user(sender, **kwargs):
+###
+# create_concert_user is a callback function used to create a ConcertUser
+# - described above - simultaneously with the creation of a django User.
+###
+def create_concert_user_callback(sender, **kwargs):
     if sender != User:
         return
     
@@ -27,15 +38,31 @@ def create_concert_user(sender, **kwargs):
     if kwargs['created']:
         concert_user = ConcertUser(user = user)
         concert_user.save()
+###
+# create_concert_user is bound to the post_save signal.  So everytime a model 
+# object gets saved, the create_concert_user checks if it's a User that is getting
+# saved, then creates the CocnertUser  
+###
+post_save.connect(create_concert_user_callback)
 
-post_save.connect(create_concert_user)
 
-
+###
+# An abstract class (abstract by Concert semantics, not Django) used to house
+# information for all the events that can occur on the system.  Built for logging
+# purpose, not event triggered events, although that functionality could
+# theoretically work using django signals.  
+### 
 class Event(models.Model):
     time = models.DateTimeField(auto_now_add = True)
     collection = models.ForeignKey('Collection')
+    active = models.BooleanField(default=True)
     real_type = models.ForeignKey(ContentType, editable=False, null=True)
 
+    ###
+    # Only allow sub classes of Event to be saved, and when saving, determine the 
+    # sub class' type and store it in real_type (e.g., TagCommentEvent, SegmentCommentEvent,
+    # etc.)
+    ###
     def save(self):
         if type(self)==Event:
             raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
@@ -45,10 +72,20 @@ class Event(models.Model):
             for user in self.collection.users.all():
                 user.get_profile().unread_events.add(self)
 
-        
+    def delete(self):
+        if type(self)==Event:
+            raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
+        else:
+            super(Event,self).delete()
+
+
+    
     def _get_real_type(self):
         return ContentType.objects.get_for_model(type(self))
 
+    ###
+    # return the sub_class object thats associated with this tuple
+    ###
     def cast(self):
         return self.real_type.get_object_for_this_type(pk=self.pk)
 
@@ -112,6 +149,14 @@ class AudioUploadedEvent(Event):
         return str(audio.uploader) + " uploaded file '" + audio.name + "'."
 
 
+class JoinCollectionEvent(Event):
+    joined_collection = models.ForeignKey("Collection", related_name = "join_collection_event")
+    new_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.new_user) + " joined " + str(self.joined_collection)        
+
+
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
@@ -120,6 +165,7 @@ class AudioSegment(models.Model):
     collection = models.ForeignKey('Collection')
     creator = models.ForeignKey(User)
 
+    
     def tag(self, tag_name, user):
         try:
             tag = Tag.objects.get(name = tag_name)
@@ -128,7 +174,6 @@ class AudioSegment(models.Model):
             tag.save()
 
         self.tags.add(tag)
-        AudoSegmentTaggedEvent(audio_segment = self, tag = tag, tagging_user = user).save()
 
     def tag_list(self):
       tags = self.tag_set.all()
@@ -140,11 +185,11 @@ class AudioSegment(models.Model):
         event.save()
 
     def delete(self):
-        events = AudioSegCreatedEvent.objects.filter(audio_segment = self)
-        UnreadEvents.objects.filter(event__in=events).delete()
+        for event in AudioSegCreatedEvent.objects.filter(audio_segment = self):
+            event.active = False
 
-        events = AudioSegmentTaggedEvent.objects.filter(audio_segment = self)
-        UnreadEvents.objects.filter(event__in=events).delete()
+        for event in AudioSegmentTaggedEvent.objects.filter(audio_segment = self):
+            event.active = False
 
         super(AudioSegment,self).delete()
 
@@ -157,23 +202,41 @@ class Collection(models.Model):
     name = models.CharField(max_length = 100, unique=True)
     admin = models.ForeignKey(User)
     users = models.ManyToManyField(User, related_name = "collections")
-    
+
+    def add_user(self,user):
+        if self not in user.get_profile().collection_join_requests.all():
+            raise Exception("You can't add a user to a collection they haven't requested ot join")
+        
+        self.users.add(user)
+        self.save()
+
+        JoinCollectionEvent(new_user = user, joined_collection = self, collection = self).save()      
+
     def save(self):
         super(Collection, self).save()
-        self.users.add(self.admin)
+        if self.users.count() == 0:
+            self.users.add(self.admin)
         super(Collection, self).save()
+        
+    def __unicode__(self):
+        return str(self.name)
 
-###
-#   These objects are instantiated when a user makes a request to join a collection.
-#   This should really just be a member of a "user" object.
-##
-class UserCollectionRequest(models.Model):
-    user = models.ForeignKey(User)
-    collection = models.ForeignKey('Collection') 
+def add_user_collection_callback(sender, **kwargs):
+    if type(kwargs['instance']) != Collection:
+        return
+    
+    if kwargs['action'] == 'post_add':
+        for pk in kwargs['pk_set']:
+            user = User.objects.get(pk=pk)
+            collection = kwargs['instance']
+            JoinCollectionEvent(new_user = user, joined_collection = collection, collection = collection).save()      
+m2m_changed.connect(add_user_collection_callback)
+    
 
+        
 
 class Tag(models.Model):
-    segments = models.ManyToManyField('AudioSegment', related_name = "tags")
+    segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
     collection = models.ForeignKey('Collection')
     name = models.CharField(max_length = 100)
     time = models.DateTimeField(auto_now_add = True)
@@ -195,19 +258,36 @@ class Tag(models.Model):
                 # delete segment
                 segment.delete()
         
-        #Make all unread TagCreatedEvents read
-        events = TagCreatedEvent.objects.filter(tag = self)
-        UnreadEvents.objects.filter(event__in=events).delete()
+        #Make all unread TagCreatedEvents read                
+        for event in TagCreatedEvent.objects.filter(tag = self):
+            event.active = False
 
         #Make all unread TagCommentEvent read
-        events = TagCommentEvent.objects.filter(tag =self)
-        UnreadEvents.objects.filter(event__in=events).delete()
-        
+        for event in TagCommentEvent.objects.filter(tag_comment__tag = self):
+            event.active = False
 
         # Delete tag using built-in delete method
-        super(Tag, self).delete(*args, **kwargs)
+        super(Tag, self).delete()
 
- 
+
+###
+# In order for tagging to be hooked into the event system, everytime you
+# tag a segment, we need to create a TagCreatedEvent.  To do this, we create
+# the AudioSegment.tag(...) function, and so we want to disallow all other forms
+# of adding AudioSegments to a Tag object
+###
+def create_tag_event_callback(sender, **kargs):
+    if type(kargs['instance']) != Tag:
+        return
+
+    if not kargs['reverse']:
+        raise Exception('You can only tag segments via <AudioSegment>.tag(...)')
+m2m_changed.connect(create_tag_event_callback)
+    
+
+###
+# A Concert-abstract (as oppsoed to django abstract) Super class for all the comment types
+###
 class Comment(models.Model):
     comment = models.TextField()
     author = models.ForeignKey(User)
@@ -217,17 +297,27 @@ class Comment(models.Model):
         if type(self)==Comment:
             raise Exception("Comment is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set ).\nYou must use one of the Comment subclasses")
         else:
-            super(Comment,self).save()        
-
+            self.real_type = self._get_real_type()
+            super(Comment,self).save()            
+ 
     def delete(self):
         if type(self)==Comment:
             raise Exception("Comment is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set ).\nYou must use one of the Comment subclasses")
         else:
-            super(Comment,self).delete()
+            super(Comment,self).delete()            
+    
+   
+    def _get_real_type(self):
+        return ContentType.objects.get_for_model(type(self))
 
-
+    ###
+    # return the sub_class object thats associated with this tuple
+    ###
+    def cast(self):
+        return self.real_type.get_object_for_this_type(pk=self.pk)
+            
     def __unicode__(self):
-        return "Comment: " +self.comment[:10] + "..."
+        return str(cast(self))
 
 
 class TagComment(Comment):
@@ -242,8 +332,10 @@ class TagComment(Comment):
         event.save()
 
     def delete(self):
-        events = TagCommentEvent.objects.filter(tag_comment = self)
-        UnreadEvents.objects.filter(event__in = events).delete()
+        for event in TagCommentEvent.objects.filter(tag=self.tag):
+            event.active = False
+
+        super(TagComment,self).delete()
     
 
 class SegmentComment(Comment):
@@ -258,9 +350,11 @@ class SegmentComment(Comment):
         event.save()
 
     def delete(self):
-        events = SegmentCommentEvent.objects.filter(segment_comment = self)
-        UnreadEvents.objects.filter(event__in = events).delete()
+        for event in SegmentCommentEvent.objects.filter(segment=self.segment):
+            event.active = False
 
+        super(SegmentComment,self).delete()
+    
 
 class Audio(models.Model):
     name = models.CharField(max_length = 100)
@@ -367,10 +461,8 @@ class Audio(models.Model):
         for segment in segments:
             segment.delete()
 
-        #Delete the Events directly associated with the audio object
-        events = AudioUploadedEvents.objects.filter(audio=self)
-        UnreadEvents.objects.filter(event__in=events).delete()
-
+        for event in AudioUploadedEvents.objects.filter(audio=self):
+            event.active = False
 
         # Send delete up
         super(Audio, self).delete()
