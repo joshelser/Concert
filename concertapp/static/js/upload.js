@@ -1,12 +1,11 @@
 /**
- *  @file       upload_audio.js
+ *  @file       upload.js
  *  Includes all functionality associated with pages that are specific to the audio 
  *  upload page.
- *  This includes the audio upload page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
-function initializeAudioUploadPage() {
+function initializeUploadPage() {
     console.log('Audio upload page initialized.');
     
     /* Handle file upload box */
@@ -42,4 +41,29 @@ function uploadFileBehavior() {
         /* Clear table, and display the file rows */
         $('#files_table').html('').append(out);
     });
+    
+    var options = {
+        dataType: 'xml',
+        beforeSubmit: function(arr, form, options) {
+            console.log('beforeSubmit');
+            console.log('arr:');
+            console.log(arr);
+            console.log('form:');
+            console.log(form);
+            console.log('options:');
+            console.log(options);
+        },
+        success: function(data, status, xhr) {
+            console.log('success');
+            console.log('data:');
+            console.log(data);
+            console.log('status:');
+            console.log(status);
+            console.log('xhr:');
+            console.log(xhr);
+        }
+    };
+    
+    $('#upload_form').ajaxSubmit(options);
+    
 }

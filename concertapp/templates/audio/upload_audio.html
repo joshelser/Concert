@@ -4,12 +4,12 @@
 
 <p>You will be able to upload audio here</p>
 
-<form>
+<form id="upload_form" action="/audio/upload/" method="POST">
     <label for="file_uploader">Select one or more audio files to upload: </label>
     <input type="file" multiple="true" id="file_uploader" accept="audio/*" />
     <div id="files_table" class="table"></div>
 
-    <input type="submit" value="Upload" />
+    <input type="submit" value="Upload" id="upload_submit_button" />
 </form>
 
 
@@ -21,8 +21,8 @@
         <div class="file_collection table-cell">
             <select id="file_collection_selector-${jsid}" class="file_collection_selector">
                 <option value="-1">Please select a collection</option>
-                {% for group in user.groups.all %}
-                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% for collection in user.collections.all %}
+                    <option value="{{ collection.id }}">{{ collection.name }}</option>
                 {% endfor %}
             </select>
         </div>

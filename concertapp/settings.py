@@ -1,4 +1,6 @@
 import os, sys
+from django.conf import global_settings
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -109,6 +111,14 @@ APPEND_SLASH = True
 
 # Make all uploaded files write to disk
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
+
+# New file upload handlers for progress uploads
+FILE_UPLOAD_HANDLERS = (
+    'uploadprogresscachedhandler.UploadProgressCachedHandler', 
+) + global_settings.FILE_UPLOAD_HANDLERS
+
+# Cache!
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
 AUTH_PROFILE_MODULE = 'concertapp.ConcertUser'
 

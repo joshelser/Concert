@@ -110,7 +110,7 @@ $(document).ready(function(){
         '/users/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
         '/collections/': initializeCollectionsPage,
-        '/audio/upload/': initializeAudioUploadPage
+        '/audio/upload/': initializeUploadPage
     };
     
     /* Get URL of page (relative to server address) */
