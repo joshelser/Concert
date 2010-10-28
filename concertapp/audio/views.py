@@ -47,8 +47,6 @@ def upload_audio(request):
             simplejson.dumps(response),
             content_type = 'application/json'
         )
-
-        return HttpRequest('{}')
     else :        
         return render_to_response('audio/upload_audio.html', {
             'page_name': 'Upload Audio'

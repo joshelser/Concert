@@ -5,8 +5,15 @@
 <h3>Upload</h3>
 
 {#  Form that user sees #}
+<div id="status_container">
+    <p>
+        Uploading<span id="status_animated_dots"></span><br />
+        Please be patient.  This may take some time.
+    </p>
+</div>
+
 <div id="upload_panel_container">
-    <label for="file_uploader">Select a file to upload: </label>
+    <label for="file_uploader" id="file_uploader_label">Select a file to upload: </label>
     {# This will be populated client-side with the actual '<input>' element #}
     <div id="choose_file_container"></div>
     {# This is the listing of files that the user has chosen #}
@@ -22,24 +29,26 @@
 
 
 <!-- Client side templates -->
-<script id="selected_file" type="text/x-jquery-tmpl">
-    <div class="file table-row">
-        <div class="file_name table-cell" id="file_name-${jsid}">${filename}</div>
-        <div class="file_collection table-cell">
-            <select id="file_collection_selector-${jsid}" class="file_collection_selector">
+<script id="uploadfilewidget_template" type="text/x-jquery-tmpl">
+    <div class="uploadfilewidget table-row" id="uploadfilewidget-${id}">
+        <div class="uploadfilewidget_filename table-cell" id="uploadfilewidget_filename-${id}">${filename}</div>
+        <div class="uploadfilewidget_collection_selector_container table-cell">
+            <select id="uploadfilewidget_collection_selector-${id}" class="uploadfilewidget_collection_selector">
                 <option value="-1">Please select a collection</option>
+                {# Server side templating, to populate dropdowns #}
                 {% for collection in user.collections.all %}
                     <option value="{{ collection.id }}">{{ collection.name }}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class=" table-cell">
-            <progress id="file_upload_progress-${jsid}" class="file_upload_progress" max=100 value=0 />
+        <div class="uploadfilewidget_progress_container table-cell">
+            <progress id="uploadfilewidget_progress-${id}" class="uploadfilewidget_progress" max=100 value=0 />
        </div>
     </div>
 </script>
 
 <script id="file_chooser_template" type="text/x-jquery-tmpl">
-    <input type="file" multiple="false" id="file_chooser-${id}" accept="audio/*" />
+    <input name="audio" type="file" multiple="false" id="file_chooser-${id}" accept="audio/*" />
 </script>
+
 {% endblock %}
