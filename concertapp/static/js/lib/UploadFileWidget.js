@@ -29,7 +29,7 @@ UploadFileWidget.prototype.init = function(params) {
     this.fileChooser = fileChooser;
     
     /* Get the progress element */
-    this.progressElement = $('#uploadfilewidget_progress-'+this.id);
+    this.progressElement = this.container.find('#uploadfilewidget_progress-'+this.id);
     
     
     /* We will save the unique upload_id for our file */
@@ -193,18 +193,27 @@ UploadFileWidget.prototype.checkOnProgress = function() {
 UploadFileWidget.prototype.updateProgress = function(data) {
     
     var progress = null;
-    var uploaded = data.uploaded;
-    var length = data.length;
     
-    if(uploaded == 0 && length == 0) {
-        progress = 0;
+    
+    if(data == null) {
+        /* Complete! */
+        progress = 1;
     }
     else {
-        progress = uploaded/length;
+        var uploaded = data.uploaded;
+        var length = data.length;
+        
+        if(uploaded == 0 && length == 0) {
+            progress = 0;
+        }
+        else {
+            progress = uploaded/length;
+        }
+        
     }
     
-    console.log('progress:');
-    console.log(progress);
+    /* Update progress slider */
+    this.progressElement.attr('value', progress);
     
     
 };

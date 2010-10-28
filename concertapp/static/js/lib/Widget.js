@@ -39,7 +39,7 @@ Widget.prototype.init = function(params) {
     }
     this.panel = panel;
     
-    var id = context.id;
+    this.id = context.id;
 
     
 
