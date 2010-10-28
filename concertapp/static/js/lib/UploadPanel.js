@@ -136,7 +136,14 @@ UploadPanel.prototype.init = function(params) {
     
     
     this.createNewFileChooser();
+    
+    
 }
+
+UploadPanel.prototype.handleUploadError = function() {
+    /* TODO */
+};
+
 
 /**
  *  Increment this.count member variable, and create the new "file chooser".  Then

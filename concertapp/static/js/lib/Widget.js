@@ -38,6 +38,10 @@ Widget.prototype.init = function(params) {
         throw new Error('params.panel is undefined');
     }
     this.panel = panel;
+    
+    var id = context.id;
+
+    
 
     
     
