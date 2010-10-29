@@ -14,8 +14,6 @@ function CollectionWidget(params) {
 CollectionWidget.prototype = new Widget();
 
 /**
- *  @param  manageCollectionsPanel        ManageCollectionsPanel - that we are a
- *                                          member of.
  **/
 CollectionWidget.prototype.init = function(params) {
     Widget.prototype.init.call(this, params);
@@ -69,14 +67,6 @@ CollectionWidget.prototype.init = function(params) {
         throw new Error('leaveButton or deleteButton must be defined');
     }    
     
-    /* We need a reference to the manageCollectionsPanel object that we are a
-        part of */
-    var manageCollectionsPanel = params.manageCollectionsPanel;
-    if(typeof(manageCollectionsPanel) == 'undefined') {
-        throw new Error('params.manageCollectionsPanel is undefined');
-    }
-    this.manageCollectionsPanel = manageCollectionsPanel;
-    
 }
 
 /**
@@ -119,8 +109,8 @@ CollectionWidget.prototype.deleteCollection = function() {
                         content: 'The collection has been deleted.'
                     });
 
-                    /* Remove me from manageCollectionsPanel */
-                    me.manageCollectionsPanel.deleteCollection(me.collection_id);
+                    /* Remove me from panel */
+                    me.panel.deleteCollection(me.collection_id);
                 }
                 else {
                     com.concertsoundorganizer.notifier.alert({

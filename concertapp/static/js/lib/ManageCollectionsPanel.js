@@ -65,7 +65,7 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
         var widget = new CollectionWidget({
             template: collectionTemplate, 
             context: col,
-            manageCollectionsPanel: this
+            panel: this
         });
         
         collections[col.id] = widget;
