@@ -107,7 +107,7 @@ $(document).ready(function(){
     
     /* For each page, run JS corresponding to that page */
     var pageInitializers = {
-        '/users/login/': initializeLoginPage,
+        '/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
         '/collections/': initializeCollectionsPage,
         '/audio/upload/': initializeUploadPage

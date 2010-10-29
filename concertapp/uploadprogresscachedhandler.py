@@ -37,12 +37,8 @@ class UploadProgressCachedHandler(FileUploadHandler):
     def receive_data_chunk(self, raw_data, start):
 
         if self.cache_key:
-            print >> sys.stderr, 'debug'
-            sys.stderr.flush()
             
             data = cache.get(self.cache_key)
-            print >> sys.stderr, data
-            sys.stderr.flush()
             data['uploaded'] += self.chunk_size
             cache.set(self.cache_key, data)
         return raw_data

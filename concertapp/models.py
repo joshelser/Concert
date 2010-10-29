@@ -41,7 +41,7 @@ def create_concert_user_callback(sender, **kwargs):
 ###
 # create_concert_user is bound to the post_save signal.  So everytime a model 
 # object gets saved, the create_concert_user checks if it's a User that is getting
-# saved, then creates the CocnertUser  
+# saved, then creates the ConcertUser  
 ###
 post_save.connect(create_concert_user_callback)
 

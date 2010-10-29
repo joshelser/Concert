@@ -36,30 +36,6 @@ def audio(request):
 def view_audio(request, audio_id):
     audio = Audio.objects.get(pk = audio_id)
     return render_to_response("view_audio.html", {'audio': audio}, RequestContext(request))
-
-##
-# Takes an audio file, converts it to mp3, ogg, and wav, saving it to disk
-# 
-# @param request    HTTP Request
-##
-@login_required
-def upload_audio(request):
-    if request.method == 'POST' and "wavfile" in request.FILES:
-        
-
-            
-
-            
-
-        
-        
-    
-    if "ajax" in request.POST:
-        response = HttpResponse(mimetype='text/plain', responseText = 'success');
-        response.write("success")
-        return response
-    else:
-        return HttpResponseRedirect('/audio/')
                     
 
 ##

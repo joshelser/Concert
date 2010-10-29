@@ -52,6 +52,7 @@ UploadFileWidget.prototype.handleUploadError = function() {
         'content': 'An error occurred while uploading.  Please try again.'
     });
     
+    
     this.stopProgressTracking();
     
     this.panel.handleUploadError();
@@ -129,20 +130,19 @@ UploadFileWidget.prototype.uploadFile = function() {
     
     /* Get unique upload id */
     actualUploadForm.ajaxSubmit({
+        /* This will return an XML document (since we are psuedo-hacking a form) */
         dataType: 'text',
         url: '/audio/upload/?upload_id='+this.upload_id,
         beforeSubmit: function(arr, form, options) {
         },
         success: function(me) {
             return function(data, status, xhr) {
-                if(data == 'success') {
+                if(data.match('success')) {
                     /* The file was hopefully uploaded */
                     me.stopProgressTracking();
                 }
                 else {
                     me.handleUploadError();
-                    console.log('data:');
-                    console.log(data);
                 }
             };
         }(this)

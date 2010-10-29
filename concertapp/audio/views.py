@@ -6,10 +6,9 @@ from django.core.cache import cache
 from django.utils import simplejson
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-import os, hashlib, tempfile, audiotools
+import os, hashlib, tempfile, audiotools, tempfile
 
 from concertapp.models  import *
-from concertapp.audio.forms   import UploadFileForm
 
 from concertapp.audio import audioFormats, audioHelpers
 from concertapp.audio.waveform import *
@@ -74,61 +73,57 @@ def upload_audio(request):
         # The file being uploaded
         f = request.FILES['audio']
 
-        # grab the filename of the temporary uploaded file
+        # grab the path of the temporary uploaded file
         inputFilePath = f.temporary_file_path()
         
-#        destination = open(inputFilePath, 'wb+')
-#        for chunk in f.chunks():
-#            destination.write(chunk)
-#        destination.close()
-
-        #   Upload a dummy file (just containing 'a'), just so we can get a 
-        #   unique filename.  This will be the actual .wav file soon.  This temporary
-        #   file is named "originalfilename.originalextension.wav"
+        # Create temporary file in the proper location, with a unique name
+        wavFile = tempfile.NamedTemporaryFile(
+            prefix='', 
+            suffix='.wav', 
+            delete=False, 
+            dir=os.path.join(MEDIA_ROOT)
+        )
+        
+        # Get original filename
         fileName = os.path.split(str(f))[-1]
-        wavFile = SimpleUploadedFile(fileName+'.wav', 'a')
+
         
         #   Audio object with dummy wav file in it
-        audio = Audio(user = user, wavfile = wavFile, filename = fileName)
+        audio = Audio(uploader = user, wavfile = wavFile, name = fileName)
         
-        # Form so we can validate
-        form = UploadFileForm(request.POST, instance = audio)
-        if form.is_valid():
-            #   Save the form, copies the dummy file to the proper location
-            audio = form.save()
+        #   Now we can get the new dummy file location with the
+        #   django-generated name
+        outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
         
-            #   Now we can get the new dummy file location with the
-            #   django-generated name
-            outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
-            try:
-                # Create the normalized .wav file at the location specified
-                # above.  This will overwrite the dummy file we created.
-                # Also we must handle errors here.
-                audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
-                
-                #Create ogg and mp3 versions of the audio (and handle errors)
-                audio.create_ogg_and_mp3()
-                
-            except (
-                audiotools.UnsupportedFile, 
-                IOError, 
-                audiotools.PCMReaderError,
-                Exception
-            ), e:
-                # Right now we have no better way to handle errors
-                errorText = 'Error: '+str(e)
-                response = HttpResponse(mimetype='text/plain')
-                response.write(errorText)
-                audio.delete()
-                return response
+        #try:
+            # Create the normalized .wav file at the location specified
+            # above.  This will overwrite the dummy file we created.
+            # Also we must handle errors here.
+            #audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
+            
+            #Create ogg and mp3 versions of the audio (and handle errors)
+            #audio.create_ogg_and_mp3()
+            
+        #except (
+            #audiotools.UnsupportedFile, 
+            #IOError, 
+            #audiotools.PCMReaderError,
+            #Exception
+        #), e:
+            # Right now we have no better way to handle errors
+            #errorText = 'Error: '+str(e)
+            #response = HttpResponse(mimetype='text/plain')
+            #response.write(errorText)
+            #audio.delete()
+            #return response
             
             # Generate the waveform onto disk
-            audio.generate_waveform()
+            #audio.generate_waveform()
 
-            audio.save()
+            #audio.save()
             
             # Get audio duration in seconds
-            duration = get_duration(audio)
+            #duration = get_duration(audio)
 
             # Get user's default group
             #default_group = user.groups.get(name = user.username)
@@ -146,7 +141,9 @@ def upload_audio(request):
             #default_tag.save()
             
             
-        return HttpResponse('success', content_type = 'text/plain')
+        return HttpResponse('success', mimetype='text/plain', content_type='text/plain')
+        
+        
 
         
     else :        
