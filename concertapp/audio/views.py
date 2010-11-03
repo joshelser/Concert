@@ -90,27 +90,23 @@ def upload_audio(request):
             prefix='', 
             suffix='.wav', 
             delete=False, 
-            dir=os.path.join(MEDIA_ROOT)
+            dir=os.path.join(MEDIA_ROOT, 'audio')
         )
+        wavFile.write('hello')
+        wavFile.close()
+        
         
         # Get original filename
-        fileName = os.path.split(str(f))[-1]
-
-        print >> sys.stderr, 'test'
-        sys.stderr.flush();
+        name = str(f)
         
+
         #   Audio object with dummy wav file in it
-        audio = Audio(uploader = user, wavfile = wavFile, name = fileName, collection=col)
+        audio = Audio(uploader = user, wavfile = wavFile, name = name, collection=col)
 
-        print >> sys.stderr, 'test'
-        sys.stderr.flush();
-        
         #   Now we can get the new dummy file location with the
         #   django-generated name
-        outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
+        outputFilePath = os.path.join(audio.wavfile.name)
         
-        print >> sys.stderr, "outputFilePath:\n"+str(outputFilePath)
-        sys.stderr.flush();
         
         try:
             # Create the normalized .wav file at the location specified
@@ -120,7 +116,6 @@ def upload_audio(request):
             
             #Create ogg and mp3 versions of the audio (and handle errors)
             audio.create_ogg_and_mp3()
-            
         except (
             audiotools.UnsupportedFile, 
             IOError, 
