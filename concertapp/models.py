@@ -10,7 +10,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 import audiotools
-import os, tempfile
+import os, tempfile, sys
 
 
 
@@ -440,19 +440,25 @@ class Audio(models.Model):
     # Delete the current audio file from the filesystem
     def delete(self):
         # Remove wavfile from this object, and delete file on filesystem.
-        self.wavfile.delete(save=False)
+        if(self.wavfile and os.path.exists(self.wavfile.name)):
+            self.wavfile.delete(save=False)
+
             
         # Remove oggfile
-        self.oggfile.delete(save=False)
+        if(self.oggfile and os.path.exists(self.oggfile.name)):
+            self.oggfile.delete(save=False)
         
         # Remove mp3file
-        self.mp3file.delete(save=False)
+        if(self.mp3file and os.path.exists(self.mp3file.name)):
+            self.mp3file.delete(save=False)
 
         # Remove viewer
-        self.waveformViewer.delete(save=False)
+        if(self.waveformViewer and os.path.exists(self.waveformViewer.name)):
+            self.waveformViewer.delete(save=False)
 
         # Remove editor image
-        self.waveformEditor.delete(save=False)
+        if(self.waveformEditor and os.path.exists(self.waveformEditor.name)):
+            self.waveformEditor.delete(save=False)
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audio = self)

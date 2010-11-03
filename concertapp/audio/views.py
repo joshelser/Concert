@@ -82,10 +82,13 @@ def upload_audio(request):
             return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
         
         
-        # grab the path of the temporary uploaded file
+        # grab the path of the temporary uploaded file.  This is where the user's
+        #   uploaded file exists currently.
         inputFilePath = f.temporary_file_path()
         
-        # Create temporary file in the proper location, with a unique name
+        # Create temporary file in the proper location, with a unique name.  This
+        #   is the audio directory in MEDIA_ROOT.  This is where the actual
+        #   wav file will go.
         wavFile = tempfile.NamedTemporaryFile(
             prefix='', 
             suffix='.wav', 
@@ -96,16 +99,16 @@ def upload_audio(request):
         wavFile.close()
         
         
-        # Get original filename
+        # Get original filename of uploaded file
         name = str(f)
         
 
         #   Audio object with dummy wav file in it
         audio = Audio(uploader = user, wavfile = wavFile, name = name, collection=col)
 
-        #   Now we can get the new dummy file location with the
-        #   django-generated name
-        outputFilePath = os.path.join(audio.wavfile.name)
+        #   Now we have an auto-generated name from Django, and we know where
+        #   we should put the converted audio file.
+        outputFilePath = audio.wavfile.name
         
         
         try:
@@ -115,42 +118,39 @@ def upload_audio(request):
             audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
             
             #Create ogg and mp3 versions of the audio (and handle errors)
-            audio.create_ogg_and_mp3()
+            #audio.create_ogg_and_mp3()
         except (
             audiotools.UnsupportedFile, 
             IOError, 
             audiotools.PCMReaderError,
             Exception
         ), e:
-            # Right now we have no better way to handle errors
-            errorText = 'Error: '+str(e)
-            response = HttpResponse(mimetype='text/plain')
-            response.write(errorText)
+            # Delete audio object that was partially created.
             audio.delete()
-            return response
+            return HttpResponse('Error: '+str(e), mimetype='text/plain')
             
-            # Generate the waveform onto disk
-            audio.generate_waveform()
+        # Generate the waveform onto disk
+        audio.generate_waveform()
 
-            audio.save()
-            
-            # Get audio duration in seconds
-            #duration = get_duration(audio)
+        audio.save()
+        
+        # Get audio duration in seconds
+        #duration = get_duration(audio)
 
-            # Get user's default group
-            #default_group = user.groups.get(name = user.username)
+        # Get user's default group
+        #default_group = user.groups.get(name = user.username)
 
-            # Determine name of segment and tag
-            #name = audio.filename
+        # Determine name of segment and tag
+        #name = audio.filename
 
-            # Create the initial audio segment
-            #first_segment = AudioSegment(name = name, beginning = 0, end = duration, audio = audio)
-            #first_segment.save()
+        # Create the initial audio segment
+        #first_segment = AudioSegment(name = name, beginning = 0, end = duration, audio = audio)
+        #first_segment.save()
 
-            # Tag segment with default tag
-            #default_tag = Tag.objects.get(group = default_group, tag = 'Uploads')
-            #default_tag.segments.add(first_segment)
-            #default_tag.save()
+        # Tag segment with default tag
+        #default_tag = Tag.objects.get(group = default_group, tag = 'Uploads')
+        #default_tag.segments.add(first_segment)
+        #default_tag.save()
             
             
         return HttpResponse('success', mimetype='text/plain', content_type='text/plain')
