@@ -37,7 +37,7 @@ CollectionWidget.prototype.init = function(params) {
     this.membersElement = membersElement;
     
     
-    
+    /* The deleteButton on the widget */
     var deleteButton = container.find('#delete_collection-'+collection_id);
     if(deleteButton.length) {
         this.deleteButton = deleteButton;
@@ -51,6 +51,7 @@ CollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
+    /* The leave button on the widget */
     var leaveButton = container.find('#leave_collection-'+collection_id);
     if(leaveButton.length) {
         this.leaveButton = leaveButton;
@@ -62,6 +63,8 @@ CollectionWidget.prototype.init = function(params) {
             };
         }(this));
     }
+    
+    
     
     if(leaveButton.length == 0 && deleteButton.length == 0) {
         throw new Error('leaveButton or deleteButton must be defined');

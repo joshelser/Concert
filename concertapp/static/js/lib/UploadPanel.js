@@ -205,8 +205,12 @@ UploadPanel.prototype.addFile = function(fileChooser) {
     this.files[index] = widget;
     this.filesToUpload[index] = widget;
     
-    /* Re-populate document with new file chooser */
-    this.createNewFileChooser();
+    /* Re-populate document with new file chooser (do this when we can support
+        multiple file uploads) */
+    //this.createNewFileChooser();
+    
+    /* Remove "select a file to upload" button */
+    this.fileChooserLabel.hide();
 };
 
 /**

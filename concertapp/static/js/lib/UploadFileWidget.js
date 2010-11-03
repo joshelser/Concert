@@ -28,8 +28,16 @@ UploadFileWidget.prototype.init = function(params) {
     }
     this.fileChooser = fileChooser;
     
-    /* Get the progress element */
-    this.progressElement = this.container.find('#uploadfilewidget_progress-'+this.id);
+    
+    
+    var container = this.container;
+    var id = this.id;
+    
+    /* Get the file loading progress element */
+    this.progressElement = container.find('#uploadfilewidget_progress-'+id);
+    
+    /* The collection select element */
+    this.collectionSelectElement = container.find('#uploadfilewidget_collection_selector-'+id);
     
     
     /* We will save the unique upload_id for our file */
@@ -46,10 +54,10 @@ UploadFileWidget.prototype.init = function(params) {
 /**
  *  What we should do in the event of an upload error.
  **/
-UploadFileWidget.prototype.handleUploadError = function() {
+UploadFileWidget.prototype.handleUploadError = function(data) {
     com.concertsoundorganizer.notifier.alert({
         'title': 'Error', 
-        'content': 'An error occurred while uploading.  Please try again.'
+        'content': 'An error occurred while uploading.  Please try again.\n\n'+data
     });
     
     
@@ -95,7 +103,7 @@ UploadFileWidget.prototype.reserveUploadId = function() {
                     me.uploadFile();
                 }
                 else {
-                    me.handleUploadError();
+                    me.handleUploadError(data);
                 }
             };
         }(this)
@@ -128,6 +136,9 @@ UploadFileWidget.prototype.uploadFile = function() {
         value: this.upload_id, 
     }));
     
+    /* Put our collection select element into the form */
+    actualUploadForm.append(this.collectionSelectElement);
+    
     /* Get unique upload id */
     actualUploadForm.ajaxSubmit({
         /* This will return an XML document (since we are psuedo-hacking a form) */
@@ -142,7 +153,7 @@ UploadFileWidget.prototype.uploadFile = function() {
                     me.stopProgressTracking();
                 }
                 else {
-                    me.handleUploadError();
+                    me.handleUploadError(data);
                 }
             };
         }(this)

@@ -6,6 +6,8 @@ from django.core.cache import cache
 from django.utils import simplejson
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+from django.core.exceptions import ObjectDoesNotExist
+
 import os, hashlib, tempfile, audiotools, tempfile
 
 from concertapp.models  import *
@@ -72,7 +74,14 @@ def upload_audio(request):
     if request.method == 'POST':
         # The file being uploaded
         f = request.FILES['audio']
-
+        
+        # The groups that this audio object is to be associated with.
+        try:
+            col = Collection.objects.get(id = request.POST['collection'])
+        except ObjectDoesNotExist, e:
+            return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
+        
+        
         # grab the path of the temporary uploaded file
         inputFilePath = f.temporary_file_path()
         
@@ -87,40 +96,48 @@ def upload_audio(request):
         # Get original filename
         fileName = os.path.split(str(f))[-1]
 
+        print >> sys.stderr, 'test'
+        sys.stderr.flush();
         
         #   Audio object with dummy wav file in it
-        audio = Audio(uploader = user, wavfile = wavFile, name = fileName)
+        audio = Audio(uploader = user, wavfile = wavFile, name = fileName, collection=col)
+
+        print >> sys.stderr, 'test'
+        sys.stderr.flush();
         
         #   Now we can get the new dummy file location with the
         #   django-generated name
         outputFilePath = os.path.join(MEDIA_ROOT, str(audio.wavfile))
         
-        #try:
+        print >> sys.stderr, "outputFilePath:\n"+str(outputFilePath)
+        sys.stderr.flush();
+        
+        try:
             # Create the normalized .wav file at the location specified
             # above.  This will overwrite the dummy file we created.
             # Also we must handle errors here.
-            #audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
+            audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
             
             #Create ogg and mp3 versions of the audio (and handle errors)
-            #audio.create_ogg_and_mp3()
+            audio.create_ogg_and_mp3()
             
-        #except (
-            #audiotools.UnsupportedFile, 
-            #IOError, 
-            #audiotools.PCMReaderError,
-            #Exception
-        #), e:
+        except (
+            audiotools.UnsupportedFile, 
+            IOError, 
+            audiotools.PCMReaderError,
+            Exception
+        ), e:
             # Right now we have no better way to handle errors
-            #errorText = 'Error: '+str(e)
-            #response = HttpResponse(mimetype='text/plain')
-            #response.write(errorText)
-            #audio.delete()
-            #return response
+            errorText = 'Error: '+str(e)
+            response = HttpResponse(mimetype='text/plain')
+            response.write(errorText)
+            audio.delete()
+            return response
             
             # Generate the waveform onto disk
-            #audio.generate_waveform()
+            audio.generate_waveform()
 
-            #audio.save()
+            audio.save()
             
             # Get audio duration in seconds
             #duration = get_duration(audio)
