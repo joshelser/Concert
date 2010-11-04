@@ -73,9 +73,6 @@ def toNormalizedWav(inputFilePath, outputFilePath):
     wav = audiotools.WaveAudio.from_pcm(outputFilePath,
         normalizedPCM)
 
-    print >> sys.stderr, 'encoded'
-    sys.stderr.flush()
-
     os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)
     
     

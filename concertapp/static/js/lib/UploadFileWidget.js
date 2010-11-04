@@ -148,9 +148,15 @@ UploadFileWidget.prototype.uploadFile = function() {
         },
         success: function(me) {
             return function(data, status, xhr) {
-                if(data.match('success')) {
+                if(data.match('<pre style="word-wrap: break-word; white-space: pre-wrap;">success</pre>')) {
                     /* The file was hopefully uploaded */
-                    me.stopProgressTracking();
+                    me.encodingWaiting = false;
+                    
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Success!', 
+                        content: 'Your file uploaded successfully.', 
+                    });
+                    
                 }
                 else {
                     me.handleUploadError(data);
@@ -195,20 +201,28 @@ UploadFileWidget.prototype.checkOnProgress = function() {
                         };
                     }(me), me.progressTrackingDelay);        
                 }
+                else if(me.encodingWaiting) {
+                    me.encodingWaitingNotification();
+                }
             };
         }(this)
     });
 };
 
 
+/**
+ *  Should be called whenever the progress slider is to be updated.
+ **/
 UploadFileWidget.prototype.updateProgress = function(data) {
     
     var progress = null;
-    
-    
     if(data == null) {
         /* Complete! */
         progress = 1;
+        /* Stop progress tracking */
+        this.progressTracking = false;
+        /* We are waiting for encoding to finish */
+        this.encodingWaiting = true;
     }
     else {
         var uploaded = data.uploaded;
@@ -225,9 +239,17 @@ UploadFileWidget.prototype.updateProgress = function(data) {
     
     /* Update progress slider */
     this.progressElement.attr('value', progress);
-    
+};
+
+/**
+ *  This should be called when the file has finished uploading, and we are
+ *  just waiting for it to encode.  This displays the "inifinite" progress bar.
+ **/
+UploadFileWidget.prototype.encodingWaitingNotification = function() {
+    this.progressElement.removeAttr('value');
     
 };
+
 
 
 

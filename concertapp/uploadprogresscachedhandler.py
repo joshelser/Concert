@@ -27,7 +27,8 @@ class UploadProgressCachedHandler(FileUploadHandler):
             self.cache_key = self.progress_id
             cache.set(self.cache_key, {
                 'length': self.content_length,
-                'uploaded' : 0
+                'uploaded' : 0,
+                'encoding': 'false'
             })
             
 

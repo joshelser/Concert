@@ -72,6 +72,9 @@ def upload_audio(request):
     username = user.username
     
     if request.method == 'POST':
+        # The id for this upload (we will use this at the end)
+        upload_id = request.POST['upload_id']
+        
         # The file being uploaded
         f = request.FILES['audio']
         
@@ -82,78 +85,25 @@ def upload_audio(request):
             return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
         
         
-        # grab the path of the temporary uploaded file.  This is where the user's
-        #   uploaded file exists currently.
-        inputFilePath = f.temporary_file_path()
-        
-        # Create temporary file in the proper location, with a unique name.  This
-        #   is the audio directory in MEDIA_ROOT.  This is where the actual
-        #   wav file will go.
-        wavFile = tempfile.NamedTemporaryFile(
-            prefix='', 
-            suffix='.wav', 
-            delete=False, 
-            dir=os.path.join(MEDIA_ROOT, 'audio')
-        )
-        wavFile.write('hello')
-        wavFile.close()
-        
-        
-        # Get original filename of uploaded file
-        name = str(f)
-        
-
-        #   Audio object with dummy wav file in it
-        audio = Audio(uploader = user, wavfile = wavFile, name = name, collection=col)
-
-        #   Now we have an auto-generated name from Django, and we know where
-        #   we should put the converted audio file.
-        outputFilePath = audio.wavfile.name
-        
+        #   new audio object
+        audio = Audio(uploader = user, collection=col)
         
         try:
-            # Create the normalized .wav file at the location specified
-            # above.  This will overwrite the dummy file we created.
-            # Also we must handle errors here.
-            audioHelpers.toNormalizedWav(inputFilePath, outputFilePath)
-            
-            #Create ogg and mp3 versions of the audio (and handle errors)
-            #audio.create_ogg_and_mp3()
+            #   initialize audio object (this will take a while as we have to encode)
+            audio.init(f)
         except (
             audiotools.UnsupportedFile, 
             IOError, 
             audiotools.PCMReaderError,
             Exception
         ), e:
+        
             # Delete audio object that was partially created.
             audio.delete()
             return HttpResponse('Error: '+str(e), mimetype='text/plain')
-            
-        # Generate the waveform onto disk
-        audio.generate_waveform()
-
-        audio.save()
         
-        # Get audio duration in seconds
-        #duration = get_duration(audio)
-
-        # Get user's default group
-        #default_group = user.groups.get(name = user.username)
-
-        # Determine name of segment and tag
-        #name = audio.filename
-
-        # Create the initial audio segment
-        #first_segment = AudioSegment(name = name, beginning = 0, end = duration, audio = audio)
-        #first_segment.save()
-
-        # Tag segment with default tag
-        #default_tag = Tag.objects.get(group = default_group, tag = 'Uploads')
-        #default_tag.segments.add(first_segment)
-        #default_tag.save()
-            
-            
-        return HttpResponse('success', mimetype='text/plain', content_type='text/plain')
+                        
+        return HttpResponse('success', mimetype='text/plain')
         
         
 
