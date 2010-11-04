@@ -110,5 +110,6 @@ def upload_audio(request):
         
     else :        
         return render_to_response('audio/upload_audio.html', {
-            'page_name': 'Upload Audio'
+            'page_name': 'Upload Audio',
+            'js_page_path': '/audio/upload/'
         }, RequestContext(request));

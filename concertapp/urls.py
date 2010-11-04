@@ -30,6 +30,9 @@ urlpatterns = patterns('',
     
     # audio urls (upload_audio and audio utilities)
     (r'^audio/', include('concertapp.audio.urls')), 
+    
+    # organize urls (audio organization view, heart of program)
+    (r'^organize/', include('concertapp.organize.urls')),
    
 )
 

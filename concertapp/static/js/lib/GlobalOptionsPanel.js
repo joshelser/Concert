@@ -52,6 +52,16 @@ GlobalOptionsPanel.prototype.init = function(params) {
     if(typeof(dashboardButton) != 'undefined') {
         this.dashboardButton = dashboardButton;
     }
+    
+    
+    this.retrieveAndUpdateCollectionSelector();
+    
+    /** INitialize behavior for collection selector */
+    collectionSelector.bind('change', function(e) {
+        var collection_id = $(this).val();
+        
+        window.location = '/organize/collection/'+collection_id;
+    });
 }
 
 /**
@@ -66,6 +76,7 @@ GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
         this.retrieveAndUpdateCollectionSelector();
     }
     
+    /* Populate dropdown */
     this.collectionSelector.html(
         this.collectionSelectorOptionsTemplate.tmpl({
             collections: data, 
@@ -81,7 +92,14 @@ GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
  **/
 GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
     /* retrieve the collections */
-    /* TODO */
+    $.getJSON(
+        'http://localhost:8896/collections/user/', 
+        function(me) {
+            return function(data, status, xhr) {
+                me.updateCollectionSelector(data);
+            };
+        }(this)
+    );
 }
 
 /**

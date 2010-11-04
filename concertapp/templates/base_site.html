@@ -58,6 +58,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/UploadPanel.js"></script>
 
       
+    <script src="/js/organize.js"></script>
     <script src="/js/dashboard.js"></script>    
     <script src="/js/login.js"></script>    
     <script src="/js/collections.js"></script>    
@@ -102,6 +103,10 @@ The base template for all pages.  All page templates will use this.
     
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
         {% include_raw "../templates/collection_dropdown_options.html" %}
+    </script>
+    
+    <script>
+        var pagePath = '{{ js_page_path }}'
     </script>
     
 </body>

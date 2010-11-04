@@ -16,4 +16,5 @@ def dashboard(request):
     
     return render_to_response('dashboard/dashboard.html', {
         'page_name': 'Dashboard',
+        'js_page_path': '/dashboard/'
     }, RequestContext(request));

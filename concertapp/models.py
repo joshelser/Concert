@@ -140,14 +140,14 @@ class AudioSegmentTaggedEvent(Event):
     tagging_user = models.ForeignKey(User, related_name = "tagged_event")
 
     def __unicode__(self):
-        return str(tagging_user) + " tagged '" + str(audio_segment.name) + "' with tag '" + str(tag.name)
+        return str(self.tagging_user) + " tagged '" + str(self.audio_segment.name) + "' with tag '" + str(self.tag.name)
 
 
 class AudioUploadedEvent(Event):
     audio = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
 
     def __unicode__(self):
-        return str(audio.uploader) + " uploaded file '" + audio.name + "'."
+        return str(self.audio.uploader) + " uploaded file '" + self.audio.name + "'."
 
 
 class JoinCollectionEvent(Event):
