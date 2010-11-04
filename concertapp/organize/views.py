@@ -34,8 +34,16 @@ def organize_collection(request, collection_id):
         
     except ObjectDoesNotExist, e:
         return HttpResponse('Error: Invalid collection.')
+        
+    
+    
+    files = Audio.objects.filter(collection = col)
+    segments = AudioSegment.objects.filter(collection = col)
+    
     
     return render_to_response('organize/organize_collection.html', {
         'page_name': 'Organize '+col.name,
-        'js_page_path': '/organize/collection/'
+        'js_page_path': '/organize/collection/',
+        'files': files,
+        'segments': segments
     }, RequestContext(request));

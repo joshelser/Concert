@@ -2,6 +2,16 @@
 {% load extra_template_tags %}
 {% block content %}
 
-poop
+<p>Segments:</p>
+{% for segment in segments %}
+    
+    {{ segment.name }} created by {{ segment.creator }} <br/>
+    
+{% endfor %}
+
+<p>Files:</p>
+{% for file in files %}
+    {{ file.name }} uploaded by {{ file.uploader }} <br />
+{% endfor %}
 
 {% endblock %}
