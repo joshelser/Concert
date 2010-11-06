@@ -5,5 +5,15 @@
  **/
 
 function initializeOrganizePage() {
-    console.log('organize!');
+    
+    
+    /*  Create waveform viewer panel */
+    var viewerPanel = new WaveformViewerPanel({
+        container: $('#waveform_viewer_container'), 
+    });
+    
+    
+    
+    
+    
 }
