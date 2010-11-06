@@ -22,13 +22,17 @@ function Button(params) {
  **/
 Button.prototype.init = function(params) {
 
-    /* Container where all of the behavior is assigned to */
+    /* Container where all of the behavior is assigned to is required */
     var container = params.container;
-    /* Required */
     if(typeof(container) == 'undefined') {
         throw new Error('params.container is undefined');
     }
+    else if(container.length == 0) {
+        throw new Error('container not found');
+    }
     this.container = container;
+
+    
 
 
     /* Assign behavior to container */

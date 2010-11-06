@@ -1,3 +1,5 @@
+{% load buttons %}
+
 <div id="page_header">
     <div class="page_header_left">
         <h1>Concert</h1>
@@ -15,25 +17,31 @@
     <div class="page_header_right">
     
         {% if page_name != 'Dashboard' %}
-            <div id="dashboard_button_container" data-href="{% url dashboard %}" class="large-icon-button">
-                <button id="dashboard_button_icon" title="Concert dashboard" class="large-icon-button-icon">D</button>
-                <label for="dashboard_button_icon" id="dashboard_button_label" class="large-icon-button-label">Dashboard</label>
-            </div>
+            {% large_icon_button
+                'Dashboard'
+                'dashboard_button'
+                '/dashboard/'
+            %}
         {% endif %}
     
     
         {% if page_name  != 'Collections' %}
-            <div id="settings_button_container" data-href="{% url manage_collections %}" class="large-icon-button">
-                <button id="settings_button_icon" title="Manage collections, connect with friends" class="large-icon-button-icon">S</button>
-                <label for="settings_button_icon" id="settings_button_label" class="large-icon-button-label">Settings</label>
-            </div>
+            {% large_icon_button
+                'Settings'
+                'settings_button'
+                '/collections/'
+                'Manage collections, connect with friends'
+            %}
         {% endif %}
     
         {% if page_name != 'Upload Audio' %}
-            <div id="upload_button_container" class="large-icon-button" data-href="{% url upload_audio %}">
-                <button id="upload_button_icon" title="Upload audio to one of your collections" class="large-icon-button-icon">U</button>
-                <label for="upload_button" class="large-icon-button-label" id="upload_button_label">Upload Audio</label>
-            </div>
+            {% large_icon_button
+                'Upload
+                Audio'
+                'upload_button'
+                '/audio/upload'
+                'Upload audio to a collection'
+            %}
         {% endif %}            
     
     </div>

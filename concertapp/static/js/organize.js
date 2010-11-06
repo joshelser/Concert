@@ -9,7 +9,12 @@ function initializeOrganizePage() {
     
     /*  Create waveform viewer panel */
     var viewerPanel = new WaveformViewerPanel({
-        container: $('#waveform_viewer_container'), 
+        container: $('#waveform_viewer_panel'), 
+    });
+    
+    /* Create the audio list panel */
+    var audioListPanel = new AudioListPanel({
+        container: $('#audio_list_panel'), 
     });
     
     
