@@ -78,6 +78,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
+SERIALIZATION_MODULES = {
+    'json': 'wadofstuff.django.serializers.json'
+}
+
 DEBUG_PROPOGATE_EXCEPTIONS = False
 
 ROOT_URLCONF = 'concertapp.urls'

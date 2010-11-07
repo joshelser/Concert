@@ -54,7 +54,7 @@ def audio_files(request, collection_id, col, user):
     
     fileObjects = Audio.objects.filter(collection = col)
     
-    data = serializers.serialize('json', Audio.objects.filter(collection = col), extras=('audiosegment_set.all()',))
+    data = serializers.serialize('json', Audio.objects.filter(collection = col))
     
     return HttpResponse(data, content_type='data/json')
     
