@@ -124,7 +124,7 @@ class TagCreatedEvent(Event):
         return str(creator) + " created tag '" + str(tag) + "'."
 
 
-class AudioSegCreatedEvent(Event):
+class AudioSegmentCreatedEvent(Event):
     audio_segment = models.ForeignKey("AudioSegment", related_name = "created_event")
 
     def __unicode__(self):
@@ -186,7 +186,7 @@ class AudioSegment(models.Model):
         event.save()
 
     def delete(self):
-        for event in AudioSegCreatedEvent.objects.filter(audio_segment = self):
+        for event in AudioSegmentCreatedEvent.objects.filter(audio_segment = self):
             event.active = False
 
         for event in AudioSegmentTaggedEvent.objects.filter(audio_segment = self):
