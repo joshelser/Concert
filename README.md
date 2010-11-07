@@ -1,6 +1,6 @@
 # Concert
 
-Concert is web-based software that enables musicians to collaborative organize audio.  It enables a group of musicians to upload entire practices or smaller segments of audio, then remotely categorize and discuss these segments, to later form them into song structures.
+Concert is a web-based application for collaboratively organizing audio.  It enables a group of musicians to upload recordings of small ideas or entire practices, and then remotely categorize and discuss these segments so that the ideas are already well-formed before the musicians actually discuss them in person.
 
 It is built on Django using the python-audio-tools library, as well as other [dependencies][dep].
 
