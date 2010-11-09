@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <form method="POST" action="{% url remove_from_group user_id group g_user_id %}">
+        <p>Are you sure you want to remove this user?</p>
+        <br />
+        <input type="hidden" name="group_name" value="{{ group }}" />
+        <input type="hidden" name="user_name" value="{{ user }}" />
+        <input type="submit" name="Accept" value="accept" />
+    </form>
+</div>
+{% endblock %}

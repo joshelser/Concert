@@ -1,0 +1,33 @@
+{% extends "base-header.html" %}
+
+
+{%block header%}
+    <div id = "inner_wrapper">
+        <div id = "controls">
+            <form>
+                <input type = "button" value = "Play" id = "play_button" class = "control_button disabled" />
+                <input type = "button" value = "Edit" id = "edit_button" class = "control_button disabled"/>
+                <div>
+                    <div class = "volume_slider disabled" id = "slider"></div>
+                    <div class = "volume_slider disabled" id = "handle"></div>
+                </div>
+            </form>
+        </div>
+
+        <div id="waveform_viewer" class="waveform">        	
+            <div id="viewer_timecode" class="timecode">00:00:00</div>
+            <div id="viewer_highlight_static" class="viewer_highlight"></div>
+            <div id="viewer_highlight" class="viewer_highlight"></div>
+            <div id="viewer_playhead" class="playhead"></div>
+            <div id="viewer_image"><img class="waveform_image {{ no_show }}" id="waveform_viewer_image" src = "{{ waveformViewerSrc }}"/></div>
+        </div>
+    </div>
+    
+    <div id="audio_container">
+            <audio id="audio_element" class="audio_element">
+                {% if audioSegment %}
+                    <source src="{{ audioSegment.audio.wavfile.url }}" />
+                {% endif %}
+            </audio>
+    </div>
+{%endblock%}

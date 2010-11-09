@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Choose a group to manage: {{ length }}</h1>
+    {% for g in groups %}
+    <div>
+        <a href='{% url manage_group user_id g.group.id %}'>{{ g.group.name }}</a> 
+    </div>
+    {% endfor %}
+
+    <p><a href="{% url groups user_id %}">Back to all of my groups</a></p>
+{% endblock %}

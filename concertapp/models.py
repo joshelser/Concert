@@ -233,8 +233,6 @@ def add_user_collection_callback(sender, **kwargs):
 m2m_changed.connect(add_user_collection_callback)
     
 
-        
-
 class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
     collection = models.ForeignKey('Collection')
@@ -495,5 +493,3 @@ class Audio(models.Model):
         super(Audio,self).save()
         event = AudioUploadedEvent(audio = self, collection = collection)
         event.save()
-        
-        
