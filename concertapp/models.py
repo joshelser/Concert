@@ -5,12 +5,13 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.files  import File
+from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 import audiotools
-import os, tempfile
+import os, tempfile, sys
 
 
 
@@ -41,7 +42,7 @@ def create_concert_user_callback(sender, **kwargs):
 ###
 # create_concert_user is bound to the post_save signal.  So everytime a model 
 # object gets saved, the create_concert_user checks if it's a User that is getting
-# saved, then creates the CocnertUser  
+# saved, then creates the ConcertUser  
 ###
 post_save.connect(create_concert_user_callback)
 
@@ -123,7 +124,7 @@ class TagCreatedEvent(Event):
         return str(creator) + " created tag '" + str(tag) + "'."
 
 
-class AudioSegCreatedEvent(Event):
+class AudioSegmentCreatedEvent(Event):
     audio_segment = models.ForeignKey("AudioSegment", related_name = "created_event")
 
     def __unicode__(self):
@@ -139,14 +140,14 @@ class AudioSegmentTaggedEvent(Event):
     tagging_user = models.ForeignKey(User, related_name = "tagged_event")
 
     def __unicode__(self):
-        return str(tagging_user) + " tagged '" + str(audio_segment.name) + "' with tag '" + str(tag.name)
+        return str(self.tagging_user) + " tagged '" + str(self.audio_segment.name) + "' with tag '" + str(self.tag.name)
 
 
 class AudioUploadedEvent(Event):
     audio = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
 
     def __unicode__(self):
-        return str(audio.uploader) + " uploaded file '" + audio.name + "'."
+        return str(self.audio.uploader) + " uploaded file '" + self.audio.name + "'."
 
 
 class JoinCollectionEvent(Event):
@@ -185,7 +186,7 @@ class AudioSegment(models.Model):
         event.save()
 
     def delete(self):
-        for event in AudioSegCreatedEvent.objects.filter(audio_segment = self):
+        for event in AudioSegmentCreatedEvent.objects.filter(audio_segment = self):
             event.active = False
 
         for event in AudioSegmentTaggedEvent.objects.filter(audio_segment = self):
@@ -365,92 +366,105 @@ class Audio(models.Model):
     collection = models.ForeignKey('Collection')
 
     ###
-    #   Create ogg and mp3 file from .wav
-    #
-    #   @throws     audiotools.EncodingError    -   Upon encoding error
-    def create_ogg_and_mp3(self):
-        self.create_ogg()
-        self.create_mp3()
-    
-    ###
-    #   Create ogg file from .wav
+    #   Do everything necessary when an audio object is first created.
     #   
-    #   @throws     audiotools.EncodingError    -   Upon encoding error
-    def create_ogg(self):
-        # Get name of wav file
-        wavFileName = os.path.split(str(self.wavfile))[-1]
-        
-        # take .wav off end, and replace with .ogg
-        oggFileName = wavFileName.split('.')[:-1]
-        oggFileName = '.'.join(oggFileName)+'.ogg'
-        
-
-        # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
-                
-        #   Create dummy Django file object, and save with self so we can
-        #   retain this filename.
-        oggFile = SimpleUploadedFile(oggFileName, 'a')
-        self.oggfile = oggFile
-        self.save()
-        
-        # Destination of ogg file (Django probably changed the filename)
-        oggFilePath = os.path.join(MEDIA_ROOT, str(self.oggfile))
-        
-        
-        #   Convert file to ogg and put it in proper place.  This will
-        #   overwrite dummy file, and will result in the self.oggfile property
-        #   pointing to the right place.  Can throw audiotools.EncodingError.
-        audioHelpers.toOgg(wavFilePath, oggFilePath)
-        
-        
-    ##
-    #   Create mp3 file from .wav
+    #   @param  f        File object from request.FILES
     #
-    #   @throws audiotools.EncodingError        - Upon encoding error        
-    def create_mp3(self):
-        # Get name of wav file
-        wavFileName = os.path.split(str(self.wavfile))[-1]
+    #   @throws     audiotools.EncodingError - upon encoding error
+    #   @throws     probably other stuff.
+    def init(self, f):
+        # Get original filename of uploaded file
+        name = str(f)
+        self.name = name
+        
+        wavName = name+'.wav'
+        oggName = name+'.ogg'
+        mp3Name = name+'.mp3'
+        
+        # grab the path of the temporary uploaded file.  This is where the user's
+        #   uploaded file exists currently.
+        inputFilePath = f.temporary_file_path()
+        
+        #   Create files with dummy contents but with proper names.
+        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'))
+        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'))
+        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'))
+        
+        #   Now we have an auto-generated name from Python, and we know where
+        #   we should put the converted audio files
+        
+        # The input is the temporary uploaded file location
+        wavInput = f.temporary_file_path()
+        # output was determined above
+        wavOutput = os.path.join(MEDIA_ROOT, self.wavfile.name)
+        
+        #   the ogg file will be encoded from the normalized wav file
+        oggInput = wavOutput
+        oggOutput = os.path.join(MEDIA_ROOT, self.oggfile.name)
+        
+        #   and so will the mp3
+        mp3Input = wavOutput
+        mp3Output = os.path.join(MEDIA_ROOT, self.mp3file.name)
+        
+        
+        
+        #   now overwrite the dummy files with the actual encodes
+        
+        # We will first normalize the wav file (convert to proper sample rate,
+        #   etc). NOTE: this doesn't actually mean "normalize" to 0db, but 
+        #   hopefully in the future.
+        audioHelpers.toNormalizedWav(wavInput, wavOutput)
+        
+        #   Do the same for ogg
+        audioHelpers.toOgg(oggInput, oggOutput)
+        
+        #   and mp3
+        audioHelpers.toMp3(mp3Input, mp3Output)
+            
+        # Generate the waveform onto disk
+        self.generate_waveform()
 
-        # take .wav off end and replace with .mp3
-        mp3FileName = wavFileName.split('.')[:-1]
-        mp3FileName = '.'.join(mp3FileName)+'.mp3'
-
-        # Input wav file path
-        wavFilePath = os.path.join(MEDIA_ROOT, 'audio', wavFileName)
-
-        #   Create dummy Django file object, and save with self so we can
-        #   retain this filename.
-        mp3File = SimpleUploadedFile(mp3FileName, 'a')
-        # Save dummy file with self
-        self.mp3file = mp3File
         self.save()
         
-        # Destination of mp3 file
-        mp3FilePath = os.path.join(MEDIA_ROOT, str(self.mp3file))
+        event = AudioUploadedEvent(audio = self, collection = self.collection)
+        event.save()
         
-        #   Convert file to mp3 and put it in proper place.  This will
-        #   overwrite dummy file, and will result in the self.mp3file property
-        #   pointing to the right place.  Can throw audiotools.EncodingError.
-        audioHelpers.toMp3(wavFilePath, mp3FilePath)
+        
+        
                 
 
     # Delete the current audio file from the filesystem
     def delete(self):
+        
         # Remove wavfile from this object, and delete file on filesystem.
-        self.wavfile.delete(save=False)
+        if(self.wavfile and os.path.exists(self.wavfile.name)):
+            # These lines should delete the files, but i'm getting an error that
+            #   I don't understand.
+            #self.wavfile.delete(save=False)
+            
+            #   So instead, lets just delete the file manually.
+            os.unlink(self.wavfile.name)
+
             
         # Remove oggfile
-        self.oggfile.delete(save=False)
+        if(self.oggfile and os.path.exists(self.oggfile.name)):
+            #self.oggfile.delete(save=False)
+            os.unlink(self.oggfile.name)
         
         # Remove mp3file
-        self.mp3file.delete(save=False)
+        if(self.mp3file and os.path.exists(self.mp3file.name)):
+            #self.mp3file.delete(save=False)
+            os.unlink(self.mp3file.name)
 
         # Remove viewer
-        self.waveformViewer.delete(save=False)
+        if(self.waveformViewer and os.path.exists(self.waveformViewer.name)):
+            #self.waveformViewer.delete(save=False)
+            os.unlink(self.waveformViewer.name)
 
         # Remove editor image
-        self.waveformEditor.delete(save=False)
+        if(self.waveformEditor and os.path.exists(self.waveformEditor.name)):
+            #self.waveformEditor.delete(save=False)
+            os.unlink(self.waveformEditor.name)
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audio = self)
@@ -459,21 +473,23 @@ class Audio(models.Model):
         for segment in segments:
             segment.delete()
 
-        for event in AudioUploadedEvents.objects.filter(audio=self):
+        for event in AudioUploadedEvent.objects.filter(audio=self):
             event.active = False
 
-        # Send delete up
-        super(Audio, self).delete()
+        # Send delete up if necessary.  This will not happen if the audio object
+        #   has not called save()
+        if(self.id):
+            super(Audio, self).delete()
 
     ##
-    # Generate all the waveforms for this audio object.  Should transition
-    # these audioFormats calls to the new audio library.
+    # Generate all the waveforms for this audio object.  
+    #   TODO: transition these audioFormats calls to the new audio library.
     #
     def generate_waveform(self):
-        wavPath = str(self.wavfile)
+        wavPath = os.path.join(MEDIA_ROOT, self.wavfile.name)
         wavName = os.path.split(wavPath)[-1]
         # Create the wav object
-        wavObj = audioFormats.Wav(os.path.join(MEDIA_ROOT, wavPath))
+        wavObj = audioFormats.Wav(wavPath)
         length = wavObj.getLength()
 
         # Name of the image for the waveform viewer (small waveform image) 
@@ -485,7 +501,7 @@ class Audio(models.Model):
         wavObj.generateWaveform(os.path.join(MEDIA_ROOT, editorImgPath), 5 * length, 585)
 
         # Save the path relative to the media_dir
-        self.waveformViewer = viewerImgPath    
+        self.waveformViewer = viewerImgPath
         self.waveformEditor = editorImgPath
         
 
@@ -493,3 +509,5 @@ class Audio(models.Model):
         super(Audio,self).save()
         event = AudioUploadedEvent(audio = self, collection = collection)
         event.save()
+        self.waveformEditor = editorImgPath        
+    

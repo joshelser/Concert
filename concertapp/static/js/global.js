@@ -107,27 +107,15 @@ $(document).ready(function(){
     
     /* For each page, run JS corresponding to that page */
     var pageInitializers = {
-        '/users/login/': initializeLoginPage,
+        '/login/': initializeLoginPage,
         '/dashboard/': initializeDashboardPage,
         '/collections/': initializeCollectionsPage,
-        '/audio/upload/': initializeAudioUploadPage
+        '/audio/upload/': initializeUploadPage,
+        '/organize/collection/': initializeOrganizePage
     };
     
-    /* Get URL of page (relative to server address) */
-    var pagePath = window.location.pathname;
-    
-    /* Initialize proper page function */
-//    try {
-        pageInitializers[pagePath](params);
-/*    }
-    catch(err) {
-        if(err.name == 'TypeError') {
-            throw new Error('Page is not initialized:\n'+err);
-        }
-        else {
-            throw err;
-        }
-    }*/
+    /* This pagePath variable is being set in the global base_site.html template */
+    pageInitializers[pagePath](params);
 
 
 });

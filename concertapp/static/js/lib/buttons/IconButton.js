@@ -20,7 +20,7 @@ IconButton.prototype.init = function(params) {
 
     /* A label for the button is optional */
     var label = params.label;
-    if(typeof(label) != 'undefined') {
+    if(typeof(label) != 'undefined' && label.length) {
         /* If there is a label */
         this.label = label;
     }
@@ -30,5 +30,10 @@ IconButton.prototype.init = function(params) {
     if(typeof(icon) == 'undefined') {
         throw new Error('params.icon is undefined');
     }
+    else if(icon.length == 0) {
+        throw new Error('icon not found');
+    }
     this.icon = icon;
+
+    
 }

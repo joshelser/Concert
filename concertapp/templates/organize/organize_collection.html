@@ -1,0 +1,51 @@
+{% extends 'base_site.html' %}
+{% load extra_template_tags %}
+{% block content %}
+
+
+<div id="waveform_viewer_panel" class="waveform_viewer_panel">
+    
+</div>
+
+<div id="audio_list_panel" class="audio_list_panel panel">
+    <div id="audio_list_panel_header" class="audio_list_panel_header panel_header">
+        <h3>Audio Files</h3>
+        <div id="audio_list_switch_button" class="icon_button">
+            
+        </div>
+    </div>
+    
+    <div id="audio_list_panel_contents" class="audio_list_panel_contents">
+        
+    </div>
+</div>
+
+<p>Segments:</p>
+{% for segment in segments %}
+    
+    {{ segment.name }} created by {{ segment.creator }} <br/>
+    
+{% endfor %}
+
+<p>Files:</p>
+{% for file in files %}
+    {{ file.name }} uploaded by {{ file.uploader }} <br />
+{% endfor %}
+
+{% endblock %}
+
+<script id="file_widget_template" type="text/x-jquery-tmpl">
+    <div id="file_widget-${id}" class="file_widget">
+        <div id="file_name-${id}" class="file_name">
+            ${name}
+        </div>
+        <div id="file_uploader-${id}" class="file_uploader">
+            by ${uploader}
+        </div>
+        <div id="file_segments-${id}" class="file_segments">
+            Segments: <span id="file_segments_list-${id}" class="file_segments_list">
+                
+            </span>
+        </div>
+    </div>
+</script>

@@ -27,6 +27,7 @@ def manage_collections(request):
 
     return render_to_response('collections/manage_collections.html', {
         'page_name': 'Collections',
+        'js_page_path': '/collections/'
     }, RequestContext(request))
 
 

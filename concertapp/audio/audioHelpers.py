@@ -27,15 +27,19 @@ NEW_FILE_PERMISSIONS = 0755
 def toNormalizedWav(inputFilePath, outputFilePath):
     # open file (can raise errors)
     orig = audiotools.open(inputFilePath)
+    
 
     ## Decode file to raw audio (PCM)
     origPCM = orig.to_pcm()
+
+
 
     # If this is a surround sound file, or if there is no channel mask
     # we shall error for now.  This will probably not happen.
     channel_mask = origPCM.channel_mask
     if channel_mask < 2 or channel_mask > 3:
       raise Exception ('Unsupported audio channel configuration')
+
   
     # Make sure bit depth is not > 16bit.
     # If it is, error for now.  I tried to convert the file, but I
@@ -48,6 +52,7 @@ def toNormalizedWav(inputFilePath, outputFilePath):
         raise Exception(
             'Unsupported bit depth, try converting file to 16bit.'
         )
+
     
     # Make sure sample rate is not > 44100
     sample_rate = origPCM.sample_rate
@@ -57,15 +62,20 @@ def toNormalizedWav(inputFilePath, outputFilePath):
       sample_rate = 44100
 
 
+
     # Create new PCM stream at 44100, with 2 channels
     normalizedPCM = audiotools.PCMConverter(origPCM, 44100, 2,
         channel_mask, bits_per_sample)
+
     
 
     # Output normalized audio to wav (Can raise error)
     wav = audiotools.WaveAudio.from_pcm(outputFilePath,
         normalizedPCM)
-    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)        
+
+    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)
+    
+    
 
 
 ###
