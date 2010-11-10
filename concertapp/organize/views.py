@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-import os, hashlib, tempfile, audiotools, tempfile
+import os, hashlib, tempfile, audiotools, json
 
 from concertapp.models  import *
 
@@ -46,39 +46,48 @@ def organize_collection(request, collection_id, col, user):
     }, RequestContext(request));
     
 ###
-#   This controller produces a list of audio files for the audio list panel
+#   This controller produces a list of audio files and audio segments for the
+#   audio list panel
 ###
 @login_required
 @user_is_member_and_collection_exists
-def audio_files(request, collection_id, col, user):
+def audio_objects(request, collection_id, col, user):
     
-    fileObjects = Audio.objects.filter(collection = col)
+    data = dict()
     
-    data = serializers.serialize('json', Audio.objects.filter(collection = col))
+    #   Get all audio objects
+    audio_objects = Audio.objects.filter(collection = col)
     
-    return HttpResponse(data, content_type='data/json')
+    #   Serialize audio objects
+    audio_objects_serialized = serializers.serialize(
+            'json',
+            audio_objects
+    )
     
-    """
-    filesForJSON = list()
+    # TODO: Fix/Subclass the serializer so we can do this correctly.
+    #       Right now we need to de-serialize what we just serialized
+    #       so that we can combine it into a larger JSON object to send
+    #       to the client, and it wont get treated as a string.
+    audio_objects_dict = json.loads(audio_objects_serialized)
     
-    for f in fileObjects:
-        
-        # The uploader for this file
-        uploader = dict({
-            'name': f.uploader.username,
-            'id': f.uploader.id            
-        })
-        
-        #
-        
-        
-        #Build json result
-        filesForJSON.append(dict({
-            'id': f.id,
-            'name': f.name,
-            'uploader': uploader,
-            'segments': 
-        }));
-    """
+    #   larger dict object for final serialization
+    data['audio_objects'] = audio_objects_dict
     
+    #   Get all audio segment objects
+    segment_objects = AudioSegment.objects.select_related().filter(collection = col)
+    
+    #   Serialize all audio segment objects
+    segment_objects_serialized = serializers.serialize(
+        'json',
+        segment_objects
+    )
+    
+    #   De-serialize (TODO: same issue as above)
+    segment_objects_dict = json.loads(segment_objects_serialized)
+    
+    data['segment_objects'] = segment_objects_dict
+    
+    #   Serialize master object for transport, and send it to client
+    data_serialized = simplejson.dumps(data)
+    return HttpResponse(data_serialized, content_type='data/json')
     

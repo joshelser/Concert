@@ -14,21 +14,21 @@ AudioListPanel.prototype = new Panel();
 AudioListPanel.prototype.init = function(params) {
     Panel.prototype.init.call(this, params);
 
-    this.retrieveFiles();
+    this.retrieveData();
 }
 
-AudioListPanel.prototype.retrieveFiles = function() {
+AudioListPanel.prototype.retrieveData = function() {
     $.getJSON(
-        window.location+'/files', 
+        window.location+'/audio', 
         function(me) {
             return function(data, status, xhr){
-                me.processFiles(data);
+                me.processData(data);
             };
         }(this)
     );
 };
 
-AudioListPanel.prototype.processFiles = function(data) {
+AudioListPanel.prototype.processData = function(data) {
     console.log('data:');
     console.log(data);
 };
