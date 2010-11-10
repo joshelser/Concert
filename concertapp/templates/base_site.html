@@ -15,24 +15,13 @@ The base template for all pages.  All page templates will use this.
     <title>Concert</title>
     <link rel=StyleSheet href="/css/styles.css" type="text/css" media=screen>
 
-
+    
     <script src="/js/lib/vendor/jquery-nightly.min.js"></script>
     <script src="/js/lib/vendor/jquery.tmpl.min.js"></script>
     <script src="/js/lib/vendor/jquery-ui-1.8.5.custom.min.js"></script>
     <script src="/js/lib/vendor/modernizr-1.6.min.js"></script>
     <script src="/js/lib/vendor/jquery.form.js"></script>
     
-    <!-- 
-       <script src="/js/lib/Waveform.js"></script>
-       <script src="/js/lib/WaveformViewer.js"></script>
-       <script src="/js/lib/WaveformEditor.js"></script>
-       <script src="/js/lib/Highlighter.js"></script>
-       <script src="/js/lib/HighlightViewer.js"></script>
-       <script src="/js/lib/helpers.js"></script>
-       <script src="/js/lib/WaveformPlayer.js"></script>
-       <script src="/js/lib/VolumeSlider.js"></script>
-       <script src="/js/lib/AudioPlayerBehavior.js"></script>
-       -->
     <script src="/js/lib/notifications/ModalAlert.js"></script>        
     <script src="/js/lib/notifications/ConfirmModalAlert.js"></script>        
     <script src="/js/lib/notifications/Notifier.js"></script>
@@ -51,6 +40,8 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/widgets/Widget.js"></script>
     <script src="/js/lib/widgets/CollectionWidget.js"></script>
     <script src="/js/lib/widgets/UploadFileWidget.js"></script>
+    <script src="/js/lib/widgets/FileWidget.js"></script>
+    <script src="/js/lib/widgets/SegmentWidget.js"></script>
     
 
     <script src="/js/lib/panels/Panel.js"></script>
@@ -105,7 +96,7 @@ The base template for all pages.  All page templates will use this.
     {% endblock %}
     
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
-        {% include_raw "../templates/collection_dropdown_options.html" %}
+        {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
     <script>

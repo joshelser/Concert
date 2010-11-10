@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-import os, hashlib, tempfile, audiotools, tempfile
+import os, hashlib, tempfile, audiotools, json
 
 from concertapp.models  import *
 
@@ -46,39 +46,68 @@ def organize_collection(request, collection_id, col, user):
     }, RequestContext(request));
     
 ###
-#   This controller produces a list of audio files for the audio list panel
+#   This controller produces a list of audio files and audio segments for the
+#   audio list panel
 ###
 @login_required
 @user_is_member_and_collection_exists
-def audio_files(request, collection_id, col, user):
+def audio_objects(request, collection_id, col, user):
     
-    fileObjects = Audio.objects.filter(collection = col)
+    data = dict()
     
-    data = serializers.serialize('json', Audio.objects.filter(collection = col))
+    #   Get all audio objects
+    audio_objects = Audio.objects.filter(collection = col)
     
-    return HttpResponse(data, content_type='data/json')
+    #   Create list  of audio objects
+    audio_objects_dicts = list()
     
-    """
-    filesForJSON = list()
-    
-    for f in fileObjects:
+    for audio in audio_objects:
         
-        # The uploader for this file
-        uploader = dict({
-            'name': f.uploader.username,
-            'id': f.uploader.id            
+        audio_dict = dict({
+            'id': audio.id, 
+            'name': audio.name, 
+            'uploader': {
+                'id': audio.uploader.id, 
+                'username': audio.uploader.username, 
+            }, 
+            'oggfile': audio.oggfile.url, 
+            'mp3file': audio.mp3file.url, 
+            'waveformViewer': audio.waveformViewer.url, 
+            'waveformEditor': audio.waveformEditor.url,
+            # We will populate this client-side (we have to loop through them anyway)
+            'segments': list()
         })
         
-        #
+        audio_objects_dicts.append(audio_dict)
         
-        
-        #Build json result
-        filesForJSON.append(dict({
-            'id': f.id,
-            'name': f.name,
-            'uploader': uploader,
-            'segments': 
-        }));
-    """
+            
+    #   put into larger dict object for final serialization
+    data['audio_objects'] = audio_objects_dicts
     
+    #   Get all audio segment objects
+    segment_objects = AudioSegment.objects.select_related().filter(collection = col)
+    
+    #   Create list of audio segment objects (as dicts)
+    segment_objects_dicts = list()
+    for seg in segment_objects:
+        
+        segment_dict = dict({
+            'id': seg.id,
+            'name': seg.name, 
+            'beginning': str(seg.beginning), 
+            'end': str(seg.end), 
+            'audio': seg.audio.id, 
+            'creator': {
+                'id': seg.creator.id, 
+                'username': seg.creator.username, 
+            }, 
+        })
+        
+        segment_objects_dicts.append(segment_dict)
+    
+    data['segment_objects'] = segment_objects_dicts
+    
+    #   Serialize master object for transport, and send it to client
+    data_serialized = simplejson.dumps(data)
+    return HttpResponse(data_serialized, content_type='data/json')
     

@@ -9,5 +9,5 @@ urlpatterns = patterns('concertapp.organize.views',
     #   Organize audio (for a collection)
     url(r'^collection/(?P<collection_id>[\d]+)$', 'organize_collection', name='organize_collection'),
     
-    url(r'^collection/(?P<collection_id>[\d]+)/files$', 'audio_files', name='audio_files')
+    url(r'^collection/(?P<collection_id>[\d]+)/audio$', 'audio_objects', name='audio_objects')
 )
