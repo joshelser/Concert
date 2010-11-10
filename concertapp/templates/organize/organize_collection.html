@@ -1,24 +1,13 @@
 {% extends 'base_site.html' %}
 {% load extra_template_tags %}
+{% load panels %}
 {% block content %}
 
 
-<div id="waveform_viewer_panel" class="waveform_viewer_panel">
-    
-</div>
+{% panel 'Waveform Viewer' 'waveform_viewer' %}
 
-<div id="audio_list_panel" class="audio_list_panel panel">
-    <div id="audio_list_panel_header" class="audio_list_panel_header panel_header">
-        <h3>Audio Files</h3>
-        <div id="audio_list_switch_button" class="icon_button">
-            
-        </div>
-    </div>
-    
-    <div id="audio_list_panel_contents" class="audio_list_panel_contents">
-        
-    </div>
-</div>
+{% audiolist_panel 'Audio' 'audio_list' %}
+
 
 
 <script id="file_widget_template" type="text/x-jquery-tmpl">
