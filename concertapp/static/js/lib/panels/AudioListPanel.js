@@ -17,8 +17,12 @@ AudioListPanel.prototype.init = function(params) {
     this.retrieveData();
 }
 
+/**
+ *  Get all audio data from the server for the current collection.
+ **/
 AudioListPanel.prototype.retrieveData = function() {
     $.getJSON(
+        /* window.location here has the collection id encoded in it */
         window.location+'/audio', 
         function(me) {
             return function(data, status, xhr){

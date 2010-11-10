@@ -58,34 +58,52 @@ def audio_objects(request, collection_id, col, user):
     #   Get all audio objects
     audio_objects = Audio.objects.filter(collection = col)
     
-    #   Serialize audio objects
-    audio_objects_serialized = serializers.serialize(
-            'json',
-            audio_objects
-    )
+    #   Create list  of audio objects
+    audio_objects_dicts = list()
     
-    # TODO: Fix/Subclass the serializer so we can do this correctly.
-    #       Right now we need to de-serialize what we just serialized
-    #       so that we can combine it into a larger JSON object to send
-    #       to the client, and it wont get treated as a string.
-    audio_objects_dict = json.loads(audio_objects_serialized)
-    
-    #   larger dict object for final serialization
-    data['audio_objects'] = audio_objects_dict
+    for audio in audio_objects:
+        
+        audio_dict = dict({
+            'id': audio.id, 
+            'name': audio.name, 
+            'uploader': {
+                'id': audio.uploader.id, 
+                'username': audio.uploader.username, 
+            }, 
+            'oggfile': audio.oggfile.url, 
+            'mp3file': audio.mp3file.url, 
+            'waveformViewer': audio.waveformViewer.url, 
+            'waveformEditor': audio.waveformEditor.url
+        })
+        
+        audio_objects_dicts.insert(audio.id, audio_dict)
+        
+            
+    #   put into larger dict object for final serialization
+    data['audio_objects'] = audio_objects_dicts
     
     #   Get all audio segment objects
     segment_objects = AudioSegment.objects.select_related().filter(collection = col)
     
-    #   Serialize all audio segment objects
-    segment_objects_serialized = serializers.serialize(
-        'json',
-        segment_objects
-    )
+    #   Create list of audio segment objects (as dicts)
+    segment_objects_dicts = list()
+    for seg in segment_objects:
+        
+        segment_dict = dict({
+            'id': seg.id,
+            'name': seg.name, 
+            'beginning': str(seg.beginning), 
+            'end': str(seg.end), 
+            'audio': seg.audio.id, 
+            'creator': {
+                'id': seg.creator.id, 
+                'username': seg.creator.username, 
+            }, 
+        })
+        
+        segment_objects_dicts.insert(seg.id, segment_dict)
     
-    #   De-serialize (TODO: same issue as above)
-    segment_objects_dict = json.loads(segment_objects_serialized)
-    
-    data['segment_objects'] = segment_objects_dict
+    data['segment_objects'] = segment_objects_dicts
     
     #   Serialize master object for transport, and send it to client
     data_serialized = simplejson.dumps(data)
