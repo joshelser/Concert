@@ -20,19 +20,6 @@
     </div>
 </div>
 
-<p>Segments:</p>
-{% for segment in segments %}
-    
-    {{ segment.name }} created by {{ segment.creator }} <br/>
-    
-{% endfor %}
-
-<p>Files:</p>
-{% for file in files %}
-    {{ file.name }} uploaded by {{ file.uploader }} <br />
-{% endfor %}
-
-{% endblock %}
 
 <script id="file_widget_template" type="text/x-jquery-tmpl">
     <div id="file_widget-${id}" class="file_widget">
@@ -40,7 +27,7 @@
             ${name}
         </div>
         <div id="file_uploader-${id}" class="file_uploader">
-            by ${uploader}
+            by ${uploader.username}
         </div>
         <div id="file_segments-${id}" class="file_segments">
             Segments: <span id="file_segments_list-${id}" class="file_segments_list">
@@ -49,3 +36,5 @@
         </div>
     </div>
 </script>
+
+{% endblock %}

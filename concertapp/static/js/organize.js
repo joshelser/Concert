@@ -15,6 +15,7 @@ function initializeOrganizePage() {
     /* Create the audio list panel */
     var audioListPanel = new AudioListPanel({
         container: $('#audio_list_panel'), 
+        fileWidgetTemplate: $('#file_widget_template'), 
     });
     
     
