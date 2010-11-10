@@ -41,6 +41,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/widgets/CollectionWidget.js"></script>
     <script src="/js/lib/widgets/UploadFileWidget.js"></script>
     <script src="/js/lib/widgets/FileWidget.js"></script>
+    <script src="/js/lib/widgets/SegmentWidget.js"></script>
     
 
     <script src="/js/lib/panels/Panel.js"></script>
@@ -95,7 +96,7 @@ The base template for all pages.  All page templates will use this.
     {% endblock %}
     
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
-        {% include_raw "../templates/collection_dropdown_options.html" %}
+        {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
     <script>

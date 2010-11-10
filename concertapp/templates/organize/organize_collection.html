@@ -3,24 +3,36 @@
 {% load panels %}
 {% block content %}
 
+{% comment %}
+    @file   organize_collection.html
+    This is the template for the organize page.    
+{% endcomment %}
 
+
+{#  We have a waveform viewer panel #}
 {% panel 'Waveform Viewer' 'waveform_viewer' %}
 
+{# and an audio list panel #}
 {% audiolist_panel 'Audio' 'audio_list' %}
 
 
-
+{# and some client-side templates #}
 <script id="file_widget_template" type="text/x-jquery-tmpl">
-    <div id="file_widget-${id}" class="file_widget">
-        <div id="file_name-${id}" class="file_name">
+    {% include_raw '../templates/clientside/file_widget.html' %}
+</script>
+
+
+<script id="segment_widget_template" type="text/x-jquery-tmpl">
+    <div id="segment_widget-${id}" class="segment_widget">
+        <div id="segment_name-${id}" class="segment_name-${id}">
             ${name}
         </div>
-        <div id="file_uploader-${id}" class="file_uploader">
-            by ${uploader.username}
+        <div id="segment_creator-${id}" class="segment_creator">
+            by ${creator.username}
         </div>
-        <div id="file_segments-${id}" class="file_segments">
-            Segments: <span id="file_segments_list-${id}" class="file_segments_list">
-                
+        <div id="segment_audio-${id}" class="segment_audio">
+            from: <span id="segment_audio_name-${id}" class="segment_audio_name">
+                ${audio.name}
             </span>
         </div>
     </div>

@@ -73,10 +73,12 @@ def audio_objects(request, collection_id, col, user):
             'oggfile': audio.oggfile.url, 
             'mp3file': audio.mp3file.url, 
             'waveformViewer': audio.waveformViewer.url, 
-            'waveformEditor': audio.waveformEditor.url
+            'waveformEditor': audio.waveformEditor.url,
+            # We will populate this client-side (we have to loop through them anyway)
+            'segments': list()
         })
         
-        audio_objects_dicts.insert(audio.id, audio_dict)
+        audio_objects_dicts.append(audio_dict)
         
             
     #   put into larger dict object for final serialization
@@ -101,7 +103,7 @@ def audio_objects(request, collection_id, col, user):
             }, 
         })
         
-        segment_objects_dicts.insert(seg.id, segment_dict)
+        segment_objects_dicts.append(segment_dict)
     
     data['segment_objects'] = segment_objects_dicts
     
