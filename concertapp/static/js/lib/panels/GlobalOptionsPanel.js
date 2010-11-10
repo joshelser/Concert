@@ -93,7 +93,7 @@ GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
 GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
     /* retrieve the collections */
     $.getJSON(
-        '/collections/user/', 
+        'http://localhost:8896/collections/user/', 
         function(me) {
             return function(data, status, xhr) {
                 me.updateCollectionSelector(data);
