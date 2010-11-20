@@ -22,3 +22,9 @@ def panel(title, id):
 @register.inclusion_tag('partials/audiolist_panel.html')
 def audiolist_panel(title, id):
     return panel(title, id)
+
+###
+#   partial for create_join_collections panel on the settings page.
+@register.inclusion_tag('collections/partials/create_join_collection_panel.html')
+def create_join_collection_panel(title, id):
+    return panel(title, id)

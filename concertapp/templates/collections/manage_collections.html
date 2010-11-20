@@ -5,6 +5,7 @@
 
 
 {% load extra_template_tags %}
+{% load panels %}
 
 {% block content %}
 
@@ -14,12 +15,8 @@
 
 <br/>
 
-<div id="create_join_container">
-    <h3>Create/Join a collection</h3>
-    <label for="create_join_input">Collection Name: </label>
-    <input type="text" id="create_join_input" class="autoClear" value="Enter a new or existing collection name" size="50" />
-    <div id="create_join_results"><!-- The search results go here --></div>
-</div>
+
+{% create_join_collection_panel 'Create/Join a Collection' 'create_join' %}
 
 <br/>
 

@@ -1,10 +1,15 @@
 <div id="{{ id }}_panel" class="{{ id }}_panel panel">
+    <div id="{{ id }}_panel_loader" class="panel_loader">
+        <div id="{{ id }}_panel_loader_notification" class="panel_loader_notification">
+            Loading...
+        </div>
+    </div>
     <div id="{{ id }}_panel_header" class="{{ id }}_panel_header panel_header">
             <h3>{{ title }}</h3>
         {% block title_content %}{% endblock %}
     </div>
     
     <div id="{{ id }}_panel_contents" class="{{ id }}_panel_contents">
-        
+        {% block panel_content %}{% endblock %}
     </div>
 </div>
