@@ -11,7 +11,7 @@ function initializeCollectionsPage(params) {
      *  Create "create/join collection panel"
      **/
     var createJoinCollectionPanel = new CreateJoinCollectionPanel({
-        container: $('#create_join_widget'), 
+        container: $('#create_join_panel'), 
         inputElement: $('#create_join_input'), 
         resultsElement: $('#create_join_results'),
         resultTemplate: $('#create_join_result'),

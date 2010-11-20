@@ -23,8 +23,24 @@ def panel(title, id):
 def audiolist_panel(title, id):
     return panel(title, id)
 
+
 ###
 #   partial for create_join_collections panel on the settings page.
 @register.inclusion_tag('collections/partials/create_join_collection_panel.html')
 def create_join_collection_panel(title, id):
     return panel(title, id)
+
+
+###
+#   partial for global options panel on every page
+#
+#   @param  page_name        String - the name of the current page to display to 
+#                               user
+#   
+@register.inclusion_tag('partials/global_options_panel.html')
+def global_options_panel(title, id, page_name, user):
+    dataForTemplate = panel(title, id)
+    dataForTemplate['page_name'] = page_name
+    dataForTemplate['user'] = user
+    
+    return dataForTemplate

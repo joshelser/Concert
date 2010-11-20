@@ -57,7 +57,7 @@ $(document).ready(function(){
      *  Create global widgets and buttons for the globalOptionsPanel
      **/
     var globalOptionsParams = {
-        container: $('#page_header'), 
+        container: $('#global_options_panel'), 
         collectionSelector: $('#collection_selector'),
         collectionSelectorOptionsTemplate: $('#collection_dropdown_options')
     }; 

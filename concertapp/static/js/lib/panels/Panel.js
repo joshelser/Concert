@@ -41,14 +41,16 @@ Panel.prototype.init = function(params) {
     }
     this.loader = loader;
     
+    /** This boolean will keep track of if we are loading or not */
     var loading = params.loading;
     if(typeof(loading) == 'undefined') {
         loading = false;
     }
     this.loading = loading;
-    
+
+    /* If we should be loading, show the loading notification */
     if(loading) {
-        this.loading(true);
+        this.showLoadingNotification();
     }
 
     
@@ -57,15 +59,26 @@ Panel.prototype.init = function(params) {
 /**
  *  This function should be called when the panel is loading, or when the panel
  *  is done displaying a loading notification.
- *
- *  @param  enable        Boolean - Wether to enable this loading notification  
  **/
-Panel.prototype.loading = function(enable) {
-    if(enable) {
+Panel.prototype.toggleLoadingNotification = function() {
+    var loading = this.loading;
+    if(!loading) {
         /* Enable loading notification */
-        this.loader.addClass('panel_loader_enabled');
+        this.showLoadingNotification();
+        this.loading = true;
     }
     else {
-        this.loader.removeClass('panel_loader_enabled');
+        this.hideLoadingNotification();
+        this.loading = false;
     }
 };
+
+Panel.prototype.showLoadingNotification = function() {
+    this.loader.addClass('panel_loader_enabled');    
+};
+
+Panel.prototype.hideLoadingNotification = function() {
+    this.loader.removeClass('panel_loader_enabled');
+};
+
+

@@ -5,8 +5,7 @@
         </div>
     </div>
     <div id="{{ id }}_panel_header" class="{{ id }}_panel_header panel_header">
-            <h3>{{ title }}</h3>
-        {% block title_content %}{% endblock %}
+        {% block header_content %}<h3>{{ title }}</h3>{% endblock %}
     </div>
     
     <div id="{{ id }}_panel_contents" class="{{ id }}_panel_contents">

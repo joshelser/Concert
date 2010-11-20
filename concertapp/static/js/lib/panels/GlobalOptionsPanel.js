@@ -72,6 +72,7 @@ GlobalOptionsPanel.prototype.init = function(params) {
  *  @param  data        Array  -    response data from backend (collection objs)
  **/
 GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
+    
     if(typeof(data) == 'undefined') {
         this.retrieveAndUpdateCollectionSelector();
     }
@@ -91,12 +92,15 @@ GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
  *  dropdown.
  **/
 GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
+    this.toggleLoadingNotification();
+    
     /* retrieve the collections */
     $.getJSON(
         '/collections/user/', 
         function(me) {
             return function(data, status, xhr) {
                 me.updateCollectionSelector(data);
+                me.toggleLoadingNotification();
             };
         }(this)
     );

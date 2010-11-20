@@ -7,6 +7,7 @@ The base template for all pages.  All page templates will use this.
 
 
 {% load extra_template_tags %}
+{% load panels %}
 
 <!DOCTYPE>
 
@@ -87,7 +88,7 @@ The base template for all pages.  All page templates will use this.
     </div>
     
     {% if user.is_authenticated %}
-        {% include 'header.html' %}
+        {% global_options_panel 'Concert' 'global_options' page_name user %}
     {% endif %}
     
     {% block content %}
