@@ -127,6 +127,7 @@ div.panel {
     /* Default height and width values (for testing) */
     height: 120px;
     width: 720px;
+    
 }
 
 /* This is the div that shows a loading notification on each panel */
@@ -137,6 +138,7 @@ div.panel_loader {
     background-color: gray;
     opacity: 0.7;
     text-align: center;
+    display: none;
 }
 
 /* This is the actual loading notification (Animation or "Loading...") */
