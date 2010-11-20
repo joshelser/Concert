@@ -150,6 +150,11 @@ div.panel_loader_notification {
     color: white;
 }
 
+/* This class is added when the panel loader is to be displayed */
+div.panel_loader_enabled {
+    display: visible;
+}
+
 
 
 
