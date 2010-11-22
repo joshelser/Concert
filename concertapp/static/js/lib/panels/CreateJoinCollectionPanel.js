@@ -33,11 +33,17 @@ CreateJoinCollectionPanel.prototype.init = function(params) {
     if(typeof(inputElement) == 'undefined') {
         throw new Error('params.inputElement is undefined');
     }
+    else if(inputElement.length == 0) {
+        throw new Error('inputElement not found');
+    }
     this.inputElement = inputElement;
 
     var resultsElement = params.resultsElement;
     if(typeof(resultsElement) == 'undefined') {
         throw new Error('params.resultsElement is undefined');
+    }
+    else if(resultsElement.length == 0) {
+        throw new Error('resultsElement not found');
     }
     this.resultsElement = resultsElement;
 
@@ -45,11 +51,17 @@ CreateJoinCollectionPanel.prototype.init = function(params) {
     if(typeof(resultTemplate) == 'undefined') {
         throw new Error('params.resultTemplate is undefined');
     }
+    else if(resultTemplate.length == 0) {
+        throw new Error('resultTemplate not found');
+    }
     this.resultTemplate = resultTemplate;
 
     var createNewTemplate = params.createNewTemplate;
     if(typeof(createNewTemplate) == 'undefined') {
         throw new Error('params.createNewTemplate is undefined');
+    }
+    else if(createNewTemplate.length == 0) {
+        throw new Error('createNewTemplate not found');
     }
     this.createNewTemplate = createNewTemplate;
 
@@ -91,6 +103,8 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
                 /* If there is something to search for */
                 if(term && term != '') {    
                     /* Search for it */
+                    
+                    me.toggleLoadingNotification();
                     me.lastCreateJoinXhr = $.getJSON(
                         'search/'+term, 
                         {}, 
@@ -99,6 +113,7 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
                             if(xhr === me.lastCreateJoinXhr) {
                                 me.currentTerm = term;
                                 me.autoCompleteResponse(data);
+                                me.toggleLoadingNotification();
                             }
                         }
                     );
