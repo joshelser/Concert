@@ -52,8 +52,6 @@ Panel.prototype.init = function(params) {
     if(loading) {
         this.showLoadingNotification();
     }
-
-    
 }
 
 /**
@@ -73,10 +71,16 @@ Panel.prototype.toggleLoadingNotification = function() {
     }
 };
 
+/**
+ *  Display the loading notification on this panel.
+ **/
 Panel.prototype.showLoadingNotification = function() {
     this.loader.addClass('panel_loader_enabled');    
 };
 
+/**
+ *  Hide the loading notification on this panel.
+ **/
 Panel.prototype.hideLoadingNotification = function() {
     this.loader.removeClass('panel_loader_enabled');
 };
