@@ -1,0 +1,38 @@
+{% extends 'partials/panel.html' %}
+
+{% load buttons %}
+
+{% block header_content %}
+    <h1>Concert</h1>
+    <h2>{{ page_name }}</h2>
+{% endblock %}
+
+{% block panel_content %}
+    <div id="global_options_panel_middle">
+        <label for="collection_selector">Organize:</label>
+        <select id="collection_selector" class="collection_selector">
+            <option value="-1">Please select a collection</option>
+            {% for collection in user.collections.all %}
+                <option id="collection_option-{{ collection.id }}" value="{{ collection.id }}">{{ collection.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="global_options_panel_right">
+    
+        {% if page_name != 'Dashboard' %}
+            {% large_icon_button 'Dashboard' 'dashboard_button' '/dashboard/' %}
+        {% endif %}
+    
+    
+        {% if page_name  != 'Collections' %}
+            {% large_icon_button 'Settings' 'settings_button' '/collections/' 'Manage collections, connect with friends' %}
+        {% endif %}
+    
+        {% if page_name != 'Upload Audio' %}
+            {% large_icon_button 'Upload Audio' 'upload_button' '/audio/upload' 'Upload audio to a collection' %}
+        {% endif %}            
+    
+    </div>
+    <div class="clear"></div>
+{% endblock %}

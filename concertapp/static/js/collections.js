@@ -20,18 +20,18 @@ function initializeCollectionsPage(params) {
     
     /**
      *  "ManageCollectionsPanel"
-     **//*
+     **/
     var manageCollectionsPanel = new ManageCollectionsPanel({
-        container: $('#manage_collections_container'), 
+        container: $('#manage_collections_panel'), 
         collectionTemplate: $('#collection_template')
-    });*/
+    });
     
-    /** Connect panels **//*
+    /** Connect panels **/
     createJoinCollectionPanel.manageCollectionsPanel = manageCollectionsPanel;
     manageCollectionsPanel.globalOptionsPanel = params.globalOptionsPanel;
     
-    /* Retrieve collections to manage *//*
-    manageCollectionsPanel.retrieveAndUpdateCollections();*/
+    /* Retrieve collections to manage */
+    manageCollectionsPanel.retrieveAndUpdateCollections();
     
         
 }

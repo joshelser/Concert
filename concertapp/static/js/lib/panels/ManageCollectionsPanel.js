@@ -22,7 +22,22 @@ ManageCollectionsPanel.prototype.init = function(params) {
     if(typeof(collectionTemplate) == 'undefined') {
         throw new Error('params.collectionTemplate is undefined');
     }
+    else if(collectionTemplate.length == 0) {
+        throw new Error('collectionTemplate not found');
+    }
     this.collectionTemplate = collectionTemplate;
+
+    /* get the "table" where we will display the collections */
+    var collectionsTable = $(this.contents).children('#manage_collections_table');
+    if(typeof(collectionsTable) == 'undefined') {
+        throw new Error('collectionsTable is undefined');
+    }
+    else if(collectionsTable.length == 0) {
+        throw new Error('malformed HTML: collectionsTable not found');
+    }
+    this.collectionsTable = collectionsTable;
+
+    
     
     
     /* reference to globalOptionsPanel so we can call methods on there */
@@ -38,10 +53,15 @@ ManageCollectionsPanel.prototype.init = function(params) {
  *  Retrieves collections from backend, then updates the list.
  **/
 ManageCollectionsPanel.prototype.retrieveAndUpdateCollections = function() {
+    /* Loading */
+    this.toggleLoadingNotification();
+    
     /* Retrieve JSON data for manage collections list */
     $.getJSON('user/', function(me) {
         return function(data, status) {
             me.updateCollections(data);
+            /* un loading */
+            me.toggleLoadingNotification();
         };
     }(this));
 }
@@ -52,7 +72,7 @@ ManageCollectionsPanel.prototype.retrieveAndUpdateCollections = function() {
 ManageCollectionsPanel.prototype.updateCollections = function(data) {
     
     var collectionTemplate = this.collectionTemplate;
-    var container = this.container;
+    var collectionsTable = this.collectionsTable;
     
     var collections = [];
     
@@ -75,7 +95,7 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
     }
     
     /* Update manage collections list */
-    container.empty().append(frag);
+    collectionsTable.empty().append(frag);
     
     this.collections = collections;
     

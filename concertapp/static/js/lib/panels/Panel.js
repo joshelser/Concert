@@ -32,6 +32,18 @@ Panel.prototype.init = function(params) {
         throw new Error('container not found');
     }
     this.container = container;
+    
+    /* This is a reference to the panel's contents */
+    var contents = $(container).children('.panel_contents');
+    if(typeof(contents) == 'undefined') {
+        throw new Error('contents is undefined for panel: '+container.id);
+    }
+    else if(contents.length == 0) {
+        throw new Error('malformed HTML: contents not found for '+container.id);
+    }
+    this.contents = contents;
+
+    
 
     
     /* Get the loader element for this panel */
