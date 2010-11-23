@@ -1,6 +1,6 @@
 /**
  *  @file       AudioListPanel.js
- *  Displays the segment or clip list within
+ *  Displays the segment or clip list within the audio organize page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
@@ -229,7 +229,6 @@ AudioListPanel.prototype.processData = function(data) {
     
     this.fileWidgets = fileWidgets;
     this.fileWidgetNodes = fileWidgetNodes;
-    
     
     
     this.audioData = audioData;
