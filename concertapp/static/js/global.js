@@ -62,40 +62,6 @@ $(document).ready(function(){
         collectionSelectorOptionsTemplate: $('#collection_dropdown_options')
     }; 
     
-    /**
-     *  TODO: Move the creation of these buttons into the global options panel
-     *  constructor.
-     **/
-    
-    /* Get upload button */
-    var uploadButtonContainer = $('#upload_button');
-    /* If this page has an upload button */
-    if(uploadButtonContainer.length) {
-        /* Create UploadLinkLargeIconButton object */
-        globalOptionsParams.uploadButton = new UploadLinkLargeIconButton({
-            container: uploadButtonContainer, 
-        });        
-    }
-    
-    /* Get dashboard button */
-    var dashboardButtonContainer = $('#dashboard_button');
-    /* If this page has a dashboard button */
-    if(dashboardButtonContainer.length) {
-        /* Create dashboard button */
-        globalOptionsParams.dashboardButton = new DashboardLinkLargeIconButton({
-            container: dashboardButtonContainer,
-        });        
-    }
-    
-    /* get settings button */
-    var settingsButtonContainer = $('#settings_button');
-    /* if this page has a settings button */
-    if(settingsButtonContainer.length) {
-        /* Create settings Button */
-        globalOptionsParams.settingsButton = new SettingsLinkLargeIconButton({
-            container: settingsButtonContainer, 
-        });
-    }
     
     /**
      *  Create globalOptionsPanel

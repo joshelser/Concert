@@ -23,6 +23,8 @@ GlobalOptionsPanel.prototype = new Panel();
 GlobalOptionsPanel.prototype.init = function(params) {
     Panel.prototype.init.call(this, params);
 
+    var contents = this.contents;
+    
     /* Make sure parameter was passed in */
     var collectionSelector = params.collectionSelector;
     if(typeof(collectionSelector) == 'undefined') {
@@ -37,20 +39,35 @@ GlobalOptionsPanel.prototype.init = function(params) {
     }
     this.collectionSelectorOptionsTemplate = collectionSelectorOptionsTemplate;
     
-    
-    var uploadButton = params.uploadButton;
-    if(typeof(uploadButton) != 'undefined') {
-        this.uploadButton = uploadButton;        
+
+    /* Get upload button */
+    var uploadButtonContainer = contents.find('#upload_button');
+    /* If this page has an upload button */
+    if(uploadButtonContainer.length) {
+        /* Create UploadLinkLargeIconButton object */
+        this.uploadButton = new UploadLinkLargeIconButton({
+            container: uploadButtonContainer, 
+        });        
     }
     
-    var settingsButton = params.settingsButton;
-    if(typeof(settingsButton) != 'undefined') {
-        this.settingsButton = settingsButton;        
+    /* Get dashboard button */
+    var dashboardButtonContainer = contents.find('#dashboard_button');
+    /* If this page has a dashboard button */
+    if(dashboardButtonContainer.length) {
+        /* Create dashboard button */
+        this.dashboardButton = new DashboardLinkLargeIconButton({
+            container: dashboardButtonContainer,
+        });        
     }
     
-    var dashboardButton = params.dashboardButton;
-    if(typeof(dashboardButton) != 'undefined') {
-        this.dashboardButton = dashboardButton;
+    /* get settings button */
+    var settingsButtonContainer = contents.find('#settings_button');
+    /* if this page has a settings button */
+    if(settingsButtonContainer.length) {
+        /* Create settings Button */
+        this.settingsButton = new SettingsLinkLargeIconButton({
+            container: settingsButtonContainer, 
+        });
     }
     
     
