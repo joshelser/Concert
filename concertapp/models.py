@@ -390,6 +390,7 @@ class Audio(models.Model):
         self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'))
         self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'))
         
+        
         #   Now we have an auto-generated name from Python, and we know where
         #   we should put the converted audio files
         
@@ -502,12 +503,4 @@ class Audio(models.Model):
 
         # Save the path relative to the media_dir
         self.waveformViewer = viewerImgPath
-        self.waveformEditor = editorImgPath
-        
-
-    def save(self):
-        super(Audio,self).save()
-        event = AudioUploadedEvent(audio = self, collection = collection)
-        event.save()
-        self.waveformEditor = editorImgPath        
-    
+        self.waveformEditor = editorImgPath    

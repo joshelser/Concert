@@ -78,15 +78,18 @@ def upload_audio(request):
         # The file being uploaded
         f = request.FILES['audio']
         
+        
         # The groups that this audio object is to be associated with.
         try:
             col = Collection.objects.get(id = request.POST['collection'])
         except ObjectDoesNotExist, e:
             return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
+
         
         
         #   new audio object
         audio = Audio(uploader = user, collection=col)
+
         
         try:
             #   initialize audio object (this will take a while as we have to encode)

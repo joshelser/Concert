@@ -57,7 +57,7 @@ UploadFileWidget.prototype.init = function(params) {
 UploadFileWidget.prototype.handleUploadError = function(data) {
     com.concertsoundorganizer.notifier.alert({
         'title': 'Error', 
-        'content': 'An error occurred while uploading.  Please try again.\n\n'+data
+        'content': 'An error occurred while uploading.  Sorry!\n\n'+data
     });
     
     
@@ -149,6 +149,7 @@ UploadFileWidget.prototype.uploadFile = function() {
         success: function(me) {
             return function(data, status, xhr) {
                 if(data.match('<pre style="word-wrap: break-word; white-space: pre-wrap;">success</pre>')) {
+                    
                     /* The file was hopefully uploaded */
                     me.encodingWaiting = false;
                     

@@ -166,9 +166,7 @@ UploadPanel.prototype.createNewFileChooser = function() {
     }(this));
     
     /* Add chooser to DOM */
-    this.fileChooserContainer.html(chooser);
-    
-    
+    this.fileChooserContainer.html(chooser);    
     
 };
 
