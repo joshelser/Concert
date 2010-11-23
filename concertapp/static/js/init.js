@@ -36,10 +36,10 @@ function initializeEverything(pagePath) {
                 /* This will throw a modal window to the user 
                     if there is a compatibility problem. */
                 detectBrowserCompatibility();
-                return new LoginPage();
+                return new LoginPage({});
             },
             '/dashboard/': function() {
-                return new DashboardPage();
+                return new DashboardPage({});
             },
             '/collections/': initializeCollectionsPage,
             '/audio/upload/': initializeUploadPage,
