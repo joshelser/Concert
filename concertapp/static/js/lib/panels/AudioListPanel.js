@@ -33,6 +33,7 @@ AudioListPanel.prototype.init = function(params) {
     }
     this.fileWidgetTemplate = fileWidgetTemplate;
     
+    
     var segmentWidgetTemplate = params.segmentWidgetTemplate;
     if(typeof(segmentWidgetTemplate) == 'undefined') {
         throw new Error('params.segmentWidgetTemplate is undefined');
@@ -41,17 +42,48 @@ AudioListPanel.prototype.init = function(params) {
         throw new Error('segmentWidgetTemplate not found');
     }
     this.segmentWidgetTemplate = segmentWidgetTemplate;
+    
+    
+    var audioSwitcherSegmentsButton = params.audioSwitcherSegmentsButton;
+    if(typeof(audioSwitcherSegmentsButton) == 'undefined') {
+        throw new Error('params.audioSwitcherSegmentsButton is undefined');
+    }
+    else if(audioSwitcherSegmentsButton.length == 0) {
+        throw new Error('audioSwitcherSegmentsButton not found');
+    }
+    this.audioSwitcherSegmentsButton = audioSwitcherSegmentsButton;
+
+    var audioSwitcherFilesButton = params.audioSwitcherFilesButton;
+    if(typeof(audioSwitcherFilesButton) == 'undefined') {
+        throw new Error('params.audioSwitcherFilesButton is undefined');
+    }
+    else if(audioSwitcherFilesButton.length == 0) {
+        throw new Error('audioSwitcherFilesButton not found');
+    }
+    this.audioSwitcherFilesButton = audioSwitcherFilesButton;
 
     
-
     
+
     
     /*  Mode is either 'files' or 'segments', as is reflected on the UI */
     var mode = params.mode;
     if(typeof(mode) == 'undefined') {
-        mode = 'files';
+        mode = 'segments';
     }
     this.mode = mode;
+    
+    /* Initialize button behavior to switch mode */
+    audioSwitcherFilesButton.click = function(me) {
+        return function() {
+            me.showFiles();            
+        };
+    }(this);
+    audioSwitcherSegmentsButton.click = function(me) {
+        return function() {
+            me.showSegments();            
+        };
+    }(this);
 
     
     
@@ -204,6 +236,9 @@ AudioListPanel.prototype.processData = function(data) {
  **/
 AudioListPanel.prototype.showFiles = function() {
     domElementsReplace(this.fileWidgetNodes, this.contents);
+    this.mode = 'files';
+    this.audioSwitcherFilesButton.container.hide();
+    this.audioSwitcherSegmentsButton.container.show();
 };
 
 /**
@@ -211,6 +246,9 @@ AudioListPanel.prototype.showFiles = function() {
  **/
 AudioListPanel.prototype.showSegments = function() {
     domElementsReplace(this.segmentWidgetNodes, this.contents);
+    this.mode = 'segments';
+    this.audioSwitcherSegmentsButton.container.hide();
+    this.audioSwitcherFilesButton.container.show();
 };
 
 

@@ -28,7 +28,7 @@ Button.prototype.init = function(params) {
         throw new Error('params.container is undefined');
     }
     else if(container.length == 0) {
-        throw new Error('container not found');
+        throw new Error('container not found for '+container.selector);
     }
     this.container = container;
 
