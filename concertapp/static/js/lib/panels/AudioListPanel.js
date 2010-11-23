@@ -23,6 +23,8 @@ AudioListPanel.prototype = new Panel();
 AudioListPanel.prototype.init = function(params) {
     Panel.prototype.init.call(this, params);
 
+    var container = this.container;
+    var header = this.header;
     
     var fileWidgetTemplate = params.fileWidgetTemplate;
     if(typeof(fileWidgetTemplate) == 'undefined') {
@@ -43,23 +45,16 @@ AudioListPanel.prototype.init = function(params) {
     }
     this.segmentWidgetTemplate = segmentWidgetTemplate;
     
+    /** Audio panel mode switcher buttons **/
+    /* These are probably going to be a different kind of button in the future */
+    var audioSwitcherSegmentsButton = new LargeIconButton({
+        container: header.children('#audiolist_switcher_segments_button')
+    });
+    var audioSwitcherFilesButton = new LargeIconButton({
+        container: header.children('#audiolist_switcher_files_button')
+    });
     
-    var audioSwitcherSegmentsButton = params.audioSwitcherSegmentsButton;
-    if(typeof(audioSwitcherSegmentsButton) == 'undefined') {
-        throw new Error('params.audioSwitcherSegmentsButton is undefined');
-    }
-    else if(audioSwitcherSegmentsButton.length == 0) {
-        throw new Error('audioSwitcherSegmentsButton not found');
-    }
     this.audioSwitcherSegmentsButton = audioSwitcherSegmentsButton;
-
-    var audioSwitcherFilesButton = params.audioSwitcherFilesButton;
-    if(typeof(audioSwitcherFilesButton) == 'undefined') {
-        throw new Error('params.audioSwitcherFilesButton is undefined');
-    }
-    else if(audioSwitcherFilesButton.length == 0) {
-        throw new Error('audioSwitcherFilesButton not found');
-    }
     this.audioSwitcherFilesButton = audioSwitcherFilesButton;
 
     

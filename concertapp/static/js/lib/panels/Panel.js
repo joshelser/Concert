@@ -34,14 +34,26 @@ Panel.prototype.init = function(params) {
     this.container = container;
     
     /* This is a reference to the panel's contents */
-    var contents = $(container).children('.panel_contents');
+    var contents = container.children('.panel_contents');
     if(typeof(contents) == 'undefined') {
-        throw new Error('contents is undefined for panel: '+container.id);
+        throw new Error('contents is undefined for panel: '+container.attr('id'));
     }
     else if(contents.length == 0) {
-        throw new Error('malformed HTML: contents not found for '+container.id);
+        throw new Error('malformed HTML: contents not found for '+container.attr('id'));
     }
     this.contents = contents;
+    
+    /* This is a reference to the div that contains the panel's header */
+    var header = container.children('.panel_header');
+    if(typeof(header) == 'undefined') {
+        throw new Error('header is undefined for panel '+container.attr('id'));
+    }
+    else if(header.length == 0) {
+        throw new Error('header not found for panel '+container.attr('id'));
+    }
+    this.header = header;
+
+    
 
     
 
