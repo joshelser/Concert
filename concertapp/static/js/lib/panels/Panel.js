@@ -54,10 +54,6 @@ Panel.prototype.init = function(params) {
     this.header = header;
 
     
-
-    
-
-    
     /* Get the loader element for this panel */
     var loader = container.children('.panel_loader');
     if(typeof(loader) == 'undefined' || loader.length == 0) {

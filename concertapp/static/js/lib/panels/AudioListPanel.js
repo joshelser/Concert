@@ -26,6 +26,19 @@ AudioListPanel.prototype.init = function(params) {
     var container = this.container;
     var header = this.header;
     
+    /* Get the two different headers */
+    var segmentsHeader = header.children('#segments_header');
+    var filesHeader = header.children('#files_header');
+    
+    if(typeof(segmentsHeader) == 'undefined' || segmentsHeader.length == 0) {
+        throw new Error('segmentsHeader not found: '+segmentsHeader.selector);
+    }
+    if(typeof(filesHeader) == 'undefined' || filesHeader.length == 0) {
+        throw new Error('filesHeader not found: '+filesHeader.selector);
+    }
+    this.segmentsHeader = segmentsHeader;
+    this.filesHeader = filesHeader;
+    
     var fileWidgetTemplate = params.fileWidgetTemplate;
     if(typeof(fileWidgetTemplate) == 'undefined') {
         throw new Error('params.fileWidgetTemplate is undefined');
@@ -234,6 +247,8 @@ AudioListPanel.prototype.showFiles = function() {
     this.mode = 'files';
     this.audioSwitcherFilesButton.container.hide();
     this.audioSwitcherSegmentsButton.container.show();
+    this.segmentsHeader.show();
+    this.filesHeader.hide();
 };
 
 /**
@@ -244,6 +259,8 @@ AudioListPanel.prototype.showSegments = function() {
     this.mode = 'segments';
     this.audioSwitcherSegmentsButton.container.hide();
     this.audioSwitcherFilesButton.container.show();
+    this.segmentsHeader.hide();
+    this.filesHeader.show();
 };
 
 
