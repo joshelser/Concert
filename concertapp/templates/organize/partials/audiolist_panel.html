@@ -2,5 +2,6 @@
 {% load buttons %}
 
 {% block header_content %}
+    <h3>{{ title }} <span id="segments_title">Segments</span><span id="files_title" class="hidden">Files</span></h3>
     {% large_icon_button 'Segments' 'audiolist_switcher' '#' 'Switch to segments' %}
 {% endblock %}

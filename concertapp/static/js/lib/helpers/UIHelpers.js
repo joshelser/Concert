@@ -76,3 +76,22 @@ function detectBrowserCompatibility() {
         notifier.alert({content: 'Site will not work.  Your browser does not support the HTML5 audio element.<br />Try upgrading your browser, or try installing one of these free modern browsers:<br /><a href="http://www.google.com/chromeframe">Chrome Frame for IE</a><br /><a href="http://www.google.com/chrome">Google Chrome</a><br /><a href="http://www.mozilla.com/firefox/upgrade.html">Mozilla Firefox</a>'});
     }
 }
+
+/**
+ *  Takes an array of DOM nodes, and a container.  It will replace all of the nodes
+ *  in the container with the given.
+ *
+ *  @param  nodes        Array  -   of DOM nodes to add to container
+ *  @param  container        jQuery DOM element  
+ **/
+function domElementsReplace(nodes, container) {
+    /* Empty container */
+    container.empty();
+    
+    /* Loop through all of the nodes, and add them to a fragment */
+    var frag = document.createDocumentFragment();
+    for(i = 0, il = nodes.length; i < il; i++) {
+        frag.appendChild(nodes[i]);
+    }
+    container.append(frag);    
+}

@@ -63,38 +63,32 @@ $(document).ready(function(){
     }; 
     
     /* Get upload button */
-    var uploadButtonContainer = $('#upload_button_container');
+    var uploadButtonContainer = $('#upload_button');
     /* If this page has an upload button */
     if(uploadButtonContainer.length) {
         /* Create UploadLinkLargeIconButton object */
         globalOptionsParams.uploadButton = new UploadLinkLargeIconButton({
             container: uploadButtonContainer, 
-            icon: $('#upload_button_icon'), 
-            label: $('#upload_button_label')
         });        
     }
     
     /* Get dashboard button */
-    var dashboardButtonContainer = $('#dashboard_button_container');
+    var dashboardButtonContainer = $('#dashboard_button');
     /* If this page has a dashboard button */
     if(dashboardButtonContainer.length) {
         /* Create dashboard button */
         globalOptionsParams.dashboardButton = new DashboardLinkLargeIconButton({
             container: dashboardButtonContainer,
-            icon: $('#dashboard_button_icon'),
-            label: $('#dashboard_button_label')
         });        
     }
     
     /* get settings button */
-    var settingsButtonContainer = $('#settings_button_container');
+    var settingsButtonContainer = $('#settings_button');
     /* if this page has a settings button */
     if(settingsButtonContainer.length) {
         /* Create settings Button */
         globalOptionsParams.settingsButton = new SettingsLinkLargeIconButton({
             container: settingsButtonContainer, 
-            icon: $('#settings_button_icon'), 
-            label: $('#settings_button_label'),
         });
     }
     

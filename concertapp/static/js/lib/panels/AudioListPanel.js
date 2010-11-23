@@ -161,9 +161,6 @@ AudioListPanel.prototype.processData = function(data) {
     this.segmentWidgetNodes = segmentWidgetNodes;
     
     
-    
-    
-    
     /* We will store our fileWidgets here indexed by audio id */
     var fileWidgets = [];
     
@@ -195,21 +192,26 @@ AudioListPanel.prototype.processData = function(data) {
     
     
     
-    
-    
-    
-    
-    
     this.audioData = audioData;
     this.segmentData = segmentData;
     
-    
-    /* Loop through all of the nodes, and add them to a fragment 
-        (This will soon be done in another function) */
-    var frag = document.createDocumentFragment();
-    for(i = 0, il = segmentWidgetNodes.length; i < il; i++) {
-        frag.appendChild(segmentWidgetNodes[i]);
-    }
-    this.container.append(frag);
+    /* Default is segments */
+    this.showSegments();
 };
+
+/**
+ *  Replace all nodes in contents container with fileWidgetNodes.
+ **/
+AudioListPanel.prototype.showFiles = function() {
+    domElementsReplace(this.fileWidgetNodes, this.contents);
+};
+
+/**
+ *  Replace all nodes in contents container with segmentWidgetNodes.
+ **/
+AudioListPanel.prototype.showSegments = function() {
+    domElementsReplace(this.segmentWidgetNodes, this.contents);
+};
+
+
 

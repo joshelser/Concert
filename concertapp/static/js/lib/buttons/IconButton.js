@@ -18,22 +18,19 @@ IconButton.prototype = new Button();
 IconButton.prototype.init = function(params) {
     Button.prototype.init.call(this, params);
 
-    /* A label for the button is optional */
-    var label = params.label;
-    if(typeof(label) != 'undefined' && label.length) {
-        /* If there is a label */
-        this.label = label;
-    }
+    var container = this.container;
     
-    /* There will always be an icon */
-    var icon = params.icon;
-    if(typeof(icon) == 'undefined') {
-        throw new Error('params.icon is undefined');
+    /* Get label and icon by traversing from container */
+    var label = container.children('.large-icon-button-label');
+    if(typeof(label) == 'undefined' || label.length == 0) {
+        throw new Error('label not found for '+container.attr('id'));
     }
-    else if(icon.length == 0) {
-        throw new Error('icon not found');
+    this.label = label;
+    
+    var icon = container.children('.large-icon-button-icon');
+    if(typeof(icon) == 'undefined' || icon.length == 0) {
+        throw new Error('icon not found for '+container.attr('id'));
     }
     this.icon = icon;
-
     
 }
