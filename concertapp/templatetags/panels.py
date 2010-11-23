@@ -19,7 +19,7 @@ def panel(title, id):
 #   This is a partial template for the audiolist panel.  No extra functionality 
 #   is needed in this partial controller, so we just pass args along to the parent 
 #   template partial controller.
-@register.inclusion_tag('partials/audiolist_panel.html')
+@register.inclusion_tag('organize/partials/audiolist_panel.html')
 def audiolist_panel(title, id):
     return panel(title, id)
 
