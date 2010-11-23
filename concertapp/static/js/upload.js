@@ -11,7 +11,7 @@ function initializeUploadPage() {
      *  Create UploadPanel
      **/
     var uploadPanel = new UploadPanel({
-        container: $('#upload_panel_container'), 
+        container: $('#upload_audio_panel'), 
         fileChooserContainer: $('#choose_file_container'), 
         fileChooserTemplate: $('#file_chooser_template'), 
         uploadFormElement: $('#server_upload_form'),

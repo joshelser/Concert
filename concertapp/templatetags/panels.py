@@ -49,5 +49,10 @@ def global_options_panel(title, id, page_name, user):
     dataForTemplate['user'] = user
     
     return dataForTemplate
-    
+
+###
+#   partial for upload_audio_panel
+@register.inclusion_tag('audio/partials/upload_audio_panel.html')
+def upload_audio_panel(title, id):
+    return panel(title, id)
 
