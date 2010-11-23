@@ -26,10 +26,10 @@ Panel.prototype.init = function(params) {
     
     var container = params.container;
     if(typeof(container) == 'undefined') {
-        throw new Error('params.container is undefined');
+        throw new Error('params.container is undefined for '+container.selector);
     }
     else if(container.length == 0) {
-        throw new Error('container not found');
+        throw new Error('container not found: '+container.selector);
     }
     this.container = container;
     

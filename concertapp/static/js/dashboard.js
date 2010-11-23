@@ -5,5 +5,4 @@
  **/
  
 function initializeDashboardPage() {
-    console.log('Dashboard page initialized.');
 }

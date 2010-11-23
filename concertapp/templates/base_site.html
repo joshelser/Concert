@@ -52,14 +52,19 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/panels/UploadPanel.js"></script>
     <script src="/js/lib/panels/WaveformViewerPanel.js"></script>
     <script src="/js/lib/panels/AudioListPanel.js"></script>
+    
+    <script src="/js/lib/pages/Page.js"></script>
+    <script src="/js/lib/pages/LoggedInPage.js"></script>
+    <script src="/js/lib/pages/DashboardPage.js"></script>
 
       
     <script src="/js/organize.js"></script>
     <script src="/js/dashboard.js"></script>    
-    <script src="/js/login.js"></script>    
     <script src="/js/collections.js"></script>    
     <script src="/js/upload.js"></script>    
+
     <script src="/js/global.js"></script>
+    <script src="/js/init.js"></script>
 
 </head>
 <body>
@@ -91,18 +96,20 @@ The base template for all pages.  All page templates will use this.
         {% global_options_panel 'Concert' 'global_options' page_name user %}
     {% endif %}
     
-    {% block content %}
-
+    {% block content %}{% endblock %}
     
-    {% endblock %}
-    
+    {# Some client-side templates that are used on most pages #}
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
         {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
-    <script>
-        var pagePath = '{{ js_page_path }}'
-    </script>
+    {# Send variable to javascript with recognizable path so we know what page we're on #}
+    {% if js_page_path %}
+        <script>
+            {# Initialize the page with our current page path #}
+            initializeEverything({{ js_page_path }});
+        </script>
+    {% endif %}
     
 </body>
 </html>
