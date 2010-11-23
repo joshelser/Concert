@@ -62,6 +62,11 @@ $(document).ready(function(){
         collectionSelectorOptionsTemplate: $('#collection_dropdown_options')
     }; 
     
+    /**
+     *  TODO: Move the creation of these buttons into the global options panel
+     *  constructor.
+     **/
+    
     /* Get upload button */
     var uploadButtonContainer = $('#upload_button');
     /* If this page has an upload button */
