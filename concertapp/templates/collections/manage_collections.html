@@ -26,8 +26,10 @@
 
 {#  an auto complete result when searching for a group #}
 <script id="create_join_result" type="text/x-jquery-tmpl">
-    <div class="create-join-result" id="create_join_result-${id}">
-        ${name}
+    <div class="create-join-result table-row" id="create_join_result-${id}">
+        <div class="collection_name-${id}" class="collection_name table-cell">${name}</div>
+        <div id="collection_join_button-${id}" class="collection_join_button table-cell">Join</div>
+        <div id="collection_info_button-${id}" class="collection_info_button-${id} table-cell">Info</div>
     </div>
 </script>
 

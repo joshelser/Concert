@@ -22,8 +22,6 @@ from django.core.exceptions import ObjectDoesNotExist
 @login_required
 def manage_collections(request):
     user = request.user
-    
-    
 
     return render_to_response('collections/manage_collections.html', {
         'page_name': 'Collections',

@@ -106,7 +106,7 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
                     
                     me.toggleLoadingNotification();
                     me.lastCreateJoinXhr = $.getJSON(
-                        'search/'+term, 
+                        'search/'+term+'/', 
                         {}, 
                         function(data, status, xhr) {
                             /* If this was the last request made (ignore previous) */
