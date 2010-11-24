@@ -57,6 +57,10 @@ figure img {width: 100%;}
 	font-size: 1.5em;
 }
 
+h3 {
+    font-size: 1.4em;
+}
+
 .normal, body {
 	font: 12px 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;;
 }
@@ -143,27 +147,9 @@ body {
 /**
  *  Page Header
  **/
-header.page_header {
-    width: 100%;
-}
-aside.page_header_left {
-    float: left;
-    width: 20%;
-}
-nav.page_header_middle {
-    float: left;
-    width: 60%;
-    text-align: center;
-}
-nav.page_header_right {
-    float: right;
-    width: 20%;
-    text-align: right;
-}
-
 div#global_options_panel {
     width: 100%;
-    margin-top: 0.2em;
+    margin-top: 0;
 }
 
 div#global_options_panel_header {
@@ -187,10 +173,11 @@ div.global_options_panel_button {
     margin-left: 0.5em;
 }
 
+
+
 /**
  *  Page-specific layout
  **/
-
 
 /* Settings Page */
 div.create_join_panel {
@@ -297,8 +284,10 @@ div.panel {
     
     /* Default height and width values (for testing) */
     height: 120px;
-    
+    /* Every panel has a padding of 1em */
     padding: 1em;
+    /* And a margin of -2em to offset this padding 
+        (padding does not affect size of block element) */
     margin: -2em;
     
 }
@@ -330,12 +319,11 @@ div.panel_loader_enabled {
 }
 
 /**
- *  A panel that is docked to the left side of the screen
+ *  A panel that is docked to the left, right or bottom side of the screen
  **/
 div.left_panel {
     float: left;
 }
-
 div.right_panel {
     float: right;
 }
