@@ -1,12 +1,19 @@
 /**
- *  @file       collections.js
- *  All functionality associated with collections page.
+ *  @file       CollectionsPage.js
+ *  Initialize all stuff needed on the collections page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
-function initializeCollectionsPage(params) {
-    
-    
+function CollectionsPage(params) {
+    if(params) {
+        this.init(params);
+    }
+}
+CollectionsPage.prototype = new LoggedInPage();
+
+CollectionsPage.prototype.init = function(params) {
+    LoggedInPage.prototype.init.call(this, params);
+
     /**
      *  Create "create/join collection panel"
      **/
@@ -28,12 +35,9 @@ function initializeCollectionsPage(params) {
     
     /** Connect panels **/
     createJoinCollectionPanel.manageCollectionsPanel = manageCollectionsPanel;
-    manageCollectionsPanel.globalOptionsPanel = params.globalOptionsPanel;
+    manageCollectionsPanel.globalOptionsPanel = this.globalOptionsPanel;
     
     /* Retrieve collections to manage */
     manageCollectionsPanel.retrieveAndUpdateCollections();
     
-        
 }
-
-

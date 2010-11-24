@@ -41,12 +41,14 @@ function initializeEverything(pagePath) {
             '/dashboard/': function() {
                 return new DashboardPage({});
             },
-            '/collections/': initializeCollectionsPage,
+            '/collections/': function() {
+                return new CollectionsPage({});
+            },
             '/audio/upload/': initializeUploadPage,
             '/organize/collection/': initializeOrganizePage
         };
 
         /* Run the initializer function for this page. */
-        pageInitializers[pagePath]();
+        var page = pageInitializers[pagePath]();
     });
 }
