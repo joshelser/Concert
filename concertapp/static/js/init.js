@@ -44,7 +44,9 @@ function initializeEverything(pagePath) {
             '/collections/': function() {
                 return new CollectionsPage({});
             },
-            '/audio/upload/': initializeUploadPage,
+            '/audio/upload/': function() {
+                return new UploadPage({});
+            },
             '/organize/collection/': initializeOrganizePage
         };
 

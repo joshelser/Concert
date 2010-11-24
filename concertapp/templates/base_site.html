@@ -57,10 +57,10 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/pages/LoggedInPage.js"></script>
     <script src="/js/lib/pages/DashboardPage.js"></script>
     <script src="/js/lib/pages/CollectionsPage.js"></script>
+    <script src="/js/lib/pages/UploadPage.js"></script>
 
       
     <script src="/js/organize.js"></script>
-    <script src="/js/upload.js"></script>    
 
     <script src="/js/global.js"></script>
     <script src="/js/init.js"></script>
@@ -106,7 +106,7 @@ The base template for all pages.  All page templates will use this.
     {% if js_page_path %}
         <script>
             {# Initialize the page with our current page path #}
-            initializeEverything({{ js_page_path }});
+            initializeEverything('{{ js_page_path }}');
         </script>
     {% endif %}
     

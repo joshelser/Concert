@@ -24,6 +24,7 @@ CollectionsPage.prototype.init = function(params) {
         resultTemplate: $('#create_join_result'),
         createNewTemplate: $('#create_join_create_new')
     });
+    this.createJoinCollectionPanel = createJoinCollectionPanel;
     
     /**
      *  "ManageCollectionsPanel"
@@ -32,6 +33,7 @@ CollectionsPage.prototype.init = function(params) {
         container: $('#manage_collections_panel'), 
         collectionTemplate: $('#collection_template')
     });
+    this.manageCollectionsPanel = manageCollectionsPanel;
     
     /** Connect panels **/
     createJoinCollectionPanel.manageCollectionsPanel = manageCollectionsPanel;
