@@ -23,8 +23,7 @@
         {% if page_name != 'Dashboard' %}
             {% large_icon_button 'Dashboard' 'dashboard' '/dashboard/' '' 'global_options_panel_button' %}
         {% endif %}
-    
-    
+
         {% if page_name  != 'Collections' %}
             {% large_icon_button 'Settings' 'settings' '/collections/' 'Manage collections, connect with friends' 'global_options_panel_button' %}
         {% endif %}
@@ -33,9 +32,12 @@
             {% large_icon_button 'Upload Audio' 'upload' '/audio/upload' 'Upload audio to a collection' 'global_options_panel_button' %}
         {% endif %}
         
+        <div class="logout_info">
+            Logged in as {{user.username}}.  <a href="/logout">Logout</a>
+        </div>
+
         <div class="clear"></div>
         
-        <a href="/logout">Logout</a>       
     
     </div>
     <div class="clear"></div>
