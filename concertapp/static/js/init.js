@@ -47,7 +47,9 @@ function initializeUI(pagePath) {
             '/audio/upload/': function() {
                 return new UploadPage({});
             },
-            '/organize/collection/': initializeOrganizePage
+            '/organize/collection/': function() {
+                return new OrganizePage({});
+            }
         };
 
         /* Run the initializer function for this page. */
