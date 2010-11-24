@@ -163,6 +163,7 @@ nav.page_header_right {
 
 div#global_options_panel {
     width: 100%;
+    margin-top: 0.2em;
 }
 
 div#global_options_panel_header {
@@ -192,6 +193,15 @@ div.global_options_panel_button {
 
 
 /* Settings Page */
+div.create_join_panel {
+    width: 70%;
+}
+div.social_panel {
+    width: 30%;
+}
+div.manage_collections_panel {
+    width: 100%;
+}
 
 
 /**
@@ -287,7 +297,9 @@ div.panel {
     
     /* Default height and width values (for testing) */
     height: 120px;
-    width: 720px;
+    
+    padding: 1em;
+    margin: -2em;
     
 }
 
@@ -315,6 +327,20 @@ div.panel_loader_notification {
 div.panel_loader_enabled {
     opacity: 0.7;
     z-index: 9999;
+}
+
+/**
+ *  A panel that is docked to the left side of the screen
+ **/
+div.left_panel {
+    float: left;
+}
+
+div.right_panel {
+    float: right;
+}
+div.bottom_panel {
+    clear: both;
 }
 
 
