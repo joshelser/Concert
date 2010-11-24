@@ -15,9 +15,10 @@ register = template.Library()
 #                       tag.
 #   @param  title        String  -  The title that will be displayed in a tooltip
 @register.inclusion_tag('partials/large_icon_button.html')
-def large_icon_button(label, id, href=None, title=None):
+def large_icon_button(label, id, href=None, title=None, extra_classes=None):
     return {
         'label': label, 
         'id': id, 
         'href': href, 
+        'extra_classes': extra_classes, 
     }
