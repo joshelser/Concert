@@ -246,8 +246,8 @@ AudioListPanel.prototype.showFiles = function() {
     this.mode = 'files';
     this.audioSwitcherFilesButton.container.hide();
     this.audioSwitcherSegmentsButton.container.show();
-    this.segmentsHeader.show();
-    this.filesHeader.hide();
+    this.segmentsHeader.hide();
+    this.filesHeader.show();
 };
 
 /**
@@ -258,8 +258,8 @@ AudioListPanel.prototype.showSegments = function() {
     this.mode = 'segments';
     this.audioSwitcherSegmentsButton.container.hide();
     this.audioSwitcherFilesButton.container.show();
-    this.segmentsHeader.hide();
-    this.filesHeader.show();
+    this.segmentsHeader.show();
+    this.filesHeader.hide();
 };
 
 
