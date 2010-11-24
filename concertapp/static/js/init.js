@@ -14,7 +14,7 @@
  *  use to determine what page we are on.  This variable is sent in on 
  *  base_site.html template.
  **/
-function initializeEverything(pagePath) {
+function initializeUI(pagePath) {
     $(document).ready(function(){
         /* Make all fields in the future that have the "autoClear" class on them    
             autoclear */
