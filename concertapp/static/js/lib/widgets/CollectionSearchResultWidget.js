@@ -1,9 +1,12 @@
 /**
  *  @file       CollectionSearchResultWidget.js
- *  This widget is displayed for each collection in a collection search result.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
+/**
+ *  This widget is displayed for each collection in a collection search result.
+ *  @class 
+ **/
 function CollectionSearchResultWidget(params) {
     if(params) {
         this.init(params);
