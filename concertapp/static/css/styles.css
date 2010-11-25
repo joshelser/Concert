@@ -190,6 +190,15 @@ div.manage_collections_panel {
     width: 100%;
 }
 
+div.create_join_widget {
+    width: 50%;
+    float: left;
+}
+div.collection_info_widget_container {
+    width: 50%;
+    float: left;
+}
+
 
 /**
  *  Buttons

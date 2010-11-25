@@ -147,5 +147,31 @@ def user_collections(request):
         content_type = 'application/json'
     )
     
+###
+#   Retrieve a JSON object of the info associated with a collection
+@login_required
+def collection_info(request, collection_id):
+    user = request.user
     
+    # Get collection
+    collection = Collection.objects.get(pk = collection_id)
+    
+    # Create object to serialize 
+    result = {
+        'id': collection.id, 
+        'name': collection.name, 
+        'users': [], 
+    }
+    # Build user data into object
+    for user in collection.users.all():
+        result['users'].append({
+            'id': user.id, 
+            'username': user.username, 
+        })
+        
+    #   Serialize results into JSON response        
+    return HttpResponse(
+        simplejson.dumps(result),
+        content_type = 'application/json'
+    )
     

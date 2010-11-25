@@ -28,4 +28,6 @@ urlpatterns = patterns('concertapp.collection.views',
     ###
     # Search collections
     url(r'^search/(?P<query>.+)/$', 'search_collections', name='search_collections'),
+    # Info for collection
+    url(r'^info/(?P<collection_id>\d+)/$', 'collection_info', name='collection_info'),
 )
