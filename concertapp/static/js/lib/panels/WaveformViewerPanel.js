@@ -1,10 +1,14 @@
 /**
  *  @file       WaveformViewerPanel.js
- *  This is the smaller waveform panel, which will be at the top underneath the 
- *  options bar on the "organization" page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  This is the smaller waveform panel, which will be at the top underneath the 
+ *  options bar on the "organization" page.
+ *	@class
+ **/
 function WaveformViewerPanel(params) {
     if(params) {
         this.init(params);

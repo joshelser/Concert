@@ -1,9 +1,13 @@
 /**
  *  @file       ConfirmModalAlert.js
- *  A subclass of ModalAlert, when a confirmation is needed.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  A subclass of ModalAlert, when a confirmation is needed.
+ *	@class
  **/
- 
 function ConfirmModalAlert(params) {
     if(params) {
         this.init(params);

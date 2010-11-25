@@ -1,9 +1,13 @@
 /**
  *  @file       CollectionInfoWidget.js
- *  This is a widget that shows the information about a collection.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  This is a widget that shows the information about a collection.
+ *	@class
+ **/
 function CollectionInfoWidget(params) {
     if(params) {
         this.init(params);

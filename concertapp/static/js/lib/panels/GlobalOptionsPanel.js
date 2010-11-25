@@ -1,9 +1,13 @@
 /**
  *  @file       GlobalOptionsPanel.js
- *  The panel on the top of every page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  The panel on the top of every page.
+ *	@class
  **/
- 
 function GlobalOptionsPanel(params) {
     if(params) {
         this.init(params);

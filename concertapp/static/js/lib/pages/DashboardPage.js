@@ -1,9 +1,13 @@
 /**
  *  @file       DashboardPage.js
- *  Functionality associated with the dashboard page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  Functionality associated with the dashboard page.
+ *	@class
  **/
- 
 function DashboardPage(params) {
     if(params) {
         this.init(params);

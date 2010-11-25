@@ -1,9 +1,13 @@
 /**
  *  @file       UploadPanel.js
- *  The panel that contains the upload form for the user to upload multiple files.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  The panel that contains the upload form for the user to upload multiple files.
+ *	@class
  **/
- 
 function UploadPanel(params) {
     if(params) {
         this.init(params);

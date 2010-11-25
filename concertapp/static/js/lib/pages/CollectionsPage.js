@@ -1,9 +1,13 @@
 /**
  *  @file       CollectionsPage.js
- *  Initialize all stuff needed on the collections page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  Initialize all stuff needed on the collections page.
+ *	@class
  **/
- 
 function CollectionsPage(params) {
     if(params) {
         this.init(params);

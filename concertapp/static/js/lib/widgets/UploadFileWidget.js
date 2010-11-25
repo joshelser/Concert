@@ -1,10 +1,14 @@
 /**
  *  @file       UploadFileWidget.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  The widget that represents a file in the list of files the user has selected for
  *  uploading.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function UploadFileWidget(params) {
     if(params) {
         this.init(params);

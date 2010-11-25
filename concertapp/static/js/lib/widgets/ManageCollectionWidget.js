@@ -1,11 +1,15 @@
 /**
  *  @file       ManageCollectionWidget.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  A collection widget is a widget that is displayed in a collections list.  It
  *  has information about the collection, as well as options to delete or leave
  *  the collection.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function ManageCollectionWidget(params) {
     if(params) {
         this.init(params);

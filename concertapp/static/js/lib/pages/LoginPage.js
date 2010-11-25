@@ -1,9 +1,13 @@
 /**
  *  @file       LoginPage.js
- *  This is the functionality that runs on the login page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  This is the functionality that runs on the login page.
+ *	@class
  **/
- 
 function LoginPage(params) {
     if(params) {
         this.init(params);

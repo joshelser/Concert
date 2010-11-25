@@ -1,9 +1,13 @@
 /**
  *  @file       Widget.js
- *  This contains general stuff that needs to take place for any widget on the UI.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  This contains general stuff that needs to take place for any widget on the UI.
+ *	@class
+ **/
 function Widget(params) {
     if(params) {
         this.init(params);

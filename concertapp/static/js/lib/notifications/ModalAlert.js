@@ -1,13 +1,17 @@
 /**
  *  @file       ModalAlert.js
+ *  @author Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  A ModalAlert object is a "window" that pops up to alert the user.  Any content
  *  can be injected into this window.  The intent is for only one of these objects
  *  to be instantiated ever, but I suppose you could have multiple ModalAlert objects
  *  if you wanted to.
  *
- *  @author Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function ModalAlert(params) {
     if(params) {
         this.init(params);

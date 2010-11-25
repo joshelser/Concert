@@ -1,10 +1,14 @@
 /**
 *  @file       CreateJoinCollectionPanel.js
+*  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/
+
+
+/**
 *  This is the panel that allows a user to create or join a group on the settings
 *  page.
-*  @author     Colin Sullivan <colinsul [at] gmail.com>
-**/
-
+ *	@class
+ **/
 function CreateJoinCollectionPanel(params) {
     if(params) {
         this.init(params);

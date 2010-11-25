@@ -1,9 +1,13 @@
 /**
  *  @file       OrganizePage.js
- *  The panels and widgets for the organize page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  The panels and widgets for the organize page.
+ *	@class
  **/
- 
 function OrganizePage(params) {
     if(params) {
         this.init(params);

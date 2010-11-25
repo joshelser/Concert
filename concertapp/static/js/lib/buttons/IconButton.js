@@ -1,10 +1,14 @@
 /**
  *  @file       IconButton.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  This is a class for a button with an icon.  This is subclassed into 
  *  SmallIconButton and LargeIconButton.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function IconButton(params) {
     if(params) {
         this.init(params);

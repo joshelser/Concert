@@ -1,9 +1,13 @@
 /**
  *  @file       UploadPage.js
- *  All of the panels associated with the Upload Page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  All of the panels associated with the Upload Page.
+ *	@class
+ **/
 function UploadPage(params) {
     if(params) {
         this.init(params);

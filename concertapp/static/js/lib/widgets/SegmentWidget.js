@@ -1,9 +1,13 @@
 /**
  *  @file       SegmentWidget.js
- *  This is the widget associated with an audio segment on the organize page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  This is the widget associated with an audio segment on the organize page.
+ *	@class
+ **/
 function SegmentWidget(params) {
     if(params) {
         this.init(params);

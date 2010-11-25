@@ -1,9 +1,13 @@
 /**
  *  @file       ManageCollectionsPanel.js
- *  Panel that lists collections for the user to manage.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  Panel that lists collections for the user to manage.
+ *	@class
+ **/
 function ManageCollectionsPanel(params) {
     if(params) {
         this.init(params);

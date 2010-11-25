@@ -1,10 +1,14 @@
 /**
  *  @file       Button.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  All buttons will inherit from this class.  Contains functionality that is
  *  necessary for all buttons.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function Button(params) {
     if(params) {
         this.init(params);
