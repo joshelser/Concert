@@ -13,7 +13,9 @@ CollectionSearchResultWidget.prototype = new Widget();
 
 CollectionSearchResultWidget.prototype.init = function(params) {
     Widget.prototype.init.call(this, params);
-
+    
+    var container = this.container;
+    
     var collectionInfoWidgetContainer = $('#collection_info_widget_container');
     if(collectionInfoWidgetContainer.length == 0) {
         throw new Error('collectionInfoWidgetContainer not found at: '+collectionInfoWidgetContainer.selector);
@@ -31,12 +33,54 @@ CollectionSearchResultWidget.prototype.init = function(params) {
     
     
     /* When the 'info' button is clicked, create a new Collection info widget */
-    this.container.children('.collection_info_button').click(function(me){
+    container.children('.collection_info_button').click(function(me){
         return function() {
             me.showCollectionInfo();
         };
     }(this));
+    
+    /* When the 'join' button is clicked, join this collection */
+    container.children('.collection_join_button').click(function(me){
+        return function() {
+            me.joinCollection();
+        };
+    }(this));
 }
+
+
+/**
+ *  Here we will join the collection.  This will happen when the user presses the
+ *  join button.
+ **/
+CollectionSearchResultWidget.prototype.joinCollection = function() {
+    var id = this.id;
+    
+    this.panel.toggleLoadingNotification();
+    $.ajax({
+        url: 'join/'+id, 
+        success: function(me) {
+            return function(data, status) {
+                if(data == 'success') {
+                    // TODO: Remove these strings and handle this much better.
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Success!', 
+                        content: 'Your request to join this collection has been submitted.', 
+                    });
+                    me.panel.toggleLoadingNotification();
+                }
+                else {
+                    // TODO: Handle this error better
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Error', 
+                        content: 'ERROR', 
+                    });
+                }
+            }
+        }(this)
+    });
+};
+
+
 
 /**
  *  This function should be called when the info button is clicked on the widget.

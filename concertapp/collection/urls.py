@@ -24,10 +24,12 @@ urlpatterns = patterns('concertapp.collection.views',
     url(r'^user/$', 'user_collections', name='user_collections'),
     
     ###
-    #   JSON
+    #   JSON/AJAX
     ###
     # Search collections
     url(r'^search/(?P<query>.+)/$', 'search_collections', name='search_collections'),
     # Info for collection
     url(r'^info/(?P<collection_id>\d+)/$', 'collection_info', name='collection_info'),
+    # User joins collection
+    url(r'^join/(?P<collection_id>\d+)/$', 'join_collection', name='join_collection'),
 )

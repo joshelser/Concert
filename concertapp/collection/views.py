@@ -175,3 +175,29 @@ def collection_info(request, collection_id):
         content_type = 'application/json'
     )
     
+###
+#   User sends a collection join request
+@login_required
+def join_collection(request, collection_id):
+    user = request.user
+    
+    collection = Collection.objects.get(pk = collection_id)
+    
+    # Wether or not we will return a generic error
+    error = False
+    
+    # If user is already a member
+    if user in collection.users.all():
+        error = True
+    # If user has already requested to join this group
+    elif collection in user.get_profile().collection_join_requests.all():
+        error = True
+    # we can add a request for this user
+    else:
+        user.get_profile().collection_join_requests.add(collection)
+    
+    if error:
+        return HttpResponse('error', content_type='text/plain')
+    else:
+        return HttpResponse('success', content_type='text/plain')
+    
