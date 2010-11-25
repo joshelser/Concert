@@ -14,34 +14,6 @@ def panel(title, id):
         'title': title, 
         'id': id, 
     }
-    
-###
-#   This is a partial for a panel that displays on the left of the screen
-@register.inclusion_tag('partials/left_panel.html')
-def left_panel(title, id):
-    return {
-        'title': title, 
-        'id': id, 
-    }
-    
-###
-#   This is a partial for a right side panel
-@register.inclusion_tag('partials/right_panel.html')
-def right_panel(title, id):
-    return {
-        'title': title, 
-        'id': id, 
-    }
-
-###
-#   This is a partial for a bottom panel
-@register.inclusion_tag('partials/bottom_panel.html')
-def bottom_panel(title, id):
-    return {
-        'title': title, 
-        'id': id, 
-    }
-
 
 
 ###
@@ -57,25 +29,19 @@ def audiolist_panel(title, id):
 #   partial for create_join_collection panel on the settings page.
 @register.inclusion_tag('collections/partials/create_join_collection_panel.html')
 def create_join_collection_panel(title, id):
-    return left_panel(title, id)
+    return panel(title, id)
 
 ###
 #   partial for manage_collections panel on the settings page.
 @register.inclusion_tag('collections/partials/manage_collections_panel.html')
 def manage_collections_panel(title, id):
-    return bottom_panel(title, id)
+    return panel(title, id)
 
 ###
 #   partial for social panel on the settings page.
 @register.inclusion_tag('collections/partials/social_panel.html')
 def social_panel(title, id):
-    return right_panel(title, id)
-
-###
-#   partial for social panel on the settings page.
-@register.inclusion_tag('collections/partials/social_panel.html')
-def social_panel(title, id):
-    return right_panel(title, id)
+    return panel(title, id)
 
 
 ###

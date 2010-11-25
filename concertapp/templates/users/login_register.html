@@ -1,14 +1,7 @@
 {% extends 'base_site.html' %}
 
-{% block content %}
 
-<div id="page_header">
-    <div class="page_header_left">
-        <h1>Concert</h1>
-        <h2>Login</h2>
-    </div>    
-    <div class="clear"></div>
-</div>
+{% block middle %}
 
 {% if login_form.errors %}
 <p class = 'error'>Your username and password didn't match. Please try again.</p>
@@ -32,7 +25,9 @@
   <input type="submit" value="Register" />
 </form>
 
+{% endblock %}
 
+{% block clientside %}
 <script>
     {# Initialize the login page.  We need this here instead of in base #}
     {#  because we aren't our own controller for this page. #}

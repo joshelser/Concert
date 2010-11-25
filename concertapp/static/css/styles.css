@@ -145,6 +145,26 @@ body {
 
 
 /**
+ *  Page layout
+ **/
+div.layout {
+    display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+div.layout_top {
+    width: 100%;
+}
+div.layout_middle {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+div.layout_bottom {
+    width: 100%;
+}
+
+
+/**
  *  Panels
  **/
 
@@ -190,45 +210,45 @@ div.panel_loader_enabled {
     z-index: 9999;
 }
 
-/**
- *  A panel that is docked to the left, right or bottom side of the screen
- **/
-div.left_panel {
-    float: left;
-}
-div.right_panel {
-    float: right;
-}
-div.bottom_panel {
-    clear: both;
-}
-
 
 /**
- *  Page Header
+ *  Page Header.  We use the CSS3 box layout here, for more info:
+ *  http://hacks.mozilla.org/2010/04/the-css-3-flexible-box-model/
+ *  http://www.w3.org/TR/css3-box/#types
  **/
 div#global_options_panel {
     width: 100%;
     margin-top: 0;
+    -webkit-box-orient: horizontal;
+    display: -webkit-box;
 }
 
-div#global_options_panel_header {
-    width: 33%;
-    float: left;
+div#global_options_panel_contents {
+    width: 100%;
+    /* The three sections of this panel are horizontal */
+    -webkit-box-orient: horizontal;
+    /* CSS3 awesomeness (will need to remove the -webkit when this is standard) */
+    display: -webkit-box;
 }
 
+div#global_options_panel_left {
+    /* Flex makes sure the box will take 1/3 of the container */
+    -webkit-box-flex: 1;
+}
 div#global_options_panel_middle {
-    width: 33%;
-    float: left;
+    text-align: center;
+    -webkit-box-flex: 1;
 }
 
 div#global_options_panel_right {
-    width: 33%;
-    float: left;
+    -webkit-box-flex: 1;
+    
+    /* Contents (buttons) will also be horizontally spread using the box model */
+    -webkit-box-orient: horizontal;
+    display: -webkit-box;
 }
 
 div.global_options_panel_button {
-    float: left;
     margin-right: 0.5em;
     margin-left: 0.5em;
 }
@@ -241,22 +261,17 @@ div.global_options_panel_button {
 
 /* Settings Page */
 div.create_join_panel {
-    width: 70%;
+    -webkit-box-flex: 4;
 }
 div.social_panel {
-    width: 30%;
+    -webkit-box-flex: 1;
 }
 div.manage_collections_panel {
-    width: 100%;
 }
 
 div.create_join_widget {
-    width: 50%;
-    float: left;
 }
 div.collection_info_widget_container {
-    width: 50%;
-    float: left;
 }
 
 

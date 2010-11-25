@@ -3,11 +3,13 @@
 {% load buttons %}
 
 {% block header_content %}
-    <h1>Concert</h1>
-    <h2>{{ page_name }}</h2>
 {% endblock %}
 
 {% block panel_content %}
+    <div id="global_options_panel_left">
+        <h1>Concert</h1>
+        <h2>{{ page_name }}</h2>
+    </div>
     <div id="global_options_panel_middle">
         <label for="collection_selector">Organize:</label>
         <select id="collection_selector" class="collection_selector">
@@ -36,9 +38,5 @@
             Logged in as {{user.username}}.  <a href="/logout">Logout</a>
         </div>
 
-        <div class="clear"></div>
-        
-    
     </div>
-    <div class="clear"></div>
 {% endblock %}

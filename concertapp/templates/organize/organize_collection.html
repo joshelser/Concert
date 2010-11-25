@@ -1,41 +1,43 @@
 {% extends 'base_site.html' %}
 {% load extra_template_tags %}
 {% load panels %}
-{% block content %}
 
 {% comment %}
     @file   organize_collection.html
     This is the template for the organize page.    
 {% endcomment %}
 
+{% block middle %}
+    <div id="organize_layout" class="organize_layout">
+        {#  We have a waveform viewer panel #}
+        {% panel 'Waveform Viewer' 'waveform_viewer' %}
 
-{#  We have a waveform viewer panel #}
-{% panel 'Waveform Viewer' 'waveform_viewer' %}
-
-{# and an audio list panel #}
-{% audiolist_panel 'Audio' 'audio_list' %}
-
-
-{# and some client-side templates #}
-<script id="file_widget_template" type="text/x-jquery-tmpl">
-    {% include_raw '../templates/clientside/file_widget.html' %}
-</script>
-
-
-<script id="segment_widget_template" type="text/x-jquery-tmpl">
-    <div id="segment_widget-${id}" class="segment_widget">
-        <div id="segment_name-${id}" class="segment_name-${id}">
-            ${name}
-        </div>
-        <div id="segment_creator-${id}" class="segment_creator">
-            by ${creator.username}
-        </div>
-        <div id="segment_audio-${id}" class="segment_audio">
-            from: <span id="segment_audio_name-${id}" class="segment_audio_name">
-                ${audio.name}
-            </span>
-        </div>
+        {# and an audio list panel #}
+        {% audiolist_panel 'Audio' 'audio_list' %}
     </div>
-</script>
+{% endblock %}
+
+{% block clientside %}
+    {# and some client-side templates #}
+    <script id="file_widget_template" type="text/x-jquery-tmpl">
+        {% include_raw '../templates/clientside/file_widget.html' %}
+    </script>
+
+
+    <script id="segment_widget_template" type="text/x-jquery-tmpl">
+        <div id="segment_widget-${id}" class="segment_widget">
+            <div id="segment_name-${id}" class="segment_name-${id}">
+                ${name}
+            </div>
+            <div id="segment_creator-${id}" class="segment_creator">
+                by ${creator.username}
+            </div>
+            <div id="segment_audio-${id}" class="segment_audio">
+                from: <span id="segment_audio_name-${id}" class="segment_audio_name">
+                    ${audio.name}
+                </span>
+            </div>
+        </div>
+    </script>
 
 {% endblock %}

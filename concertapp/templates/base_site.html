@@ -61,6 +61,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/pages/CollectionsPage.js"></script>
     <script src="/js/lib/pages/UploadPage.js"></script>
     <script src="/js/lib/pages/OrganizePage.js"></script>
+    <script src="/js/lib/pages/LoginPage.js"></script>
 
       
     <script src="/js/global.js"></script>
@@ -92,12 +93,26 @@ The base template for all pages.  All page templates will use this.
         </div>
     </div>
     
-    {% if user.is_authenticated %}
-        {% global_options_panel 'Concert' 'global_options' page_name user %}
-    {% endif %}
+    <div id="layout" class="layout">
+        <div id="layout_top" class="layout_top">
+            {% if user.is_authenticated %}
+                {% global_options_panel 'Concert' 'global_options' page_name user %}
+            {% else %}
+                <h1>Concert</h1>
+                <h2>Login</h2>
+            {% endif %}
+        </div>
+
+        <div id="layout_middle" class="layout_middle">
+            {% block middle %}{% endblock %}
+        </div>
+
+        <div id="layout_bottom" class="layout_bottom">
+            {% block bottom %}{% endblock %}
+        </div>
+    </div>
     
-    {% block content %}{% endblock %}
-    
+    {% block clientside %}{% endblock %}
     {# Some client-side templates that are used on most pages #}
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
         {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
