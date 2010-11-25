@@ -66,7 +66,6 @@ CollectionSearchResultWidget.prototype.joinCollection = function() {
                         title: 'Success!', 
                         content: 'Your request to join this collection has been submitted.', 
                     });
-                    me.panel.toggleLoadingNotification();
                 }
                 else {
                     // TODO: Handle this error better
@@ -75,6 +74,7 @@ CollectionSearchResultWidget.prototype.joinCollection = function() {
                         content: 'ERROR', 
                     });
                 }
+                me.panel.toggleLoadingNotification();
             }
         }(this)
     });
