@@ -10,7 +10,12 @@
 {% block middle %}
 
     {# Create/join collection and manage collections panels #}
-
+{% comment %}    Waiting requests:
+    {% for request in user.get_profile.collection_join_requests.all %}
+        {{request.name}}, 
+    {% endfor %}
+    {% endcomment %}
+    
     {% create_join_collection_panel 'Create/Join a Collection' 'create_join' %}
 
     {% social_panel 'Who else is using Concert?' 'social' %}
