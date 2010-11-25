@@ -71,6 +71,12 @@ def manage_collections_panel(title, id):
 def social_panel(title, id):
     return right_panel(title, id)
 
+###
+#   partial for social panel on the settings page.
+@register.inclusion_tag('collections/partials/social_panel.html')
+def social_panel(title, id):
+    return right_panel(title, id)
+
 
 ###
 #   partial for global options panel on every page

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.models import Group, User
 from django.utils import simplejson
+import json
 from concertapp.models import Collection
 from concertapp.collection.forms import CreateCollectionForm
 from django.core.exceptions import ObjectDoesNotExist
@@ -43,12 +44,22 @@ def search_collections(request, query):
 
     #   Get collections that match criteria
     results = Collection.objects.filter(name__icontains=query)
+    
+    #   Create object with properties that we will serialize
+    resultsDicts = []
+    for result in results:
+        obj = {
+            'name': result.name, 
+            'id': result.id, 
+        }
+        resultsDicts.append(obj)
+    
 
     #   Serialize results into JSON response        
-    json_serializer = serializers.get_serializer('json')()
-    serializers.serialize('json', results, fields=('name'), stream=response)
-    
-    return response
+    return HttpResponse(
+        simplejson.dumps(resultsDicts),
+        content_type = 'application/json'
+    )
     
 ##
 #    Create a collection

@@ -83,6 +83,9 @@ CreateJoinCollectionPanel.prototype.init = function(params) {
         };
     }(this));
     
+    /* This is a list of the widgets for search results */
+    this.resultWidgets = null;
+    
     /* Reference to ManageCollectionsPanel so we can run methods on there */
     this.manageCollectionsPanel = null;
 }
@@ -139,17 +142,20 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
 }
 
 /**
-*  This should be called when an autocomplete request finishes, and we wish
-*  to display the results to the user.
-*
-*  @param  data        Object  - JSON data from server about collection search
-*                                  results.
-**/
+ *  This should be called when an autocomplete request finishes, and we wish
+ *  to display the results to the user.  In here we will create a 
+ *  CollectionSearchResultWidget for each search result.
+ *
+ *  @param  data        Object  - JSON data from server about collection search
+ *                                  results.
+ **/
 CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
     var resultsContainer = this.resultsElement;
     var createNewTemplate = this.createNewTemplate;
     var resultTemplate = this.resultTemplate;
     var term = this.currentTerm;
+    /* We will have a new set of widgets for the results */
+    var resultWidgets = [];
     /* results were found! */
     if(data.length) {
         /* Temporary structure for results */
@@ -157,13 +163,22 @@ CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
 
         /* For each result */
         for(i = 0, il = data.length; i < il; i++) {
-            var obj = data[i].fields
+            var obj = data[i];
+            
+            /* Create widget */
+            var widget = new CollectionSearchResultWidget({
+                template: resultTemplate, 
+                context: obj, 
+                panel: this, 
+            });
+            
             /* Add to fragment */
-            frag.appendChild(resultTemplate.tmpl({
-                name: obj.name, 
-                id: obj.pk
-            }).get(0));
+            frag.appendChild(widget.container.get(0));
+            
+            /* Add to list of widgets */
+            resultWidgets.push(widget);
         }
+        this.resultWidgets = resultWidgets;
         /* empty results container */
         resultsContainer.empty();
         /* Put results in container */

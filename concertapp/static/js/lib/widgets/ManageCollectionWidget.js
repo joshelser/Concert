@@ -1,21 +1,21 @@
 /**
- *  @file       CollectionWidget.js
+ *  @file       ManageCollectionWidget.js
  *  A collection widget is a widget that is displayed in a collections list.  It
  *  has information about the collection, as well as options to delete or leave
  *  the collection.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
-function CollectionWidget(params) {
+function ManageCollectionWidget(params) {
     if(params) {
         this.init(params);
     }
 }
-CollectionWidget.prototype = new Widget();
+ManageCollectionWidget.prototype = new Widget();
 
 /**
  **/
-CollectionWidget.prototype.init = function(params) {
+ManageCollectionWidget.prototype.init = function(params) {
     Widget.prototype.init.call(this, params);
 
     var container = this.container;
@@ -76,7 +76,7 @@ CollectionWidget.prototype.init = function(params) {
  *  This should be called when user presses the delete button for a collection.
  *  Just prompts them "Are you sure?" about deleting the collection.
  **/
-CollectionWidget.prototype.deleteCollectionConfirm = function() {
+ManageCollectionWidget.prototype.deleteCollectionConfirm = function() {
     /* Confirm with user */
     com.concertsoundorganizer.notifier.confirm({
         'title': 'Are you sure?',
@@ -98,7 +98,7 @@ CollectionWidget.prototype.deleteCollectionConfirm = function() {
  *  Should be called when collection is actually to be deleted.  This is serious 
  *  stuff, and will error on backend if user doesn't have proper permissions.
  **/
-CollectionWidget.prototype.deleteCollection = function() {
+ManageCollectionWidget.prototype.deleteCollection = function() {
     /* we are serious about deleting this collection. */
     $.ajax({
         url: 'delete/',

@@ -25,7 +25,7 @@
     <div class="create-join-result table-row" id="create_join_result-${id}">
         <div class="collection_name-${id}" class="collection_name table-cell">${name}</div>
         <div id="collection_join_button-${id}" class="collection_join_button table-cell">Join</div>
-        <div id="collection_info_button-${id}" class="collection_info_button-${id} table-cell">Info</div>
+        <button id="collection_info_button-${id}" class="text_button collection_info_button table-cell">Info</button>
     </div>
 </script>
 
@@ -41,6 +41,11 @@
 <script id="collection_template" type="text/x-jquery-tmpl">
     {% include_raw "../templates/collections/user_collection_template.html" %}
 </script>
+
+<script id="collection_info_widget" type="text/x-jquery-tmpl">
+    {% include_raw "../templates/collections/partials/clientside/collection_info_widget.html" %}
+</script>
+
 
 
 {% endblock %}

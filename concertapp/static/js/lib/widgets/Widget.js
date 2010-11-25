@@ -39,11 +39,7 @@ Widget.prototype.init = function(params) {
     }
     this.panel = panel;
     
-    this.id = context.id;
-
-    
-
-    
+    this.id = context.id; 
     
     this.container = template.tmpl(context);
 }

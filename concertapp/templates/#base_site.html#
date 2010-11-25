@@ -45,7 +45,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/SettingsLinkLargeIconButton.js"></script>
 
     <script src="/js/lib/Widget.js"></script>
-    <script src="/js/lib/CollectionWidget.js"></script>
+    <script src="/js/lib/ManageCollectionWidget.js"></script>
     
 
     <script src="/js/lib/Panel.js"></script>

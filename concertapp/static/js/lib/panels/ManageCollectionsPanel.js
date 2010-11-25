@@ -82,7 +82,7 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
     for(i = 0, il = data.length; i < il; i++) {
         var col = data[i];
         
-        var widget = new CollectionWidget({
+        var widget = new ManageCollectionWidget({
             template: collectionTemplate, 
             context: col,
             panel: this
