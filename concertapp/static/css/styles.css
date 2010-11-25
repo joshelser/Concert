@@ -145,6 +145,66 @@ body {
 
 
 /**
+ *  Panels
+ **/
+
+/* This is a panel on the UI, used for many things. */
+div.panel {
+    /*  Need this so the "panel_loader" will display correctly 
+        (see div.panel_loader) */
+    position: relative;
+    
+    /* Default height and width values (for testing) */
+    min-height: 120px;
+    /* Every panel has a padding of 1em */
+    padding: 1em;
+    /* And a margin of -2em to offset this padding 
+        (padding does not affect size of block element) */
+    margin: -2em;
+    
+}
+
+/* This is the div that shows a loading notification on each panel */
+div.panel_loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    text-align: center;
+    opacity: 0;
+    z-index: -1;
+}
+
+/* This is the actual loading notification (Animation or "Loading...") */
+div.panel_loader_notification {
+    position: relative;
+    top: 50%;
+    height: 1em;
+    margin-top: -0.5em;
+    color: white;
+}
+
+/* This class is added when the panel loader is to be displayed */
+div.panel_loader_enabled {
+    opacity: 0.7;
+    z-index: 9999;
+}
+
+/**
+ *  A panel that is docked to the left, right or bottom side of the screen
+ **/
+div.left_panel {
+    float: left;
+}
+div.right_panel {
+    float: right;
+}
+div.bottom_panel {
+    clear: both;
+}
+
+
+/**
  *  Page Header
  **/
 div#global_options_panel {
@@ -282,64 +342,6 @@ button.blue:active {
 
 
 
-/**
- *  Panels
- **/
-
-/* This is a panel on the UI, used for many things. */
-div.panel {
-    /*  Need this so the "panel_loader" will display correctly 
-        (see div.panel_loader) */
-    position: relative;
-    
-    /* Default height and width values (for testing) */
-    height: 120px;
-    /* Every panel has a padding of 1em */
-    padding: 1em;
-    /* And a margin of -2em to offset this padding 
-        (padding does not affect size of block element) */
-    margin: -2em;
-    
-}
-
-/* This is the div that shows a loading notification on each panel */
-div.panel_loader {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: gray;
-    text-align: center;
-    opacity: 0;
-    z-index: -1;
-}
-
-/* This is the actual loading notification (Animation or "Loading...") */
-div.panel_loader_notification {
-    position: relative;
-    top: 50%;
-    height: 1em;
-    margin-top: -0.5em;
-    color: white;
-}
-
-/* This class is added when the panel loader is to be displayed */
-div.panel_loader_enabled {
-    opacity: 0.7;
-    z-index: 9999;
-}
-
-/**
- *  A panel that is docked to the left, right or bottom side of the screen
- **/
-div.left_panel {
-    float: left;
-}
-div.right_panel {
-    float: right;
-}
-div.bottom_panel {
-    clear: both;
-}
 
 
 
