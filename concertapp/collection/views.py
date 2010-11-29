@@ -1,16 +1,15 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from concertapp.collection.forms import CreateCollectionForm
+from concertapp.models import Collection
+from django import forms
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.core import serializers
-from django.contrib.auth.models import User
-from django import forms
-from django.contrib.auth.models import Group, User
 from django.utils import simplejson
 import json
-from concertapp.models import Collection
-from concertapp.collection.forms import CreateCollectionForm
-from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -189,7 +188,7 @@ def join_collection(request, collection_id):
     # If user is already a member
     if user in collection.users.all():
         error = True
-    # If user has already requested to join this group
+    # If user has already requested to join this collection
     elif collection in user.get_profile().collection_join_requests.all():
         error = True
     # we can add a request for this user

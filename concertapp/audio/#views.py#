@@ -89,7 +89,6 @@ def upload_audio(request):
         
         #   new audio object
         audio = Audio(uploader = user, collection=col)
-
         
         try:
             #   initialize audio object (this will take a while as we have to encode)
