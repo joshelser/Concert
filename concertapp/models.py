@@ -214,7 +214,6 @@ class Collection(models.Model):
 
         if user not in self.requesting_users.all():
             raise Exception("You can't add a user to a collection they haven't requested ot join")
-
         
         self.users.add(user)
         self.save()
@@ -245,29 +244,6 @@ class Collection(models.Model):
         
     def __unicode__(self):
         return str(self.name)
-
-
-def add_user_collection_callback(sender, **kwargs):
-
-    
-    if type(kwargs['instance']) != Collection:
-        return;
-
-    if kwargs['action'] != 'post_add':
-        return;
-    
-    for i in kwargs:
-        print str(i) + " " + str(kwargs[i])
-            
-    print
-
-    for pk in kwargs['pk_set']:
-        user = User.objects.get(pk=pk)
-        collection = kwargs['instance']
-        JoinCollectionEvent(new_user = user, collection = collection).save()      
-
-#m2m_changed.connect(add_user_collection_callback)
-
 
 
 class Tag(models.Model):
