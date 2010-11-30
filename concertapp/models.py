@@ -1,7 +1,6 @@
 from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
-from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.files  import File
@@ -12,8 +11,6 @@ from django.db import models
 from django.db.models.signals import post_save
 import audiotools
 import os, tempfile, sys
-
-
 
 ###
 # An extension to the User model accomplished through the Django supported
@@ -42,7 +39,6 @@ def create_concert_user_receiver(sender, **kwargs):
 # saved, then creates the ConcertUser  
 ###
 post_save.connect(create_concert_user_receiver)
-
 
 ###
 # An abstract class (abstract by Concert semantics, not Django) used to house
@@ -144,14 +140,13 @@ class JoinCollectionEvent(Event):
 
     def __unicode__(self):
         return str(self.new_user) + " joined " + str(self.collection)        
- 
+    
 
 class RequestJoinCollectionEvent(Event):
     requesting_user = models.ForeignKey(User)
     
     def __unicode__(self):
         return str(self.requesting_user) + " requested to join " + str(self.collection)
-
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -171,25 +166,21 @@ class AudioSegment(models.Model):
                                          collection = self.audio.collection)
         event.save()
 
+    def resegment(self, name, beginning, end, user):
+        return self.audio.segment(name, beginning, end, user)
+
+
     def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):
         tag, created = Tag.objects.get_or_create(collection = self.audio.collection,
-                                                 name = tag_name,
-                                                 defaults={'creator':user})
+                                                     name = tag_name,
+                                                     defaults={'creator':user})
         if created:
             tag.init()
 
-        if(beggining != self.beginning or end != self.end):
-            segment = AudioSegment(name = seg_name,
-                                   beginning = beginning,
-                                   end = end,
-                                   audio = self,
-                                   collection = self.audio.collection,
-                                   creator = user)
-            segment.init()
 
+        segment = self.audio.segment(name, beginning, end, user)
         segment.tag(tag, user)
-
-            
+        
     
     def tag(self, tag_name, user):
         tag, created = Tag.objects.get_or_create(name = tag_name, 
@@ -205,6 +196,8 @@ class AudioSegment(models.Model):
         event.save()
 
         self.tags.add(tag)
+        
+        return tag
 
     def untag(self, tag):
         if type(tag) == str:
@@ -221,7 +214,7 @@ class AudioSegment(models.Model):
                                                     tag = tag,
                                                     collection = self.audio.collection)
         event.active=False
-                
+        
     def tag_list(self):
         tags = self.tag_set.all()
         return ', '.join(tags)
@@ -517,6 +510,17 @@ class Audio(models.Model):
         if(self.id):
             super(Audio, self).delete()
 
+    def segment(self, name, beginning, end, user):
+        segment = AudioSegment(name = name,
+                               beginning = beginning,
+                               end = end,
+                               creator = user,
+                               audio = self)
+        segment.init()
+        
+        return segment
+
+
     def segment_and_tag(self, seg_name, beginning, end, tag_name, user):
         tag, created = Tag.objects.get_or_create(collection = self.collection,
                                                  name = tag_name,
@@ -528,10 +532,11 @@ class Audio(models.Model):
                                beginning = beginning,
                                end = end,
                                audio = self,
-                               collection = self.collection,
                                creator = user)
         segment.init()
         segment.tag(tag, user)
+
+        return tag
 
 
     ##
