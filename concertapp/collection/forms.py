@@ -10,4 +10,4 @@ class CreateCollectionForm(ModelForm):
     class Meta:
         model = Collection
         # We don't need to validate the Collection admin, or the user list
-        exclude = ('admin', 'users')
+        exclude = ('admin', 'users', 'requesting_users')

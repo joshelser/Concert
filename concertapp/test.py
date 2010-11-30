@@ -1,12 +1,7 @@
 from concertapp.models import *
 
 user = User.objects.get(pk=1)
-Collection.objects.all().delete()
+audio = Audio.objects.get(pk=1)
 
-collection = Collection(admin = user, name = "Collection 1")
-collection.save()
-
-user = User.objects.get(username = "john")
-
-collection.add_request_to_join(user)
-collection.add_user(user)
+audio.segment_and_tag("Seg1",5,30,"Tag1",user)
+ 

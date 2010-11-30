@@ -80,11 +80,12 @@ def create_collection(request):
         
         col = form.save()
         
-        #   Add current user to collection
+        # Add current user to collection
         col.users.add(request.user)
         
         return HttpResponse('success')
     else:
+        print form.get_errors()
         return HttpResponse('failure')
         
 
