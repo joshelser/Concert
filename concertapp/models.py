@@ -158,9 +158,6 @@ class AudioSegment(models.Model):
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio')
-
-    #redundant... e.g., self.audio.collection should always be the same as this...
-    collection = models.ForeignKey('Collection')
     creator = models.ForeignKey(User)
 
     # TODO: ensure that the clean makes it so no
@@ -171,12 +168,32 @@ class AudioSegment(models.Model):
             raise Exception("You can only initalize an object once")
         self.save()
         event = AudioSegmentCreatedEvent(audio_segment = self,
-                                         collection = self.collection)
+                                         collection = self.audio.collection)
         event.save()
+
+    def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):
+        tag, created = Tag.objects.get_or_create(collection = self.audio.collection,
+                                                 name = tag_name,
+                                                 defaults={'creator':user})
+        if created:
+            tag.init()
+
+        if(beggining != self.beginning or end != self.end):
+            segment = AudioSegment(name = seg_name,
+                                   beginning = beginning,
+                                   end = end,
+                                   audio = self,
+                                   collection = self.audio.collection,
+                                   creator = user)
+            segment.init()
+
+        segment.tag(tag, user)
+
+            
     
     def tag(self, tag_name, user):
         tag, created = Tag.objects.get_or_create(name = tag_name, 
-                                                 collection = self.collection, 
+                                                 collection = self.audio.collection, 
                                                  defaults = {'creator':user})
         if created:
             tag.init()
@@ -184,7 +201,7 @@ class AudioSegment(models.Model):
         event = AudioSegmentTaggedEvent(audio_segment = self, 
                                         tag = tag,
                                         tagging_user = user,
-                                        collection = self.collection)
+                                        collection = self.audio.collection)
         event.save()
 
         self.tags.add(tag)
@@ -202,8 +219,8 @@ class AudioSegment(models.Model):
         self.tags.remove(tag)
         event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,
                                                     tag = tag,
-                                                    collection = self.collection)
-        event.delete()
+                                                    collection = self.audio.collection)
+        event.active=False
                 
     def tag_list(self):
         tags = self.tag_set.all()
@@ -261,6 +278,7 @@ class Collection(models.Model):
         
     def __unicode__(self):
         return str(self.name)
+
 
 class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
@@ -429,8 +447,6 @@ class Audio(models.Model):
         mp3Input = wavOutput
         mp3Output = os.path.join(MEDIA_ROOT, self.mp3file.name)
         
-        
-        
         #   now overwrite the dummy files with the actual encodes
         
         # We will first normalize the wav file (convert to proper sample rate,
@@ -501,17 +517,16 @@ class Audio(models.Model):
         if(self.id):
             super(Audio, self).delete()
 
-    def segment_and_tag(self, seg_name, seg_begin, seg_end, tag_name, user):
+    def segment_and_tag(self, seg_name, beginning, end, tag_name, user):
         tag, created = Tag.objects.get_or_create(collection = self.collection,
                                                  name = tag_name,
                                                  defaults={'creator':user})
-
         if created:
             tag.init()
 
         segment = AudioSegment(name = seg_name,
-                               beginning = seg_begin,
-                               end = seg_end,
+                               beginning = beginning,
+                               end = end,
                                audio = self,
                                collection = self.collection,
                                creator = user)
