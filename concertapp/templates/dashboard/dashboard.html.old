@@ -1,0 +1,23 @@
+{% extends 'base_site.html' %}
+
+{% block middle %}
+
+<section id = "concert_info_panel">
+
+</section>
+
+<section id = "recent_events">
+  <ul>
+    {% if user.get_profile.unread_events.count > 0 %}
+    {% for event in user.get_profile.unread_events.all %}
+    {% if event.active %}
+    <li>{{ event }}</li>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <li>No new events</li>
+    {% endif %}
+  </ul>
+</section>
+
+{% endblock %}
