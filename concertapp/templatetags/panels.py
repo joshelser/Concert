@@ -64,3 +64,21 @@ def global_options_panel(title, id, page_name, user):
 def upload_audio_panel(title, id):
     return panel(title, id)
 
+
+###
+#   partial for concert_info_panel
+@register.inclusion_tag('dashboard/partials/concert_info.html')
+def concert_info_panel(title, id):
+    return panel(title, id)
+
+
+###
+#   partial for concert_info_panel
+@register.inclusion_tag('dashboard/partials/recent_events.html')
+def recent_events_panel(title, id, user):
+    dataForTemplate = panel(title, id)
+    dataForTemplate['user'] = user
+    
+    return dataForTemplate
+
+

@@ -1,21 +1,15 @@
 {% extends 'base_site.html' %}
 
+{% load extra_template_tags %}
+{% load panels %}
+
 {% block middle %}
 
-<p>Welcome to Concert, {{user}}</p>
-<br/>
-<section id = "events">
-  <ul>
-    {% if user.get_profile.unread_events.count > 0 %}
-    {% for event in user.get_profile.unread_events.all %}
-    {% if event.active %}
-    <li>{{ event }}</li>
-    {% endif %}
-    {% endfor %}
-    {% else %}
-    <li>No new events</li>
-    {% endif %}
-  </ul>
-</section>
+    {# concert_info and recent events panels #}
+
+    {% concert_info_panel 'Concert Info' 'concert_info' %}
+
+    {% recent_events_panel 'Recent Events' 'recent_events' user %}
 
 {% endblock %}
+

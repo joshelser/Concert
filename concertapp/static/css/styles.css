@@ -274,6 +274,18 @@ div.create_join_widget {
 div.collection_info_widget_container {
 }
 
+/* Dashboard */
+div#concert_info_panel{
+    -webkit-box-flex: 1;
+}
+
+div#recent_events_panel {
+    -webkit-box-flex: 1;
+}
+ul#recent_events {
+    list-style:inside;
+}
+
 
 /**
  *  Buttons
