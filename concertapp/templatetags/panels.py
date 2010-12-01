@@ -6,7 +6,7 @@ register = template.Library()
 
 def get_panel(parser, token):
     try:
-        tag_name, template_location, id, title = token.split_contents()
+        tag_name, template_location, title, id = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError, "%r tag requires a two arguments" % token.contents.split()[0]
     
@@ -17,15 +17,15 @@ def get_panel(parser, token):
 
     if not is_quoted(template_location):
         raise template.TemplateSyntaxError, "%r tag's 1st argument should be in quotes" % tag_name
-    if not is_quoted(id): 
-        raise template.TemplateSyntaxError, "%r tag's 2nd argument should be in quotes" % tag_name
     if not is_quoted(title):
         raise template.TemplateSyntaxError, "%r tag's 3rd argument should be in quotes" % tag_name
+    if not is_quoted(id): 
+        raise template.TemplateSyntaxError, "%r tag's 2nd argument should be in quotes" % tag_name
 
-    return PanelNode(template_location[1:-1], id[1:-1], title[1:-1])
+    return PanelNode(template_location[1:-1], title[1:-1], id[1:-1])
 
 class PanelNode(template.Node):
-    def __init__(self, template_location, id, title):
+    def __init__(self, template_location, title, id):
         self.template_location = template_location
         self.id = id
         self.title = title

@@ -7,11 +7,10 @@
 
     {# concert_info and recent events panels #}
 
-    {% concert_info_panel 'Concert Info' 'concert_info' %}
+    {% panel2 'dashboard/partials/concert_info.html' 'Concert Info' 'concert_info' %}
 
-    {% recent_events_panel 'Recent Events' 'recent_events' user %}
+    {% panel2 'dashboard/partials/recent_events.html' 'Recent Events' 'recent_events' %}
 
-    {% panel2 'partials/panel.html' 'rand' 'AWESOME' %}
 
 {% endblock %}
 
