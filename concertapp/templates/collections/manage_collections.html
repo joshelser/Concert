@@ -7,15 +7,15 @@
 
     {# Create/join collection and manage collections panels #}
 
-    {% create_join_collection_panel 'Create/Join a Collection' 'create_join' %}
+    {% panel 'collections/partials/create_join_collection_panel.html' 'Create/Join a Collection' 'create_join' %}
 
-    {% social_panel 'Who else is using Concert?' 'social' %}
+    {% panel 'collections/partials/social_panel.html' 'Who else is using Concert?' 'social' %}
 
 {% endblock %}
 
 
 {% block bottom %}
-    {% manage_collections_panel 'Manage Collections' 'manage_collections' %}
+    {% panel 'collections/partials/manage_collections_panel.html' 'Manage Collections' 'manage_collections' %}
 {% endblock %}
 
 {% block clientside %}

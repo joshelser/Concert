@@ -10,10 +10,10 @@
 {% block middle %}
     <div id="organize_layout" class="organize_layout">
         {#  We have a waveform viewer panel #}
-        {% panel 'Waveform Viewer' 'waveform_viewer' %}
+        {% panel 'partials/panel.html' 'Waveform Viewer' 'waveform_viewer' %}
 
         {# and an audio list panel #}
-        {% audiolist_panel 'Audio' 'audio_list' %}
+        {% panel 'organize/partials/audiolist_panel.html' 'Audio' 'audio_list' %}
     </div>
 {% endblock %}
 

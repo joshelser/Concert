@@ -4,6 +4,8 @@ from django.template.loader import render_to_string
 register = template.Library()
 
 
+###
+#   Parser for the panel2 tag
 def get_panel(parser, token):
     try:
         tag_name, template_location, title, id = token.split_contents()
@@ -24,6 +26,9 @@ def get_panel(parser, token):
 
     return PanelNode(template_location[1:-1], title[1:-1], id[1:-1])
 
+###
+#   A Panel node renders the given template setting 'id' and 'title' variables and passing the context of
+#   calling template.  Basically a django {% include %} with a custom context for id and title
 class PanelNode(template.Node):
     def __init__(self, template_location, title, id):
         self.template_location = template_location
@@ -32,89 +37,5 @@ class PanelNode(template.Node):
     def render(self, context):
         return render_to_string(self.template_location, {'id': self.id, 'title':self.title}, context)
 
-register.tag('panel2', get_panel)
-
-
-
-
-
-###
-#   This is a partial template for a panel.  All panels will have this same stuff.
-#
-#   @param  title        String  -  the title of this panel which will be displayed
-#                           in the panel header.
-#   @param  id          String - the id of the panel for id and class attributes
-@register.inclusion_tag('partials/panel.html')
-def panel(title, id):
-    return {
-        'title': title, 
-        'id': id, 
-    }
-
-
-###
-#   This is a partial template for the audiolist panel.  No extra functionality 
-#   is needed in this partial controller, so we just pass args along to the parent 
-#   template partial controller.
-@register.inclusion_tag('organize/partials/audiolist_panel.html')
-def audiolist_panel(title, id):
-    return panel(title, id)
-
-
-###
-#   partial for create_join_collection panel on the settings page.
-@register.inclusion_tag('collections/partials/create_join_collection_panel.html')
-def create_join_collection_panel(title, id):
-    return panel(title, id)
-
-###
-#   partial for manage_collections panel on the settings page.
-@register.inclusion_tag('collections/partials/manage_collections_panel.html')
-def manage_collections_panel(title, id):
-    return panel(title, id)
-
-###
-#   partial for social panel on the settings page.
-@register.inclusion_tag('collections/partials/social_panel.html')
-def social_panel(title, id):
-    return panel(title, id)
-
-
-###
-#   partial for global options panel on every page
-#
-#   @param  page_name        String - the name of the current page to display to 
-#                               user
-#   
-@register.inclusion_tag('partials/global_options_panel.html')
-def global_options_panel(title, id, page_name, user):
-    dataForTemplate = panel(title, id)
-    dataForTemplate['page_name'] = page_name
-    dataForTemplate['user'] = user
-    
-    return dataForTemplate
-
-###
-#   partial for upload_audio_panel
-@register.inclusion_tag('audio/partials/upload_audio_panel.html')
-def upload_audio_panel(title, id):
-    return panel(title, id)
-
-
-###
-#   partial for concert_info_panel
-@register.inclusion_tag('dashboard/partials/concert_info.html')
-def concert_info_panel(title, id):
-    return panel(title, id)
-
-
-###
-#   partial for concert_info_panel
-@register.inclusion_tag('dashboard/partials/recent_events.html')
-def recent_events_panel(title, id, user):
-    dataForTemplate = panel(title, id)
-    dataForTemplate['user'] = user
-    
-    return dataForTemplate
-
+register.tag('panel', get_panel)
 

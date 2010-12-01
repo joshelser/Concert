@@ -96,7 +96,7 @@ The base template for all pages.  All page templates will use this.
     <div id="layout" class="layout">
         <div id="layout_top" class="layout_top">
             {% if user.is_authenticated %}
-                {% global_options_panel 'Concert' 'global_options' page_name user %}
+                {% panel 'partials/global_options_panel.html' 'Concert' 'global_options' %}
             {% else %}
                 <h1>Concert</h1>
                 <h2>Login</h2>
