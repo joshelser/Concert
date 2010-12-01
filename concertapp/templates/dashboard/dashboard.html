@@ -4,8 +4,6 @@
 
 <p>Welcome to Concert, {{user}}</p>
 <br/>
-<p>Show all unread events and stuff!<br />Recent shits!</p>
-<br /><br />
 <section id = "events">
   <ul>
     {% if user.get_profile.unread_events.count > 0 %}

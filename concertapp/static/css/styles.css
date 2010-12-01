@@ -326,11 +326,10 @@ button.large-icon-button-icon {
 }
 /* Label */
 label.large-icon-button-label {
-    visibility: hidden;
     cursor: pointer;
 }
 label.large-icon-button-label.hover {
-    visibility: visible;
+    text-decoration:underline;
 }
 
 /* blue */
