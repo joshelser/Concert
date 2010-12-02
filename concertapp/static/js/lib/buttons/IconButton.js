@@ -8,6 +8,7 @@
  *  This is a class for a button with an icon.  This is subclassed into 
  *  SmallIconButton and LargeIconButton.
  *	@class
+ *  @augments Button
  **/
 function IconButton(params) {
     if(params) {

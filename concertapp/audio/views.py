@@ -79,7 +79,7 @@ def upload_audio(request):
         f = request.FILES['audio']
         
         
-        # The groups that this audio object is to be associated with.
+        # The collection that this audio object is to be associated with.
         try:
             col = Collection.objects.get(id = request.POST['collection'])
         except ObjectDoesNotExist, e:

@@ -6,37 +6,31 @@
 {% endblock %}
 
 {% block panel_content %}
-    <div id="global_options_panel_left">
-        <h1>Concert</h1>
-        <h2>{{ page_name }}</h2>
-    </div>
-    <div id="global_options_panel_middle">
-        <label for="collection_selector">Organize:</label>
-        <select id="collection_selector" class="collection_selector">
-            <option value="-1">Please select a collection</option>
-            {% for collection in user.collections.all %}
-                <option id="collection_option-{{ collection.id }}" value="{{ collection.id }}">{{ collection.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+<div id="global_options_panel_left">
+  <h1>Concert</h1>
+  <h2>{{ page_name }}</h2>
+</div>
+<div id="global_options_panel_middle">
+  <label for="collection_selector">Organize:</label>
+  <select id="collection_selector" class="collection_selector">
+    <option value="-1">Please select a collection</option>
+    {% for collection in user.collections.all %}
+    <option id="collection_option-{{ collection.id }}" value="{{ collection.id }}">{{ collection.name }}</option>
+    {% endfor %}
+  </select>
+</div>
 
-    <div id="global_options_panel_right">
-    
-        {% if page_name != 'Dashboard' %}
-            {% large_icon_button 'Dashboard' 'dashboard' '/dashboard/' '' 'global_options_panel_button' %}
-        {% endif %}
+<div id="global_options_panel_right">
+  
+  {% large_icon_button 'Dashboard' 'dashboard' '/dashboard/' '' 'global_options_panel_button' %}
+  
+  {% large_icon_button 'Settings' 'settings' '/collections/' 'Manage collections, connect with friends' 'global_options_panel_button' %}
+  
+  {% large_icon_button 'Upload Audio' 'upload' '/audio/upload' 'Upload audio to a collection' 'global_options_panel_button' %}
+  
+  <div class="logout_info">
+    Logged in as {{user.username}}.  <a href="/logout">Logout</a>
+  </div>
 
-        {% if page_name  != 'Collections' %}
-            {% large_icon_button 'Settings' 'settings' '/collections/' 'Manage collections, connect with friends' 'global_options_panel_button' %}
-        {% endif %}
-    
-        {% if page_name != 'Upload Audio' %}
-            {% large_icon_button 'Upload Audio' 'upload' '/audio/upload' 'Upload audio to a collection' 'global_options_panel_button' %}
-        {% endif %}
-        
-        <div class="logout_info">
-            Logged in as {{user.username}}.  <a href="/logout">Logout</a>
-        </div>
-
-    </div>
+</div>
 {% endblock %}

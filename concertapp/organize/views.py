@@ -35,11 +35,11 @@ def organize_collection(request, collection_id, col, user):
     
     
     files = Audio.objects.filter(collection = col)
-    segments = AudioSegment.objects.filter(collection = col)
+    segments = AudioSegment.objects.filter(audio__collection = col)
     
     
     return render_to_response('organize/organize_collection.html', {
-        'page_name': 'Organize '+col.name,
+        'page_name': 'Organize '+ col.name,
         'js_page_path': '/organize/collection/',
         'files': files,
         'segments': segments
@@ -85,7 +85,7 @@ def audio_objects(request, collection_id, col, user):
     data['audio_objects'] = audio_objects_dicts
     
     #   Get all audio segment objects
-    segment_objects = AudioSegment.objects.select_related().filter(collection = col)
+    segment_objects = AudioSegment.objects.select_related().filter(audio__collection = col)
     
     #   Create list of audio segment objects (as dicts)
     segment_objects_dicts = list()
@@ -111,3 +111,4 @@ def audio_objects(request, collection_id, col, user):
     data_serialized = simplejson.dumps(data)
     return HttpResponse(data_serialized, content_type='data/json')
     
+
