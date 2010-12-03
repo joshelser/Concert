@@ -115,7 +115,7 @@ The base template for all pages.  All page templates will use this.
     {% block clientside %}{% endblock %}
     {# Some client-side templates that are used on most pages #}
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
-        {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
+        {% include "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
     {# Send variable to javascript with recognizable path so we know what page we're on #}
