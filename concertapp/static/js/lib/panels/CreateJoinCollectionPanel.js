@@ -107,9 +107,6 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
                 /* Our search term */
                 var term = request.term;
                 
-                console.log('term:');
-                console.log(term);
-
                 /* If there is something to search for */
                 if(term && term != '') {    
                     /* Search for it */
