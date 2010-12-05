@@ -195,21 +195,23 @@ def join_collection(request, collection_id):
     
     collection = Collection.objects.get(pk = collection_id)
     
-    # Wether or not we will return a generic error
-    error = False
+    response = {
+        'status': 'error or success', 
+        'notification': 'The text to send to the user', 
+    }
     
     # If user is already a member
     if user in collection.users.all():
-        error = True
+        response['status'] = 'error'
+        response['notification'] = 'You are already a member of this group.'
     # If user has already requested to join this collection
-    elif collection in user.get_profile().collection_join_requests.all():
-        error = True
+    elif user in collection.requesting_users.all():
+        response['status'] = 'error'
+        response['notification'] = 'Your request to join this group has already been submitted.'
     # we can add a request for this user
     else:
-        user.get_profile().collection_join_requests.add(collection)
+        collection.add_request(user)
+        response['status'] = 'success'
     
-    if error:
-        return HttpResponse('error', content_type='text/plain')
-    else:
-        return HttpResponse('success', content_type='text/plain')
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
     

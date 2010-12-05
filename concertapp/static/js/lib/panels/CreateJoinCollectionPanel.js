@@ -163,47 +163,58 @@ CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
     
     var results = data.results;
     var exact = data.exact;
-    /* results were found! */
-    if(results.length) {
-        /* Temporary structure for results */
-        var frag = document.createDocumentFragment();
-
-        /* For each result */
-        for(i = 0, il = results.length; i < il; i++) {
-            var obj = results[i];
-            
-            /* Create widget */
-            var widget = new CollectionSearchResultWidget({
-                template: resultTemplate, 
-                context: obj, 
-                panel: this, 
-            });
-            
-            /* Add to fragment */
-            frag.appendChild(widget.container.get(0));
-            
-            /* Add to list of widgets */
-            resultWidgets.push(widget);
-        }
-        this.resultWidgets = resultWidgets;
-        /* empty results container */
-        resultsContainer.empty();
-        /* Put results in container */
-        resultsContainer.append(frag);
-    }
-
-    /* If there was no exact match */
-    if(exact == null) {
-        /* results container will just be "create new" option */
-        resultsContainer.prepend(createNewTemplate.tmpl({
-            term: term, 
-        }));
-    }
     
     /* No search term */
     if(term == '') {
         resultsContainer.empty();
     }
+    /* There was a search term, so we will be displaying something in the results */
+    else {
+        
+        /* Temporary structure for results */
+        var frag = document.createDocumentFragment();
+        
+        
+        /* If there was no exact match, we will display a create new option */
+        if(exact == null) {
+            frag.appendChild(createNewTemplate.tmpl({
+                term: term, 
+            }).get(0));
+            
+        }
+
+        /* results were found! we will display those and save references to the
+            corresponding widgets. */
+        if(results && results.length) {
+
+            /* For each result */
+            for(i = 0, il = results.length; i < il; i++) {
+                var obj = results[i];
+
+                /* Create widget */
+                var widget = new CollectionSearchResultWidget({
+                    template: resultTemplate, 
+                    context: obj, 
+                    panel: this, 
+                });
+
+                /* Add to fragment */
+                frag.appendChild(widget.container.get(0));
+
+                /* Add to list of widgets */
+                resultWidgets.push(widget);
+            }
+            this.resultWidgets = resultWidgets;
+        }
+        
+        
+        /* empty results container */
+        resultsContainer.empty();
+        /* Put results in container */
+        resultsContainer.append(frag);
+        
+    }
+    
 }
 
 /**

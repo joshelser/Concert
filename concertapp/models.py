@@ -256,7 +256,7 @@ class Collection(models.Model):
         event = JoinCollectionEvent(new_user = user, collection = self)
         event.save()
 
-    def add_request_to_join(self,user):
+    def add_request(self,user):
         if user not in User.objects.all():
             raise Exception("user dne")
 

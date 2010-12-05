@@ -59,28 +59,24 @@ CollectionSearchResultWidget.prototype.joinCollection = function() {
     var id = this.id;
     
     this.panel.toggleLoadingNotification();
-    $.ajax({
-        url: 'join/'+id, 
-        success: function(me) {
+    $.getJSON('join/'+id, 
+        function(me) {
             return function(data, status) {
-                if(data == 'success') {
-                    // TODO: Remove these strings and handle this much better.
-                    com.concertsoundorganizer.notifier.alert({
-                        title: 'Success!', 
-                        content: 'Your request to join this collection has been submitted.', 
-                    });
+                var status = data.status;
+                var notification = data.notification;
+                if(status == 'success') {
+                    me.panel.manageCollectionsPanel.retrieveAndUpdateCollections();
                 }
                 else {
-                    // TODO: Handle this error better
                     com.concertsoundorganizer.notifier.alert({
                         title: 'Error', 
-                        content: 'ERROR', 
+                        content: notification, 
                     });
                 }
                 me.panel.toggleLoadingNotification();
             }
         }(this)
-    });
+    );
 };
 
 
