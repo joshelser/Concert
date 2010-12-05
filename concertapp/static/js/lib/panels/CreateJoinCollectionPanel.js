@@ -160,14 +160,17 @@ CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
     var term = this.currentTerm;
     /* We will have a new set of widgets for the results */
     var resultWidgets = [];
+    
+    var results = data.results;
+    var exact = data.exact;
     /* results were found! */
-    if(data.length) {
+    if(results.length) {
         /* Temporary structure for results */
         var frag = document.createDocumentFragment();
 
         /* For each result */
-        for(i = 0, il = data.length; i < il; i++) {
-            var obj = data[i];
+        for(i = 0, il = results.length; i < il; i++) {
+            var obj = results[i];
             
             /* Create widget */
             var widget = new CollectionSearchResultWidget({
@@ -188,15 +191,17 @@ CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
         /* Put results in container */
         resultsContainer.append(frag);
     }
-    /* No results :( */
-    else if(term != '') {
+
+    /* If there was no exact match */
+    if(exact == null) {
         /* results container will just be "create new" option */
-        resultsContainer.html(createNewTemplate.tmpl({
+        resultsContainer.prepend(createNewTemplate.tmpl({
             term: term, 
         }));
     }
+    
     /* No search term */
-    else {
+    if(term == '') {
         resultsContainer.empty();
     }
 }

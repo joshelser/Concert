@@ -53,10 +53,22 @@ def search_collections(request, query):
         }
         resultsDicts.append(obj)
     
-
+    # Get exact match if one exists
+    try:
+        exact = Collection.objects.get(name=query)
+        exactDict = {
+            'name': exact.name,
+            'id': exact.id, 
+        }
+    except ObjectDoesNotExist:
+        exactDict = None
+        
     #   Serialize results into JSON response        
     return HttpResponse(
-        simplejson.dumps(resultsDicts),
+        simplejson.dumps({
+            'results': resultsDicts, 
+            'exact': exactDict, 
+        }),
         content_type = 'application/json'
     )
     
