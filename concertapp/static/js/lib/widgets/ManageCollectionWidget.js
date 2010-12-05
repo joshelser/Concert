@@ -24,8 +24,9 @@ ManageCollectionWidget.prototype.init = function(params) {
 
     var container = this.container;
     
-    var collection_id = params.context.id;
-    this.collection_id = collection_id;
+    /* Collection id is easier to understand here */
+    var collection_id = this.id;
+    this.collection_id = this.id;
     
     var nameElement = container.find('#user_collection_name-'+collection_id);
     if(nameElement.length == 0) {
@@ -68,7 +69,47 @@ ManageCollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
+    /* The revoke request button on the widget */
+    var revokeButton = container.find('#revoke_request-'+collection_id);
+    if(revokeButton.length) {
+        this.revokeButton = revokeButton;
+        
+        /* When revoke button is clicked, revoke join request */
+        revokeButton.click(function(me) {
+            return function() {
+                me.revokeRequest();
+            };
+        }(this));
+    }
+    
+    
 }
+
+/**
+ *  This will be called when the user is revoking his/her request to join a
+ *  collection.
+ **/
+ManageCollectionWidget.prototype.revokeRequest = function() {
+    var collection_id = this.collection_id;
+    this.panel.toggleLoadingNotification();
+    
+    $.getJSON('revoke/'+collection_id, 
+        function(me){ 
+            return function(data, status){
+                if(status == 'success' && data.status == 'success') {
+                    me.panel.toggleLoadingNotification();
+                    me.panel.retrieveAndUpdateCollections();
+                }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: "Error", 
+                        content: "An error occurred: "+data.notification, 
+                    });
+                }
+            }; }(this));
+};
+
+
 
 /**
  *  This should be called when user presses the delete button for a collection.

@@ -16,11 +16,11 @@
     
     <div class="user_collection_actions table-cell" id="user_collection_actions-${id}">
         {{if admin}}
-            <button class="delete_collection" id="delete_collection-${id}" data-collection_id="${id}">Delete this collection</button>    
+            <button class="delete_collection" id="delete_collection-${id}">Delete this collection</button>    
         {{else member}}
-            <button class="leave_collection" id="leave_collection-${id}" data-collection_id="${id}">Leave this collection</button>
+            <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>
         {{else request}}
-            Awaiting approval.
+            Awaiting approval. <button class="revoke_request" id="revoke_request-${id}">Revoke request</button>
         {{/if}}
     </div>
 

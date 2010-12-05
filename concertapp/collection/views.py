@@ -227,3 +227,27 @@ def join_collection(request, collection_id):
     
     return HttpResponse(simplejson.dumps(response), content_type='application/json')
     
+###
+#   User decides to revoke join request
+###
+@login_required
+def revoke_request(request, collection_id):
+    user = request.user
+    
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {
+        'status': 'error or success', 
+        'notification': '', 
+    }
+    
+    try:
+        collection.remove_request(user)
+        response['status'] = 'success'
+    except Exception, e:
+        response['notification'] = str(e)
+        response['status'] = 'error'
+        
+    
+    
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')

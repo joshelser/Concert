@@ -269,6 +269,25 @@ class Collection(models.Model):
         event = RequestJoinCollectionEvent(requesting_user = user, collection = self)
         event.save()
         
+    ###
+    #   This is when a user decides that they don't actually want to join a
+    #   collection, so they revoke their join request.  This will delete the 
+    #   corresponding event as well.
+    ###
+    def remove_request(self,user):
+        if user not in User.objects.all():
+            raise Exception("user dne")
+            
+        if user not in self.requesting_users.all():
+            raise Exception("User has not requested to join this collection.")
+            
+        self.requesting_users.remove(user)
+        self.save()
+        
+        # Delete request event
+        event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
+        event.delete()
+        
     def __unicode__(self):
         return str(self.name)
 
