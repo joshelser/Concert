@@ -123,6 +123,7 @@ def delete_collection(request):
     
 ###
 #   Retrieve a JSON list of the collections this user is associated with.
+#   This is used on the "Manage Collections" panel.
 #
 ###
 @login_required
@@ -133,24 +134,35 @@ def user_collections(request):
     # Get all collections this user is a member of
     collections = user.collection_set.all()
     
+    join_requests = user.collection_join_requests.all()
+    
     results = list()
     
-    # For each of these collections
-    for col in collections:
-        
-        # If the current user is the admin
-        if col.admin == user:
-            admin = 1
-        else:
-            admin = 0
-        
-        # Build json results
-        results.append(dict({
+    def build_result(col):
+        return dict({
             'name': col.name,
             'id': col.id,
             'num_users': col.users.all().count(),
-            'admin': admin
-        }))
+        })
+    
+    # For each of these collections
+    for col in collections:
+        result = build_result(col)
+        
+        # If the current user is the admin
+        if col.admin == user:
+            result['admin'] = 1
+        else:
+            result['member'] = 1
+        
+        # Build json results
+        results.append(result)
+        
+    # For each of the join requests, add them to the collection list as well
+    for col in join_requests:
+        result = build_result(col)
+        result['request'] = 1
+        results.append(result)
         
     
     #   Serialize results into JSON response        

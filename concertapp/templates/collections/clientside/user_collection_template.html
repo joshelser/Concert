@@ -15,10 +15,12 @@
     </div>
     
     <div class="user_collection_actions table-cell" id="user_collection_actions-${id}">
-        {{if admin == 1}}
+        {{if admin}}
             <button class="delete_collection" id="delete_collection-${id}" data-collection_id="${id}">Delete this collection</button>    
-        {{else}}
+        {{else member}}
             <button class="leave_collection" id="leave_collection-${id}" data-collection_id="${id}">Leave this collection</button>
+        {{else request}}
+            Awaiting approval.
         {{/if}}
     </div>
 

@@ -68,12 +68,6 @@ ManageCollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
-    
-    
-    if(leaveButton.length == 0 && deleteButton.length == 0) {
-        throw new Error('leaveButton or deleteButton must be defined');
-    }    
-    
 }
 
 /**
