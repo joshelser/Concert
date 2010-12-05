@@ -261,7 +261,10 @@ class Collection(models.Model):
             raise Exception("user dne")
 
         if user in self.users.all():
-            raise Exception("User can't request to join a collection they're already in")
+            raise Exception("You are already a member of this collection.")
+            
+        if user in self.requesting_users.all():
+            raise Exception('Your request to join this group has already been submitted.')
 
         self.requesting_users.add(user)
         self.save()

@@ -209,21 +209,15 @@ def join_collection(request, collection_id):
     
     response = {
         'status': 'error or success', 
-        'notification': 'The text to send to the user', 
+        'notification': '', 
     }
     
-    # If user is already a member
-    if user in collection.users.all():
-        response['status'] = 'error'
-        response['notification'] = 'You are already a member of this group.'
-    # If user has already requested to join this collection
-    elif user in collection.requesting_users.all():
-        response['status'] = 'error'
-        response['notification'] = 'Your request to join this group has already been submitted.'
-    # we can add a request for this user
-    else:
+    try:
         collection.add_request(user)
         response['status'] = 'success'
+    except Exception, e:
+        response['status'] = 'error'
+        response['notification'] = str(e)
     
     return HttpResponse(simplejson.dumps(response), content_type='application/json')
     
