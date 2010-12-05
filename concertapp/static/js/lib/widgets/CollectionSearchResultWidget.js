@@ -67,6 +67,8 @@ CollectionSearchResultWidget.prototype.joinCollection = function() {
                 if(status == 'success') {
                     /* Clear search results */
                     me.panel.resultsElement.empty();
+                    /* Clear input field */
+                    me.panel.inputElement.focus().val('').blur().autocomplete('search', '');                    
                     me.panel.manageCollectionsPanel.retrieveAndUpdateCollections();
                 }
                 else {
