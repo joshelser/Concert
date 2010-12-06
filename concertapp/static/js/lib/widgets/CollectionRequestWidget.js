@@ -116,8 +116,6 @@ CollectionRequestWidget.prototype.denyRequestConfirm = function() {
  *  This is when the user confirms that he/she wants to deny a request.
  **/
 CollectionRequestWidget.prototype.denyRequest = function() {
-    
-    /* Actually deny the request */
     this.panel.toggleLoadingNotification();
 
     $.getJSON('deny/'+this.collection_id+'/'+this.user_id+'/', 
@@ -158,7 +156,25 @@ CollectionRequestWidget.prototype.approveRequestConfirm = function() {
  *  This should be called when the actual request is to be approved.
  **/
 CollectionRequestWidget.prototype.approveRequest = function() {
-    console.log('allow request');
+    this.panel.toggleLoadingNotification();
+
+    $.getJSON('approve/'+this.collection_id+'/'+this.user_id+'/', 
+        function(me){
+            return function(data, status) {
+                if(status == 'success' && data.status == 'success') {
+                    me.panel.toggleLoadingNotification();
+                    me.panel.retrieveAndUpdateCollections();
+                }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: "Error", 
+                        content: "An error occurred: "+data.notification, 
+                    });
+                }
+            };
+        }(this)
+    );
+    
 };
 
 
