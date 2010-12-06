@@ -27,6 +27,31 @@ CollectionRequestWidget.prototype.init = function(params) {
         throw new Error('container not found');
     }
     this.container = container;
+    
+    var panel = params.panel;
+    if(typeof(panel) == 'undefined') {
+        throw new Error('params.panel is undefined');
+    }
+    else if(panel.length == 0) {
+        throw new Error('panel not found');
+    }
+    this.panel = panel;
+
+    
+    
+    /* This grabs the user_id from the container's 'data-user_id' attribute */
+    var user_id = container.data('user_id');
+    if(typeof(user_id) == 'undefined' || user_id == null || user_id == '') {
+        throw new Error('user_id was not found');
+    }
+    this.user_id = user_id;
+    
+    var collection_id = container.data('collection_id');
+    if(typeof(collection_id) == 'undefined' || collection_id == null || collection_id == '') {
+        throw new Error('collection_id was not found');
+    }
+    this.collection_id = collection_id;
+    
 
     /* Approve button */
     var approveButton = container.children('.approve_request');
@@ -91,7 +116,26 @@ CollectionRequestWidget.prototype.denyRequestConfirm = function() {
  *  This is when the user confirms that he/she wants to deny a request.
  **/
 CollectionRequestWidget.prototype.denyRequest = function() {
-    console.log('deny request');
+    
+    /* Actually deny the request */
+    this.panel.toggleLoadingNotification();
+
+    $.getJSON('deny/'+this.collection_id+'/'+this.user_id+'/', 
+        function(me){
+            return function(data, status) {
+                if(status == 'success' && data.status == 'success') {
+                    me.panel.toggleLoadingNotification();
+                    me.panel.retrieveAndUpdateCollections();
+                }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: "Error", 
+                        content: "An error occurred: "+data.notification, 
+                    });
+                }
+            };
+        }(this)
+    );
 };
 
 /**

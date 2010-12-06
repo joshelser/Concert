@@ -92,7 +92,8 @@ ManageCollectionWidget.prototype.init = function(params) {
 
     for(var i = 0, il = collectionRequestContainers.length; i < il; i++) {
         collectionRequestWidgets.push(new CollectionRequestWidget({
-            container: $(collectionRequestContainers[i])
+            container: $(collectionRequestContainers[i]),
+            panel: this.panel, 
         }));
     }
     
