@@ -36,6 +36,7 @@ Widget.prototype.init = function(params) {
     if(typeof(context) == 'undefined') {
         throw new Error('params.context is undefined');
     }
+    this.context = context;
     
     var panel = params.panel;
     if(typeof(panel) == 'undefined') {

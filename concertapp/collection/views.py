@@ -152,6 +152,20 @@ def user_collections(request):
         # If the current user is the admin
         if col.admin == user:
             result['admin'] = 1
+            
+            # Get all of the requests for this collection
+            col_requests = col.requesting_users.all()
+            
+            # If there are requests
+            if col_requests.count():            
+                reqs = []
+                for req in col_requests:
+                    reqs.append(dict({
+                        'id': req.id, 
+                        'username': req.username, 
+                    }))
+                result['requests'] = reqs
+            
         else:
             result['member'] = 1
         

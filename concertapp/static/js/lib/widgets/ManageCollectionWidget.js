@@ -24,6 +24,8 @@ ManageCollectionWidget.prototype.init = function(params) {
 
     var container = this.container;
     
+    
+    
     /* Collection id is easier to understand here */
     var collection_id = this.id;
     this.collection_id = this.id;
@@ -82,8 +84,20 @@ ManageCollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
+    /* For all of the user collection requests, create a CollectionRequestWidget*/
+    var collectionRequestWidgets = [];
     
-}
+    
+    var collectionRequestContainers = container.children('.user_collection_requests').children();
+
+    for(var i = 0, il = collectionRequestContainers.length; i < il; i++) {
+        collectionRequestWidgets.push(new CollectionRequestWidget({
+            container: $(collectionRequestContainers[i])
+        }));
+    }
+    
+    
+};
 
 /**
  *  This will be called when the user is revoking his/her request to join a

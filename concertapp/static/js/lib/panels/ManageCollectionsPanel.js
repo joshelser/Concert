@@ -40,6 +40,17 @@ ManageCollectionsPanel.prototype.init = function(params) {
         throw new Error('malformed HTML: collectionsTable not found');
     }
     this.collectionsTable = collectionsTable;
+    
+    var collectionsTableHeader = $(this.contents).find('#manage_collections_table_header');
+    if(typeof(collectionsTableHeader) == 'undefined') {
+        throw new Error('collectionsTableHeader is undefined');
+    }
+    else if(collectionsTableHeader.length == 0) {
+        throw new Error('malformed HTML: collectionsTableHeader not found');
+    }
+    this.collectionsTableHeader = collectionsTableHeader;
+
+    
 
     
     
@@ -82,6 +93,9 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
     
     /* Temporary fragment for all DOM additions */
     var frag = document.createDocumentFragment();
+    
+    /* The header will always be first in the table */
+    frag.appendChild(this.collectionsTableHeader.get(0))
 
     for(i = 0, il = data.length; i < il; i++) {
         var col = data[i];

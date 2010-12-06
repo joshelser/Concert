@@ -73,6 +73,16 @@ Notifier.prototype.confirm = function(params) {
  *  @param  params        Object 
  **/
 Notifier.prototype.validateParams = function(params) {
+    
+    
+    /* If there is no cancelCallback, use empty function */
+    if(typeof(params.cancelCallback) == 'undefined') {
+        params.cancelCallback = function() {
+            
+        };
+    };
+    
+    
     /* Check if the user passed in content */
     var content = params.content;
     if(typeof(content) == 'undefined') {
