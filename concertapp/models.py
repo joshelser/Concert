@@ -246,12 +246,20 @@ class Collection(models.Model):
             JoinCollectionEvent(new_user = self.admin, collection = self).save()
         self.save()
 
+    ###
+    #   When an administrator accepts a user's request for approval.
+    ###
     def accept_request(self,user):
         if user not in self.requesting_users.all():
             raise Exception("You can't add a user to a collection they haven't requested ot join")
         
+        # Add user to group
         self.users.add(user)
+        # Remove user from requests
+        self.requesting_users.remove(user)
         self.save()
+        
+        
 
         event = JoinCollectionEvent(new_user = user, collection = self)
         event.save()
@@ -274,8 +282,9 @@ class Collection(models.Model):
         
     ###
     #   This is when a user decides that they don't actually want to join a
-    #   collection, so they revoke their join request.  This will delete the 
+    #   collection, or when an administrator denies a request.  This will delete the 
     #   corresponding event as well.
+    #   TODO: Decide if it is best to delete the event.
     ###
     def remove_request(self,user):
         if user not in User.objects.all():

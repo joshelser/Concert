@@ -161,7 +161,8 @@ def user_collections(request):
                 reqs = []
                 for req in col_requests:
                     reqs.append(dict({
-                        'id': req.id, 
+                        # I would like to call this 'id' instead of 'userid' but jquery-tmpl is a bitch
+                        'userid': req.id, 
                         'username': req.username, 
                     }))
                 result['requests'] = reqs
@@ -255,7 +256,52 @@ def revoke_request(request, collection_id):
     except Exception, e:
         response['notification'] = str(e)
         response['status'] = 'error'
-        
-    
-    
     return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
+###
+#   Administrator denies a join request.  This is different than revoke_request 
+#   because request.user must be the administrator of the group.
+###
+@login_required
+def deny_request(request, collection_id, user_id):
+    
+    user = User.objects.get(pk = user_id)
+    
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {}
+    if request.user != collection.admin:
+        response['status'] = 'error'
+        response['notification'] = 'You do not have sufficient privileges.'
+    else:
+        try:
+            collection.remove_request(user)
+            response['status'] = 'success'
+        except Exception, e:
+            response['notification'] = str(e)
+            response['status'] = 'error'
+
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
+###
+#   Administrator approves a join request.
+###
+@login_required
+def approve_request(request, collection_id, user_id):
+    user = User.objects.get(pk = user_id)
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {}
+    if request.user != collection.admin:
+        response['status'] = 'error'
+        response['notification'] = 'You do not have sufficient privileges'
+    else:
+        try:
+            collection.accept_request(user)
+            response['status'] = 'success'
+        except Exception, e:
+            response['notification'] = str(e)
+            response['status'] = 'error'
+
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
