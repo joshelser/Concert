@@ -133,10 +133,14 @@ The base template for all pages.  All page templates will use this.
     {% if js_page_path %}
         <script>
             {# Initialize the page with our current page path and default data #}
-            initializeUI('{{ js_page_path }}'
+            initializeUI('{{ js_page_path }}',
                 {% if data %}
                     {% autoescape off %}
-                        , {{ data }}
+                        {{ data }}
+                    {% endautoescape %}
+                {% else %}
+                    {% autoescape off %}
+                        {}
                     {% endautoescape %}
                 {% endif %}
             );

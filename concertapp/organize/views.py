@@ -33,6 +33,10 @@ from concertapp.decorators import user_is_member_and_collection_exists
 @user_is_member_and_collection_exists
 def organize_collection(request, collection_id, col, user):
     
+    data = {
+        'collections': user.get_profile().get_collections_dict(), 
+    }
+    
     
     files = Audio.objects.filter(collection = col)
     segments = AudioSegment.objects.filter(audio__collection = col)
@@ -42,7 +46,8 @@ def organize_collection(request, collection_id, col, user):
         'page_name': 'Organize '+ col.name,
         'js_page_path': '/organize/collection/',
         'files': files,
-        'segments': segments
+        'segments': segments,
+        'data': simplejson.dumps(data),         
     }, RequestContext(request));
     
 ###
