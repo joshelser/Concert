@@ -286,6 +286,32 @@ ul#recent_events {
     list-style:inside;
 }
 
+/**
+ *  Audio list panel
+ **/
+ 
+/**
+ *  File widget
+ **/
+div.file_widget {
+    display: table-row;
+    padding: 0;
+    margin: 0;
+}
+div.file_thumb {
+    display: table-cell;    
+}
+img.file_thumb_img {
+    width: 100px;
+    height: 50px;
+}
+div.file_info {
+    display: table-cell;
+}
+div.file_actions {
+    display: table-cell;
+}
+
 
 /**
  *  Buttons
