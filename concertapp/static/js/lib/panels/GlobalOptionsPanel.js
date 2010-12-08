@@ -30,18 +30,29 @@ GlobalOptionsPanel.prototype.init = function(params) {
     var contents = this.contents;
     
     /* Make sure parameter was passed in */
-    var collectionSelector = params.collectionSelector;
-    if(typeof(collectionSelector) == 'undefined') {
-        throw new Error('params.collectionSelector is undefined');
+    var collectionSelector = contents.find('.collection_selector');
+    if(typeof(collectionSelector) == 'undefined' || collectionSelector.length == 0) {
+        throw new Error('collectionSelector not found');
     }
     /* Save as member */
     this.collectionSelector = collectionSelector;
     
-    var collectionSelectorOptionsTemplate = params.collectionSelectorOptionsTemplate;
-    if(typeof(collectionSelectorOptionsTemplate) == 'undefined') {
-        throw new Error('params.collectionSelectorOptionsTemplate is undefined');
+    var collectionSelectorOptionTemplate = $('#collection_selector_option_template');
+    if(typeof(collectionSelectorOptionTemplate) == 'undefined' || collectionSelectorOptionTemplate.length == 0) {
+        throw new Error('collectionSelectorOptionTemplate not found');
     }
-    this.collectionSelectorOptionsTemplate = collectionSelectorOptionsTemplate;
+    this.collectionSelectorOptionTemplate = collectionSelectorOptionTemplate;
+    
+
+    /* The actual data for each collection */
+    var collections = params.collections;
+    if(typeof(collections) == 'undefined') {
+        throw new Error('params.collections is undefined');
+    }
+    else if(collections.length == 0) {
+        throw new Error('collections not found');
+    }
+    this.collections = collections;    
     
 
     /* Get upload button */
@@ -100,7 +111,7 @@ GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
     
     /* Populate dropdown */
     this.collectionSelector.html(
-        this.collectionSelectorOptionsTemplate.tmpl({
+        this.collectionSelectorOptionTemplate.tmpl({
             collections: data, 
         })
     );

@@ -13,8 +13,10 @@
  *  @param  pagePath        String  -   From the server, the string that we will
  *  use to determine what page we are on.  This variable is sent in on 
  *  base_site.html template.
+ *  @param  data        Object   -   the JSON object that contains all of the
+ *  data we need for this page.
  **/
-function initializeUI(pagePath) {
+function initializeUI(pagePath, data) {
     $(document).ready(function(){
         /* Make all fields in the future that have the "autoClear" class on them    
             autoclear */
@@ -29,30 +31,21 @@ function initializeUI(pagePath) {
             '/graphics/somethingelse.jpg'
         ]);
         */    
+        
+        var pageParams = {
+            data: data, 
+        };
 
         /* For each page, run JS corresponding to that page */
         var pageInitializers = {
-            '/login/': function() {
-                /* This will throw a modal window to the user 
-                    if there is a compatibility problem. */
-                detectBrowserCompatibility();
-                return new LoginPage({});
-            },
-            '/dashboard/': function() {
-                return new DashboardPage({});
-            },
-            '/collections/': function() {
-                return new CollectionsPage({});
-            },
-            '/audio/upload/': function() {
-                return new UploadPage({});
-            },
-            '/organize/collection/': function() {
-                return new OrganizePage({});
-            }
+            '/login/': LoginPage,
+            '/dashboard/': DashboardPage,
+            '/collections/': CollectionsPage,
+            '/audio/upload/': UploadPage,
+            '/organize/collection/': OrganizePage
         };
 
         /* Run the initializer function for this page. */
-        var page = pageInitializers[pagePath]();
+        var page = new pageInitializers[pagePath](pageParams);
     });
 }

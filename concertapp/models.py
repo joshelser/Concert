@@ -21,6 +21,68 @@ import os, tempfile, sys
 class ConcertUser(models.Model):
     user = models.ForeignKey(User, unique = True)
     unread_events = models.ManyToManyField('Event')
+    
+    ###
+    #   This function will get all of the collections that a user is a member
+    #   of, all of join requests for collections that the user is an administrator
+    #   of, and that the user has requested to join, and returns all of this
+    #   data in a dict that can be serialized.
+    ###
+    def get_collections_dict(self):
+        user = self.user
+        
+        # Get all collections this user is a member of
+        collections = user.collection_set.all()
+
+        # Get all collections this user has requested to join
+        join_requests = user.collection_join_requests.all()
+
+        # We will return this when we are done
+        results = []
+
+        # A small function to build a collection result into the dict
+        def build_result(col):
+            return dict({
+                'name': col.name,
+                'id': col.id,
+                'num_users': col.users.all().count(),
+            })
+
+        # For each of these collections
+        for col in collections:
+            result = build_result(col)
+
+            # If the current user is the admin
+            if col.admin == user:
+                result['admin'] = 1
+
+                # Get all of the requests for this collection
+                col_requests = col.requesting_users.all()
+
+                # If there are requests
+                if col_requests.count():            
+                    reqs = []
+                    for req in col_requests:
+                        reqs.append(dict({
+                            # I would like to call this 'id' instead of 'userid' but jquery-tmpl is a bitch
+                            'userid': req.id, 
+                            'username': req.username, 
+                        }))
+                    result['requests'] = reqs
+
+            else:
+                result['member'] = 1
+
+            # Build json results
+            results.append(result)
+
+        # For each of the join requests, add them to the collection list as well
+        for col in join_requests:
+            result = build_result(col)
+            result['request'] = 1
+            results.append(result)
+            
+        return results;
 ###
 # create_concert_user is a callback function used to create a ConcertUser
 # - described above - simultaneously with the creation of a django User.

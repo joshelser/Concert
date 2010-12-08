@@ -22,10 +22,17 @@ import json
 @login_required
 def manage_collections(request):
     user = request.user
+    
+    data = {
+        'collections': user.get_profile().get_collections_dict(), 
+    }
+    
+    
 
     return render_to_response('collections/manage_collections.html', {
         'page_name': 'Collections',
-        'js_page_path': '/collections/'
+        'js_page_path': '/collections/',
+        'data': simplejson.dumps(data), 
     }, RequestContext(request))
 
 
@@ -131,53 +138,8 @@ def user_collections(request):
     
     user = request.user
     
-    # Get all collections this user is a member of
-    collections = user.collection_set.all()
-    
-    join_requests = user.collection_join_requests.all()
-    
-    results = list()
-    
-    def build_result(col):
-        return dict({
-            'name': col.name,
-            'id': col.id,
-            'num_users': col.users.all().count(),
-        })
-    
-    # For each of these collections
-    for col in collections:
-        result = build_result(col)
-        
-        # If the current user is the admin
-        if col.admin == user:
-            result['admin'] = 1
-            
-            # Get all of the requests for this collection
-            col_requests = col.requesting_users.all()
-            
-            # If there are requests
-            if col_requests.count():            
-                reqs = []
-                for req in col_requests:
-                    reqs.append(dict({
-                        # I would like to call this 'id' instead of 'userid' but jquery-tmpl is a bitch
-                        'userid': req.id, 
-                        'username': req.username, 
-                    }))
-                result['requests'] = reqs
-            
-        else:
-            result['member'] = 1
-        
-        # Build json results
-        results.append(result)
-        
-    # For each of the join requests, add them to the collection list as well
-    for col in join_requests:
-        result = build_result(col)
-        result['request'] = 1
-        results.append(result)
+    # Get all collection info as dict
+    results = user.get_profile().get_collections_dict()
         
     
     #   Serialize results into JSON response        
@@ -185,7 +147,7 @@ def user_collections(request):
         simplejson.dumps(results),
         content_type = 'application/json'
     )
-    
+
 ###
 #   Retrieve a JSON object of the info associated with a collection
 @login_required

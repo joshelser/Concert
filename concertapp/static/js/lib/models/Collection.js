@@ -11,3 +11,8 @@
 var Collection = Backbone.Model.extend({
     
 });
+
+
+var Collections = Backbone.Collection.extend({
+    model: Collection
+});

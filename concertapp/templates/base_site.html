@@ -26,6 +26,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/vendor/json2.js"></script>
     <script src="/js/lib/vendor/backbone-min.js"></script>
     
+    <script src="/js/lib/models/Collection.js"></script>
     
     <script src="/js/lib/notifications/ModalAlert.js"></script>        
     <script src="/js/lib/notifications/ConfirmModalAlert.js"></script>        
@@ -120,15 +121,21 @@ The base template for all pages.  All page templates will use this.
     
     {% block clientside %}{% endblock %}
     {# Some client-side templates that are used on most pages #}
-    <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
+    <script id="collection_selector_option_template" type="text/x-jquery-tmpl">
         {% include "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
     {# Send variable to javascript with recognizable path so we know what page we're on #}
     {% if js_page_path %}
         <script>
-            {# Initialize the page with our current page path #}
-            initializeUI('{{ js_page_path }}');
+            {# Initialize the page with our current page path and default data #}
+            initializeUI('{{ js_page_path }}'
+                {% if data %}
+                    {% autoescape off %}
+                        , {{ data }}
+                    {% endautoescape %}
+                {% endif %}
+            );
         </script>
     {% endif %}
     
