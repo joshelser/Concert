@@ -37,14 +37,8 @@ GlobalOptionsPanel.prototype.init = function(params) {
     /* Save as member */
     this.collectionSelector = collectionSelector;
     
-    var collectionSelectorOptionTemplate = $('#collection_selector_option_template');
-    if(typeof(collectionSelectorOptionTemplate) == 'undefined' || collectionSelectorOptionTemplate.length == 0) {
-        throw new Error('collectionSelectorOptionTemplate not found');
-    }
-    this.collectionSelectorOptionTemplate = collectionSelectorOptionTemplate;
-    
 
-    /* The actual data for each collection */
+    /* The Backbone colletion for each Concert Collection */
     var collections = params.collections;
     if(typeof(collections) == 'undefined') {
         throw new Error('params.collections is undefined');
@@ -53,6 +47,7 @@ GlobalOptionsPanel.prototype.init = function(params) {
         throw new Error('collections not found');
     }
     this.collections = collections;    
+    
     
 
     /* Get upload button */
@@ -86,7 +81,7 @@ GlobalOptionsPanel.prototype.init = function(params) {
     }
     
     
-    this.retrieveAndUpdateCollectionSelector();
+    //this.retrieveAndUpdateCollectionSelector();
     
     /** INitialize behavior for collection selector */
     collectionSelector.bind('change', function(e) {
@@ -94,56 +89,15 @@ GlobalOptionsPanel.prototype.init = function(params) {
         
         window.location = '/organize/collection/'+collection_id;
     });
-}
 
-/**
- *  This will update the collectionSelector dropdown.  If params.collections is 
- *  defined, we will update the dropdown with those objects.  If not, we will
- *  retrieve the collections first.
- *
- *  @param  data        Array  -    response data from backend (collection objs)
- **/
-GlobalOptionsPanel.prototype.updateCollectionSelector = function(data) {
+    /* The Backbone view object for the collection selector */
+    var userCollectionSelectView = new UserCollectionSelectView({
+        id: 'collection_selector', 
+        collection: collections,
+        collectionSelectorOptionsTemplate: $('#collection_selector_options_template'), 
+        collectionSelector: collectionSelector, 
+    });
     
-    if(typeof(data) == 'undefined') {
-        this.retrieveAndUpdateCollectionSelector();
-    }
-    
-    /* Populate dropdown */
-    this.collectionSelector.html(
-        this.collectionSelectorOptionTemplate.tmpl({
-            collections: data, 
-        })
-    );
-    
-    
+    userCollectionSelectView.render();
+    this.userCollectionSelectView = userCollectionSelectView;
 }
-
-/**
- *  This will retrieve the collections from the backend, then update the collection
- *  dropdown.
- **/
-GlobalOptionsPanel.prototype.retrieveAndUpdateCollectionSelector = function() {
-    this.toggleLoadingNotification();
-    
-    /* retrieve the collections */
-    $.getJSON(
-        '/collections/user/', 
-        function(me) {
-            return function(data, status, xhr) {
-                me.updateCollectionSelector(data);
-                me.toggleLoadingNotification();
-            };
-        }(this)
-    );
-}
-
-/**
- *  This will remove a collection from the collection selector.
- *
- *  @param  collection_id        Number  -  The id of the collection
- **/
-GlobalOptionsPanel.prototype.removeCollectionFromSelector = function(collection_id) {
-    $('#collection_option-'+collection_id).remove();
-}
-

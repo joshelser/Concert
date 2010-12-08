@@ -13,10 +13,6 @@
 <div id="global_options_panel_middle">
   <label for="collection_selector">Organize:</label>
   <select id="collection_selector" class="collection_selector">
-    <option value="-1">Please select a collection</option>
-    {% for collection in user.collections.all %}
-    <option id="collection_option-{{ collection.id }}" value="{{ collection.id }}">{{ collection.name }}</option>
-    {% endfor %}
   </select>
 </div>
 

@@ -118,7 +118,7 @@ ManageCollectionsPanel.prototype.updateCollections = function(data) {
     this.collections = collections;
     
     /* Update dropdown */
-    this.globalOptionsPanel.updateCollectionSelector(data);
+//    this.globalOptionsPanel.updateCollectionSelector(data);
 }
 
 /**
