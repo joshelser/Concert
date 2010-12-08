@@ -1,0 +1,9 @@
+{% extends "partials/panel.html" %}
+{% load buttons %}
+
+{% block header_content %}
+    <h3 id="segments_header">Audio Segments</h3>
+    <h3 id="files_header">Audio Files</h3>
+    {% large_icon_button 'Segments' 'audiolist_switcher_segments' '#' 'Switch to segments' %}
+    {% large_icon_button 'Files' 'audiolist_switcher_files' '#' 'Switch to files' %}
+{% endblock %}

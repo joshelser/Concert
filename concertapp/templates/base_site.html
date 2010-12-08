@@ -100,19 +100,22 @@ The base template for all pages.  All page templates will use this.
     </div>
     
     <div id="layout" class="layout">
-        <header id="top" class="top">
+        <div id="layout_top" class="layout_top">
             {% if user.is_authenticated %}
                 {% panel 'partials/global_options_panel.html' 'Concert' 'global_options' %}
             {% else %}
                 <h1>Concert</h1>
                 <h2>Login</h2>
             {% endif %}
-        </header>
-
-        <div id="main_container" class="main_container">
-            {% block main_content %} asfdsad{% endblock %}
         </div>
 
+        <div id="layout_middle" class="layout_middle">
+            {% block middle %}{% endblock %}
+        </div>
+
+        <div id="layout_bottom" class="layout_bottom">
+            {% block bottom %}{% endblock %}
+        </div>
     </div>
     
     {% block clientside %}{% endblock %}
