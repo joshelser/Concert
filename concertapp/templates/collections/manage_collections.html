@@ -3,7 +3,7 @@
 {% load extra_template_tags %}
 {% load panels %}
 
-{% block middle %}
+{% block main_content %}
 
     {# Create/join collection and manage collections panels #}
 
@@ -11,11 +11,8 @@
 
     {% panel 'collections/partials/social_panel.html' 'Who else is using Concert?' 'social' %}
 
-{% endblock %}
-
-
-{% block bottom %}
     {% panel 'collections/partials/manage_collections_panel.html' 'Manage Collections' 'manage_collections' %}
+
 {% endblock %}
 
 {% block clientside %}
