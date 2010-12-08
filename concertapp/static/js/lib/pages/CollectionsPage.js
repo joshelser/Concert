@@ -7,6 +7,7 @@
 /**
  *  Initialize all stuff needed on the collections page.
  *	@class
+ *  @extends Page
  **/
 function CollectionsPage(params) {
     if(params) {
