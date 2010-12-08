@@ -302,13 +302,17 @@ div.file_thumb {
     display: table-cell;    
 }
 img.file_thumb_img {
-    width: 100px;
-    height: 50px;
+    width: 6em;
+    height: 3em;
 }
 div.file_info {
+    vertical-align: middle;
     display: table-cell;
+    padding-left: 1em;
 }
 div.file_actions {
+    padding-left: 1em;
+    vertical-align: middle;
     display: table-cell;
 }
 
