@@ -7,13 +7,21 @@
     This is the template for the organize page.    
 {% endcomment %}
 
-{% block middle %}
-    <div id="organize_layout" class="organize_layout">
+{% block main_content %}
+    <div class="row">
         {#  We have a waveform viewer panel #}
         {% panel 'partials/panel.html' 'Waveform Viewer' 'waveform_viewer' %}
+    </div>
+    <div class="row">
+        {# comments panel #}
+        {% panel 'organize/partials/comment_list_panel.html' 'Comments' 'comment_list' %}
 
         {# and an audio list panel #}
-        {% panel 'organize/partials/audiolist_panel.html' 'Audio' 'audio_list' %}
+        {% panel 'organize/partials/audio_list_panel.html' 'Audio' 'audio_list' %}
+    </div>
+
+    <div class="row">
+      {% panel 'organize/partials/tags_panel.html' 'Tags' 'tag_list' %}
     </div>
 {% endblock %}
 
