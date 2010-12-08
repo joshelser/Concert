@@ -1,12 +1,16 @@
 /**
  *  @file       Notifier.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  This is an object which can notify the user in a few different ways.  Right now
  *  the only options that are available are modal dialogs and modal alerts.  In 
  *  the future, a "growl" like interface can be triggered from here.  This should
  *  be a singleton object, i.e. only one should be instantiated.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function Notifier(params) {
     if(params) {
         this.init(params);
@@ -69,6 +73,16 @@ Notifier.prototype.confirm = function(params) {
  *  @param  params        Object 
  **/
 Notifier.prototype.validateParams = function(params) {
+    
+    
+    /* If there is no cancelCallback, use empty function */
+    if(typeof(params.cancelCallback) == 'undefined') {
+        params.cancelCallback = function() {
+            
+        };
+    };
+    
+    
     /* Check if the user passed in content */
     var content = params.content;
     if(typeof(content) == 'undefined') {

@@ -1,9 +1,12 @@
 /**
  *  @file       CollectionSearchResultWidget.js
- *  This widget is displayed for each collection in a collection search result.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
+/**
+ *  This widget is displayed for each collection in a collection search result.
+ *  @class 
+ **/
 function CollectionSearchResultWidget(params) {
     if(params) {
         this.init(params);
@@ -56,28 +59,28 @@ CollectionSearchResultWidget.prototype.joinCollection = function() {
     var id = this.id;
     
     this.panel.toggleLoadingNotification();
-    $.ajax({
-        url: 'join/'+id, 
-        success: function(me) {
+    $.getJSON('join/'+id, 
+        function(me) {
             return function(data, status) {
-                if(data == 'success') {
-                    // TODO: Remove these strings and handle this much better.
-                    com.concertsoundorganizer.notifier.alert({
-                        title: 'Success!', 
-                        content: 'Your request to join this collection has been submitted.', 
-                    });
+                var status = data.status;
+                var notification = data.notification;
+                if(status == 'success') {
+                    /* Clear search results */
+                    me.panel.resultsElement.empty();
+                    /* Clear input field */
+                    me.panel.inputElement.focus().val('').blur().autocomplete('search', '');                    
+                    me.panel.manageCollectionsPanel.retrieveAndUpdateCollections();
                 }
                 else {
-                    // TODO: Handle this error better
                     com.concertsoundorganizer.notifier.alert({
                         title: 'Error', 
-                        content: 'ERROR', 
+                        content: notification, 
                     });
                 }
                 me.panel.toggleLoadingNotification();
             }
         }(this)
-    });
+    );
 };
 
 

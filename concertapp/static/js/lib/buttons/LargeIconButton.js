@@ -1,10 +1,14 @@
 /**
  *  @file       LargeIconButton.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  This is a class for the large buttons (right now found in top options bar).  
  *  Label appears underneath icon when hovered, and goes away afterwards.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function LargeIconButton(params) {
     if(params) {
         this.init(params);

@@ -1,9 +1,13 @@
 /**
  *  @file       LinkLargeIconButton.js
- *  Just a large icon button that redirects to a URL when clicked.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  Just a large icon button that redirects to a URL when clicked.
+ *	@class
  **/
- 
 function LinkLargeIconButton(params) {
     if(params) {
         this.init(params);

@@ -94,16 +94,24 @@ def upload_audio(request):
         try:
             #   initialize audio object (this will take a while as we have to encode)
             audio.init(f)
-        except (
-            audiotools.UnsupportedFile, 
-            IOError, 
-            audiotools.PCMReaderError,
-            Exception
-        ), e:
-        
+        except IOError, e:
             # Delete audio object that was partially created.
             audio.delete()
+            return HttpResponse('An error occured while opening the file.', mimetype='text/plain')
+        except audiotools.UnsupportedFile, e:
+            # Delete audio object that was partially created.
+            audio.delete()
+            return HttpResponse('Error: Unsupported file type.', mimetype='text/plain')
+        except audiotools.PCMReaderError, e:
+            # Delete audio object that was partially created.
+            audio.delete()
+            return HttpResponse('Error reading file.', mimetype='text/plain')
+        except Exception, e:
+            audio.delete()
             return HttpResponse('Error: '+str(e), mimetype='text/plain')
+            
+            
+            
         
                         
         return HttpResponse('success', mimetype='text/plain')

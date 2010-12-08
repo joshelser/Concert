@@ -1,13 +1,14 @@
 /**
  *  @file       Panel.js
- *  Any panel that distinguishes groups of functionality on the UI.  This could be
- *  the top "global options" bar, or the waveform playback panel.  Panels will
- *  contain widgets, which may be buttons or groups of buttons.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
 /**
+ *  Any panel that distinguishes groups of functionality on the UI.  This could be
+ *  the top "global options" bar, or the waveform playback panel.  Panels will
+ *  contain widgets, which may be buttons or groups of buttons.
  *  Panel is meant to be an abstract class.  It doesn't do much on its own.
+ *  @class
  **/
 function Panel(params) {
     if(params) {

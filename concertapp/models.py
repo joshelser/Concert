@@ -246,28 +246,59 @@ class Collection(models.Model):
             JoinCollectionEvent(new_user = self.admin, collection = self).save()
         self.save()
 
+    ###
+    #   When an administrator accepts a user's request for approval.
+    ###
     def accept_request(self,user):
         if user not in self.requesting_users.all():
             raise Exception("You can't add a user to a collection they haven't requested ot join")
         
+        # Add user to group
         self.users.add(user)
+        # Remove user from requests
+        self.requesting_users.remove(user)
         self.save()
+        
+        
 
         event = JoinCollectionEvent(new_user = user, collection = self)
         event.save()
 
-    def add_request_to_join(self,user):
+    def add_request(self,user):
         if user not in User.objects.all():
             raise Exception("user dne")
 
         if user in self.users.all():
-            raise Exception("User can't request to join a collection they're already in")
+            raise Exception("You are already a member of this collection.")
+            
+        if user in self.requesting_users.all():
+            raise Exception('Your request to join this group has already been submitted.')
 
         self.requesting_users.add(user)
         self.save()
 
         event = RequestJoinCollectionEvent(requesting_user = user, collection = self)
         event.save()
+        
+    ###
+    #   This is when a user decides that they don't actually want to join a
+    #   collection, or when an administrator denies a request.  This will delete the 
+    #   corresponding event as well.
+    #   TODO: Decide if it is best to delete the event.
+    ###
+    def remove_request(self,user):
+        if user not in User.objects.all():
+            raise Exception("user dne")
+            
+        if user not in self.requesting_users.all():
+            raise Exception("User has not requested to join this collection.")
+            
+        self.requesting_users.remove(user)
+        self.save()
+        
+        # Delete request event
+        event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
+        event.delete()
         
     def __unicode__(self):
         return str(self.name)

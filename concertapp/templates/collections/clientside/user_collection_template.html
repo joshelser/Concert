@@ -1,0 +1,43 @@
+{% load extra_template_tags %}
+
+{% verbatim %}
+<div class="user_collection table-row" id="user_collection-${id}">
+    <div class="user_collection_name table-cell" id="user_collection_name-${id}">
+        ${name}
+    </div>
+    
+    <div class="user_collection_members table-cell" id="user_collection_members-${id}">
+        {{if num_users == 1}}
+            1 user
+        {{else}}
+            ${num_users} users 
+        {{/if}}
+    </div>
+    
+    <div class="user_collection_actions table-cell" id="user_collection_actions-${id}">
+        {{if admin}}
+            <button class="delete_collection" id="delete_collection-${id}">Delete this collection</button>    
+        {{else member}}
+            <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>
+        {{else request}}
+            Awaiting approval. <button class="revoke_request" id="revoke_request-${id}">Revoke request</button>
+        {{/if}}
+    </div>
+
+    <div id="user_collection_requests-${id} table-cell" class="user_collection_requests">
+        {{if requests}}
+            {{each(i, user) requests}}
+                <div id="user_collection_request-${id}-${user.userid}" class="user_collection_request" data-user_id="${user.userid}" data-collection_id="${id}">
+                    <div id="user_collection_request_user-${id}-${user.userid}" class="user_widget">
+                        <div id="user_collection_request_user_username-${id}-${user.userid}" class="user_widget_username">
+                            ${user.username}                            
+                        </div>
+                    </div>
+                    <button id="approve_request-${id}-${user.userid}" class="approve_request">Approve</button>
+                    <button id="deny_request-${id}-${user.userid}" class="deny_request">Deny</button>
+                </div>
+            {{/each}}
+        {{/if}}
+    </div>
+</div>
+{% endverbatim %}

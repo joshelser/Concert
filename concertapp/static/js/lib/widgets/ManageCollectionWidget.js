@@ -1,11 +1,15 @@
 /**
  *  @file       ManageCollectionWidget.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  A collection widget is a widget that is displayed in a collections list.  It
  *  has information about the collection, as well as options to delete or leave
  *  the collection.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function ManageCollectionWidget(params) {
     if(params) {
         this.init(params);
@@ -20,8 +24,11 @@ ManageCollectionWidget.prototype.init = function(params) {
 
     var container = this.container;
     
-    var collection_id = params.context.id;
-    this.collection_id = collection_id;
+    
+    
+    /* Collection id is easier to understand here */
+    var collection_id = this.id;
+    this.collection_id = this.id;
     
     var nameElement = container.find('#user_collection_name-'+collection_id);
     if(nameElement.length == 0) {
@@ -64,13 +71,60 @@ ManageCollectionWidget.prototype.init = function(params) {
         }(this));
     }
     
+    /* The revoke request button on the widget */
+    var revokeButton = container.find('#revoke_request-'+collection_id);
+    if(revokeButton.length) {
+        this.revokeButton = revokeButton;
+        
+        /* When revoke button is clicked, revoke join request */
+        revokeButton.click(function(me) {
+            return function() {
+                me.revokeRequest();
+            };
+        }(this));
+    }
+    
+    /* For all of the user collection requests, create a CollectionRequestWidget*/
+    var collectionRequestWidgets = [];
     
     
-    if(leaveButton.length == 0 && deleteButton.length == 0) {
-        throw new Error('leaveButton or deleteButton must be defined');
-    }    
+    var collectionRequestContainers = container.children('.user_collection_requests').children();
+
+    for(var i = 0, il = collectionRequestContainers.length; i < il; i++) {
+        collectionRequestWidgets.push(new CollectionRequestWidget({
+            container: $(collectionRequestContainers[i]),
+            panel: this.panel, 
+        }));
+    }
     
-}
+    
+};
+
+/**
+ *  This will be called when the user is revoking his/her request to join a
+ *  collection.
+ **/
+ManageCollectionWidget.prototype.revokeRequest = function() {
+    var collection_id = this.collection_id;
+    this.panel.toggleLoadingNotification();
+    
+    $.getJSON('revoke/'+collection_id, 
+        function(me){ 
+            return function(data, status){
+                if(status == 'success' && data.status == 'success') {
+                    me.panel.toggleLoadingNotification();
+                    me.panel.retrieveAndUpdateCollections();
+                }
+                else {
+                    com.concertsoundorganizer.notifier.alert({
+                        title: "Error", 
+                        content: "An error occurred: "+data.notification, 
+                    });
+                }
+            }; }(this));
+};
+
+
 
 /**
  *  This should be called when user presses the delete button for a collection.

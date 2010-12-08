@@ -1,10 +1,14 @@
 /**
  *  @file       LoggedInPage.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
  *  This class will run certain functionality that must be run on every page where
  *  a user is logged in.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
- 
 function LoggedInPage(params) {
     if(params) {
         this.init(params);

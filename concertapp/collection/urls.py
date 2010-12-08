@@ -32,4 +32,10 @@ urlpatterns = patterns('concertapp.collection.views',
     url(r'^info/(?P<collection_id>\d+)/$', 'collection_info', name='collection_info'),
     # User joins collection
     url(r'^join/(?P<collection_id>\d+)/$', 'join_collection', name='join_collection'),
+    # User revokes join request
+    url(r'^revoke/(?P<collection_id>\d+)/$', 'revoke_request', name='revoke_request'),
+    # Administrator denies join request
+    url(r'^deny/(?P<collection_id>\d+)/(?P<user_id>\d+)/$', 'deny_request', name='deny_request'),
+    # Administrator approves join request
+    url(r'^approve/(?P<collection_id>\d+)/(?P<user_id>\d+)/$', 'approve_request', name='approve_request'),
 )

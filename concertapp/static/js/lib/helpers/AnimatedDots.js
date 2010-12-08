@@ -1,5 +1,10 @@
 /**
  *  @file       AnimatedDots.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/
+
+
+/**
  *  This is a class that can be used when we want to animate some dots
  *  .
  *  ..
@@ -7,9 +12,8 @@
  *  ^ Like that.
  *  Sometimes I like to do this because it is much cheaper than a graphical
  *  loading notification.
- *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *	@class
  **/
-
 function AnimatedDots(params) {
     if(params) {
         this.init(params);

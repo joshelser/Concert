@@ -1,9 +1,13 @@
 /**
  *  @file       SettingsLinkLargeIconButton.js
- *  A button specific for the settings at the top of the page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  A button specific for the settings at the top of the page.
+ *	@class
+ **/
 function SettingsLinkLargeIconButton(params) {
     if(params) {
         this.init(params);

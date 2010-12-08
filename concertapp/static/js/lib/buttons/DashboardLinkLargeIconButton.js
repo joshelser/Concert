@@ -1,9 +1,13 @@
 /**
  *  @file       DashboardLinkLargeIconButton.js
- *  This is the button to navigate to the dashboard.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  This is the button to navigate to the dashboard.
+ *	@class
  **/
- 
 function DashboardLinkLargeIconButton(params) {
     if(params) {
         this.init(params);

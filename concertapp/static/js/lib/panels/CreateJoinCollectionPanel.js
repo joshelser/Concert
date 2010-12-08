@@ -1,10 +1,14 @@
 /**
 *  @file       CreateJoinCollectionPanel.js
+*  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/
+
+
+/**
 *  This is the panel that allows a user to create or join a group on the settings
 *  page.
-*  @author     Colin Sullivan <colinsul [at] gmail.com>
-**/
-
+ *	@class
+ **/
 function CreateJoinCollectionPanel(params) {
     if(params) {
         this.init(params);
@@ -102,7 +106,7 @@ CreateJoinCollectionPanel.prototype.initAutoCompleteBehavior = function() {
             return function(request, response) {
                 /* Our search term */
                 var term = request.term;
-
+                
                 /* If there is something to search for */
                 if(term && term != '') {    
                     /* Search for it */
@@ -156,45 +160,61 @@ CreateJoinCollectionPanel.prototype.autoCompleteResponse = function(data) {
     var term = this.currentTerm;
     /* We will have a new set of widgets for the results */
     var resultWidgets = [];
-    /* results were found! */
-    if(data.length) {
+    
+    var results = data.results;
+    var exact = data.exact;
+    
+    /* No search term */
+    if(term == '') {
+        resultsContainer.empty();
+    }
+    /* There was a search term, so we will be displaying something in the results */
+    else {
+        
         /* Temporary structure for results */
         var frag = document.createDocumentFragment();
-
-        /* For each result */
-        for(i = 0, il = data.length; i < il; i++) {
-            var obj = data[i];
+        
+        
+        /* If there was no exact match, we will display a create new option */
+        if(exact == null) {
+            frag.appendChild(createNewTemplate.tmpl({
+                term: term, 
+            }).get(0));
             
-            /* Create widget */
-            var widget = new CollectionSearchResultWidget({
-                template: resultTemplate, 
-                context: obj, 
-                panel: this, 
-            });
-            
-            /* Add to fragment */
-            frag.appendChild(widget.container.get(0));
-            
-            /* Add to list of widgets */
-            resultWidgets.push(widget);
         }
-        this.resultWidgets = resultWidgets;
+
+        /* results were found! we will display those and save references to the
+            corresponding widgets. */
+        if(results && results.length) {
+
+            /* For each result */
+            for(i = 0, il = results.length; i < il; i++) {
+                var obj = results[i];
+
+                /* Create widget */
+                var widget = new CollectionSearchResultWidget({
+                    template: resultTemplate, 
+                    context: obj, 
+                    panel: this, 
+                });
+
+                /* Add to fragment */
+                frag.appendChild(widget.container.get(0));
+
+                /* Add to list of widgets */
+                resultWidgets.push(widget);
+            }
+            this.resultWidgets = resultWidgets;
+        }
+        
+        
         /* empty results container */
         resultsContainer.empty();
         /* Put results in container */
         resultsContainer.append(frag);
+        
     }
-    /* No results :( */
-    else if(term != '') {
-        /* results container will just be "create new" option */
-        resultsContainer.html(createNewTemplate.tmpl({
-            term: term, 
-        }));
-    }
-    /* No search term */
-    else {
-        resultsContainer.empty();
-    }
+    
 }
 
 /**

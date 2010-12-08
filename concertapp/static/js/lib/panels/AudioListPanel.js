@@ -1,9 +1,13 @@
 /**
  *  @file       AudioListPanel.js
- *  Displays the segment or clip list within the audio organize page.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
+ **/ 
+
+
+/**
+ *  Displays the segment or clip list within the audio organize page.
+ *	@class
  **/
- 
 function AudioListPanel(params) {
     if(params) {
         this.init(params);

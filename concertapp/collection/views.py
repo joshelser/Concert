@@ -53,10 +53,22 @@ def search_collections(request, query):
         }
         resultsDicts.append(obj)
     
-
+    # Get exact match if one exists
+    try:
+        exact = Collection.objects.get(name=query)
+        exactDict = {
+            'name': exact.name,
+            'id': exact.id, 
+        }
+    except ObjectDoesNotExist:
+        exactDict = None
+        
     #   Serialize results into JSON response        
     return HttpResponse(
-        simplejson.dumps(resultsDicts),
+        simplejson.dumps({
+            'results': resultsDicts, 
+            'exact': exactDict, 
+        }),
         content_type = 'application/json'
     )
     
@@ -111,6 +123,7 @@ def delete_collection(request):
     
 ###
 #   Retrieve a JSON list of the collections this user is associated with.
+#   This is used on the "Manage Collections" panel.
 #
 ###
 @login_required
@@ -121,24 +134,50 @@ def user_collections(request):
     # Get all collections this user is a member of
     collections = user.collection_set.all()
     
+    join_requests = user.collection_join_requests.all()
+    
     results = list()
     
-    # For each of these collections
-    for col in collections:
-        
-        # If the current user is the admin
-        if col.admin == user:
-            admin = 1
-        else:
-            admin = 0
-        
-        # Build json results
-        results.append(dict({
+    def build_result(col):
+        return dict({
             'name': col.name,
             'id': col.id,
             'num_users': col.users.all().count(),
-            'admin': admin
-        }))
+        })
+    
+    # For each of these collections
+    for col in collections:
+        result = build_result(col)
+        
+        # If the current user is the admin
+        if col.admin == user:
+            result['admin'] = 1
+            
+            # Get all of the requests for this collection
+            col_requests = col.requesting_users.all()
+            
+            # If there are requests
+            if col_requests.count():            
+                reqs = []
+                for req in col_requests:
+                    reqs.append(dict({
+                        # I would like to call this 'id' instead of 'userid' but jquery-tmpl is a bitch
+                        'userid': req.id, 
+                        'username': req.username, 
+                    }))
+                result['requests'] = reqs
+            
+        else:
+            result['member'] = 1
+        
+        # Build json results
+        results.append(result)
+        
+    # For each of the join requests, add them to the collection list as well
+    for col in join_requests:
+        result = build_result(col)
+        result['request'] = 1
+        results.append(result)
         
     
     #   Serialize results into JSON response        
@@ -183,21 +222,86 @@ def join_collection(request, collection_id):
     
     collection = Collection.objects.get(pk = collection_id)
     
-    # Wether or not we will return a generic error
-    error = False
+    response = {
+        'status': 'error or success', 
+        'notification': '', 
+    }
     
-    # If user is already a member
-    if user in collection.users.all():
-        error = True
-    # If user has already requested to join this collection
-    elif collection in user.get_profile().collection_join_requests.all():
-        error = True
-    # we can add a request for this user
-    else:
-        user.get_profile().collection_join_requests.add(collection)
+    try:
+        collection.add_request(user)
+        response['status'] = 'success'
+    except Exception, e:
+        response['status'] = 'error'
+        response['notification'] = str(e)
     
-    if error:
-        return HttpResponse('error', content_type='text/plain')
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
+###
+#   User decides to revoke join request
+###
+@login_required
+def revoke_request(request, collection_id):
+    user = request.user
+    
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {
+        'status': 'error or success', 
+        'notification': '', 
+    }
+    
+    try:
+        collection.remove_request(user)
+        response['status'] = 'success'
+    except Exception, e:
+        response['notification'] = str(e)
+        response['status'] = 'error'
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
+###
+#   Administrator denies a join request.  This is different than revoke_request 
+#   because request.user must be the administrator of the group.
+###
+@login_required
+def deny_request(request, collection_id, user_id):
+    
+    user = User.objects.get(pk = user_id)
+    
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {}
+    if request.user != collection.admin:
+        response['status'] = 'error'
+        response['notification'] = 'You do not have sufficient privileges.'
     else:
-        return HttpResponse('success', content_type='text/plain')
+        try:
+            collection.remove_request(user)
+            response['status'] = 'success'
+        except Exception, e:
+            response['notification'] = str(e)
+            response['status'] = 'error'
+
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+    
+###
+#   Administrator approves a join request.
+###
+@login_required
+def approve_request(request, collection_id, user_id):
+    user = User.objects.get(pk = user_id)
+    collection = Collection.objects.get(pk = collection_id)
+    
+    response = {}
+    if request.user != collection.admin:
+        response['status'] = 'error'
+        response['notification'] = 'You do not have sufficient privileges'
+    else:
+        try:
+            collection.accept_request(user)
+            response['status'] = 'success'
+        except Exception, e:
+            response['notification'] = str(e)
+            response['status'] = 'error'
+
+    return HttpResponse(simplejson.dumps(response), content_type='application/json')
     

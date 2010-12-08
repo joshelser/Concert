@@ -17,7 +17,7 @@ The base template for all pages.  All page templates will use this.
     <link rel=StyleSheet href="/css/styles.css" type="text/css" media=screen>
 
     
-    <script src="/js/lib/vendor/jquery-nightly.min.js"></script>
+    <script src="/js/lib/vendor/jquery-1.4.3.min.js"></script>
     <script src="/js/lib/vendor/jquery.tmpl.min.js"></script>
     <script src="/js/lib/vendor/jquery-ui-1.8.5.custom.min.js"></script>
     <script src="/js/lib/vendor/modernizr-1.6.min.js"></script>
@@ -45,6 +45,8 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/widgets/SegmentWidget.js"></script>
     <script src="/js/lib/widgets/CollectionSearchResultWidget.js"></script>
     <script src="/js/lib/widgets/CollectionInfoWidget.js"></script>
+    <script src="/js/lib/widgets/CollectionRequestWidget.js"></script>
+    <script src="/js/lib/widgets/UserWidget.js"></script>
     
 
     <script src="/js/lib/panels/Panel.js"></script>
@@ -112,7 +114,7 @@ The base template for all pages.  All page templates will use this.
     {% block clientside %}{% endblock %}
     {# Some client-side templates that are used on most pages #}
     <script id="collection_dropdown_options" type="text/x-jquery-tmpl">
-        {% include_raw "../templates/clientside/collection_dropdown_options.html" %}
+        {% include "../templates/clientside/collection_dropdown_options.html" %}
     </script>
     
     {# Send variable to javascript with recognizable path so we know what page we're on #}

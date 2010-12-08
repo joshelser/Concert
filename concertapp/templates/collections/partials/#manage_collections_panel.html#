@@ -1,7 +1,0 @@
-{% extends 'partials/panel.html' %}
-
-
-{% block panel_content %}
-<div id="manage_collections_table" class="table">    
-</div>
-{% endblock %}

@@ -1,9 +1,13 @@
 /**
  *  @file       Widget.js
- *  This contains general stuff that needs to take place for any widget on the UI.
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
+
+/**
+ *  This contains general stuff that needs to take place for any widget on the UI.
+ *	@class
+ **/
 function Widget(params) {
     if(params) {
         this.init(params);
@@ -32,6 +36,7 @@ Widget.prototype.init = function(params) {
     if(typeof(context) == 'undefined') {
         throw new Error('params.context is undefined');
     }
+    this.context = context;
     
     var panel = params.panel;
     if(typeof(panel) == 'undefined') {
