@@ -24,11 +24,6 @@ var CreateJoinCollectionWidget = Widget.extend({
         }
         this.resultsElement = resultsElement;
         
-        var resultTemplate = $('#create_join_result_template');
-        if(typeof(resultTemplate) == 'undefined' || resultTemplate.length == 0) {
-            throw new Error('resultTemplate not found');
-        }
-        this.resultTemplate = resultTemplate;
         
         var createNewTemplate = $('#create_join_create_new_template');
         if(typeof(createNewTemplate) == 'undefined' || createNewTemplate.length == 0) {

@@ -6,6 +6,7 @@
 /**
  *  This widget is displayed for each collection in a collection search result.
  *  @class 
+ *  @extend Widget
  **/
 var CollectionSearchResultWidget = Widget.extend({
     

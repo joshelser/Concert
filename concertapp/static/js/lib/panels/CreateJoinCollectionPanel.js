@@ -36,11 +36,27 @@ var CreateJoinCollectionPanel = Panel.extend({
         }
         this.inputElement = inputElement;
         
+        
         /**
          *  The Backbone.js collection of django Collection objects for search
          *  results.
          **/
-        this.searchResults = new Collections;
+        var searchResults = new Collections;
+        this.searchResults = searchResults;
+        
+        /* Another model object for the exact result (if one exists) */
+        var exactResult = new Collection;
+        this.exactResult = exactResult;
+
+        /**
+         *  The search result widget that displays the search results.
+         **/
+        var searchResultsWidget = new CollectionSearchResultsWidget({
+            el: contents.find('.create_join_results'), 
+            collection: searchResults, 
+            panel: this, 
+            exactResult: exactResult, 
+        });
 
         /* This will hold a reference so we can keep track of the last Xhr */
         this.lastCreateJoinXhr = null;
@@ -91,9 +107,13 @@ var CreateJoinCollectionPanel = Panel.extend({
                                 if(xhr === me.lastCreateJoinXhr) {
                                     me.currentTerm = term;
                                     
-                                    var exactMatch = data.exact;
-
+                                    me.exactResult.parse(data.exact);
+                                    
+                                    console.log('me.searchResults.length:');
+                                    console.log(me.searchResults.length);
                                     me.searchResults.refresh(data.results);
+                                    console.log('me.searchResults.length:');
+                                    console.log(me.searchResults.length);
                                     
                                     me.toggleLoadingNotification();
                                 }
