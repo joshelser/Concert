@@ -24,8 +24,6 @@ ManageCollectionWidget.prototype.init = function(params) {
 
     var container = this.container;
     
-    
-    
     /* Collection id is easier to understand here */
     var collection_id = this.id;
     this.collection_id = this.id;

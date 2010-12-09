@@ -41,12 +41,15 @@ LoggedInPage.prototype.init = function(params) {
     /* And populate it with all of the data from the server */
     collections.refresh(collectionData);
     
+    /* Save Backbone collection of Concert Collections */
+    this.collections = collections;
+    
     
 
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 
         page) */
     this.globalOptionsPanel = new GlobalOptionsPanel({
-        container: $('#global_options_panel'), 
-        collections: collections, 
+        page: this, 
+        container: $('#global_options_panel')
     });
 }

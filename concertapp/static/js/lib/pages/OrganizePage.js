@@ -20,12 +20,14 @@ OrganizePage.prototype.init = function(params) {
 
     /*  Create waveform viewer panel */
     this.viewerPanel = new WaveformViewerPanel({
+        page: this, 
         container: $('#waveform_viewer_panel'), 
     });
     
     
     /* Create the audio list panel */    
     this.audioListPanel = new AudioListPanel({
+        page: this, 
         container: $('#audio_list_panel'), 
         fileWidgetTemplate: $('#file_widget_template'), 
         segmentWidgetTemplate: $('#segment_widget_template')

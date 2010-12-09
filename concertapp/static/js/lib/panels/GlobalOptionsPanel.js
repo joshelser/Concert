@@ -38,18 +38,6 @@ GlobalOptionsPanel.prototype.init = function(params) {
     this.collectionSelector = collectionSelector;
     
 
-    /* The Backbone colletion for each Concert Collection */
-    var collections = params.collections;
-    if(typeof(collections) == 'undefined') {
-        throw new Error('params.collections is undefined');
-    }
-    else if(collections.length == 0) {
-        throw new Error('collections not found');
-    }
-    this.collections = collections;    
-    
-    
-
     /* Get upload button */
     var uploadButtonContainer = contents.find('#upload_button');
     /* If this page has an upload button */
@@ -93,7 +81,7 @@ GlobalOptionsPanel.prototype.init = function(params) {
     /* The Backbone view object for the collection selector */
     var userCollectionSelectView = new UserCollectionSelectView({
         id: 'collection_selector', 
-        collection: collections,
+        collection: this.page.collections,
         collectionSelectorOptionsTemplate: $('#collection_selector_options_template'), 
         collectionSelector: collectionSelector, 
     });

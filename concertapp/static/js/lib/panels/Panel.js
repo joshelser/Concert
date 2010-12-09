@@ -20,10 +20,17 @@ function Panel(params) {
  *  Initialize the UI Panel.  Should be called from child class.
  *
  *  @param  params.container        jQuery object - container for panel  
+ *  @param  params.page             Page - the page that this panel belongs to
  *  @param  params.loading          Boolean -   Wether or not this panel is initially
  *                                      to display a loading notification.
  **/
 Panel.prototype.init = function(params) {
+    
+    var page = params.page;
+    if(typeof(page) == 'undefined') {
+        throw new Error('params.page is undefined');
+    }
+    this.page = page;
     
     var container = params.container;
     if(typeof(container) == 'undefined') {
