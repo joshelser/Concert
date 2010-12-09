@@ -78,7 +78,9 @@ var GlobalOptionsPanel = Panel.extend({
         this.collectionSelectorOptionsTemplate = collectionSelectorOptionsTemplate;
 
 
-        this.render();
+        
+        _.bindAll(this, "render");
+        this.render();        
     },
     
     /* To render this panel, just populate the dropdown */
@@ -93,7 +95,6 @@ var GlobalOptionsPanel = Panel.extend({
 
 
         return this;
-
     }
 
 });

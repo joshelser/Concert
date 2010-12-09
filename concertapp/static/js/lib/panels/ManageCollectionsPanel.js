@@ -13,7 +13,6 @@ var ManageCollectionsPanel = Panel.extend({
     
     /**
      *  @constructor
-     
      **/
     initialize: function() {
         Panel.prototype.initialize.call(this);
@@ -43,6 +42,8 @@ var ManageCollectionsPanel = Panel.extend({
         this.collectionsTableHeader = collectionsTableHeader;
         
         
+        
+        _.bindAll(this, "render");
         this.render();
     },
     render: function() {
