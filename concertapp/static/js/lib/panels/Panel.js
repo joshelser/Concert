@@ -10,13 +10,16 @@
  *  contain widgets, which may be buttons or groups of buttons.
  *  Panel is meant to be an abstract class.  It doesn't do much on its own.
  *  @class
- *  @param  params.container        jQuery object - container for panel  
- *  @param  params.page             Page - the page that this panel belongs to
- *  @param  params.loading          Boolean -   Wether or not this panel is initially
- *                                      to display a loading notification.
  **/
 var Panel = Backbone.View.extend({
     
+    /**
+     *  @constructor
+     *  @param  params.container        jQuery object - container for panel  
+     *  @param  params.page             Page - the page that this panel belongs to
+     *  @param  params.loading          Boolean -   Wether or not this panel is         
+     *                                  initially to display a loading notification.
+     **/
     initialize: function() {
         var params = this.options;
         
@@ -76,6 +79,8 @@ var Panel = Backbone.View.extend({
         }
         
     },
+    
+    /* This should be overridden */
     render: function() {
         
         return this;
