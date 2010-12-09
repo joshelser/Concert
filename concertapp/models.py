@@ -40,41 +40,10 @@ class ConcertUser(models.Model):
         # We will return this when we are done
         results = []
 
-        # A small function to build a collection result into the dict
-        def build_result(col):
-            return dict({
-                'name': col.name,
-                'id': col.id,
-                'num_users': col.users.all().count(),
-            })
-
         # For each of these collections
         for col in collections:
-            result = build_result(col)
-
-            # If the current user is the admin
-            if col.admin == user:
-                result['admin'] = 1
-
-                # Get all of the requests for this collection
-                col_requests = col.requesting_users.all()
-
-                # If there are requests
-                if col_requests.count():            
-                    reqs = []
-                    for req in col_requests:
-                        reqs.append(dict({
-                            # I would like to call this 'id' instead of 'userid' but jquery-tmpl is a bitch
-                            'userid': req.id, 
-                            'username': req.username, 
-                        }))
-                    result['requests'] = reqs
-
-            else:
-                result['member'] = 1
-
             # Build json results
-            results.append(result)
+            results.append(col.to_dict(user))
 
         # For each of the join requests, add them to the collection list as well
         for col in join_requests:
@@ -361,6 +330,44 @@ class Collection(models.Model):
         # Delete request event
         event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
         event.delete()
+        
+    ###
+    #   Convert the collection into a dictionary of values, and return it.  Some
+    #   values are relative to the user, and thus the user is required.
+    #
+    #   @param  user        User  - The current logged in user for which we are
+    #                       retrieving the collections.
+    ###
+    def to_dict(self,user):
+        result = {
+            'name': self.name, 
+            'id': self.id, 
+            'num_users': self.users.all().count()
+        }
+        
+        # If user is the administrator of this collection
+        if self.admin == user:
+            result['admin'] = 1
+            
+            # also give them all of the requests for the collection
+            reqs = self.requesting_users.all()
+            
+            # If there are requests
+            if reqs.count():
+                reqsList = []
+                
+                for req in reqs:
+                    reqsList.append({
+                        # Should call this 'id' instead of 'userid' but jquery-tmpl is a bitch
+                        'userid': req.id, 
+                        'username': req.username, 
+                    })
+                result['requests'] = reqsList
+        elif user in self.users.all():
+            result['member'] = 1
+        
+        return result  
+        
         
     def __unicode__(self):
         return str(self.name)
