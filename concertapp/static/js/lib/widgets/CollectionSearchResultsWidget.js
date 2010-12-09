@@ -23,11 +23,11 @@ var CollectionSearchResultsWidget = Widget.extend({
         }
         this.resultTemplate = resultTemplate;
         
-        var exactResult = params.exactResult;
-        if(typeof(exactResult) == 'undefined') {
-            throw new Error('exactResult is undefined');
+        var createNewTemplate = $('#create_join_create_new_template');
+        if(typeof(createNewTemplate) == 'undefined' || createNewTemplate.length == 0) {
+            throw new Error('createNewTemplate not found');
         }
-        this.exactResult = exactResult;
+        this.createNewTemplate = createNewTemplate;
         
 
         _.bindAll(this, 'render');
@@ -39,15 +39,38 @@ var CollectionSearchResultsWidget = Widget.extend({
     },
     render: function() {
         
+        var collections = this.collection;
+        if(collections.length == 0) {
+            return;
+        }
+        
         var resultTemplate = this.resultTemplate;
         
-        /* For each element in the collection */
-        var collections = this.collection;
-        collections.each(function(collection){
-            /* Create a CollectionSearchResult widget */
-            
-        });
+        var frag = document.createDocumentFragment();
         
+        if(!this.panel.exactResult) {
+            frag.appendChild(this.createNewTemplate.tmpl({
+                term: this.panel.currentTerm, 
+            }).get(0));
+        }
+        
+        /* For each element in the collection */
+        collections.each(function(frag, resultTemplate, panel) {
+            return function(collection){
+
+                /* Create a CollectionSearchResult widget */
+                var widget = new CollectionSearchResultWidget({
+                    template: resultTemplate, 
+                    model: collection,
+                    panel: panel, 
+                });
+                
+                frag.appendChild(widget.el);
+                
+            };
+        }(frag, resultTemplate, this.panel));
+        
+        $(this.el).html(frag);
         return this;
     }
 });

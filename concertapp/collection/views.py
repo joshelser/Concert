@@ -50,24 +50,25 @@ def search_collections(request, query):
 
     #   Get collections that match criteria
     results = Collection.objects.filter(name__icontains=query)
-    
+        
+    # Get exact match if one exists
+    try:
+        exact = Collection.objects.get(name=query)
+        exact = True
+    except ObjectDoesNotExist:
+        exact = False
+            
     #   Create object with properties that we will serialize
     resultsDicts = []
     for col in results:
         resultsDicts.append(col.to_dict(user))
     
-    # Get exact match if one exists
-    try:
-        exact = Collection.objects.get(name=query)
-        exactDict = exact.to_dict(user)
-    except ObjectDoesNotExist:
-        exactDict = None
         
     #   Serialize results into JSON response        
     return HttpResponse(
         simplejson.dumps({
             'results': resultsDicts, 
-            'exact': exactDict, 
+            'exact': exact, 
         }),
         content_type = 'application/json'
     )

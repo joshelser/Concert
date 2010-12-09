@@ -45,8 +45,7 @@ var CreateJoinCollectionPanel = Panel.extend({
         this.searchResults = searchResults;
         
         /* Another model object for the exact result (if one exists) */
-        var exactResult = new Collection;
-        this.exactResult = exactResult;
+        this.exactResult = null;
 
         /**
          *  The search result widget that displays the search results.
@@ -55,7 +54,6 @@ var CreateJoinCollectionPanel = Panel.extend({
             el: contents.find('.create_join_results'), 
             collection: searchResults, 
             panel: this, 
-            exactResult: exactResult, 
         });
 
         /* This will hold a reference so we can keep track of the last Xhr */
@@ -107,13 +105,9 @@ var CreateJoinCollectionPanel = Panel.extend({
                                 if(xhr === me.lastCreateJoinXhr) {
                                     me.currentTerm = term;
                                     
-                                    me.exactResult.parse(data.exact);
+                                    this.exactResult = data.exact;
                                     
-                                    console.log('me.searchResults.length:');
-                                    console.log(me.searchResults.length);
                                     me.searchResults.refresh(data.results);
-                                    console.log('me.searchResults.length:');
-                                    console.log(me.searchResults.length);
                                     
                                     me.toggleLoadingNotification();
                                 }
