@@ -39,11 +39,12 @@ var Widget = Backbone.View.extend({
         this.panel = panel;
 
         _.bindAll(this, "render");
-        
-        this.render();
     },
     render: function() {
-        this.el = this.template.tmpl(this.model.toJSON()).get(0);
+        var template = this.template;
+        if(template) {
+            this.el = template.tmpl(this.model.toJSON()).get(0);            
+        }
         
         this.delegateEvents();
                 

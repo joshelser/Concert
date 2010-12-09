@@ -66,7 +66,7 @@ var ManageCollectionsPanel = Panel.extend({
                     panel: panel
                 });
             
-                frag.appendChild(widget.el);
+                frag.appendChild(widget.render().el);
             };
         }(this));
         

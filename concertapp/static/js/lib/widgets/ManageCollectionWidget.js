@@ -15,6 +15,8 @@ var ManageCollectionWidget = Widget.extend({
     initialize: function() {
         Widget.prototype.initialize.call(this);
         
+        this.render();
+        
         var params = this.options;
         
         var container = $(this.el);

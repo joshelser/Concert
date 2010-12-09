@@ -30,7 +30,6 @@ var CollectionSearchResultsWidget = Widget.extend({
         this.createNewTemplate = createNewTemplate;
         
 
-        _.bindAll(this, 'render');
         /* Bind collection events to render */
         var collections = this.collection;
         collections.bind('refresh', this.render);
@@ -40,35 +39,40 @@ var CollectionSearchResultsWidget = Widget.extend({
     render: function() {
         
         var collections = this.collection;
-        if(collections.length == 0) {
-            return;
-        }
+
+        /* Clear results */
+        $(this.el).empty();
         
         var resultTemplate = this.resultTemplate;
         
         var frag = document.createDocumentFragment();
         
-        if(!this.panel.exactResult) {
+        var currentTerm = this.panel.currentTerm;
+        var exact = this.panel.exactResult;
+        
+        if(!exact && currentTerm != '') {
             frag.appendChild(this.createNewTemplate.tmpl({
-                term: this.panel.currentTerm, 
+                term: currentTerm, 
             }).get(0));
         }
         
-        /* For each element in the collection */
-        collections.each(function(frag, resultTemplate, panel) {
-            return function(collection){
+        if(collections.length) {
+            /* For each element in the collection */
+            collections.each(function(frag, resultTemplate, panel) {
+                return function(collection){
 
-                /* Create a CollectionSearchResult widget */
-                var widget = new CollectionSearchResultWidget({
-                    template: resultTemplate, 
-                    model: collection,
-                    panel: panel, 
-                });
-                
-                frag.appendChild(widget.el);
-                
-            };
-        }(frag, resultTemplate, this.panel));
+                    /* Create a CollectionSearchResult widget */
+                    var widget = new CollectionSearchResultWidget({
+                        template: resultTemplate, 
+                        model: collection,
+                        panel: panel, 
+                    });
+
+                    frag.appendChild(widget.el);
+
+                };
+            }(frag, resultTemplate, this.panel));            
+        }
         
         $(this.el).html(frag);
         return this;

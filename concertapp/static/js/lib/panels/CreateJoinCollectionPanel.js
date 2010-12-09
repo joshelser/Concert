@@ -71,7 +71,6 @@ var CreateJoinCollectionPanel = Panel.extend({
     render: function() {
         
         
-        
         return this;
     },
     
@@ -105,7 +104,7 @@ var CreateJoinCollectionPanel = Panel.extend({
                                 if(xhr === me.lastCreateJoinXhr) {
                                     me.currentTerm = term;
                                     
-                                    this.exactResult = data.exact;
+                                    me.exactResult = data.exact;
                                     
                                     me.searchResults.refresh(data.results);
                                     
