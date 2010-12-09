@@ -29,15 +29,8 @@ var Panel = Backbone.View.extend({
         }
         this.page = page;
 
-        var container = params.container;
-        if(typeof(container) == 'undefined') {
-            throw new Error('params.container is undefined for '+container.selector);
-        }
-        else if(container.length == 0) {
-            throw new Error('container not found: '+container.selector);
-        }
-        this.container = container;
-
+        var container = $(this.el);
+        
         /* This is a reference to the panel's contents */
         var contents = container.children('.panel_contents');
         if(typeof(contents) == 'undefined') {

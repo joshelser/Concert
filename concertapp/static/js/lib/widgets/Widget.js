@@ -24,10 +24,10 @@ var Widget = Backbone.View.extend({
         var params = this.options;
         
         var template = params.template;
-        if(typeof(template) == 'undefined') {
-            throw new Error('params.template is undefined');
+        if(typeof(template) == 'undefined' && typeof(params.el) == 'undefined') {
+            throw new Error('params.template or params.el must be undefined');
         }
-        else if(template.length == 0) {
+        else if(typeof(template) != 'undefined' && template.length == 0) {
             throw new Error('template not found');
         }
         this.template = template;

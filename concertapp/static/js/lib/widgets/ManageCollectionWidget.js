@@ -23,8 +23,6 @@ var ManageCollectionWidget = Widget.extend({
         var collection_id = this.model.id;
         this.collection_id = this.model.id;
         
-        console.log('container:');
-        console.log(container);
 
         var nameElement = container.find('#user_collection_name-'+collection_id);
         if(nameElement.length == 0) {

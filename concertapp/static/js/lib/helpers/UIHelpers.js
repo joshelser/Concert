@@ -43,7 +43,7 @@ function initializeAutoClearFieldBehavior(){
  **/
 function preloadImages(urls) {
     var images = [];
-    for(i = 0, il = urls.length; i < il; i++) {
+    for(var i = 0, il = urls.length; i < il; i++) {
         images.push($('<img />').attr('src', urls[i]));
     }
 }
@@ -90,7 +90,7 @@ function domElementsReplace(nodes, container) {
     
     /* Loop through all of the nodes, and add them to a fragment */
     var frag = document.createDocumentFragment();
-    for(i = 0, il = nodes.length; i < il; i++) {
+    for(var i = 0, il = nodes.length; i < il; i++) {
         frag.appendChild(nodes[i]);
     }
     container.append(frag);    

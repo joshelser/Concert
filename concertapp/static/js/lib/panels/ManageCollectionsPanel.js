@@ -54,10 +54,9 @@ var ManageCollectionsPanel = Panel.extend({
         /* The header will always be first in the table */
         frag.appendChild(this.collectionsTableHeader.get(0))
 
-        /* Get collection data from page */
-        var collections = this.page.collections;
         
         /* For each collection object */
+        var collections = this.collection;
         collections.each(function(panel) {
             return function(collection){
                 /* Create a ManageCollectionWidget */

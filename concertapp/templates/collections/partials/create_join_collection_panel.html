@@ -7,14 +7,17 @@
 {% block panel_content %}
 <p>Join or create a collection below.  You can also leave the collections you are a member of, or delete the collection if you have created it.</p>
 
-<div id="create_join_widget" class="create_join_widget">
+<div id="create_join_input_container" class="create_join_input_container">
     <label for="create_join_input">Collection Name: </label>
-    <input type="text" id="create_join_input" class="autoClear" value="Enter a new or existing collection name" size="40" />
-    <div id="create_join_results" class="table"><!-- The search results go here --></div>
+    <input type="text" id="create_join_input" class="create_join_input autoClear" value="Enter a new or existing collection name" size="40" />    
+</div>
+
+<div id="create_join_results" class="create_join_results table">
+    {# The search results go here #}
 </div>
 
 <div id="collection_info_widget_container" class="collection_info_widget_container">
-    
+    {# Info for a collection goes here #}
 </div>
 
 {% endblock %}

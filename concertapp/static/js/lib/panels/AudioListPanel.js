@@ -158,12 +158,12 @@ AudioListPanel.prototype.processData = function(data) {
     /*  First we need to make our own audioData and segmentData arrays that are 
         indexed by the object's id.
     */
-    for(i = 0, il = audioDataServer.length; i < il; i++) {
+    for(var i = 0, il = audioDataServer.length; i < il; i++) {
         var audio = audioDataServer[i];
         
         audioData[audio.id] = audio;
     }
-    for(i = 0, il = segmentDataServer.length; i < il; i++) {
+    for(var i = 0, il = segmentDataServer.length; i < il; i++) {
         var segment = segmentDataServer[i];
         
         segmentData[segment.id] = segment;
@@ -175,7 +175,7 @@ AudioListPanel.prototype.processData = function(data) {
     
     
     /* For each segment data object */
-    for(i = 0, il = segmentDataServer.length; i < il; i++) {
+    for(var i = 0, il = segmentDataServer.length; i < il; i++) {
         var segment = segmentData[segmentDataServer[i].id];
         
         /* Connect with actual audio object */
@@ -214,7 +214,7 @@ AudioListPanel.prototype.processData = function(data) {
     
     
     /* For each audio data object */
-    for(i = 0, il = audioDataServer.length; i < il; i++) {
+    for(var i = 0, il = audioDataServer.length; i < il; i++) {
         var audio = audioData[audioDataServer[i].id];
         
         /* Create file widget */

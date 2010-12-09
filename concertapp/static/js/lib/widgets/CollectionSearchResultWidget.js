@@ -7,49 +7,48 @@
  *  This widget is displayed for each collection in a collection search result.
  *  @class 
  **/
-function CollectionSearchResultWidget(params) {
-    if(params) {
-        this.init(params);
+var CollectionSearchResultWidget = Widget.extend({
+    
+    initialize: function() {
+        Widget.prototype.initialize.call(this);
+
+        var params = this.options;
+        
+        var collectionInfoWidgetContainer = $('#collection_info_widget_container');
+        if(collectionInfoWidgetContainer.length == 0) {
+            throw new Error('collectionInfoWidgetContainer not found at: '+collectionInfoWidgetContainer.selector);
+        }
+        this.collectionInfoWidgetContainer = collectionInfoWidgetContainer;
+
+        var collectionInfoWidgetTemplate = $('#collection_info_widget_template');
+        if(collectionInfoWidgetTemplate.length == 0) {
+            throw new Error('collectionInfoWidgetTemplate not found');
+        }
+        this.collectionInfoWidgetTemplate = collectionInfoWidgetTemplate;
+        
+        /* When the 'info' button is clicked, create a new Collection info widget */
+        container.children('.collection_info_button').click(function(me){
+            return function() {
+                me.showCollectionInfo();
+            };
+        }(this));
+
+        /* When the 'join' button is clicked, join this collection */
+        container.children('.collection_join_button').click(function(me){
+            return function() {
+                me.joinCollection();
+            };
+        }(this));
+        
+
+        _.bindAll(this, "render");
+        this.render();
+    },
+    render: function() {
+        
+        return this;
     }
-}
-CollectionSearchResultWidget.prototype = new Widget();
-
-CollectionSearchResultWidget.prototype.init = function(params) {
-    Widget.prototype.init.call(this, params);
-    
-    var container = this.container;
-    
-    var collectionInfoWidgetContainer = $('#collection_info_widget_container');
-    if(collectionInfoWidgetContainer.length == 0) {
-        throw new Error('collectionInfoWidgetContainer not found at: '+collectionInfoWidgetContainer.selector);
-    }
-    this.collectionInfoWidgetContainer = collectionInfoWidgetContainer;
-    
-    var collectionInfoWidgetTemplate = $('#collection_info_widget_template');
-    if(collectionInfoWidgetTemplate.length == 0) {
-        throw new Error('collectionInfoWidgetTemplate not found');
-    }
-    this.collectionInfoWidgetTemplate = collectionInfoWidgetTemplate;
-
-    
-
-    
-    
-    /* When the 'info' button is clicked, create a new Collection info widget */
-    container.children('.collection_info_button').click(function(me){
-        return function() {
-            me.showCollectionInfo();
-        };
-    }(this));
-    
-    /* When the 'join' button is clicked, join this collection */
-    container.children('.collection_join_button').click(function(me){
-        return function() {
-            me.joinCollection();
-        };
-    }(this));
-}
-
+});
 
 /**
  *  Here we will join the collection.  This will happen when the user presses the

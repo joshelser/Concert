@@ -49,6 +49,6 @@ LoggedInPage.prototype.init = function(params) {
         page) */
     this.globalOptionsPanel = new GlobalOptionsPanel({
         page: this, 
-        container: $('#global_options_panel')
+        el: $('#global_options_panel')
     });
 }

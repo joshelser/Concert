@@ -58,7 +58,7 @@ AnimatedDots.prototype.init = function(params) {
     /* This is what the final step of the animation will look like, it will just be
         numDots amount of period characters */
     var finalContents = '';
-    for(i = 0; i < numDots; i++) {
+    for(var i = 0; i < numDots; i++) {
         finalContents += '.';
     }
     this.finalContents = finalContents;
