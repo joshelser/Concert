@@ -53,20 +53,13 @@ def search_collections(request, query):
     
     #   Create object with properties that we will serialize
     resultsDicts = []
-    for result in results:
-        obj = {
-            'name': result.name, 
-            'id': result.id, 
-        }
-        resultsDicts.append(obj)
+    for col in results:
+        resultsDicts.append(col.to_dict(user))
     
     # Get exact match if one exists
     try:
         exact = Collection.objects.get(name=query)
-        exactDict = {
-            'name': exact.name,
-            'id': exact.id, 
-        }
+        exactDict = exact.to_dict(user)
     except ObjectDoesNotExist:
         exactDict = None
         
