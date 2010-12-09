@@ -17,11 +17,14 @@ var ManageCollectionWidget = Widget.extend({
         
         var params = this.options;
         
-        var container = this.container;
-
+        var container = $(this.el);
+        
         /* Collection id is easier to understand here */
-        var collection_id = this.id;
-        this.collection_id = this.id;
+        var collection_id = this.model.id;
+        this.collection_id = this.model.id;
+        
+        console.log('container:');
+        console.log(container);
 
         var nameElement = container.find('#user_collection_name-'+collection_id);
         if(nameElement.length == 0) {
@@ -36,46 +39,6 @@ var ManageCollectionWidget = Widget.extend({
         }
         this.membersElement = membersElement;
 
-
-        /* The deleteButton on the widget */
-        var deleteButton = container.find('#delete_collection-'+collection_id);
-        if(deleteButton.length) {
-            this.deleteButton = deleteButton;
-
-            /* Initialize delete behavior here, because this will not change 
-                dynamically */
-            deleteButton.click(function(me){
-                return function() {
-                    me.deleteCollectionConfirm();
-                };
-            }(this));
-        }
-
-        /* The leave button on the widget */
-        var leaveButton = container.find('#leave_collection-'+collection_id);
-        if(leaveButton.length) {
-            this.leaveButton = leaveButton;
-
-            /* Initialize leave behavior here, because this will not change */
-            leaveButton.click(function(me){
-                return function() {
-                    me.leaveCollection();
-                };
-            }(this));
-        }
-
-        /* The revoke request button on the widget */
-        var revokeButton = container.find('#revoke_request-'+collection_id);
-        if(revokeButton.length) {
-            this.revokeButton = revokeButton;
-
-            /* When revoke button is clicked, revoke join request */
-            revokeButton.click(function(me) {
-                return function() {
-                    me.revokeRequest();
-                };
-            }(this));
-        }
 
         /* For all of the user collection requests, create a CollectionRequestWidget*/
         var collectionRequestWidgets = [];
@@ -93,8 +56,42 @@ var ManageCollectionWidget = Widget.extend({
 
         _.bindAll(this, "render");
     },
+    
     render: function() {
+        Widget.prototype.render.call(this);
+        
+        
         
         return this;
+    },
+    
+    events: {
+        'click button.delete_collection': 'delete_collection', 
+        'click button.leave_collection': 'leave_collection',
+        'click button.revoke_request': 'revoke_request',
+        
+    },
+    
+    /**
+     *  This will be executed when the delete button is pressed on a collection
+     **/
+    delete_collection: function() {
+        console.log('delete_collection');
+    },
+    
+    /**
+     *  This will be executed when the "leave" button is pressed on a collection
+     **/
+    leave_collection: function() {
+        console.log('leave_collection');
+    },
+    
+    /**
+     *  This will be executed when the "revoke" button is pressed on a collection
+     *  that the user has requested to join.
+     **/
+    revoke_request: function() {
+        console.log('revoke_request');
     }
+    
 });

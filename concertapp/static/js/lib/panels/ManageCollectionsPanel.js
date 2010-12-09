@@ -54,19 +54,23 @@ var ManageCollectionsPanel = Panel.extend({
         /* The header will always be first in the table */
         frag.appendChild(this.collectionsTableHeader.get(0))
 
-        var data = this.page.collections.toJSON();
-        for(i = 0, il = data.length; i < il; i++) {
-            var col = data[i];
-
-            var widget = new ManageCollectionWidget({
-                template: this.collectionTemplate, 
-                context: col,
-                panel: this
-            });
-
-            frag.appendChild(widget.container.get(0));
-
-        }
+        /* Get collection data from page */
+        var collections = this.page.collections;
+        
+        /* For each collection object */
+        collections.each(function(panel) {
+            return function(collection){
+                /* Create a ManageCollectionWidget */
+                var widget = new ManageCollectionWidget({
+                    template: panel.collectionTemplate, 
+                    model: collection, 
+                    panel: panel
+                });
+            
+                frag.appendChild(widget.el);
+            };
+        }(this));
+        
 
         /* Update manage collections list */
         this.collectionsTable.empty().append(frag);

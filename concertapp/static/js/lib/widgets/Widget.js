@@ -18,7 +18,6 @@ var Widget = Backbone.View.extend({
      *
      *  @constructor
      *  @param  params.template        jQuery tmpl object   -   THe template.
-     *  @param  params.context        Object     - the context to send to template.
      *  @param  params.panel        Panel object that we belong to.  
      **/    
     initialize: function() {
@@ -31,12 +30,7 @@ var Widget = Backbone.View.extend({
         else if(template.length == 0) {
             throw new Error('template not found');
         }
-
-        var context = params.context;
-        if(typeof(context) == 'undefined') {
-            throw new Error('params.context is undefined');
-        }
-        this.context = context;
+        this.template = template;
 
         var panel = params.panel;
         if(typeof(panel) == 'undefined') {
@@ -44,14 +38,15 @@ var Widget = Backbone.View.extend({
         }
         this.panel = panel;
 
-        this.id = context.id; 
-
-        this.container = template.tmpl(context);
-
         _.bindAll(this, "render");
+        
+        this.render();
     },
     render: function() {
+        this.el = this.template.tmpl(this.model.toJSON()).get(0);
         
+        this.delegateEvents();
+                
         return this;
     }
 });
