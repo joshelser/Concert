@@ -542,10 +542,13 @@ class Audio(models.Model):
         
         #   now overwrite the dummy files with the actual encodes
         
+        print >> sys.stderr, "debug:\n"
+        sys.stderr.flush()
+        
         # We will first normalize the wav file (convert to proper sample rate,
         #   etc). NOTE: this doesn't actually mean "normalize" to 0db, but 
         #   hopefully in the future.
-        audioHelpers.toNormalizedWav(wavInput, wavOutput)
+        audioHelpers.toNormalizedWav(wavInput, wavOutput)        
         
         #   Do the same for ogg
         audioHelpers.toOgg(oggInput, oggOutput)

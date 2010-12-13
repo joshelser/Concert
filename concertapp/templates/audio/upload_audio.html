@@ -15,7 +15,7 @@
         <div class="uploadfilewidget table-row" id="uploadfilewidget-${id}">
             <div class="uploadfilewidget_filename table-cell" id="uploadfilewidget_filename-${id}">${filename}</div>
             <div class="uploadfilewidget_collection_selector_container table-cell">
-                <select id="uploadfilewidget_collection_selector-${id}" class="uploadfilewidget_collection_selector" name="collection">
+                <select id="uploadfilewidget_collection_selector-${id}" class="uploadfilewidget_collection_selector" name="collection_id">
                     <option value="-1">Please select a collection</option>
                     {# Server side templating, to populate dropdowns #}
                     {% for collection in user.collections.all %}
@@ -30,7 +30,7 @@
     </script>
 
     <script id="file_chooser_template" type="text/x-jquery-tmpl">
-        <input name="audio" type="file" multiple="false" id="file_chooser-${id}" accept="audio/*" />
+        <input name="audio" type="file" multiple="false" id="file_chooser-${id}" />
     </script>
 
 {% endblock %}

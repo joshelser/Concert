@@ -23,16 +23,7 @@ UploadPage.prototype.init = function(params) {
      **/
     this.uploadPanel = new UploadPanel({
         page: this, 
-        container: $('#upload_audio_panel'), 
-        fileChooserContainer: $('#choose_file_container'), 
-        fileChooserTemplate: $('#file_chooser_template'), 
-        uploadFormElement: $('#server_upload_form'),
-        uploadFileWidgetTemplate: $('#uploadfilewidget_template'), 
-        filesTable: $('#files_table'),
-        uploadButtonElement: $('#upload_submit_button'), 
-        fileChooserLabel: $('#file_uploader_label'), 
-        statusContainer: $('#status_container'),
-        statusDots: $('#status_animated_dots')
+        el: $('#upload_audio_panel')
     });
     
 }

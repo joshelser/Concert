@@ -85,7 +85,7 @@ def upload_audio(request):
         
         # The collection that this audio object is to be associated with.
         try:
-            col = Collection.objects.get(id = request.POST['collection'])
+            col = Collection.objects.get(id = request.POST['collection_id'])
         except ObjectDoesNotExist, e:
             return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
 
