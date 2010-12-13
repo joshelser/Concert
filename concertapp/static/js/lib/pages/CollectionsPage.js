@@ -22,7 +22,6 @@ CollectionsPage.prototype.init = function(params) {
     /**
      *  Create "create/join collection panel"
      **/
-
     var createJoinCollectionPanel = new CreateJoinCollectionPanel({
         page: this, 
         el: $('#create_join_panel'), 
@@ -36,9 +35,16 @@ CollectionsPage.prototype.init = function(params) {
      **/
     var manageCollectionsPanel = new ManageCollectionsPanel({
         page: this, 
-        el: $('#manage_collections_panel').get(0),
-        collection: this.collections, 
+        container: $('#manage_collections_panel'), 
+        collectionTemplate: $('#collection_template'),
     });
     this.manageCollectionsPanel = manageCollectionsPanel;
+    
+    /** Connect panels **/
+    createJoinCollectionPanel.manageCollectionsPanel = manageCollectionsPanel;
+    manageCollectionsPanel.globalOptionsPanel = this.globalOptionsPanel;
+    
+    /* Retrieve collections to manage */
+    manageCollectionsPanel.retrieveAndUpdateCollections();
     
 }
