@@ -33,21 +33,14 @@ CollectionsPage.prototype.init = function(params) {
     
     /**
      *  "ManageCollectionsPanel"
-     *
+     **/
     var manageCollectionsPanel = new ManageCollectionsPanel({
         page: this, 
-        container: $('#manage_collections_panel'), 
-        collectionTemplate: $('#collection_template'),
+        el: $('#manage_collections_panel'),
+        userCollections: userCollections, 
     });
     this.manageCollectionsPanel = manageCollectionsPanel;
     
-    /** Connect panels *
-    createJoinCollectionPanel.manageCollectionsPanel = manageCollectionsPanel;
-    manageCollectionsPanel.globalOptionsPanel = this.globalOptionsPanel;
-    
-    /* Retrieve collections to manage 
-    manageCollectionsPanel.retrieveAndUpdateCollections();
-    */
     
     this.refreshUserCollections();
 };

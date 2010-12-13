@@ -42,8 +42,6 @@ LoggedInPage.prototype.init = function(params) {
     /* Save Backbone collection of Concert Collections */
     this.userCollections = userCollections;
     
-    
-
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 
         page) */
     this.globalOptionsPanel = new GlobalOptionsPanel({

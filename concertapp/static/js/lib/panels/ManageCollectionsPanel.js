@@ -41,10 +41,21 @@ var ManageCollectionsPanel = Panel.extend({
         }
         this.collectionsTableHeader = collectionsTableHeader;
         
+        var userCollections = params.userCollections;
+        if(typeof(userCollections) == 'undefined') {
+            throw new Error('params.userCollections is undefined');
+        }
+        this.userCollections = userCollections;
+
+        
+        
         
         
         _.bindAll(this, "render");
-        this.render();
+        /* Bind collection events to render */
+        userCollections.bind('refresh', this.render);
+        userCollections.bind('add', this.render);
+        userCollections.bind('remove', this.render);
     },
     render: function() {
 
