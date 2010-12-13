@@ -29,21 +29,20 @@ var CollectionSearchResultsWidget = Widget.extend({
         }
         this.createNewTemplate = createNewTemplate;
         
-        var userCollections = params.userCollections;
-        if(typeof(userCollections) == 'undefined') {
-            throw new Error('params.userCollections is undefined');
+        var searchResults = params.searchResults;
+        if(typeof(searchResults) == 'undefined') {
+            throw new Error('params.searchResults is undefined');
         }
-        this.userCollections = userCollections;
+        this.searchResults = searchResults;
 
+        
 
         /* Bind collection events to render */
-        userCollections.bind('refresh', this.render);
-        userCollections.bind('add', this.render);
-        userCollections.bind('remove', this.render);
+        searchResults.bind('refresh', this.render);
     },
     render: function() {
         
-        var collections = this.userCollections;
+        var collections = this.searchResults;
 
         /* Clear results */
         $(this.el).empty();

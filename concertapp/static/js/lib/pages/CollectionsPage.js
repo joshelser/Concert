@@ -19,13 +19,14 @@ CollectionsPage.prototype = new LoggedInPage();
 CollectionsPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
+    var userCollections = this.userCollections;
+    
     /**
      *  Create "create/join collection panel"
-     *
+     **/
     var createJoinCollectionPanel = new CreateJoinCollectionPanel({
         page: this, 
-        el: $('#create_join_panel'), 
-        userCollections: this.userCollections, 
+        el: $('#create_join_panel')
     });
     this.createJoinCollectionPanel = createJoinCollectionPanel;
     
@@ -47,4 +48,6 @@ CollectionsPage.prototype.init = function(params) {
     /* Retrieve collections to manage 
     manageCollectionsPanel.retrieveAndUpdateCollections();
     */
-}
+    
+    this.refreshUserCollections();
+};

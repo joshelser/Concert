@@ -34,6 +34,7 @@ LoggedInPage.prototype.init = function(params) {
     if(typeof(userCollectionData) == 'undefined') {
         throw new Error('data.collections is undefined');
     }
+    this.userCollectionData = userCollectionData;
     
     /* Now lets create our Backbone collection */
     var userCollections = new Collections;
@@ -51,7 +52,12 @@ LoggedInPage.prototype.init = function(params) {
         userCollections: userCollections
     });
     
+};
+
+/**
+ *  This should be called from init of the child classes.
+ **/
+LoggedInPage.prototype.refreshUserCollections = function() {
     /* Populate the collections object with all of the data from the server */
-    userCollections.refresh(userCollectionData);
-    
-}
+    this.userCollections.refresh(this.userCollectionData);
+};

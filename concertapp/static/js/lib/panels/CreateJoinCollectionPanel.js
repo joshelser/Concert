@@ -1,6 +1,6 @@
 /**
-*  @file       CreateJoinCollectionPanel.js
-*  @author     Colin Sullivan <colinsul [at] gmail.com>
+ *  @file       CreateJoinCollectionPanel.js
+ *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
 
 
@@ -8,10 +8,7 @@
  *  This is the panel that allows a user to create or join a group on the settings
  *  page.
  *	@class
- **/
-/**
- *  
- *  @class
+ *  @extends Panel
  **/
 var CreateJoinCollectionPanel = Panel.extend({
     
@@ -52,7 +49,7 @@ var CreateJoinCollectionPanel = Panel.extend({
          **/
         var searchResultsWidget = new CollectionSearchResultsWidget({
             el: contents.find('.create_join_results'), 
-            collection: searchResults, 
+            searchResults: searchResults, 
             panel: this, 
         });
 
@@ -65,8 +62,7 @@ var CreateJoinCollectionPanel = Panel.extend({
         /* Initialize the auto complete behavior */
         this.initAutoCompleteBehavior();
 
-        _.bindAll(this, "render");
-        this.render();
+        _.bindAll(this, "render");        
     },
     render: function() {
         
