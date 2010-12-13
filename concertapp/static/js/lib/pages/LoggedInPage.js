@@ -30,19 +30,16 @@ LoggedInPage.prototype.init = function(params) {
     this.data = data;
     
     /* Every page needs the collection data */
-    var collectionData = data.collections;
-    if(typeof(collectionData) == 'undefined') {
+    var userCollectionData = data.collections;
+    if(typeof(userCollectionData) == 'undefined') {
         throw new Error('data.collections is undefined');
     }
     
     /* Now lets create our Backbone collection */
-    var collections = new Collections;
-    
-    /* And populate it with all of the data from the server */
-    collections.refresh(collectionData);
-    
+    var userCollections = new Collections;
+        
     /* Save Backbone collection of Concert Collections */
-    this.collections = collections;
+    this.userCollections = userCollections;
     
     
 
@@ -50,6 +47,11 @@ LoggedInPage.prototype.init = function(params) {
         page) */
     this.globalOptionsPanel = new GlobalOptionsPanel({
         page: this, 
-        el: $('#global_options_panel')
+        el: $('#global_options_panel'),
+        userCollections: userCollections
     });
+    
+    /* Populate the collections object with all of the data from the server */
+    userCollections.refresh(userCollectionData);
+    
 }

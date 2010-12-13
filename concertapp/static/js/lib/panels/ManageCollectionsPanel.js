@@ -56,7 +56,7 @@ var ManageCollectionsPanel = Panel.extend({
 
         
         /* For each collection object */
-        var collections = this.collection;
+        var collections = this.userCollections;
         collections.each(function(panel) {
             return function(collection){
                 /* Create a ManageCollectionWidget */

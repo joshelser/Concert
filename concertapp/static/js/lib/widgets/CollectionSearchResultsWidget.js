@@ -29,16 +29,21 @@ var CollectionSearchResultsWidget = Widget.extend({
         }
         this.createNewTemplate = createNewTemplate;
         
+        var userCollections = params.userCollections;
+        if(typeof(userCollections) == 'undefined') {
+            throw new Error('params.userCollections is undefined');
+        }
+        this.userCollections = userCollections;
+
 
         /* Bind collection events to render */
-        var collections = this.collection;
-        collections.bind('refresh', this.render);
-        collections.bind('add', this.render);
-        collections.bind('remove', this.render);
+        userCollections.bind('refresh', this.render);
+        userCollections.bind('add', this.render);
+        userCollections.bind('remove', this.render);
     },
     render: function() {
         
-        var collections = this.collection;
+        var collections = this.userCollections;
 
         /* Clear results */
         $(this.el).empty();

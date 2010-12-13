@@ -60,8 +60,14 @@ var GlobalOptionsPanel = Panel.extend({
             });
         }
 
+        var userCollections = params.userCollections;
+        if(typeof(userCollections) == 'undefined') {
+            throw new Error('params.userCollections is undefined');
+        }
+        this.userCollections = userCollections;
 
-        //this.retrieveAndUpdateCollectionSelector();
+        
+
 
         /** INitialize behavior for collection selector */
         collectionSelector.bind('change', function(e) {
@@ -80,7 +86,10 @@ var GlobalOptionsPanel = Panel.extend({
 
         
         _.bindAll(this, "render");
-        this.render();        
+        /* Bind collection events to render */
+        userCollections.bind('refresh', this.render);
+        userCollections.bind('add', this.render);
+        userCollections.bind('remove', this.render);
     },
     
     /* To render this panel, just populate the dropdown */
@@ -89,7 +98,7 @@ var GlobalOptionsPanel = Panel.extend({
         /* Populate dropdown */
         this.collectionSelector.html(
             this.collectionSelectorOptionsTemplate.tmpl({
-                collections: this.page.collections.toJSON(), 
+                collections: this.userCollections.toJSON(), 
             })
         );
 
