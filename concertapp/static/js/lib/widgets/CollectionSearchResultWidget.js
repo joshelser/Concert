@@ -23,5 +23,15 @@ var CollectionSearchResultWidget = Widget.extend({
         Widget.prototype.render.call(this);
         
         return this;
-    }
+    },
+    events: {
+        'click .collection_join_button': 'joinCollection', 
+        'click .collection_info_button': 'showCollectionInfo', 
+    }, 
+    joinCollection: function() {
+        console.log('joinCollection');
+    }, 
+    showCollectionInfo: function() {
+        console.log('showCollectionInfo');
+    }, 
 });
