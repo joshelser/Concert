@@ -123,16 +123,15 @@ def delete_collection(request):
         return HttpResponse('error')
     
 ###
-#   Retrieve a JSON list of the collections this user is associated with.
-#   This is used on the "Manage Collections" panel.
-#
+#   Retrieve a JSON list of the collections this user is a member of
+#   This is used on every page (for the organize dropdown)
 ###
 @login_required
 def user_collections(request):
     
     user = request.user
     
-    # Get all collection info as dict
+    # Get all collections for which we are a member
     results = user.get_profile().get_collections_dict()
         
     
@@ -141,6 +140,23 @@ def user_collections(request):
         simplejson.dumps(results),
         content_type = 'application/json'
     )
+
+###
+#   Retrieve a JSON list of the collections that this user has requested to join.
+#   This is used on the settings page.
+###
+@login_required
+def user_requests(request):
+    user = request.user
+    
+    results = user.get_profile().get_requests_dict()
+    
+    #   Serialize results into JSON response        
+    return HttpResponse(
+        simplejson.dumps(results),
+        content_type = 'application/json'
+    )
+    
 
 ###
 #   Retrieve a JSON object of the info associated with a collection

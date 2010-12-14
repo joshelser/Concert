@@ -21,7 +21,9 @@ urlpatterns = patterns('concertapp.collection.views',
     url(r'^delete/$', 'delete_collection', name='delete_collection'),
     
     # retrieve collections
-    url(r'^user/$', 'user_collections', name='user_collections'),
+    url(r'^usercollections/$', 'user_collections', name='user_collections'),
+    # requests
+    url(r'^userrequests/$', 'user_requests', name='user_requests'),
     
     ###
     #   JSON/AJAX

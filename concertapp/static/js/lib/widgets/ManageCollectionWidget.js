@@ -91,7 +91,7 @@ var ManageCollectionWidget = Widget.extend({
      *  that the user has requested to join.
      **/
     revoke_request: function() {
-        console.log('revoke_request');
+        this.model.revokeRequest();
     }
     
 });

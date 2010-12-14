@@ -38,7 +38,7 @@ var CreateJoinCollectionPanel = Panel.extend({
          *  The Backbone.js collection of django Collection objects for search
          *  results.
          **/
-        var searchResults = new Collections;
+        var searchResults = new CollectionSet;
         this.searchResults = searchResults;
         
         /* Another model object for the exact result (if one exists) */

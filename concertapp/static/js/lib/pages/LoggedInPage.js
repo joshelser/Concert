@@ -37,7 +37,7 @@ LoggedInPage.prototype.init = function(params) {
     this.userCollectionData = userCollectionData;
     
     /* Now lets create our Backbone collection */
-    var userCollections = new Collections;
+    var userCollections = new CollectionSet;
         
     /* Save Backbone collection of Concert Collections */
     this.userCollections = userCollections;

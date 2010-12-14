@@ -24,9 +24,7 @@ class ConcertUser(models.Model):
     
     ###
     #   This function will get all of the collections that a user is a member
-    #   of, all of join requests for collections that the user is an administrator
-    #   of, and that the user has requested to join, and returns all of this
-    #   data in a dict that can be serialized.
+    #   of in a dict that can be serialized.
     ###
     def get_collections_dict(self):
         user = self.user
@@ -34,24 +32,41 @@ class ConcertUser(models.Model):
         # Get all collections this user is a member of
         collections = user.collection_set.all()
 
-        # Get all collections this user has requested to join
-        join_requests = user.collection_join_requests.all()
 
         # We will return this when we are done
         results = []
+        
 
         # For each of these collections
         for col in collections:
             # Build json results
             results.append(col.to_dict(user))
 
+            
+        return results
+        
+    ###
+    #   gets all of join requests for collections that the user is an administrator
+    #   of, and that the user has requested to join, and returns all of this
+    #   data
+    ###
+    def get_requests_dict(self):
+        user = self.user
+
+        # Get all collections this user has requested to join
+        join_requests = user.collection_join_requests.all()
+
+        # We will return this when we are done
+        results = []
+
         # For each of the join requests, add them to the collection list as well
         for col in join_requests:
-            result = build_result(col)
-            result['request'] = 1
-            results.append(result)
+            results.append(col.to_dict(user))
             
-        return results;
+        return results
+        
+        
+    
 ###
 # create_concert_user is a callback function used to create a ConcertUser
 # - described above - simultaneously with the creation of a django User.

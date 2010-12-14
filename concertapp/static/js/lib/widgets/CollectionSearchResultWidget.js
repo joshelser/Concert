@@ -29,7 +29,7 @@ var CollectionSearchResultWidget = Widget.extend({
         'click .collection_info_button': 'showCollectionInfo', 
     }, 
     joinCollection: function() {
-        console.log('joinCollection');
+        this.model.requestToJoin();
     }, 
     showCollectionInfo: function() {
         console.log('showCollectionInfo');
