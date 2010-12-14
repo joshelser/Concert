@@ -72,7 +72,7 @@ var CollectionSearchResultsWidget = Widget.extend({
                         panel: panel, 
                     });
 
-                    frag.appendChild(widget.el);
+                    frag.appendChild(widget.render().el);
 
                 };
             }(frag, resultTemplate, this.panel));            
