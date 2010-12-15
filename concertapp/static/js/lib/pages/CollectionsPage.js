@@ -23,9 +23,9 @@ CollectionsPage.prototype.init = function(params) {
     
     /** The raw collection data for the collections that the current user has
         requested to join **/
-    var userRequestsData = params.data.requests;
+    var userRequestsData = params.data.requestCollections;
     if(typeof(userRequestsData) == 'undefined') {
-        throw new Error('params.data.requests is undefined');
+        throw new Error('params.data.requestCollections is undefined');
     }
     this.userRequestsData = userRequestsData;
     
@@ -33,6 +33,23 @@ CollectionsPage.prototype.init = function(params) {
         that the user has requested to join */
     var userRequests = new CollectionSet;
     this.userRequests = userRequests;
+    
+    
+    var userAdminCollectionData = params.data.adminCollections;
+    if(typeof(userAdminCollectionData) == 'undefined') {
+        throw new Error('params.data.adminCollections is undefined');
+    }
+    this.userAdminCollectionData = userAdminCollectionData;
+    
+    console.log('userAdminCollectionData:');
+    console.log(userAdminCollectionData);
+
+    
+    
+    /*  Backbone collection that will hold Concert Collection objects that the
+        user is an administrator of */
+    var userAdminCollections = new CollectionSet;
+    this.userAdminCollections = userAdminCollections;
     
 
     

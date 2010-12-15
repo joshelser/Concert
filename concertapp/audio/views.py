@@ -72,7 +72,7 @@ def upload_audio(request):
     username = user.username
     
     data = {
-        'collections': user.get_profile().get_collections_dict(), 
+        'memberCollections':user.get_profile().get_collections_dict(), 
     }
     
     if request.method == 'POST':

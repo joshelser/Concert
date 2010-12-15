@@ -61,9 +61,22 @@ class ConcertUser(models.Model):
 
         # For each of the join requests, add them to the collection list as well
         for col in join_requests:
-            colDict = col.to_dict(user)
-            colDict['request'] = 1
-            results.append(colDict)
+            results.append(col.to_dict(user))
+            
+        return results
+    
+    ###
+    #   Get all of the collections that this user is an administrator of.
+    ###
+    def get_admin_collections_dict(self):
+        user = self.user
+        
+        collections = user.collection_set.filter(admin=user)
+        
+        results = []
+        
+        for col in collections:
+            results.append(col.to_dict(user))
             
         return results
         

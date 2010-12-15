@@ -30,9 +30,9 @@ LoggedInPage.prototype.init = function(params) {
     this.data = data;
     
     /* Every page needs the collections that this user is a member of */
-    var userCollectionData = data.collections;
+    var userCollectionData = data.memberCollections;
     if(typeof(userCollectionData) == 'undefined') {
-        throw new Error('data.collections is undefined');
+        throw new Error('data.memberCollections is undefined');
     }
     this.userCollectionData = userCollectionData;
     

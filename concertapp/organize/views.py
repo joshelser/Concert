@@ -34,7 +34,7 @@ from concertapp.decorators import user_is_member_and_collection_exists
 def organize_collection(request, collection_id, col, user):
     
     data = {
-        'collections': user.get_profile().get_collections_dict(), 
+        'memberCollections':user.get_profile().get_collections_dict(), 
     }
     
     

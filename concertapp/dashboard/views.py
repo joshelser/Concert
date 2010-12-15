@@ -14,7 +14,7 @@ def dashboard(request):
     user = request.user
     
     data = {
-        'collections': user.get_profile().get_collections_dict(), 
+        'memberCollections':user.get_profile().get_collections_dict(), 
     }
     
     return render_to_response('dashboard/dashboard.html', {
