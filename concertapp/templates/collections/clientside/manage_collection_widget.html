@@ -7,21 +7,14 @@
     </div>
     
     <div class="user_collection_members table-cell" id="user_collection_members-${id}">
-        {{if num_users == 1}}
-            1 user
-        {{else}}
-            ${num_users} users 
-        {{/if}}
+        ${num_users}{{if num_users ==  1}}user{{else}}users{{endif}}
     </div>
     
     <div class="user_collection_actions table-cell" id="user_collection_actions-${id}">
-        {{if admin}}
-            <button class="delete_collection" id="delete_collection-${id}">Delete this collection</button>    
-        {{else member}}
-            <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>
-        {{else request}}
-            Awaiting approval. <button class="revoke_request" id="revoke_request-${id}">Revoke request</button>
-        {{/if}}
+{% endverbatim %}
+        {% block actions %}
+        {% endblock %}
+{% verbatim %}
     </div>
 
     <div id="user_collection_requests-${id} table-cell" class="user_collection_requests">

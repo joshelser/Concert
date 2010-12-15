@@ -23,11 +23,36 @@ var ManageCollectionsPanel = Panel.extend({
         
         var $ = jQuery;
         
-        var collectionTemplate = $('#collection_template');
-        if(typeof(collectionTemplate) == 'undefined' || collectionTemplate.length == 0) {
-            throw new Error('collectionTemplate not found');
+        /**
+         *  Templates for manage collection widgets
+         **/
+        var memberCollectionTemplate = $('#manage_member_collection_template');
+        if(typeof(memberCollectionTemplate) == 'undefined') {
+            throw new Error('memberCollectionTemplate is undefined');
         }
-        this.collectionTemplate = collectionTemplate;
+        else if(memberCollectionTemplate.length == 0) {
+            throw new Error('memberCollectionTemplate not found');
+        }
+        this.memberCollectionTemplate = memberCollectionTemplate;
+
+        var adminCollectionTemplate = $('#manage_admin_collection_template');
+        if(typeof(adminCollectionTemplate) == 'undefined') {
+            throw new Error('adminCollectionTemplate is undefined');
+        }
+        else if(adminCollectionTemplate.length == 0) {
+            throw new Error('adminCollectionTemplate not found');
+        }
+        this.adminCollectionTemplate = adminCollectionTemplate;
+
+        var requestCollectionTemplate = $('#manage_request_collection_template');
+        if(typeof(requestCollectionTemplate) == 'undefined') {
+            throw new Error('requestCollectionTemplate is undefined');
+        }
+        else if(requestCollectionTemplate.length == 0) {
+            throw new Error('requestCollectionTemplate not found');
+        }
+        this.requestCollectionTemplate = requestCollectionTemplate;
+        
         
         var collectionsTable = $(contents).children('#manage_collections_table');
         if(typeof(collectionsTable) == 'undefined' || collectionsTable.length == 0) {

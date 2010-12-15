@@ -7,3 +7,4 @@ concertapp/media/images/*
 !concertapp/media/audio/.gitignore
 !concertapp/media/images/.gitignore
 Concert.tmproj
+*.autosave

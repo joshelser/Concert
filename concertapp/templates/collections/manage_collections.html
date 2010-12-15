@@ -15,7 +15,11 @@
 
 
 {% block bottom %}
-    {% panel 'collections/partials/manage_collections_panel.html' 'Manage Collections' 'manage_collections' %}
+    {% panel 'collections/partials/manage_admin_collections_panel.html' 'Manage Your Collections' 'manage_admin_collections_panel' %}
+    
+    {% panel 'collections/partials/manage_member_collections_panel.html' 'Manage Your Memberships' 'manage_member_collections_panel' %}
+
+    {% panel 'collections/partials/manage_request_collections_panel.html' 'Manage Your Requests' 'manage_request_collections_panel' %}
 {% endblock %}
 
 {% block clientside %}
@@ -39,8 +43,16 @@
         </div>
     </script>
 
-    <script id="collection_template" type="text/x-jquery-tmpl">
-        {% include "../templates/collections/clientside/user_collection_template.html" %}
+    <script id="manage_member_collection_template" type="text/x-jquery-tmpl">
+        {% include "../templates/collections/clientside/manage_member_collection_widget.html" %}
+    </script>
+    
+    <script id="manage_admin_collection_template" type="text/x-jquery-tmpl">
+        {% include "../templates/collections/clientside/manage_admin_collection_widget.html" %}
+    </script>
+    
+    <script id="manage_request_collection_template" type="text/x-jquery-tmpl">
+        {% include "../templates/collections/clientside/manage_request_collection_widget.html" %}
     </script>
 
     <script id="collection_info_widget_template" type="text/x-jquery-tmpl">
