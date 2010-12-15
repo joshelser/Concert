@@ -46,6 +46,14 @@ var ManageCollectionsPanel = Panel.extend({
             throw new Error('params.userCollections is undefined');
         }
         this.userCollections = userCollections;
+        
+        var userRequests = params.userRequests;
+        if(typeof(userRequests) == 'undefined') {
+            throw new Error('params.userRequests is undefined');
+        }
+        this.userRequests = userRequests;
+
+        
 
         
         
@@ -56,6 +64,9 @@ var ManageCollectionsPanel = Panel.extend({
         userCollections.bind('refresh', this.render);
         userCollections.bind('add', this.render);
         userCollections.bind('remove', this.render);
+        userRequests.bind('refresh', this.render);
+        userRequests.bind('add', this.render);
+        userRequests.bind('remove', this.render);
     },
     render: function() {
 
@@ -65,10 +76,8 @@ var ManageCollectionsPanel = Panel.extend({
         /* The header will always be first in the table */
         frag.appendChild(this.collectionsTableHeader.get(0))
 
-        
-        /* For each collection object */
-        var collections = this.userCollections;
-        collections.each(function(panel) {
+
+        var renderCollectionWidget = function(panel, frag) {
             return function(collection){
                 /* Create a ManageCollectionWidget */
                 var widget = new ManageCollectionWidget({
@@ -79,7 +88,20 @@ var ManageCollectionsPanel = Panel.extend({
             
                 frag.appendChild(widget.render().el);
             };
-        }(this));
+        }(this, frag);
+        
+        /* For each collection object */
+        var collections = this.userCollections;
+        collections.each(renderCollectionWidget);
+        
+        console.log('collections.toJSON():');
+        console.log(collections.toJSON());
+        
+        /* For each request (collection) object */
+        var requests = this.userRequests;
+        console.log('requests.toJSON():');
+        console.log(requests.toJSON());
+        requests.each(renderCollectionWidget);
         
 
         /* Update manage collections list */

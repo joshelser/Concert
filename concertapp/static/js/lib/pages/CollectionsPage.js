@@ -21,6 +21,22 @@ CollectionsPage.prototype.init = function(params) {
 
     var userCollections = this.userCollections;
     
+    /** The raw collection data for the collections that the current user has
+        requested to join **/
+    var userRequestsData = params.data.requests;
+    if(typeof(userRequestsData) == 'undefined') {
+        throw new Error('params.data.requests is undefined');
+    }
+    this.userRequestsData = userRequestsData;
+    
+    /*  Backbone collection that will hold the Concert Collection objects
+        that the user has requested to join */
+    var userRequests = new CollectionSet;
+    this.userRequests = userRequests;
+    
+
+    
+    
     /**
      *  Create "create/join collection panel"
      **/
@@ -38,9 +54,19 @@ CollectionsPage.prototype.init = function(params) {
         page: this, 
         el: $('#manage_collections_panel'),
         userCollections: userCollections, 
+        userRequests: userRequests
     });
     this.manageCollectionsPanel = manageCollectionsPanel;
     
     
-    this.refreshUserCollections();
+    this.initData();
+};
+
+/**
+ *  This is called from init.  We override because we have user Requests as well.
+ **/
+CollectionsPage.prototype.initData = function() {
+    LoggedInPage.prototype.initData.call(this);
+    
+    this.userRequests.refresh(this.userRequestsData);
 };

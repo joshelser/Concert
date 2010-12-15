@@ -35,7 +35,7 @@ function initializeUI(pagePath, data) {
         var pageParams = {
             data: data, 
         };
-
+        
         /* For each page, run JS corresponding to that page */
         var pageInitializers = {
             '/login/': LoginPage,

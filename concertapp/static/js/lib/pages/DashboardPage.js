@@ -19,5 +19,5 @@ DashboardPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
 
-    this.refreshUserCollections();
+    this.initData();
 }

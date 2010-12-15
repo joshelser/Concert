@@ -61,7 +61,9 @@ class ConcertUser(models.Model):
 
         # For each of the join requests, add them to the collection list as well
         for col in join_requests:
-            results.append(col.to_dict(user))
+            colDict = col.to_dict(user)
+            colDict['request'] = 1
+            results.append(colDict)
             
         return results
         

@@ -29,18 +29,18 @@ LoggedInPage.prototype.init = function(params) {
     }
     this.data = data;
     
-    /* Every page needs the collection data */
+    /* Every page needs the collections that this user is a member of */
     var userCollectionData = data.collections;
     if(typeof(userCollectionData) == 'undefined') {
         throw new Error('data.collections is undefined');
     }
     this.userCollectionData = userCollectionData;
     
-    /* Now lets create our Backbone collection */
+    /* Now lets create our Backbone collection of Concert Collections for which
+        the current user is a member. */
     var userCollections = new CollectionSet;
-        
-    /* Save Backbone collection of Concert Collections */
     this.userCollections = userCollections;
+        
     
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 
         page) */
@@ -53,9 +53,10 @@ LoggedInPage.prototype.init = function(params) {
 };
 
 /**
- *  This should be called from init of the child classes.
+ *  This should be called from the bottom of init of the child classes.  Should be
+ *  overridden if the page has any of its own datasets to initialize.
  **/
-LoggedInPage.prototype.refreshUserCollections = function() {
+LoggedInPage.prototype.initData = function() {
     /* Populate the collections object with all of the data from the server */
     this.userCollections.refresh(this.userCollectionData);
 };

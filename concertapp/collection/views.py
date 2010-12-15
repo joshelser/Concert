@@ -25,6 +25,7 @@ def manage_collections(request):
     
     data = {
         'collections': user.get_profile().get_collections_dict(), 
+        'requests': user.get_profile().get_requests_dict() 
     }
     
     
