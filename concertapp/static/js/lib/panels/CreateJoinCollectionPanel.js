@@ -128,5 +128,12 @@ var CreateJoinCollectionPanel = Panel.extend({
             }
         });
     },
+    resetForm: function(){
+        /* Clear text field */
+        this.inputElement.val('');
+        this.currentTerm = '';
+        /* Clear auto complete */
+        this.searchResults.refresh([]);
+    }, 
 
 });

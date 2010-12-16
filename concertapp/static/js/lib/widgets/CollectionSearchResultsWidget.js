@@ -63,7 +63,8 @@ var CollectionSearchResultsWidget = Widget.extend({
                 container: createNewElement, 
                 userAdminCollections: this.panel.page.userAdminCollections, 
                 userMemberCollections: this.panel.page.userCollections,
-                newCollectionName: currentTerm 
+                newCollectionName: currentTerm,
+                panel: this.panel,  
             });
             
             

@@ -17,7 +17,13 @@ CreateNewCollectionButton.prototype = new Button();
 
 CreateNewCollectionButton.prototype.init = function(params) {
     Button.prototype.init.call(this, params);
-
+    
+    var panel = params.panel;
+    if(typeof(panel) == 'undefined') {
+        throw new Error('params.panel is undefined');
+    }
+    this.panel = panel;
+    
     var userAdminCollections = params.userAdminCollections;
     if(typeof(userAdminCollections) == 'undefined') {
         throw new Error('params.userAdminCollections is undefined');
@@ -46,12 +52,13 @@ CreateNewCollectionButton.prototype.click = function() {
     });
     
     newCollection.save({}, {
-        success: function(userMemberCollections, userAdminCollections) {
+        success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
                 userMemberCollections.add(model);
                 userAdminCollections.add(model);
+                panel.resetForm();
             };
-        }(this.userMemberCollections, this.userAdminCollections)
+        }(this.userMemberCollections, this.userAdminCollections, this.panel)
     });
     
     

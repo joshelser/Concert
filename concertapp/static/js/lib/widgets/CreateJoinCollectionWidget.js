@@ -31,20 +31,6 @@ var CreateJoinCollectionWidget = Widget.extend({
         }
         this.createNewTemplate = createNewTemplate;
         
-
-
-        /* When "create new collection" button is pressed */
-        $('#create_new_collection').live('click', function(me) {
-            return function() {
-                me.createNewCollection({
-                    collection_name: $(this).attr('data-collection_name'), 
-                });
-            };
-        }(this));
-
-        /* This is a list of the widgets for search results */
-        this.resultWidgets = null;
-        
         
         _.bindAll(this, "render");
         this.render();
