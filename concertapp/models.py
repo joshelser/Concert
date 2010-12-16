@@ -24,7 +24,8 @@ class ConcertUser(models.Model):
     
     ###
     #   This function will get all of the collections that a user is a member
-    #   of in a dict that can be serialized.
+    #   of in a dict that can be serialized.  This includes collections
+    #   that the user is an administrator of.
     ###
     def get_collections_dict(self):
         user = self.user

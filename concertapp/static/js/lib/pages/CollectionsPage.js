@@ -31,20 +31,19 @@ CollectionsPage.prototype.init = function(params) {
     
     /*  Backbone collection that will hold the Concert Collection objects
         that the user has requested to join */
-    var userRequests = new CollectionSet;
-    this.userRequests = userRequests;
+    var userRequestCollections = new CollectionSet;
+    this.userRequestCollections = userRequestCollections;
     
     
+    /**
+     *  The raw collection data for collections that the current user is an
+     *  administrator of.
+     **/
     var userAdminCollectionData = params.data.adminCollections;
     if(typeof(userAdminCollectionData) == 'undefined') {
         throw new Error('params.data.adminCollections is undefined');
     }
-    this.userAdminCollectionData = userAdminCollectionData;
-    
-    console.log('userAdminCollectionData:');
-    console.log(userAdminCollectionData);
-
-    
+    this.userAdminCollectionData = userAdminCollectionData;    
     
     /*  Backbone collection that will hold Concert Collection objects that the
         user is an administrator of */
@@ -52,8 +51,6 @@ CollectionsPage.prototype.init = function(params) {
     this.userAdminCollections = userAdminCollections;
     
 
-    
-    
     /**
      *  Create "create/join collection panel"
      **/
@@ -65,16 +62,15 @@ CollectionsPage.prototype.init = function(params) {
     
     
     /**
-     *  "ManageCollectionsPanel"
+     *  This panel will allow the user to manage the collections they are an 
+     *  administrator of.
      **/
-    var manageCollectionsPanel = new ManageCollectionsPanel({
-        page: this, 
-        el: $('#manage_collections_panel'),
-        userCollections: userCollections, 
-        userRequests: userRequests
+    var manageAdminCollectionsPanel = new ManageAdminCollectionsPanel({
+        page: this,
+        el: $('#manage_admin_collections_panel'),
+        collections: userAdminCollections
     });
-    this.manageCollectionsPanel = manageCollectionsPanel;
-    
+    this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
     this.initData();
 };
@@ -85,5 +81,5 @@ CollectionsPage.prototype.init = function(params) {
 CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
     
-    this.userRequests.refresh(this.userRequestsData);
+    this.userAdminCollections.refresh(this.userAdminCollectionData);
 };
