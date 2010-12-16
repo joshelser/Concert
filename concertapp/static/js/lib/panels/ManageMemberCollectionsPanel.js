@@ -1,5 +1,5 @@
 /**
- *  @file       ManageAdminCollectionsPanel.js
+ *  @file       ManageMemberCollectionsPanel.js
  *  
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
@@ -11,20 +11,20 @@
  *  @class
  *  @extends    ManageCollectionsPanel
  **/
-var ManageAdminCollectionsPanel = ManageCollectionsPanel.extend({
+var ManageMemberCollectionsPanel = ManageCollectionsPanel.extend({
     
     initialize: function() {
         ManageCollectionsPanel.prototype.initialize.call(this);
 
         /* The manage admin collection widget template */
-        var widgetTemplate = $('#manage_admin_collection_template');
+        var widgetTemplate = $('#manage_member_collection_template');
         if(typeof(widgetTemplate) == 'undefined' || widgetTemplate.length == 0) {
             throw new Error('widgetTemplate not found.');
         }
         this.widgetTemplate = widgetTemplate;
         
         /* The ManageAdminCollectionWidget class */
-        this.widgetClass = ManageAdminCollectionWidget;
+        this.widgetClass = ManageMemberCollectionWidget;
         
     }
 });

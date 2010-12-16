@@ -72,6 +72,16 @@ CollectionsPage.prototype.init = function(params) {
     });
     this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
+    /**
+     *  This panel will allow the user to manage the collectiosn they are a 
+     *  member of (excluding the ones they are an administrator of)
+     **/
+    var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
+        page: this, 
+        el: $('#manage_member_collections_panel'), 
+        collections: userCollections
+    });
+    
     this.initData();
 };
 

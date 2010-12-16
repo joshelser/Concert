@@ -1,5 +1,14 @@
 {% extends "collections/clientside/manage_collection_widget.html" %}
 
+{% load extra_template_tags %}
+
+
 {% block actions %}
-    <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>
+    {% verbatim %}
+        {{if admin}}
+            You are the admin of this collection.
+        {{else}}
+            <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>
+        {{/if}}
+    {% endverbatim %}
 {% endblock %}
