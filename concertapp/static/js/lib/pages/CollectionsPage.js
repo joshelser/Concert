@@ -23,11 +23,11 @@ CollectionsPage.prototype.init = function(params) {
     
     /** The raw collection data for the collections that the current user has
         requested to join **/
-    var userRequestsData = params.data.requestCollections;
-    if(typeof(userRequestsData) == 'undefined') {
+    var userRequestCollectionData = params.data.requestCollections;
+    if(typeof(userRequestCollectionData) == 'undefined') {
         throw new Error('params.data.requestCollections is undefined');
     }
-    this.userRequestsData = userRequestsData;
+    this.userRequestCollectionData = userRequestCollectionData;
     
     /*  Backbone collection that will hold the Concert Collection objects
         that the user has requested to join */
@@ -82,6 +82,16 @@ CollectionsPage.prototype.init = function(params) {
         collections: userCollections
     });
     
+    /**
+     *  This panel will allow the user to manage the join requests they have
+     *  sent out.
+     **/
+    var manageRequestCollectionsPanel = new ManageRequestCollectionsPanel({
+        page: this, 
+        el: $('#manage_request_collections_panel'), 
+        collections: userRequestCollections
+    });
+    
     this.initData();
 };
 
@@ -92,4 +102,5 @@ CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
     
     this.userAdminCollections.refresh(this.userAdminCollectionData);
+    this.userRequestCollections.refresh(this.userRequestCollectionData)
 };
