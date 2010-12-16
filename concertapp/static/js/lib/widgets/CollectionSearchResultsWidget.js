@@ -55,9 +55,15 @@ var CollectionSearchResultsWidget = Widget.extend({
         var exact = this.panel.exactResult;
         
         if(!exact && currentTerm != '') {
-            frag.appendChild(this.createNewTemplate.tmpl({
+            var createNewElement = this.createNewTemplate.tmpl({
                 term: currentTerm, 
-            }).get(0));
+            });
+            
+            var createNewButton = new CreateNewCollectionButton({
+                container: createNewElement, 
+            });
+            
+            frag.appendChild(createNewElement.get(0));
         }
         
         if(collections.length) {
