@@ -15,15 +15,25 @@ function CreateNewCollectionButton(params) {
 }
 CreateNewCollectionButton.prototype = new Button();
 
+/**
+ *  @constructor
+ **/
 CreateNewCollectionButton.prototype.init = function(params) {
     Button.prototype.init.call(this, params);
     
+    /* The panel we are on.  Need to access this to reset the form (for now this is
+        good enough, but TODO: in the future, the CreateJoinCollectionPanel should
+        be watching the results collection and calling the resetForm method 
+        automatically when the collection changes.)
+        */
     var panel = params.panel;
     if(typeof(panel) == 'undefined') {
         throw new Error('params.panel is undefined');
     }
     this.panel = panel;
     
+    /* A reference to the collection sets that we will need to add the new 
+        collection to if the user decides to create it */
     var userAdminCollections = params.userAdminCollections;
     if(typeof(userAdminCollections) == 'undefined') {
         throw new Error('params.userAdminCollections is undefined');
@@ -36,6 +46,7 @@ CreateNewCollectionButton.prototype.init = function(params) {
     }
     this.userMemberCollections = userMemberCollections;
 
+    /* The name that the user has entered for the new collection */
     var newCollectionName = params.newCollectionName;
     if(typeof(newCollectionName) == 'undefined') {
         throw new Error('params.newCollectionName is undefined');
@@ -45,21 +56,28 @@ CreateNewCollectionButton.prototype.init = function(params) {
     
 };
 
+/**
+ *  This is what will be executed when the user clicks the button, deciding to 
+ *  create a new collection.
+ **/
 CreateNewCollectionButton.prototype.click = function() {
     
+    /* Create new collection */
     var newCollection = new Collection({
         name: this.newCollectionName
     });
     
+    /* Save to server */
     newCollection.save({}, {
+        /* On successful save */
         success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
+                /* Add new collection to proper CollectionSet objects */
                 userMemberCollections.add(model);
                 userAdminCollections.add(model);
+                /* Reset the search field */
                 panel.resetForm();
             };
         }(this.userMemberCollections, this.userAdminCollections, this.panel)
     });
-    
-    
 };
