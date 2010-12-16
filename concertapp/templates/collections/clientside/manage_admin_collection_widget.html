@@ -13,21 +13,8 @@
     <div class="user_collection_actions table-cell">
         <button class="delete_collection" id="delete_collection-${id}">Delete this collection</button>
     </div>
-
+    
     <div class="user_collection_requests table-cell">
-        {{if requests}}
-            {{each(i, user) requests}}
-                <div id="user_collection_request-${id}-${user.userid}" class="user_collection_request" data-user_id="${user.userid}" data-collection_id="${id}">
-                    <div id="user_collection_request_user-${id}-${user.userid}" class="user_widget">
-                        <div id="user_collection_request_user_username-${id}-${user.userid}" class="user_widget_username">
-                            ${user.username}                            
-                        </div>
-                    </div>
-                    <button id="approve_request-${id}-${user.userid}" class="approve_request">Approve</button>
-                    <button id="deny_request-${id}-${user.userid}" class="deny_request">Deny</button>
-                </div>
-            {{/each}}
-        {{/if}}
     </div>
 
 </div>

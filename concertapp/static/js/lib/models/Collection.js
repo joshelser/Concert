@@ -10,6 +10,20 @@
  **/
 var Collection = Backbone.Model.extend({
     
+    initialize: function() {
+        var requestUserData = this.get('requests');
+        
+        var requestingUsers = new UserSet;
+        
+        if(requestUserData) {
+            requestingUsers.refresh(requestUserData);            
+        }
+        
+        this.set({
+            requests: requestingUsers
+        });
+        
+    },
     /**
      *  Here we will join the collection.  This will happen when the user presses the
      *  join button.

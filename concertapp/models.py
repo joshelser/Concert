@@ -23,6 +23,18 @@ class ConcertUser(models.Model):
     unread_events = models.ManyToManyField('Event')
     
     ###
+    #   Convert all properties of general interest to a serializable dictionary
+    ###
+    def to_dict(self):
+        user = self.user
+        
+        return {
+            'username': user.username, 
+            'id': user.id, 
+        }
+        
+    
+    ###
     #   This function will get all of the collections that a user is a member
     #   of in a dict that can be serialized.  This includes collections
     #   that the user is an administrator of.
@@ -388,11 +400,7 @@ class Collection(models.Model):
                 reqsList = []
                 
                 for req in reqs:
-                    reqsList.append({
-                        # Should call this 'id' instead of 'userid' but jquery-tmpl is a bitch
-                        'userid': req.id, 
-                        'username': req.username, 
-                    })
+                    reqsList.append(req.get_profile().to_dict())
                 result['requests'] = reqsList
         elif user in self.users.all():
             result['member'] = 1

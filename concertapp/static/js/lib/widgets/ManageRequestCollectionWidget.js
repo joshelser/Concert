@@ -25,5 +25,11 @@ var ManageRequestCollectionWidget = Widget.extend({
         
         
         return this;
-    }
+    },
+    events: {
+        'click .revoke_request': 'revokeRequest', 
+    }, 
+    revokeRequest: function(){
+        console.log('Revoke join request for: '+this.model.get('name'));
+    }, 
 });

@@ -16,7 +16,7 @@ var User = Backbone.Model.extend({
  *  Users represents a collection of django User objects.
  *  @class
  **/
-var Users = Backbone.Collection.extend({
+var UserSet = Backbone.Collection.extend({
     model: User
 });
 
