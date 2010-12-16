@@ -18,9 +18,41 @@ CreateNewCollectionButton.prototype = new Button();
 CreateNewCollectionButton.prototype.init = function(params) {
     Button.prototype.init.call(this, params);
 
+    var userAdminCollections = params.userAdminCollections;
+    if(typeof(userAdminCollections) == 'undefined') {
+        throw new Error('params.userAdminCollections is undefined');
+    }
+    this.userAdminCollections = userAdminCollections;
+    
+    var userMemberCollections = params.userMemberCollections;
+    if(typeof(userMemberCollections) == 'undefined') {
+        throw new Error('params.userMemberCollections is undefined');
+    }
+    this.userMemberCollections = userMemberCollections;
+
+    var newCollectionName = params.newCollectionName;
+    if(typeof(newCollectionName) == 'undefined') {
+        throw new Error('params.newCollectionName is undefined');
+    }
+    this.newCollectionName = newCollectionName;
+    
     
 };
 
 CreateNewCollectionButton.prototype.click = function() {
-    console.log('Create new collection');
+    
+    var newCollection = new Collection({
+        name: this.newCollectionName
+    });
+    
+    newCollection.save({}, {
+        success: function(userMemberCollections, userAdminCollections) {
+            return function(model, response) {
+                userMemberCollections.add(model);
+                userAdminCollections.add(model);
+            };
+        }(this.userMemberCollections, this.userAdminCollections)
+    });
+    
+    
 };

@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import simplejson
 import json
+import sys
 
 
 
@@ -82,26 +83,32 @@ def search_collections(request, query):
 ##
 @login_required
 def create_collection(request):
+    user = request.user
+    
     if not(request.POST):
         return HttpResponseRedirect('/collections/')
-        
-    # Create new collection with current user as the admin
-    col = Collection(admin=request.user)
     
+    # Create new collection with current user as the admin
+    col = Collection(admin=user)
+    
+    data = simplejson.loads(request.POST.items()[0][0])
+
     # Create form so we can validate collection name
-    form = CreateCollectionForm(request.POST, instance=col)
+    form = CreateCollectionForm(data, instance=col)
     if form.is_valid():
         colname = form.cleaned_data['name']
         
         col = form.save()
         
         # Add current user to collection
-        col.users.add(request.user)
+        col.users.add(user)
         
-        return HttpResponse('success')
+        return HttpResponse(
+            simplejson.dumps(col.to_dict(user)), 
+            content_type='application/json'
+        )
     else:
-        print form.get_errors()
-        return HttpResponse('failure')
+        return HttpResponse('failure: '+str(form.errors))
         
 
 ###

@@ -10,6 +10,9 @@
  **/
 var Collection = Backbone.Model.extend({
     
+    /**
+     *  @constructor
+     **/
     initialize: function() {
         var requestUserData = this.get('requests');
         
@@ -24,6 +27,7 @@ var Collection = Backbone.Model.extend({
         });
         
     },
+    url: '/collections/crud/', 
     /**
      *  Here we will join the collection.  This will happen when the user presses the
      *  join button.
@@ -61,7 +65,7 @@ var Collection = Backbone.Model.extend({
                 }; 
             }(this)
         );
-    }, 
+    }
 });
 
 

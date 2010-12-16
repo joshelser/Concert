@@ -61,7 +61,11 @@ var CollectionSearchResultsWidget = Widget.extend({
             
             var createNewButton = new CreateNewCollectionButton({
                 container: createNewElement, 
+                userAdminCollections: this.panel.page.userAdminCollections, 
+                userMemberCollections: this.panel.page.userCollections,
+                newCollectionName: currentTerm 
             });
+            
             
             frag.appendChild(createNewElement.get(0));
         }
