@@ -27,7 +27,16 @@ var Collection = Backbone.Model.extend({
         });
         
     },
-    url: '/collections/crud/', 
+    url: function() {
+        var base = '/collections/crud/';
+        var id = this.get('id');
+        if(id) {
+            return base+id+'/';
+        }
+        else {
+            return base+'/';
+        }
+    },
     /**
      *  Here we will join the collection.  This will happen when the user presses the
      *  join button.

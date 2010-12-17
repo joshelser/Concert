@@ -14,8 +14,8 @@ urlpatterns = patterns('concertapp.collection.views',
     # /collections goes to Manage collections
     url(r'^$', 'manage_collections', name='manage_collections'),
 
-    # Add new collection
-    url(r'^crud/$', 'create_collection', name='create_collection'),
+    # Add/delete/update a collection
+    url(r'^crud/(?P<collection_id>\d*)/$', 'crud', name='crud'),
     
     # Delete collection
     url(r'^delete/$', 'delete_collection', name='delete_collection'),

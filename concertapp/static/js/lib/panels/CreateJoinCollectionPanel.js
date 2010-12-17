@@ -128,6 +128,9 @@ var CreateJoinCollectionPanel = Panel.extend({
             }
         });
     },
+    /**
+     *  This should be called when the search form is to be reset.
+     **/
     resetForm: function(){
         /* Clear text field */
         this.inputElement.val('');

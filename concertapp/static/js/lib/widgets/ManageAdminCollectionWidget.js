@@ -70,7 +70,40 @@ var ManageAdminCollectionWidget = Widget.extend({
     events: {
         'click .delete_collection': 'delete_collection'
     },
+    /**
+     *  This is called when the user first clicks the delete button.
+     **/
     delete_collection: function() {
-        console.log('Delete: '+this.model.get('name'));
+        /* First confirm with the user that this is what they would like to do */
+        /* TODO: Remove this text */
+        com.concertsoundorganizer.notifier.confirm({
+            title: 'Are you sure?', 
+            content: 'Are you sure you want to delete '+this.model.get('name')+'<br />All associated audio will be removed from Concert.',
+            confirmCallback: function(me) {
+                return function() {
+                    me.really_delete_collection();
+                }
+            }(this)
+        })
+    }, 
+    /**
+     *  This is called when the user confirms the deletion.
+     **/
+    really_delete_collection: function() {
+        this.model.destroy({
+            success: function(model, response) {
+                console.log('model:');
+                console.log(model);
+                
+                console.log('response:');
+                console.log(response);
+            },
+            error: function(model, response) {
+                com.concertsoundorganizer.notifier.alert({
+                    title: 'Error', 
+                    content: 'An Error occurred: '+response.responseText, 
+                })
+            }, 
+        });
     }, 
 });

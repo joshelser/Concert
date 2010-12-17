@@ -78,9 +78,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-SERIALIZATION_MODULES = {
-    'json': 'wadofstuff.django.serializers.json'
-}
 
 DEBUG_PROPOGATE_EXCEPTIONS = False
 
@@ -99,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.markup',
+    'tastypie',
     'concertapp',
 )
 

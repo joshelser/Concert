@@ -54,7 +54,9 @@ var CollectionSearchResultsWidget = Widget.extend({
         var currentTerm = this.panel.currentTerm;
         var exact = this.panel.exactResult;
         
+        /* There was no exact match, so we can create this collection */
         if(!exact && currentTerm != '') {
+            /* "create new" button */
             var createNewElement = this.createNewTemplate.tmpl({
                 term: currentTerm, 
             });
@@ -67,10 +69,11 @@ var CollectionSearchResultsWidget = Widget.extend({
                 panel: this.panel,  
             });
             
-            
+            /* Put in search results area */
             frag.appendChild(createNewElement.get(0));
         }
         
+        /* If there were search results */
         if(collections.length) {
             /* For each element in the collection */
             collections.each(function(frag, resultTemplate, panel) {
