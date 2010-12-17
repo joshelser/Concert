@@ -34,3 +34,18 @@ class UserCollectionRequestAcceptTestCase(UserCollectionRequestTestCase):
         
         # Accept join request
         self.collection.accept_request(self.user)
+        
+###
+#   In this case the user requests to join a collection, then the request is
+#   removed.
+###
+class UserCollectionRequestRemoveTestCase(UserCollectionRequestTestCase):
+    
+    def setUp(self):
+        super(UserCollectionRequestRemoveTestCase, self).setUp()
+        
+    def runTest(self):
+        super(UserCollectionRequestRemoveTestCase, self).runTest()
+        
+        # Remove join request
+        self.collection.remove_request(self.user)

@@ -324,10 +324,9 @@ class Collection(models.Model):
     #   When an administrator accepts a user's request for approval.
     ###
     def accept_request(self,user):
-        
         try:
             req = CollectionJoinRequest.objects.get(user = user, collection = self)
-            req.accept_request()
+            req.accept()
         except ObjectDoesNotExist:
             raise Exception("You can't add a user to a collection they haven't requested to join")
         
@@ -336,24 +335,15 @@ class Collection(models.Model):
         
     ###
     #   This is when a user decides that they don't actually want to join a
-    #   collection, or when an administrator denies a request.  This will delete the 
-    #   corresponding event as well.
-    #   TODO: Decide if it is best to delete the event.
+    #   collection, or when an administrator denies a request.
     ###
     def remove_request(self,user):
-        if user not in User.objects.all():
-            raise Exception("user dne")
-            
-        if user not in self.requesting_users.all():
-            raise Exception("User has not requested to join this collection.")
-            
-        self.requesting_users.remove(user)
-        self.save()
-        
-        # Delete request event
-        event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
-        event.delete()
-        
+        try:
+            req = CollectionJoinRequest.objects.get(user = user, collection = self)
+            req.remove()
+        except ObjectDoesNotExist:
+            raise Exception('This request does not exist')
+                
     ###
     #   Convert the collection into a dictionary of values, and return it.  Some
     #   values are relative to the user, and thus the user is required.
@@ -430,7 +420,10 @@ class CollectionJoinRequest(models.Model):
         # The object already exists
         raise Exception('Your request to join this group has already been submitted.')
         
-    def accept_request(self):
+    ###
+    #   When the request is accepted.
+    ###
+    def accept(self):
         
         user = self.user
         collection = self.collection
@@ -444,6 +437,22 @@ class CollectionJoinRequest(models.Model):
         
         # Remove request object
         self.delete()
+        
+    ###
+    #   When the request is to be revoked or denied.
+    #   TODO: Determine if we should delete this event.
+    ###
+    def remove(self):
+        user = self.user
+        collection = self.collection
+        
+        # Delete request event
+        event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
+        event.delete()
+        
+        # Delete request
+        self.delete()
+        
         
         
             
