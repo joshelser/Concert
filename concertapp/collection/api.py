@@ -8,6 +8,10 @@ from tastypie import fields
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.authentication import BasicAuthentication
 
+from django.core.exceptions import ObjectDoesNotExist
+
+from urlparse import parse_qs
+
 from concertapp.models import *
 from django.contrib.auth.models import User
 
@@ -58,6 +62,7 @@ class CollectionResource(MyResource):
         
         bundle.data['num_users'] = userCount
         
+        
         return bundle
         
         
@@ -74,8 +79,24 @@ class CollectionResource(MyResource):
         if method == 'DELETE' or method == 'PUT':
             # User must be an administrator of the collection
             object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
-
+        
         return object_list
+    
+    ###
+    #   When creating a new collection
+    ###
+    def obj_create(self, bundle, request, **kwargs):
+        # Be sure that the current user will be sent in as the admin of the group
+        kwargs['admin'] = request.user
+        
+        # Do magic
+        bundle = super(CollectionResource, self).obj_create(bundle, request, **kwargs)
+                
+        # Now we can call our init method
+        bundle.obj.init() 
+        
+        return bundle
+
     
     
 
@@ -121,8 +142,6 @@ class MemberNotAdminCollectionResource(CollectionResource):
 #   This resource is only for collections which the user is an administrator of.
 ###
 class AdminCollectionResource(CollectionResource):
-    
-    requesting_users = fields.ManyToManyField(UserResource, 'requesting_users')
     
     ###
     #   Retrieve only the collections for which the user is an administrator

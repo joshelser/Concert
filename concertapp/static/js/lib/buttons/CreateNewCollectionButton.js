@@ -64,7 +64,8 @@ CreateNewCollectionButton.prototype.click = function() {
     
     /* Create new collection */
     var newCollection = new Collection({
-        name: this.newCollectionName
+        name: this.newCollectionName,
+        users: [], 
     });
     
     /* Save to server */

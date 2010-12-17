@@ -51,7 +51,8 @@ def manage_collections(request):
 
 
 ##
-#   An ajax request that returns a JSON object of collection names and ids.
+#   An ajax request that returns a JSON object of collection names and ids.  This
+#   should be enhanced at some point to sort by relevance, etc.
 #
 #   @param  query        String  - the search query
 ##
@@ -73,11 +74,9 @@ def search_collections(request, query):
         exact = False
             
     #   Create object with properties that we will serialize
-    resultsDicts = []
-    for col in results:
-        resultsDicts.append(col.to_dict(user))
-    
-        
+    cr = CollectionResource()
+    resultsDicts = cr.as_dict(request)
+
     #   Serialize results into JSON response        
     return HttpResponse(
         simplejson.dumps({

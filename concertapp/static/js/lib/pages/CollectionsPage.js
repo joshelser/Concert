@@ -46,7 +46,7 @@ CollectionsPage.prototype.init = function(params) {
         throw new Error('params.data.adminCollections is undefined');
     }
     this.userAdminCollectionData = userAdminCollectionData;    
-        
+    
     /*  Backbone collection that will hold Concert Collection objects that the
         user is an administrator of */
     var userAdminCollections = new CollectionSet;

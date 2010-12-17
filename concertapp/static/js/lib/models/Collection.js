@@ -14,18 +14,6 @@ var Collection = Backbone.Model.extend({
      *  @constructor
      **/
     initialize: function() {
-        var requestUserData = this.get('requests');
-        
-        var requestingUsers = new UserSet;
-        
-        if(requestUserData) {
-            requestingUsers.refresh(requestUserData);            
-        }
-        
-        this.set({
-            requests: requestingUsers
-        });
-        
     },
     url: function() {
         var base = '/api/1/collection/';
@@ -34,7 +22,7 @@ var Collection = Backbone.Model.extend({
             return base+id+'/';
         }
         else {
-            return base+'/';
+            return base;
         }
     },
     /**
