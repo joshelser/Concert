@@ -15,7 +15,10 @@ from concertapp.users.api import *
 
 
 ###
-#   Only the administrator of a collection can modify the collection
+#   Only the administrator of a collection can modify the collection.  This is a
+#   subclass of tastypi.authorization.Authorization because 
+#   tastypie.authorization.DjangoAuthorization deals with django.contrib.auth
+#   permission stuff that we are not using.
 ###
 class AdminAuthorization(Authorization):
     def is_authorized(self, request, object_list):
@@ -67,6 +70,23 @@ class CollectionResource(ModelResource):
         colsSerialized = [obj.data for obj in colsBundles]
 
         return colsSerialized
+        
+    ###
+    #   Make sure the user is an admin if they are trying to modify or delete the 
+    #   collection.
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        user = request.user
+        
+        method = request.META['REQUEST_METHOD']
+        
+        # If user is just trying to delete or update the collection:
+        if method == 'DELETE' or method == 'PUT':
+            # User must be an administrator of the collection
+            object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
+
+        return object_list
+    
     
 
 ###

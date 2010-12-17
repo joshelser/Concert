@@ -47,5 +47,6 @@ function initializeUI(pagePath, data) {
 
         /* Run the initializer function for this page. */
         var page = new pageInitializers[pagePath](pageParams);
+        com.concertsoundorganizer.page = page;
     });
 }
