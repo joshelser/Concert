@@ -60,11 +60,11 @@ var GlobalOptionsPanel = Panel.extend({
             });
         }
 
-        var userCollections = params.userCollections;
-        if(typeof(userCollections) == 'undefined') {
-            throw new Error('params.userCollections is undefined');
+        var userMemberCollections = params.userMemberCollections;
+        if(typeof(userMemberCollections) == 'undefined') {
+            throw new Error('params.userMemberCollections is undefined');
         }
-        this.userCollections = userCollections;
+        this.userMemberCollections = userMemberCollections;
 
         
 
@@ -87,9 +87,9 @@ var GlobalOptionsPanel = Panel.extend({
         
         _.bindAll(this, "render");
         /* Bind collection events to render */
-        userCollections.bind('refresh', this.render);
-        userCollections.bind('add', this.render);
-        userCollections.bind('remove', this.render);
+        userMemberCollections.bind('refresh', this.render);
+        userMemberCollections.bind('add', this.render);
+        userMemberCollections.bind('remove', this.render);
     },
     
     /* To render this panel, just populate the dropdown */
@@ -98,7 +98,7 @@ var GlobalOptionsPanel = Panel.extend({
         /* Populate dropdown */
         this.collectionSelector.html(
             this.collectionSelectorOptionsTemplate.tmpl({
-                collections: this.userCollections.toJSON(), 
+                collections: this.userMemberCollections.toJSON(), 
             })
         );
 

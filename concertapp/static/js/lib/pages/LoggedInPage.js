@@ -30,16 +30,16 @@ LoggedInPage.prototype.init = function(params) {
     this.data = data;
     
     /* Every page needs the collections that this user is a member of */
-    var userCollectionData = data.memberCollections;
-    if(typeof(userCollectionData) == 'undefined') {
+    var userMemberCollectionsData = data.memberCollections;
+    if(typeof(userMemberCollectionsData) == 'undefined') {
         throw new Error('data.memberCollections is undefined');
     }
-    this.userCollectionData = userCollectionData;
+    this.userMemberCollectionsData = userMemberCollectionsData;
     
     /* Now lets create our Backbone collection of Concert Collections for which
         the current user is a member. */
-    var userCollections = new CollectionSet;
-    this.userCollections = userCollections;
+    var userMemberCollections = new CollectionSet;
+    this.userMemberCollections = userMemberCollections;
         
     
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 
@@ -47,7 +47,7 @@ LoggedInPage.prototype.init = function(params) {
     this.globalOptionsPanel = new GlobalOptionsPanel({
         page: this, 
         el: $('#global_options_panel'),
-        userCollections: userCollections
+        userMemberCollections: userMemberCollections
     });
     
 };
@@ -58,5 +58,5 @@ LoggedInPage.prototype.init = function(params) {
  **/
 LoggedInPage.prototype.initData = function() {
     /* Populate the collections object with all of the data from the server */
-    this.userCollections.refresh(this.userCollectionData);
+    this.userMemberCollections.refresh(this.userMemberCollectionsData);
 };

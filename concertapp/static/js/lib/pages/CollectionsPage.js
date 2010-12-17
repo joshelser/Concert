@@ -19,7 +19,7 @@ CollectionsPage.prototype = new LoggedInPage();
 CollectionsPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
-    var userCollections = this.userCollections;
+    var userMemberCollections = this.userMemberCollections;
     
     /** The raw collection data for the collections that the current user has
         requested to join **/
@@ -44,6 +44,9 @@ CollectionsPage.prototype.init = function(params) {
         throw new Error('params.data.adminCollections is undefined');
     }
     this.userAdminCollectionData = userAdminCollectionData;    
+    
+    console.log('userAdminCollectionData:');
+    console.log(userAdminCollectionData);
     
     /*  Backbone collection that will hold Concert Collection objects that the
         user is an administrator of */
@@ -79,7 +82,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
         page: this, 
         el: $('#manage_member_collections_panel'), 
-        collections: userCollections
+        collections: userMemberCollections
     });
     
     /**

@@ -12,6 +12,8 @@ from django.utils import simplejson
 import json
 import sys
 
+from concertapp.collection.api import *
+
 
 
 ##
@@ -24,10 +26,20 @@ import sys
 def manage_collections(request):
     user = request.user
     
+    cr = MemberCollectionResource()
+    memberCollectionsSerialized = cr.as_dict(request)
+    
+    
+    ar = AdminCollectionResource()
+    adminCollectionsSerialized = ar.as_dict(request)
+    
+    ur = UserCollectionRequestResource()
+    userCollectionRequestsSerialized = ur.as_dict(request)
+    
     data = {
-        'memberCollections':user.get_profile().get_collections_dict(), 
-        'requestCollections': user.get_profile().get_requests_dict(),
-        'adminCollections': user.get_profile().get_admin_collections_dict()
+        'memberCollections': memberCollectionsSerialized, 
+        'adminCollections': adminCollectionsSerialized,
+        'requestCollections': userCollectionRequestsSerialized
     }
     
     

@@ -10,3 +10,8 @@ from django.contrib.auth.models import User
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
+        fields = [
+            'id',
+            'username',
+        ]
+        allowed_methods = ['get']
