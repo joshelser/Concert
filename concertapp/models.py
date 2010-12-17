@@ -325,13 +325,13 @@ class Collection(models.Model):
     ###
     def accept_request(self,user):
         try:
-            req = CollectionJoinRequest.objects.get(user = user, collection = self)
+            req = Request.objects.get(user = user, collection = self)
             req.accept()
         except ObjectDoesNotExist:
             raise Exception("You can't add a user to a collection they haven't requested to join")
         
     def add_request(self,user):        
-        req = CollectionJoinRequest(user = user, collection = self).init()
+        req = Request(user = user, collection = self).init()
         
     ###
     #   This is when a user decides that they don't actually want to join a
@@ -339,7 +339,7 @@ class Collection(models.Model):
     ###
     def remove_request(self,user):
         try:
-            req = CollectionJoinRequest.objects.get(user = user, collection = self)
+            req = Request.objects.get(user = user, collection = self)
             req.remove()
         except ObjectDoesNotExist:
             raise Exception('This request does not exist')
@@ -381,8 +381,10 @@ class Collection(models.Model):
     def __unicode__(self):
         return str(self.name)
 
-
-class CollectionJoinRequest(models.Model):
+###
+#   A collection join request.
+###
+class Request(models.Model):
     user = models.ForeignKey(User)
     collection = models.ForeignKey(Collection)
     
@@ -404,7 +406,7 @@ class CollectionJoinRequest(models.Model):
         
         # See if this request already exists
         try:
-            possibleDuplicate = CollectionJoinRequest.objects.get(user = user, collection = collection)
+            possibleDuplicate = Request.objects.get(user = user, collection = collection)
         except ObjectDoesNotExist:
             # If it does not, we are legit
             self.save()

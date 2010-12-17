@@ -12,6 +12,7 @@ from concertapp.users.api import *
 api1 = Api(api_name='1')
 api1.register(CollectionResource())
 api1.register(UserResource())
+api1.register(RequestResource())
 
 urlpatterns = patterns('',
 

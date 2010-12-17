@@ -15,23 +15,6 @@ from concertapp.users.api import *
 
 
 ###
-#   Only the administrator of a collection can modify the collection.  This is a
-#   subclass of tastypi.authorization.Authorization because 
-#   tastypie.authorization.DjangoAuthorization deals with django.contrib.auth
-#   permission stuff that we are not using.
-###
-class AdminAuthorization(Authorization):
-    def is_authorized(self, request, object_list):
-        if request and hasattr(request, 'GET') and request.user:
-            if request.user.is_authenticated():
-                object_list = object_list.filter(admin=request.user)
-            else:
-                object_list = object_list.none()
-        
-        return object_list
-            
-
-###
 #   This is the resource that is used for a collection.
 ###
 class CollectionResource(ModelResource):
@@ -149,7 +132,7 @@ class AdminCollectionResource(CollectionResource):
 ###
 #   This resource is for collections that a user has requested to join.
 ###
-class UserCollectionRequestResource(CollectionResource):
+class CollectionRequestResource(CollectionResource):
     
     ###
     #   Retrieve only the collections for which the user has sent join requests
@@ -163,3 +146,14 @@ class UserCollectionRequestResource(CollectionResource):
         return object_list
         
         
+###
+#   This is the resource that is used for a collection request.
+###
+class RequestResource(ModelResource):
+    
+
+    class Meta:
+        queryset = Request.objects.all()
+
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
