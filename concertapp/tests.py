@@ -19,3 +19,18 @@ class UserCollectionRequestTestCase(unittest.TestCase):
         
     def runTest(self):
         self.collection.add_request(self.user)
+        
+###
+#   In this test, a user requests to join a collection (as above), then the
+#   request is accepted.
+###
+class UserCollectionRequestAcceptTestCase(UserCollectionRequestTestCase):
+    
+    def setUp(self):
+        super(UserCollectionRequestAcceptTestCase, self).setUp()
+        
+    def runTest(self):
+        super(UserCollectionRequestAcceptTestCase, self).runTest()
+        
+        # Accept join request
+        self.collection.accept_request(self.user)

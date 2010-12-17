@@ -9,6 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.db.models.signals import post_save
+from django.core.exceptions import ObjectDoesNotExist
 import audiotools
 import os, tempfile, sys
 
@@ -311,7 +312,6 @@ class Collection(models.Model):
     name = models.CharField(max_length = 100, unique=True)
     admin = models.ForeignKey(User)
     users = models.ManyToManyField(User, related_name = "collections")
-    requesting_users = models.ManyToManyField(User, related_name = "collection_join_requests")
 
     def init(self):
         self.save()
@@ -324,35 +324,15 @@ class Collection(models.Model):
     #   When an administrator accepts a user's request for approval.
     ###
     def accept_request(self,user):
-        if user not in self.requesting_users.all():
-            raise Exception("You can't add a user to a collection they haven't requested ot join")
         
-        # Add user to group
-        self.users.add(user)
-        # Remove user from requests
-        self.requesting_users.remove(user)
-        self.save()
+        try:
+            req = CollectionJoinRequest.objects.get(user = user, collection = self)
+            req.accept_request()
+        except ObjectDoesNotExist:
+            raise Exception("You can't add a user to a collection they haven't requested to join")
         
-        
-
-        event = JoinCollectionEvent(new_user = user, collection = self)
-        event.save()
-
-    def add_request(self,user):
-        if user not in User.objects.all():
-            raise Exception("user dne")
-
-        if user in self.users.all():
-            raise Exception("You are already a member of this collection.")
-            
-        if user in self.requesting_users.all():
-            raise Exception('Your request to join this group has already been submitted.')
-
-        self.requesting_users.add(user)
-        self.save()
-
-        event = RequestJoinCollectionEvent(requesting_user = user, collection = self)
-        event.save()
+    def add_request(self,user):        
+        req = CollectionJoinRequest(user = user, collection = self).init()
         
     ###
     #   This is when a user decides that they don't actually want to join a
@@ -410,6 +390,63 @@ class Collection(models.Model):
         
     def __unicode__(self):
         return str(self.name)
+
+
+class CollectionJoinRequest(models.Model):
+    user = models.ForeignKey(User)
+    collection = models.ForeignKey(Collection)
+    
+    ###
+    #   Validate errors
+    ###
+    def init(self):
+        
+        user = self.user
+        collection = self.collection
+        
+        # Make sure user exists
+        if user not in User.objects.all():
+            raise Exception("user dne")
+            
+        # Make sure user is not already a member of the collection
+        if user in collection.users.all():
+            raise Exception("You are already a member of this collection.")
+        
+        # See if this request already exists
+        try:
+            possibleDuplicate = CollectionJoinRequest.objects.get(user = user, collection = collection)
+        except ObjectDoesNotExist:
+            # If it does not, we are legit
+            self.save()
+            
+            # Create event
+            event = RequestJoinCollectionEvent(requesting_user = user, collection = collection)
+            event.save()
+            
+            # Done
+            return
+            
+            
+        # The object already exists
+        raise Exception('Your request to join this group has already been submitted.')
+        
+    def accept_request(self):
+        
+        user = self.user
+        collection = self.collection
+        
+        # Add user to group
+        collection.users.add(user)
+        
+        # Create event
+        event = JoinCollectionEvent(new_user = user, collection = collection)
+        event.save()
+        
+        # Remove request object
+        self.delete()
+        
+        
+            
 
 
 class Tag(models.Model):
