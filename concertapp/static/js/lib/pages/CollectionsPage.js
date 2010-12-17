@@ -21,33 +21,32 @@ CollectionsPage.prototype.init = function(params) {
 
     var userMemberCollections = this.userMemberCollections;
     
+    var data = params.data;
+    
     /** The raw collection data for the collections that the current user has
         requested to join **/
-    var userRequestCollectionData = params.data.requestCollections;
-    if(typeof(userRequestCollectionData) == 'undefined') {
-        throw new Error('params.data.requestCollections is undefined');
+    var requestData = data.requests;
+    if(typeof(requestData) == 'undefined') {
+        throw new Error('params.data.requests is undefined');
     }
-    this.userRequestCollectionData = userRequestCollectionData;
+    this.requestData = requestData;
     
     /*  Backbone collection that will hold the Concert Collection objects
         that the user has requested to join */
-    var userRequestCollections = new CollectionSet;
-    this.userRequestCollections = userRequestCollections;
+    var userRequests = new RequestSet;
+    this.userRequests = userRequests;
     
     
     /**
      *  The raw collection data for collections that the current user is an
      *  administrator of.
      **/
-    var userAdminCollectionData = params.data.adminCollections;
+    var userAdminCollectionData = data.adminCollections;
     if(typeof(userAdminCollectionData) == 'undefined') {
         throw new Error('params.data.adminCollections is undefined');
     }
     this.userAdminCollectionData = userAdminCollectionData;    
-    
-    console.log('userAdminCollectionData:');
-    console.log(userAdminCollectionData);
-    
+        
     /*  Backbone collection that will hold Concert Collection objects that the
         user is an administrator of */
     var userAdminCollections = new CollectionSet;
@@ -92,7 +91,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageRequestCollectionsPanel = new ManageRequestCollectionsPanel({
         page: this, 
         el: $('#manage_request_collections_panel'), 
-        collections: userRequestCollections
+        collections: userRequests
     });
     
     this.initData();
@@ -105,5 +104,5 @@ CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
     
     this.userAdminCollections.refresh(this.userAdminCollectionData);
-    this.userRequestCollections.refresh(this.userRequestCollectionData)
+    this.userRequests.refresh(this.requestData)
 };

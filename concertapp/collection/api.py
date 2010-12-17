@@ -13,11 +13,29 @@ from django.contrib.auth.models import User
 
 from concertapp.users.api import *
 
+###
+#   This is soley to provide the to_dict function.  Once I figure out what a better
+#   way to do this is, we can remove this class.
+###
+class MyResource(ModelResource):
+    ###
+    #   This method is used to bootstrap the objects into place.
+    ###
+    def as_dict(self, request):
+        cols = self.get_object_list(request)
+
+        colsBundles = [self.full_dehydrate(obj=obj) for obj in cols]
+
+        colsSerialized = [obj.data for obj in colsBundles]
+
+        return colsSerialized
+    
+        
 
 ###
 #   This is the resource that is used for a collection.
 ###
-class CollectionResource(ModelResource):
+class CollectionResource(MyResource):
     users = fields.ManyToManyField(UserResource, 'users')
     
     class Meta:
@@ -42,17 +60,6 @@ class CollectionResource(ModelResource):
         
         return bundle
         
-    ###
-    #   This method is used to bootstrap the objects into place.
-    ###
-    def as_dict(self, request):
-        cols = self.get_object_list(request)
-
-        colsBundles = [self.full_dehydrate(obj=obj) for obj in cols]
-
-        colsSerialized = [obj.data for obj in colsBundles]
-
-        return colsSerialized
         
     ###
     #   Make sure the user is an admin if they are trying to modify or delete the 
@@ -149,7 +156,7 @@ class CollectionRequestResource(CollectionResource):
 ###
 #   This is the resource that is used for a collection request.
 ###
-class RequestResource(ModelResource):
+class RequestResource(MyResource):
     
 
     class Meta:
@@ -157,3 +164,25 @@ class RequestResource(ModelResource):
 
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+
+
+###
+#   This is the resource that is used for collection requests from a single
+#   user.
+###
+class UserRequestResource(RequestResource):
+
+    ###
+    #   Make sure the user is the one who made the request
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        
+        user = request.user
+        
+        # Here we ignore the incomming argument, and only send forth the
+        # requests for this user
+        object_list = super(UserRequestResource, self).apply_authorization_limits(request, user.request_set.all())
+        
+        return object_list
+
+

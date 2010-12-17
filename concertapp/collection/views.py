@@ -32,13 +32,13 @@ def manage_collections(request):
     ar = AdminCollectionResource()
     adminCollectionsSerialized = ar.as_dict(request)
     
-    ur = UserCollectionRequestResource()
-    userCollectionRequestsSerialized = ur.as_dict(request)
+    ur = UserRequestResource()
+    userRequestsSerialized = ur.as_dict(request)
     
     data = {
         'memberCollections': memberCollectionsSerialized, 
         'adminCollections': adminCollectionsSerialized,
-        'requestCollections': userCollectionRequestsSerialized
+        'requests': userRequestsSerialized
     }
     
     
