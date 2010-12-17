@@ -2,10 +2,12 @@ import os
 from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.conf import settings
-
 from django.views.generic.simple import redirect_to
 
+from concertapp.collection.api import CollectionResource
+
 admin.autodiscover()
+
 
 ## I know it is confusing, but this module is called "collection" because
 ## "collections" is a reserved word.
@@ -13,9 +15,6 @@ admin.autodiscover()
 urlpatterns = patterns('concertapp.collection.views',
     # /collections goes to Manage collections
     url(r'^$', 'manage_collections', name='manage_collections'),
-
-    # Add/delete/update a collection
-    url(r'^crud/(?P<collection_id>\d*)/$', 'crud', name='crud'),
     
     # Delete collection
     url(r'^delete/$', 'delete_collection', name='delete_collection'),
