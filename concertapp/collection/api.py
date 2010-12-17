@@ -5,7 +5,7 @@
 
 from tastypie.resources import ModelResource, Resource
 from tastypie import fields
-from tastypie.authorization import DjangoAuthorization
+from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.authentication import BasicAuthentication
 
 from concertapp.models import *
@@ -14,6 +14,19 @@ from django.contrib.auth.models import User
 from concertapp.users.api import *
 
 
+###
+#   Only the administrator of a collection can modify the collection
+###
+class AdminAuthorization(Authorization):
+    def is_authorized(self, request, object_list):
+        if request and hasattr(request, 'GET') and request.user:
+            if request.user.is_authenticated():
+                object_list = object_list.filter(admin=request.user)
+            else:
+                object_list = object_list.none()
+        
+        return object_list
+            
 
 ###
 #   This is the resource that is used for a collection.
@@ -93,7 +106,6 @@ class MemberNotAdminCollectionResource(CollectionResource):
         object_list = super(MemberNotAdminCollectionResource, self).apply_authorization_limits(request, user.collection_set.exclude(admin=user))
         
         return object_list
-        
         
 ###
 #   This resource is only for collections which the user is an administrator of.
