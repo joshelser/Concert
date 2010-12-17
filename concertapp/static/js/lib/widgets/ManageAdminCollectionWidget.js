@@ -92,11 +92,6 @@ var ManageAdminCollectionWidget = Widget.extend({
     really_delete_collection: function() {
         this.model.destroy({
             success: function(model, response) {
-                console.log('model:');
-                console.log(model);
-                
-                console.log('response:');
-                console.log(response);
             },
             error: function(model, response) {
                 com.concertsoundorganizer.notifier.alert({

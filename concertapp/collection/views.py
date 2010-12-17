@@ -26,9 +26,8 @@ from concertapp.collection.api import *
 def manage_collections(request):
     user = request.user
     
-    cr = MemberCollectionResource()
+    cr = MemberNotAdminCollectionResource()
     memberCollectionsSerialized = cr.as_dict(request)
-    
     
     ar = AdminCollectionResource()
     adminCollectionsSerialized = ar.as_dict(request)

@@ -28,7 +28,7 @@ var Collection = Backbone.Model.extend({
         
     },
     url: function() {
-        var base = '/collections/crud/';
+        var base = '/api/1/collection/';
         var id = this.get('id');
         if(id) {
             return base+id+'/';

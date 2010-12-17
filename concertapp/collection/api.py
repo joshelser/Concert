@@ -75,6 +75,25 @@ class MemberCollectionResource(CollectionResource):
         
         return object_list
         
+###
+#   This resource is for collections which the user is a member, but is not the
+#   administrator.
+###
+class MemberNotAdminCollectionResource(CollectionResource):
+    
+    ###
+    #   Make sure the user is not an admin
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        
+        user = request.user
+        
+        # Here we ignore the incomming argument, and only send forth the
+        # collections that the user is a member of.        
+        object_list = super(MemberNotAdminCollectionResource, self).apply_authorization_limits(request, user.collection_set.exclude(admin=user))
+        
+        return object_list
+        
         
 ###
 #   This resource is only for collections which the user is an administrator of.
