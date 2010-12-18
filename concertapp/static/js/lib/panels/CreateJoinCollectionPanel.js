@@ -91,7 +91,7 @@ var CreateJoinCollectionPanel = Panel.extend({
                     if(term && term != '') {    
                         /* Search for it */
 
-                        me.toggleLoadingNotification();
+                        //me.toggleLoadingNotification();
                         me.lastCreateJoinXhr = $.getJSON(
                             'search/'+term+'/', 
                             {}, 
@@ -104,7 +104,7 @@ var CreateJoinCollectionPanel = Panel.extend({
                                     
                                     me.searchResults.refresh(data.results);
                                     
-                                    me.toggleLoadingNotification();
+                                   // me.toggleLoadingNotification();
                                 }
                             }
                         );

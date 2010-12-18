@@ -11,6 +11,9 @@ from django.template import RequestContext
 from django.utils import simplejson
 import json
 import sys
+from urlparse import parse_qs
+from urllib import urlencode
+
 
 from concertapp.collection.api import *
 
@@ -60,12 +63,6 @@ def manage_collections(request):
 def search_collections(request, query):
     user = request.user
     
-    # Create response object
-    response = HttpResponse(mimetype='application/json')
-
-    #   Get collections that match criteria
-    results = Collection.objects.filter(name__icontains=query)
-        
     # Get exact match if one exists
     try:
         exact = Collection.objects.get(name=query)
@@ -75,6 +72,7 @@ def search_collections(request, query):
             
     #   Create object with properties that we will serialize
     cr = CollectionResource()
+    cr.set_search_term(query)
     resultsDicts = cr.as_dict(request)
 
     #   Serialize results into JSON response        

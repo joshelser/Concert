@@ -45,12 +45,23 @@ class CollectionResource(MyResource):
     class Meta:
         queryset = Collection.objects.all()
         
+        # For when we need to filter the resource programatically (not sure how to
+        # do this otherwise)
+        search_term = None
+        
         filtering = {
-            'name': ('contains',)
+            'name': ('contains','icontains',)
         }
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+    
+    ###
+    #   Used to set the current search term from the outside.  This should not 
+    #   be done like this, but our search is not too robust right now in either case.
+    ###
+    def set_search_term(self, term):
+        self._meta.search_term = term
         
     ###
     #   Before sending object out, add the number of users so it doesn't have to 
@@ -79,6 +90,10 @@ class CollectionResource(MyResource):
         if method == 'DELETE' or method == 'PUT':
             # User must be an administrator of the collection
             object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
+  
+        elif method == 'GET' and self._meta.search_term:
+            # Filter by search term
+            object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(name__icontains=self._meta.search_term))
         
         return object_list
     
