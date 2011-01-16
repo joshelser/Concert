@@ -74,8 +74,6 @@ def search_collections(request, query):
     cr = CollectionResource()
     cr.set_search_term(query)
     resultsDicts = cr.as_dict(request)
-    print >> sys.stderr, "resultsDicts:\n"+str(resultsDicts)
-    sys.stderr.flush()
 
     #   Serialize results into JSON response        
     return HttpResponse(
