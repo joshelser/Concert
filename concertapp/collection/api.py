@@ -21,11 +21,38 @@ from django.contrib.auth.models import User
 from concertapp.users.api import *
 
 
-
+###
+#   Just make sure that the user is logged into Django
+###
 class DjangoAuthentication(Authentication):
     """Authenticate based upon Django session"""
     def is_authenticated(self, request, **kwargs):
         return request.user.is_authenticated()
+
+
+###
+#   Make sure that the user who is trying to modify the board is the administrator.
+###
+class CollectionAuthorization(Authorization):
+    def is_authorized(self, request, object=None):
+        
+        #   Get is always allowed, since we're just requesting information about the
+        #   collection.
+        if request.method == 'GET':
+            return True
+            
+        #   User must be logged in, authentication backend should have set
+        #   request.user
+        if not hasattr(request, 'user'):
+            return False
+            
+        #   If there is an object to authorize
+        if object:
+            #   Make sure that we're the administrator
+            return (request.user == object.admin)
+        else:
+            #   We're just creating an object (or something).
+            return True
 
 
 ###
@@ -74,6 +101,7 @@ class CollectionResource(MyResource):
     
     class Meta:
         authentication = DjangoAuthentication()
+        authorization = CollectionAuthorization()
         queryset = Collection.objects.all()
         
         # For when we need to filter the resource programatically (not sure how to
@@ -84,7 +112,6 @@ class CollectionResource(MyResource):
             'name': ('contains','icontains',)
         }
         
-        authorization = DjangoAuthorization()
     
     ###
     #   Used to set the current search term from the outside.  This should not 
@@ -113,7 +140,6 @@ class CollectionResource(MyResource):
     ###
     def apply_authorization_limits(self, request, object_list):
         user = request.user
-        
         method = request.META['REQUEST_METHOD']
         
         # If user is just trying to delete or update the collection:
@@ -121,10 +147,14 @@ class CollectionResource(MyResource):
             # User must be an administrator of the collection
             object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
   
-        elif method == 'GET' and self._meta.search_term:
-            # Filter by search term
-            object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(name__icontains=self._meta.search_term))
-        
+        else:
+            # Filter by search term if there is one
+            search_term = self._meta.search_term
+            if search_term:
+                object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list.filter(name__icontains=self._meta.search_term))
+            else:
+                object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list)
+
         return object_list
     
     ###
@@ -151,12 +181,24 @@ class CollectionResource(MyResource):
 ###        
 class MemberCollectionResource(CollectionResource):
     
+    class Meta:
+        # The user which we are referring to.  This must be set before
+        #   the collection is to be retrieved.
+        user = None
+        
+    def set_user(self, user):
+        self._meta.user = user
+        
     ###
     #   Make sure the user is a member of the collections
     ###
     def apply_authorization_limits(self, request, object_list):
         
-        user = request.user
+        if self._meta.user:
+            user = self._meta.user
+        else:
+            user = request.user
+        
         
         # Here we ignore the incomming argument, and only send forth the
         # collections that the user is a member of.        

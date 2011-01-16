@@ -4,6 +4,8 @@ from django.template import RequestContext
 
 from django.utils import simplejson
 
+from concertapp.collection.api import *
+
 ##
 # The dashboard page, what users see when they first log in.
 #
@@ -13,8 +15,11 @@ from django.utils import simplejson
 def dashboard(request):
     user = request.user
     
+    r = MemberCollectionResource()
+    r.set_user(user)
+    
     data = {
-        'memberCollections':user.get_profile().get_collections_dict(), 
+        'memberCollections':r.as_dict(request), 
     }
     
     return render_to_response('dashboard/dashboard.html', {
