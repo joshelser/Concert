@@ -6,7 +6,10 @@
 from tastypie.resources import ModelResource, Resource
 from tastypie import fields
 from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.authentication import BasicAuthentication
+from tastypie.authentication import Authentication, BasicAuthentication
+
+from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
+from tastypie.http import *
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -16,6 +19,14 @@ from concertapp.models import *
 from django.contrib.auth.models import User
 
 from concertapp.users.api import *
+
+
+
+class DjangoAuthentication(Authentication):
+    """Authenticate based upon Django session"""
+    def is_authenticated(self, request, **kwargs):
+        return request.user.is_authenticated()
+
 
 ###
 #   This is soley to provide the to_dict function.  Once I figure out what a better
@@ -33,6 +44,25 @@ class MyResource(ModelResource):
         colsSerialized = [obj.data for obj in colsBundles]
 
         return colsSerialized
+        
+    ###
+    #   This method returns the serialized object upon creation, instead of 
+    #   just the uri to it.
+    ###
+    def post_list(self, request, **kwargs):
+       deserialized = self.deserialize(request,
+                                       request.raw_post_data,
+                                       format=request.META.get('CONTENT_TYPE',
+                                                               'application/json'))
+       bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized))
+       self.is_valid(bundle, request)
+       updated_bundle = self.obj_create(bundle, request=request)
+       resp = self.create_response(request,
+                                   self.full_dehydrate(updated_bundle.obj))
+       resp['location'] = self.get_resource_uri(updated_bundle)
+       resp.code = 201
+       return resp                              
+    
     
         
 
@@ -43,6 +73,7 @@ class CollectionResource(MyResource):
     users = fields.ManyToManyField(UserResource, 'users')
     
     class Meta:
+        authentication = DjangoAuthentication()
         queryset = Collection.objects.all()
         
         # For when we need to filter the resource programatically (not sure how to
@@ -53,7 +84,6 @@ class CollectionResource(MyResource):
             'name': ('contains','icontains',)
         }
         
-        authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
     
     ###
@@ -196,8 +226,8 @@ class RequestResource(MyResource):
     class Meta:
         queryset = Request.objects.all()
 
-        authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+        authentication = DjangoAuthentication()
 
 
 ###

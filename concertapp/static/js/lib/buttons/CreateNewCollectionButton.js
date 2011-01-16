@@ -73,12 +73,6 @@ CreateNewCollectionButton.prototype.click = function() {
         /* On successful save */
         success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
-                console.log('model.toJSON():');
-                console.log(model.toJSON());
-                console.log('response:');
-                console.log(response);
-                /* Add new collection to proper CollectionSet objects */
-                userMemberCollections.add(model);
                 userAdminCollections.add(model);
                 /* Reset the search field */
                 panel.resetForm();
