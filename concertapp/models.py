@@ -343,39 +343,6 @@ class Collection(models.Model):
             req.remove()
         except ObjectDoesNotExist:
             raise Exception('This request does not exist')
-                
-    ###
-    #   Convert the collection into a dictionary of values, and return it.  Some
-    #   values are relative to the user, and thus the user is required.
-    #
-    #   @param  user        User  - The current logged in user for which we are
-    #                       retrieving the collections.
-    ###
-    def to_dict(self,user):
-        result = {
-            'name': self.name, 
-            'id': self.id, 
-            'num_users': self.users.all().count()
-        }
-        
-        # If user is the administrator of this collection
-        if self.admin == user:
-            result['admin'] = 1
-            
-            # also give them all of the requests for the collection
-            reqs = self.requesting_users.all()
-            
-            # If there are requests
-            if reqs.count():
-                reqsList = []
-                
-                for req in reqs:
-                    reqsList.append(req.get_profile().to_dict())
-                result['requests'] = reqsList
-        elif user in self.users.all():
-            result['member'] = 1
-        
-        return result  
         
         
     def __unicode__(self):

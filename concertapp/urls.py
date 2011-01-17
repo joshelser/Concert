@@ -4,6 +4,9 @@ from django.views.generic.simple import redirect_to
 import django.contrib.auth.views
 import os
 
+from django.contrib import admin
+
+
 from tastypie.api import Api
 
 from concertapp.collection.api import *
@@ -13,6 +16,8 @@ api1 = Api(api_name='1')
 api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
+
+admin.autodiscover()
 
 urlpatterns = patterns('',
 
@@ -46,6 +51,8 @@ urlpatterns = patterns('',
     # REST api
     (r'^api/', include(api1.urls)),
 
+    # admin
+    (r'^admin/', include(admin.site.urls)),
 )
 
 

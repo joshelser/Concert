@@ -35,6 +35,9 @@ def manage_collections(request):
     ar = AdminCollectionResource()
     adminCollectionsSerialized = ar.as_dict(request)
     
+    print >> sys.stderr, "adminCollectionsSerialized:\n"+str(adminCollectionsSerialized)
+    sys.stderr.flush()
+    
     ur = UserRequestResource()
     userRequestsSerialized = ur.as_dict(request)
     
@@ -84,51 +87,6 @@ def search_collections(request, query):
         content_type = 'application/json'
     )
     
-##
-#    Create a collection
-#
-#   @param  request.POST['name']        String  - The name of the new collection.
-##
-@login_required
-def crud(request, collection_id):
-    user = request.user
-    
-    if not(request.POST):
-        print >> sys.stderr, "not request.POST:\n"
-        sys.stderr.flush()
-        return HttpResponseRedirect('/collections/')
-    else:
-        print >> sys.stderr, "post:\n"
-        sys.stderr.flush()
-    
-    method = request.META['REQUEST_METHOD']
-    
-    if method == 'POST':
-        # Create new collection with current user as the admin
-        col = Collection(admin=user)
-    
-        data = simplejson.loads(request.POST.items()[0][0])
-
-        # Create form so we can validate collection name
-        form = CreateCollectionForm(data, instance=col)
-        if form.is_valid():
-            colname = form.cleaned_data['name']
-        
-            col = form.save()
-        
-            # Add current user to collection
-            col.users.add(user)
-        
-            return HttpResponse(
-                simplejson.dumps(col.to_dict(user)), 
-                content_type='application/json'
-            )
-        else:
-            return HttpResponse('failure: '+str(form.errors))
-    elif method == 'DELETE':
-        print >> sys.stderr, "deleting collection:\n"
-        sys.stderr.flush()
-        return HttpResponse('success')
         
 
 ###

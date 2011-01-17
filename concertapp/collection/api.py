@@ -18,16 +18,11 @@ from urlparse import parse_qs
 from concertapp.models import *
 from django.contrib.auth.models import User
 
+from concertapp.lib.api import *
+
 from concertapp.users.api import *
 
 
-###
-#   Just make sure that the user is logged into Django
-###
-class DjangoAuthentication(Authentication):
-    """Authenticate based upon Django session"""
-    def is_authenticated(self, request, **kwargs):
-        return request.user.is_authenticated()
 
 
 ###
@@ -53,50 +48,15 @@ class CollectionAuthorization(Authorization):
         else:
             #   We're just creating an object (or something).
             return True
-
-
-###
-#   This is soley to provide the to_dict function.  Once I figure out what a better
-#   way to do this is, we can remove this class.
-###
-class MyResource(ModelResource):
-    ###
-    #   This method is used to bootstrap the objects into place.
-    ###
-    def as_dict(self, request):
-        cols = self.get_object_list(request)
-
-        colsBundles = [self.full_dehydrate(obj=obj) for obj in cols]
-
-        colsSerialized = [obj.data for obj in colsBundles]
-
-        return colsSerialized
-        
-    ###
-    #   This method returns the serialized object upon creation, instead of 
-    #   just the uri to it.
-    ###
-    def post_list(self, request, **kwargs):
-       deserialized = self.deserialize(request,
-                                       request.raw_post_data,
-                                       format=request.META.get('CONTENT_TYPE',
-                                                               'application/json'))
-       bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized))
-       self.is_valid(bundle, request)
-       updated_bundle = self.obj_create(bundle, request=request)
-       resp = self.create_response(request,
-                                   self.full_dehydrate(updated_bundle.obj))
-       resp['location'] = self.get_resource_uri(updated_bundle)
-       resp.code = 201
-       return resp                              
     
     
-        
+
 
 ###
 #   This is the resource that is used for a collection.
 ###
 class CollectionResource(MyResource):
+    
     users = fields.ManyToManyField(UserResource, 'users')
     
     class Meta:
@@ -149,10 +109,13 @@ class CollectionResource(MyResource):
   
         else:
             # Filter by search term if there is one
-            search_term = self._meta.search_term
-            if search_term:
-                object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list.filter(name__icontains=self._meta.search_term))
-            else:
+            try:                
+                search_term = self._meta.search_term
+                if search_term:
+                    object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list.filter(name__icontains=self._meta.search_term))
+                else:
+                    object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list)
+            except AttributeError, e:
                 object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list)
 
         return object_list
@@ -229,11 +192,14 @@ class MemberNotAdminCollectionResource(CollectionResource):
 #   This resource is only for collections which the user is an administrator of.
 ###
 class AdminCollectionResource(CollectionResource):
-    
+        
     ###
     #   Retrieve only the collections for which the user is an administrator
     ###
     def apply_authorization_limits(self, request, object_list):
+        
+        self._meta.request = request
+        
         user = request.user
         
         # Again, ignore incomming argument and only send forth the
@@ -241,6 +207,22 @@ class AdminCollectionResource(CollectionResource):
         object_list = super(AdminCollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
         
         return object_list
+
+    ###
+    #   Here, before the object is sent for serialization we will add the 
+    #   requests.
+    ###
+    def full_dehydrate(self, obj):
+
+        dehydrated = super(AdminCollectionResource, self).full_dehydrate(obj)
+        
+        # Get all requests for this collection
+        r = CollectionRequestResource()
+        r.set_collection(obj)
+        
+        dehydrated.data['requests'] = r.as_dict(self._meta.request)
+        
+        return dehydrated
         
 ###
 #   This resource is for collections that a user has requested to join.
@@ -263,7 +245,8 @@ class CollectionRequestResource(CollectionResource):
 #   This is the resource that is used for a collection request.
 ###
 class RequestResource(MyResource):
-    
+    user = fields.ForeignKey(UserResource, 'user', full=True)
+    collection = fields.ForeignKey(CollectionResource, 'collection')
 
     class Meta:
         queryset = Request.objects.all()
@@ -290,5 +273,30 @@ class UserRequestResource(RequestResource):
         object_list = super(UserRequestResource, self).apply_authorization_limits(request, user.request_set.all())
         
         return object_list
-
-
+        
+###
+#   This is a resource that is used for the requests from a single collection.
+###
+class CollectionRequestResource(RequestResource):
+    
+    
+    class Meta:
+        # The collection for which we will retrieve these requests
+        collection = None
+        
+    ###
+    #   This must be called before retreving the requests
+    ###
+    def set_collection(self, collection):
+        self._meta.collection = collection
+        
+    ###
+    #   When retrieving the requests, only get those from our specified collection.
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        collection = self._meta.collection
+        
+        object_list = super(CollectionRequestResource, self).apply_authorization_limits(request, Request.objects.filter(collection=collection))
+        
+        return object_list
+        

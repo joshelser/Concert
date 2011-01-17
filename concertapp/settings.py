@@ -85,8 +85,6 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, 'templates_old'),
-    os.path.join(BASE_DIR, 'templates_experiment')
     )
 
 INSTALLED_APPS = (
