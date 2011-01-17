@@ -27,12 +27,12 @@ def login_register(request, redirect_field_name=REDIRECT_FIELD_NAME):
         login_valid = False
         if login_form.is_valid():
             login_valid = True
-
+        
         register_form = UserRegisterForm(data=request.POST)
         register_valid = False
         if register_form.is_valid():
             register_valid = True
-
+        
         if login_valid or register_valid:
             # Light security check -- make sure redirect_to isn't garbage.
             if not redirect_to or ' ' in redirect_to:

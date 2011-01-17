@@ -332,6 +332,7 @@ class Collection(models.Model):
         
     def add_request(self,user):        
         req = Request(user = user, collection = self).init()
+        return req
         
     ###
     #   This is when a user decides that they don't actually want to join a
@@ -383,7 +384,7 @@ class Request(models.Model):
             event.save()
             
             # Done
-            return
+            return self
             
             
         # The object already exists

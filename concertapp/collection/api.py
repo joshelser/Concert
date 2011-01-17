@@ -23,34 +23,67 @@ from concertapp.lib.api import *
 from concertapp.users.api import *
 
 
-
-
-###
-#   Make sure that the user who is trying to modify the board is the administrator.
-###
-class CollectionAuthorization(Authorization):
+class ConcertAuthorization(Authorization):
     def is_authorized(self, request, object=None):
-        
-        #   Get is always allowed, since we're just requesting information about the
-        #   collection.
-        if request.method == 'GET':
-            return True
-            
         #   User must be logged in, authentication backend should have set
         #   request.user
         if not hasattr(request, 'user'):
             return False
             
-        #   If there is an object to authorize
-        if object:
-            #   Make sure that we're the administrator
-            return (request.user == object.admin)
-        else:
-            #   We're just creating an object (or something).
-            return True
-    
-    
+        return True
+        
 
+
+###
+#   Make sure that the user who is trying to modify the board is the administrator.
+###
+class CollectionAuthorization(ConcertAuthorization):
+    def is_authorized(self, request, object=None):
+        
+        if super(CollectionAuthorization, self).is_authorized(request, object):
+            #   Get is always allowed, since we're just requesting information about
+            #   the collection.
+            if request.method == 'GET':
+                return True
+            
+            
+            #   If there is an object to authorize
+            if object:
+                #   Make sure that we're the administrator
+                return (request.user == object.admin)
+            else:
+                #   TODO: This currently is always the case (tastypie issues)
+                return True
+        else:
+            return False
+            
+###
+#   Make sure that the user who is trying to access/modify a request is either
+#   the creator of that request, or the administrator of the collection.
+###
+class RequestAuthorization(ConcertAuthorization):
+    def is_authorized(self, request, object=None):
+        
+        if super(RequestAuthorization, self).is_authorized(request, object):
+            user = request.user
+            
+            # If we have an object to authenticate
+            if object:
+                # If the user is the one who made this request
+                if user == object.user:
+                    return True
+                # or the user is the administrator of the collection
+                elif user == object.collection.admin:
+                    return True
+                else:
+                    return False
+            else:
+                # TODO: This is always the case (tastypie issues)
+                return True
+            
+        else:
+            # not authorized by django
+            return False
 
 ###
 #   This is the resource that is used for a collection.
@@ -251,7 +284,7 @@ class RequestResource(MyResource):
     class Meta:
         queryset = Request.objects.all()
 
-        authorization = DjangoAuthorization()
+        authorization = RequestAuthorization()
         authentication = DjangoAuthentication()
 
 
