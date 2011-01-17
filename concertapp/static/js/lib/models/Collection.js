@@ -14,6 +14,13 @@ var Collection = Backbone.Model.extend({
      *  @constructor
      **/
     initialize: function() {
+        
+        /* Requests attribute should be a RequestSet */
+        var oldRequests = this.get('requests');
+        
+        var newRequests = new RequestSet;
+        newRequests.refresh(oldRequests);        
+        this.set({'requests': newRequests});
     },
     url: function() {
         var base = '/api/1/collection/';

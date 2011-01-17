@@ -35,9 +35,6 @@ def manage_collections(request):
     ar = AdminCollectionResource()
     adminCollectionsSerialized = ar.as_dict(request)
     
-    print >> sys.stderr, "adminCollectionsSerialized:\n"+str(adminCollectionsSerialized)
-    sys.stderr.flush()
-    
     ur = UserRequestResource()
     userRequestsSerialized = ur.as_dict(request)
     

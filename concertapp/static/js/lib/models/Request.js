@@ -9,6 +9,23 @@
  **/ 
 var Request = Backbone.Model.extend({
     
+    /**
+     *  @constructor
+     **/
+    initialize: function() {
+        var userData = this.get('user');
+
+        /* If a user was sent in as a JSON object, make sure we treat it as a
+            User object */
+        if(userData && typeof(userData) == 'object') {
+            var newUser = new User;
+            newUser.set(userData);
+            this.set({'user': newUser});
+            
+            var user = this.get('user');
+        }
+        
+    },
 });
 
 /**

@@ -292,7 +292,14 @@ class RequestResource(MyResource):
 #   This is the resource that is used for collection requests from a single
 #   user.
 ###
-class UserRequestResource(RequestResource):
+class UserRequestResource(MyResource):
+    collection = fields.ForeignKey(CollectionResource, 'collection')
+
+    class Meta:
+        queryset = Request.objects.all()
+
+        authorization = RequestAuthorization()
+        authentication = DjangoAuthentication()
 
     ###
     #   Make sure the user is the one who made the request

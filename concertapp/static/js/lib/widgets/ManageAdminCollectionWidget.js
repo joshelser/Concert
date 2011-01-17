@@ -49,19 +49,19 @@ var ManageAdminCollectionWidget = Widget.extend({
         var frag = document.createDocumentFragment();
         
         /*  We are now done rendering the collection information, but we need to 
-            create a widget for every user who has requested to join the collection
+            create a widget for every user who has requested to join the collection*/
             
         this.model.get('requests').each(function(parentWidget, template, frag){
-            return function(user) {
+            return function(req) {
                 var widget = new CollectionRequestWidget({
                     panel: parentWidget.panel, 
-                    model: user, 
+                    model: req, 
                     template: template
                 });
                 
                 frag.appendChild(widget.render().el);
             };
-        }(this, this.collectionRequestWidgetTemplate, frag));*/
+        }(this, this.collectionRequestWidgetTemplate, frag));
         
         requestContainer.html(frag);
         
