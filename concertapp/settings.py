@@ -78,9 +78,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-SERIALIZATION_MODULES = {
-    'json': 'wadofstuff.django.serializers.json'
-}
 
 DEBUG_PROPOGATE_EXCEPTIONS = False
 
@@ -88,8 +85,6 @@ ROOT_URLCONF = 'concertapp.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, 'templates_old'),
-    os.path.join(BASE_DIR, 'templates_experiment')
     )
 
 INSTALLED_APPS = (
@@ -99,6 +94,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.markup',
+    'tastypie',
     'concertapp',
 )
 
