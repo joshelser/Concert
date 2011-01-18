@@ -38,10 +38,15 @@ def manage_collections(request):
     ur = UserRequestResource()
     userRequestsSerialized = ur.as_dict(request)
     
+    userResource = SingleUserResource()
+    userResource.set_user(request.user)
+    userSerialized = userResource.as_dict(request)[0]
+    
     data = {
         'memberCollections': memberCollectionsSerialized, 
         'adminCollections': adminCollectionsSerialized,
-        'requests': userRequestsSerialized
+        'requests': userRequestsSerialized,
+        'user': userSerialized
     }
     
     

@@ -13,27 +13,40 @@ var Request = Backbone.Model.extend({
      *  @constructor
      **/
     initialize: function() {
-        var userData = this.get('user');
 
+        
+    },
+    set: function(attrs, options) {
+        var userData = attrs['user'];
         /* If a user was sent in as a JSON object, make sure we treat it as a
             User object */
         if(userData && typeof(userData) == 'object') {
-            var newUser = new User;
-            newUser.set(userData);
-            this.set({'user': newUser});
+            var newUser = new User(userData);
+            attrs['user'] = newUser;
         }
         
+        var collectionData = attrs['collection'];
         /**
          *  If the collection was sent in as JSON, do the same.
          **/
-        var collectionData = this.get('collection');
-        if(collectionData && typeof(collectionData) == 'object') {
-            var newCollection = new Collection;
-            newCollection.set(collectionData);
-            this.set({'collection': newCollection});
-        }
+         if(collectionData && typeof(collectionData) == 'object') {
+             var newCollection = new Collection(collectionData);
+            attrs['collection'] = newCollection;
+         }
+         
+         return Backbone.Model.prototype.set.call(this, attrs, options);
         
-    },
+    }, 
+    url: function() {
+        var base = '/api/1/request/';
+        var id = this.get('id');
+        if(id) {
+            return base+id+'/';
+        }
+        else {
+            return base;
+        }
+    }, 
 });
 
 /**

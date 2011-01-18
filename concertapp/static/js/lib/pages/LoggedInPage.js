@@ -40,6 +40,17 @@ LoggedInPage.prototype.init = function(params) {
         the current user is a member. */
     var userMemberCollections = new CollectionSet;
     this.userMemberCollections = userMemberCollections;
+    
+    /* Data for current user */
+    var userData = data.user;
+    if(typeof(userData) == 'undefined') {
+        throw new Error('data.user is undefined');
+    }
+    this.userData = userData;
+
+    /* Backbone object for current user */
+    var user = new User;
+    this.user = user;
         
     
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 
@@ -59,4 +70,6 @@ LoggedInPage.prototype.init = function(params) {
 LoggedInPage.prototype.initData = function() {
     /* Populate the collections object with all of the data from the server */
     this.userMemberCollections.refresh(this.userMemberCollectionsData);
+    
+    this.user.set(this.userData);
 };

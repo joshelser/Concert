@@ -37,19 +37,11 @@ var Collection = Backbone.Model.extend({
      *  join button.
      **/
     requestToJoin: function() {
-        var id = this.id;
-        $.getJSON('join/'+id, 
-            function(me) {
-                return function(data, status) {
-                    if(status == 'success' && data.status == 'success') {
-                        me.trigger('join_success');
-                    }
-                    else {
-                        me.trigger('join_error', data.notification);
-                    }
-                }
-            }(this)
-        );
+        var reqs = this.get('requests');
+        reqs.create({
+            user: com.concertsoundorganizer.page.user.url(), 
+            collection: this.url()
+        });
     }, 
     /**
      *  Revoke a request to join this collection.

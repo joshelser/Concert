@@ -132,11 +132,14 @@ class CollectionResource(MyResource):
     #   collection.
     ###
     def apply_authorization_limits(self, request, object_list):
-        user = request.user
+        if not request:
+            return super(CollectionResource, self).apply_authorization_limits(request, object_list)
+            
         method = request.META['REQUEST_METHOD']
         
         # If user is just trying to delete or update the collection:
         if method == 'DELETE' or method == 'PUT':
+            user = request.user
             # User must be an administrator of the collection
             object_list = super(CollectionResource, self).apply_authorization_limits(request, user.collection_set.filter(admin=user))
   
@@ -278,8 +281,8 @@ class CollectionRequestResource(CollectionResource):
 #   This is the resource that is used for a collection request.
 ###
 class RequestResource(MyResource):
-    user = fields.ForeignKey(UserResource, 'user', full=True)
-    collection = fields.ForeignKey(CollectionResource, 'collection')
+    user = fields.ForeignKey(UserResource, 'user')
+    collection = fields.ForeignKey(CollectionResource, 'collection', full=True)
 
     class Meta:
         queryset = Request.objects.all()
@@ -292,15 +295,7 @@ class RequestResource(MyResource):
 #   This is the resource that is used for collection requests from a single
 #   user.
 ###
-class UserRequestResource(MyResource):
-    collection = fields.ForeignKey(CollectionResource, 'collection', full=True)
-
-    class Meta:
-        queryset = Request.objects.all()
-
-        authorization = RequestAuthorization()
-        authentication = DjangoAuthentication()
-
+class UserRequestResource(RequestResource):
     ###
     #   Make sure the user is the one who made the request
     ###
@@ -318,6 +313,7 @@ class UserRequestResource(MyResource):
 #   This is a resource that is used for the requests from a single collection.
 ###
 class CollectionRequestResource(RequestResource):
+    user = fields.ForeignKey(UserResource, 'user', full=True)
     
     
     class Meta:

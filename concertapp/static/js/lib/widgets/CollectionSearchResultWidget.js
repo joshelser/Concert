@@ -15,7 +15,11 @@ var CollectionSearchResultWidget = Widget.extend({
 
         var params = this.options;
         
+        var page = this.panel.page;
         
+        /* Save references to userRequests collection and user */
+        this.userRequests = page.userRequests;        
+        this.user = page.user;
                 
         _.bindAll(this, "render");
     },
@@ -28,8 +32,18 @@ var CollectionSearchResultWidget = Widget.extend({
         'click .collection_join_button': 'joinCollection', 
         'click .collection_info_button': 'showCollectionInfo', 
     }, 
+    /**
+     *  This will be executed when a user decides to join a collection.  Here
+     *  we instantiate a new request object and put it into the userRequests 
+     *  collection.
+     **/
     joinCollection: function() {
-        this.model.requestToJoin();
+        this.userRequests.create({
+            collection: this.model.url(), 
+            user: this.user.url() 
+        });
+        
+        this.render();
     }, 
     showCollectionInfo: function() {
         console.log('showCollectionInfo');
