@@ -3,11 +3,7 @@
 {% verbatim %}
 <div class="user_collection table-row">
     <div class="user_collection_name table-cell" id="user_collection_name-${id}">
-        ${name}
-    </div>
-    
-    <div class="user_collection_members table-cell">
-        ${num_users}{{if num_users ==  1}}user{{else}}users{{/if}}
+        ${collection.get("name")}
     </div>
     
     <div class="user_collection_request_status table-cell">

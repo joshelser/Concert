@@ -293,7 +293,7 @@ class RequestResource(MyResource):
 #   user.
 ###
 class UserRequestResource(MyResource):
-    collection = fields.ForeignKey(CollectionResource, 'collection')
+    collection = fields.ForeignKey(CollectionResource, 'collection', full=True)
 
     class Meta:
         queryset = Request.objects.all()

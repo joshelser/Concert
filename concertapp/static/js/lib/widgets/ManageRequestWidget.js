@@ -1,5 +1,5 @@
 /**
- *  @file       ManageRequestCollectionWidget.js
+ *  @file       ManageRequestWidget.js
  *  
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
@@ -9,7 +9,7 @@
  *  @class
  *  @extends    Widget
  **/
-var ManageRequestCollectionWidget = Widget.extend({
+var ManageRequestWidget = Widget.extend({
     
     initialize: function() {
         Widget.prototype.initialize.call(this);

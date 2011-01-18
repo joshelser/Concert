@@ -1,5 +1,5 @@
 /**
- *  @file       ManageRequestCollectionsPanel.js
+ *  @file       ManageRequestsPanel.js
  *  
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
@@ -9,12 +9,12 @@
  *  This is the panel where the user can manage the collections he/she has requested
  *  to join.
  *  @class
- *  @extends    ManageCollectionsPanel
+ *  @extends    ManageTablePanel
  **/
-var ManageRequestCollectionsPanel = ManageCollectionsPanel.extend({
+var ManageRequestsPanel = ManageTablePanel.extend({
     
     initialize: function() {
-        ManageCollectionsPanel.prototype.initialize.call(this);
+        ManageTablePanel.prototype.initialize.call(this);
 
         /* The manage admin collection widget template */
         var widgetTemplate = $('#manage_request_collection_template');
@@ -24,7 +24,7 @@ var ManageRequestCollectionsPanel = ManageCollectionsPanel.extend({
         this.widgetTemplate = widgetTemplate;
         
         /* The ManageAdminCollectionWidget class */
-        this.widgetClass = ManageRequestCollectionWidget;
+        this.widgetClass = ManageRequestWidget;
         
     }
 });

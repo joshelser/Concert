@@ -70,7 +70,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageAdminCollectionsPanel = new ManageAdminCollectionsPanel({
         page: this,
         el: $('#manage_admin_collections_panel'),
-        collections: userAdminCollections
+        set: userAdminCollections
     });
     this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
@@ -81,18 +81,20 @@ CollectionsPage.prototype.init = function(params) {
     var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
         page: this, 
         el: $('#manage_member_collections_panel'), 
-        collections: userMemberCollections
+        set: userMemberCollections
     });
+    this.manageMemberCollectionsPanel = manageMemberCollectionsPanel;
     
     /**
      *  This panel will allow the user to manage the join requests they have
      *  sent out.
      **/
-    var manageRequestCollectionsPanel = new ManageRequestCollectionsPanel({
+    var manageRequestsPanel = new ManageRequestsPanel({
         page: this, 
         el: $('#manage_request_collections_panel'), 
-        collections: userRequests
+        set: userRequests
     });
+    this.manageRequestsPanel = manageRequestsPanel;
     
     this.initData();
 };

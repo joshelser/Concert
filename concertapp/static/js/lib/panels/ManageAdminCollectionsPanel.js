@@ -9,12 +9,12 @@
  *  This is the panel where the user can manage the collections he/she is an 
  *  administrator of.
  *  @class
- *  @extends    ManageCollectionsPanel
+ *  @extends    ManageTablePanel
  **/
-var ManageAdminCollectionsPanel = ManageCollectionsPanel.extend({
+var ManageAdminCollectionsPanel = ManageTablePanel.extend({
     
     initialize: function() {
-        ManageCollectionsPanel.prototype.initialize.call(this);
+        ManageTablePanel.prototype.initialize.call(this);
 
         /* The manage admin collection widget template */
         var widgetTemplate = $('#manage_admin_collection_template');

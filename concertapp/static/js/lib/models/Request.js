@@ -21,8 +21,16 @@ var Request = Backbone.Model.extend({
             var newUser = new User;
             newUser.set(userData);
             this.set({'user': newUser});
-            
-            var user = this.get('user');
+        }
+        
+        /**
+         *  If the collection was sent in as JSON, do the same.
+         **/
+        var collectionData = this.get('collection');
+        if(collectionData && typeof(collectionData) == 'object') {
+            var newCollection = new Collection;
+            newCollection.set(collectionData);
+            this.set({'collection': newCollection});
         }
         
     },
