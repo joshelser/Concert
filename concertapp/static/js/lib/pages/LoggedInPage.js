@@ -18,21 +18,23 @@ LoggedInPage.prototype = new Page();
 
 LoggedInPage.prototype.init = function(params) {
     Page.prototype.init.call(this, params);
-    
-    /* Get data from the server for this page */
-    var data = params.data;
-    if(typeof(data) == 'undefined') {
-        throw new Error('params.data is undefined');
+
+    /* Data for current user will probably be needed on pages */
+    var userData = params.userData;
+    if(typeof(userData) == 'undefined') {
+        throw new Error('params.userData is undefined');
     }
-    else if(data.length == 0) {
-        throw new Error('data not found');
-    }
-    this.data = data;
+    this.userData = userData;
+
+    /* Backbone object for current user */
+    var user = new User;
+    this.user = user;
+
     
     /* Every page needs the collections that this user is a member of */
-    var userMemberCollectionsData = data.memberCollections;
+    var userMemberCollectionsData = params.memberCollectionsData;
     if(typeof(userMemberCollectionsData) == 'undefined') {
-        throw new Error('data.memberCollections is undefined');
+        throw new Error('params.memberCollectionsData is undefined');
     }
     this.userMemberCollectionsData = userMemberCollectionsData;
     
@@ -41,16 +43,6 @@ LoggedInPage.prototype.init = function(params) {
     var userMemberCollections = new CollectionSet;
     this.userMemberCollections = userMemberCollections;
     
-    /* Data for current user */
-    var userData = data.user;
-    if(typeof(userData) == 'undefined') {
-        throw new Error('data.user is undefined');
-    }
-    this.userData = userData;
-
-    /* Backbone object for current user */
-    var user = new User;
-    this.user = user;
         
     
     /*  Create the globalOptionsPanel (the buttons and menus at the top of every 

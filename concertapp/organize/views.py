@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.template.response import TemplateResponse
 from django.template import RequestContext
 from django.core.cache import cache
 from django.utils import simplejson
@@ -33,22 +33,16 @@ from concertapp.decorators import user_is_member_and_collection_exists
 @user_is_member_and_collection_exists
 def organize_collection(request, collection_id, col, user):
     
-    data = {
-        'memberCollections':user.get_profile().get_collections_dict(), 
-    }
-    
-    
     files = Audio.objects.filter(collection = col)
     segments = AudioSegment.objects.filter(audio__collection = col)
     
     
-    return render_to_response('organize/organize_collection.html', {
+    return TemplateResponse(request, 'organize/organize_collection.html', {
         'page_name': 'Organize '+ col.name,
         'js_page_path': '/organize/collection/',
         'files': files,
         'segments': segments,
-        'data': simplejson.dumps(data),         
-    }, RequestContext(request));
+    });
     
 ###
 #   This controller produces a list of audio files and audio segments for the

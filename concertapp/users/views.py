@@ -7,7 +7,7 @@ from concertapp.users.forms import UserRegisterForm
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site, RequestSite
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.template.response import TemplateResponse
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -75,10 +75,10 @@ def login_register(request, redirect_field_name=REDIRECT_FIELD_NAME):
     else:
         current_site = RequestSite(request)
     
-    return render_to_response('users/login_register.html', {
+    return TemplateResponse(request, 'users/login_register.html', {
             'login_form': login_form,
             'register_form': register_form,
             redirect_field_name: redirect_to,
             'site': current_site,
             'site_name': current_site.name,
-            }, context_instance=RequestContext(request))
+            })

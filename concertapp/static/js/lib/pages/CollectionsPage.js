@@ -21,13 +21,11 @@ CollectionsPage.prototype.init = function(params) {
 
     var userMemberCollections = this.userMemberCollections;
     
-    var data = params.data;
-    
     /** The raw collection data for the collections that the current user has
         requested to join **/
-    var requestData = data.requests;
+    var requestData = params.requests;
     if(typeof(requestData) == 'undefined') {
-        throw new Error('params.data.requests is undefined');
+        throw new Error('params.requests is undefined');
     }
     this.requestData = requestData;
     
@@ -41,9 +39,9 @@ CollectionsPage.prototype.init = function(params) {
      *  The raw collection data for collections that the current user is an
      *  administrator of.
      **/
-    var userAdminCollectionData = data.adminCollections;
+    var userAdminCollectionData = params.adminCollections;
     if(typeof(userAdminCollectionData) == 'undefined') {
-        throw new Error('params.data.adminCollections is undefined');
+        throw new Error('params.adminCollections is undefined');
     }
     this.userAdminCollectionData = userAdminCollectionData;    
     

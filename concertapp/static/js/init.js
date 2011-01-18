@@ -32,10 +32,6 @@ function initializeUI(pagePath, data) {
         ]);
         */    
         
-        var pageParams = {
-            data: data, 
-        };
-        
         /* For each page, run JS corresponding to that page */
         var pageInitializers = {
             '/login/': LoginPage,
@@ -46,7 +42,7 @@ function initializeUI(pagePath, data) {
         };
 
         /* Run the initializer function for this page. */
-        var page = new pageInitializers[pagePath](pageParams);
+        var page = new pageInitializers[pagePath](data);
         com.concertsoundorganizer.page = page;
     });
 }

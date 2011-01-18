@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.response import TemplateResponse
 
 from django.utils import simplejson
 
@@ -15,15 +15,8 @@ from concertapp.collection.api import *
 def dashboard(request):
     user = request.user
     
-    r = MemberCollectionResource()
-    r.set_user(user)
     
-    data = {
-        'memberCollections':r.as_dict(request), 
-    }
-    
-    return render_to_response('dashboard/dashboard.html', {
+    return TemplateResponse(request, 'dashboard/dashboard.html', {
         'page_name': 'Dashboard',
         'js_page_path': '/dashboard/',
-        'data': simplejson.dumps(data), 
-    }, RequestContext(request));
+    })

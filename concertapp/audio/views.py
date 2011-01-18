@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.template.response import TemplateResponse
 from django.template import RequestContext
 from django.core.cache import cache
 from django.utils import simplejson
@@ -71,10 +71,6 @@ def upload_audio(request):
     
     username = user.username
     
-    data = {
-        'memberCollections':user.get_profile().get_collections_dict(), 
-    }
-    
     if request.method == 'POST':
         # The id for this upload (we will use this at the end)
         upload_id = request.POST['upload_id']
@@ -124,8 +120,7 @@ def upload_audio(request):
 
         
     else :        
-        return render_to_response('audio/upload_audio.html', {
+        return TemplateResponse(request, 'audio/upload_audio.html', {
             'page_name': 'Upload Audio',
             'js_page_path': '/audio/upload/',
-            'data': simplejson.dumps(data), 
-        }, RequestContext(request));
+        });

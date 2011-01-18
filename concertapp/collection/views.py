@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.template.response import TemplateResponse
 from django.template import RequestContext
 from django.utils import simplejson
 import json
@@ -29,33 +29,21 @@ from concertapp.collection.api import *
 def manage_collections(request):
     user = request.user
     
-    cr = MemberNotAdminCollectionResource()
-    memberCollectionsSerialized = cr.as_dict(request)
-    
     ar = AdminCollectionResource()
-    adminCollectionsSerialized = ar.as_dict(request)
-    
     ur = UserRequestResource()
-    userRequestsSerialized = ur.as_dict(request)
-    
-    userResource = SingleUserResource()
-    userResource.set_user(request.user)
-    userSerialized = userResource.as_dict(request)[0]
     
     data = {
-        'memberCollections': memberCollectionsSerialized, 
-        'adminCollections': adminCollectionsSerialized,
-        'requests': userRequestsSerialized,
-        'user': userSerialized
+        'adminCollections': ar.as_dict(request),
+        'requests': ur.as_dict(request),
     }
     
     
 
-    return render_to_response('collections/manage_collections.html', {
+    return TemplateResponse(request, 'collections/manage_collections.html', {
         'page_name': 'Collections',
         'js_page_path': '/collections/',
-        'data': simplejson.dumps(data), 
-    }, RequestContext(request))
+        'data': data, 
+    })
 
 
 ##
