@@ -74,6 +74,7 @@ CreateNewCollectionButton.prototype.click = function() {
         success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
                 userAdminCollections.add(model);
+                userMemberCollections.add(model);
                 /* Reset the search field */
                 panel.resetForm();
             };

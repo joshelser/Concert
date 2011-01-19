@@ -103,6 +103,10 @@ CollectionsPage.prototype.init = function(params) {
 CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
     
-    this.userAdminCollections.refresh(this.userAdminCollectionData);
-    this.userRequests.refresh(this.requestData)
+    var userAdminCollections = this.userAdminCollections;
+    userAdminCollections.refresh(this.userAdminCollectionData);
+    
+    this.seenCollections.add(userAdminCollections.models);
+    
+    this.userRequests.refresh(this.requestData);
 };

@@ -29,6 +29,9 @@ LoggedInPage.prototype.init = function(params) {
     /* Backbone object for current user */
     var user = new User;
     this.user = user;
+    
+    /* Collection of users we have seen */
+    this.seenUsers = new UserSet;
 
     
     /* Every page needs the collections that this user is a member of */
@@ -42,6 +45,10 @@ LoggedInPage.prototype.init = function(params) {
         the current user is a member. */
     var userMemberCollections = new CollectionSet;
     this.userMemberCollections = userMemberCollections;
+    
+    /* Any page that has collections represented will require a master list of collections we have seen */
+    var seenCollections = new CollectionSet;
+    this.seenCollections = seenCollections;
     
         
     
@@ -63,5 +70,13 @@ LoggedInPage.prototype.initData = function() {
     /* Populate the collections object with all of the data from the server */
     this.userMemberCollections.refresh(this.userMemberCollectionsData);
     
-    this.user.set(this.userData);
+    /* We have now seen all of the above collections */
+    this.seenCollections.add(this.userMemberCollections.models);
+    
+    var user = this.user;
+    /* parse user data */
+    user.set(this.userData);
+    
+    /* We have now seen our user */
+    this.seenUsers.add(user);
 };

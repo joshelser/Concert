@@ -71,7 +71,6 @@ var ManageTablePanel = Panel.extend({
         /* The header will always be first in the table */
         frag.appendChild(this.tableHeader.get(0))
         
-        
         this.set.each(function(panel, template, widgetClass, frag) {
             return function(obj){
                 /* Create a ManageCollectionWidget */

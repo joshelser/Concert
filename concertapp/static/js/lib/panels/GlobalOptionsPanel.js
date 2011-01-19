@@ -94,13 +94,28 @@ var GlobalOptionsPanel = Panel.extend({
     
     /* To render this panel, just populate the dropdown */
     render: function() {
-
-        /* Populate dropdown */
-        this.collectionSelector.html(
-            this.collectionSelectorOptionsTemplate.tmpl({
-                collections: this.userMemberCollections.toJSON(), 
-            })
-        );
+        
+        /* If there are collections */
+        if(this.userMemberCollections.length) {
+            /* The dropdown should not be disabled.  TODO: This logic can be in the template. */
+            if(this.collectionSelector.attr('disabled')) {
+                this.collectionSelector.removeAttr('disabled');
+            }
+            /* Populate dropdown */
+            this.collectionSelector.html(
+                this.collectionSelectorOptionsTemplate.tmpl({
+                    collections: this.userMemberCollections.toJSON(), 
+                })
+            );            
+        }
+        else {
+            /* There are not collections */
+            
+            /* Disable dropdown */
+            this.collectionSelector.attr('disabled', 'true');
+            
+            /* TODO: Display notification, or some text in selector?  This logic can also be in the template. */
+        }
 
 
         return this;
