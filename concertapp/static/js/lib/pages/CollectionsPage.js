@@ -39,11 +39,11 @@ CollectionsPage.prototype.init = function(params) {
      *  The raw collection data for collections that the current user is an
      *  administrator of.
      **/
-    var userAdminCollectionData = params.adminCollections;
-    if(typeof(userAdminCollectionData) == 'undefined') {
+    var userAdminCollectionsData = params.adminCollections;
+    if(typeof(userAdminCollectionsData) == 'undefined') {
         throw new Error('params.adminCollections is undefined');
     }
-    this.userAdminCollectionData = userAdminCollectionData;    
+    this.userAdminCollectionsData = userAdminCollectionsData;    
     
     /*  Backbone collection that will hold Concert Collection objects that the
         user is an administrator of */
@@ -103,10 +103,28 @@ CollectionsPage.prototype.init = function(params) {
 CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
     
+    var seenCollections = this.seenCollections;
+    
+    /* We must merge these collections into our list of seen collections, so we 
+        don't have duplicate instances of any collection */
     var userAdminCollections = this.userAdminCollections;
-    userAdminCollections.refresh(this.userAdminCollectionData);
-    
-    this.seenCollections.add(userAdminCollections.models);
-    
+    var userAdminCollectionsData = this.userAdminCollectionsData;
+    for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
+        var collectionData = userAdminCollectionsData[i];
+        
+        /* Grab this collection from our seen collections */
+        var collection = seenCollections.get(collectionData.id);
+        if(!collection) {
+            /* The collection has not been seen or instantiated yet, so we'll
+                create it now. */
+            collection = new Collection(collectionData);
+            seenCollections.add(collection);
+        }
+        /* Add the collection silently so views aren't updated right away */
+        userAdminCollections.add(collection, {silent: true});
+    }
+    /* Trigger a refresh event so views are updated */
+    userAdminCollections.trigger('refresh');
+        
     this.userRequests.refresh(this.requestData);
 };
