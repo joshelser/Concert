@@ -1,3 +1,4 @@
+from django.core.context_processors import csrf
 from concertapp.collection.api import *
 
 from django.utils import simplejson
@@ -33,4 +34,15 @@ class ConcertBootstrapDataMiddleware(object):
         # object.
         response.context_data['data'] = simplejson.dumps(response.context_data['data'])
 
+        return response
+        
+        
+###
+# Ensures that CSRF stuff is added to template context.
+# @class
+###
+class ConcertCSRFMiddleware(object):
+    def process_template_response(self, request, response):
+        response.context_data.update(csrf(request))
+        
         return response
