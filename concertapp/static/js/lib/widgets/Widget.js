@@ -12,9 +12,9 @@ var Widget = Backbone.View.extend({
 
 
     /**
-     *  Create the DOM elements associated with this widget using a template.  The
-     *  container member variable is then set automatically for the widget.  The widget
-     *  is not inserted into the DOM.
+     *  Create the DOM elements associated with this widget using a template.  
+     *  The widget is not inserted into the DOM in this class.  That is for whoever
+     *  is instantiating the widget to take care of.
      *
      *  @constructor
      *  @param  params.template        jQuery tmpl object   -   THe template.
@@ -39,11 +39,24 @@ var Widget = Backbone.View.extend({
         this.panel = panel;
 
         _.bindAll(this, "render");
+        if(this.model) {
+            this.model.bind('change', this.render);            
+        }
     },
     render: function() {
         var template = this.template;
         if(template) {
-            this.el = template.tmpl(this.model.toJSON()).get(0);            
+            /* render new widget */
+            var newel = template.tmpl(this.model.toJSON());
+            var el = this.el;
+            
+            /* If this element is currently in the DOM */
+            if($(el).parent().length) {
+                /* replace old widget in DOM (or non-dom) */
+                $(el).replaceWith(newel);                
+            }
+            /* Save reference to new widget */
+            this.el = newel.get(0);
         }
         
         this.delegateEvents();

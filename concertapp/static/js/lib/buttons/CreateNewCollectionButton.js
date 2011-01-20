@@ -53,6 +53,7 @@ CreateNewCollectionButton.prototype.init = function(params) {
     }
     this.newCollectionName = newCollectionName;
     
+    this.user = panel.page.user;
     
 };
 
@@ -66,6 +67,7 @@ CreateNewCollectionButton.prototype.click = function() {
     var newCollection = new Collection({
         name: this.newCollectionName,
         users: [], 
+        admin: this.user.url()
     });
     
     /* Save to server */
@@ -73,6 +75,7 @@ CreateNewCollectionButton.prototype.click = function() {
         /* On successful save */
         success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
+                model.set({'user_is_admin': true});
                 userAdminCollections.add(model);
                 userMemberCollections.add(model);
                 /* Reset the search field */

@@ -79,8 +79,7 @@ var ManageTablePanel = Panel.extend({
                     model: obj, 
                     panel: panel
                 });
-            
-                frag.appendChild(widget.render().el);
+                frag.appendChild(widget.el);
             };
         }(this, this.widgetTemplate, this.widgetClass, frag));
         

@@ -64,19 +64,20 @@ LoggedInPage.prototype.init = function(params) {
 
 /**
  *  This should be called from the bottom of init of the child classes.  Should be
- *  overridden if the page has any of its own datasets to initialize.
+ *  extended if the page has any of its own datasets to initialize.
  **/
 LoggedInPage.prototype.initData = function() {
-    /* Populate the collections object with all of the data from the server */
-    this.userMemberCollections.refresh(this.userMemberCollectionsData);
-    
-    /* We have now seen all of the above collections */
-    this.seenCollections.add(this.userMemberCollections.models);
-    
     var user = this.user;
     /* parse user data */
     user.set(this.userData);
     
     /* We have now seen our user */
     this.seenUsers.add(user);
+
+    /* Populate the collections object with all of the data from the server */
+    this.userMemberCollections.refresh(this.userMemberCollectionsData);
+    
+    /* We have now seen all of the above collections */
+    this.seenCollections.add(this.userMemberCollections.models);
+    
 };

@@ -91,6 +91,7 @@ class RequestAuthorization(ConcertAuthorization):
 class CollectionResource(MyResource):
     
     users = fields.ManyToManyField(UserResource, 'users')
+    admin = fields.ForeignKey(UserResource, 'admin')
     
     class Meta:
         authentication = DjangoAuthentication()

@@ -20,12 +20,11 @@ var ManageMemberCollectionWidget = Widget.extend({
         var params = this.options;
         
         
-
-        _.bindAll(this, "render");
+        this.render();
     },
     render: function() {
         Widget.prototype.render.call(this);
-        
+
         return this;
     }
 });

@@ -18,6 +18,7 @@ var ManageRequestWidget = Widget.extend({
         
 
         _.bindAll(this, "render");
+        this.render();
     },
     render: function() {
         Widget.prototype.render.call(this);

@@ -34,6 +34,7 @@ var ManageAdminCollectionWidget = Widget.extend({
         
 
         _.bindAll(this, "render");
+        this.render();
     },
     render: function() {
         Widget.prototype.render.call(this);
@@ -59,7 +60,7 @@ var ManageAdminCollectionWidget = Widget.extend({
                     template: template
                 });
                 
-                frag.appendChild(widget.render().el);
+                frag.appendChild(widget.el);
             };
         }(this, this.collectionRequestWidgetTemplate, frag));
         

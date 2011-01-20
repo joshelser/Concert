@@ -98,7 +98,7 @@ CollectionsPage.prototype.init = function(params) {
 };
 
 /**
- *  This is called from init.  We override because we have user Requests as well.
+ *  This is called from init.  Here we will initialize the data sets for collections
  **/
 CollectionsPage.prototype.initData = function() {
     LoggedInPage.prototype.initData.call(this);
@@ -120,10 +120,15 @@ CollectionsPage.prototype.initData = function() {
             collection = new Collection(collectionData);
             seenCollections.add(collection);
         }
+        
+        /* The current user is an administrator of this collection, this is info
+            that might come in handy later */
+        collection.set({'user_is_admin': true});
+        
         /* Add the collection silently so views aren't updated right away */
         userAdminCollections.add(collection, {silent: true});
     }
-    /* Trigger a refresh event so views are updated */
+    /* Trigger a refresh event so views are updated. */
     userAdminCollections.trigger('refresh');
         
     this.userRequests.refresh(this.requestData);

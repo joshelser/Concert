@@ -11,7 +11,7 @@
     </div>
     
     <div class="user_collection_actions table-cell">
-        {{if admin}}
+        {{if user_is_admin}}
             You are the admin of this collection.
         {{else}}
             <button class="leave_collection" id="leave_collection-${id}">Leave this collection</button>

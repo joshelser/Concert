@@ -18,5 +18,5 @@ CollectionInfoWidget.prototype = new Widget();
 CollectionInfoWidget.prototype.init = function(params) {
     Widget.prototype.init.call(this, params);
 
-    
+    this.render();
 }

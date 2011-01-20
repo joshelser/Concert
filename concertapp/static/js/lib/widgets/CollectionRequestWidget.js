@@ -22,6 +22,7 @@ var CollectionRequestWidget = Widget.extend({
         this.userWidget = null;
 
         _.bindAll(this, "render");
+        this.render();
     },
     render: function() {
         Widget.prototype.render.call(this);
