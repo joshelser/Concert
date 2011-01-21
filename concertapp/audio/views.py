@@ -73,7 +73,7 @@ def upload_audio(request):
     
     if request.method == 'POST':
         # The id for this upload (we will use this at the end)
-        upload_id = request.POST['upload_id']
+        #upload_id = request.POST['upload_id']
         
         # The file being uploaded
         f = request.FILES['audio']
@@ -105,7 +105,7 @@ def upload_audio(request):
         except IOError, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('An error occured while file handling.', mimetype='text/plain')
+            return HttpResponse('An error occured while file handling: '+str(e), mimetype='text/plain')
         except Exception, e:
             audio.delete()
             return HttpResponse('Error: '+str(e), mimetype='text/plain')

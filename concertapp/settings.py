@@ -77,6 +77,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfResponseMiddleware',
     
     'concertapp.lib.ConcertMiddleware.ConcertBootstrapDataMiddleware',
     
@@ -131,3 +132,5 @@ AUTH_PROFILE_MODULE = 'concertapp.ConcertUser'
 DEFAULT_FROM_EMAIL = 'apg552@gmail.com'
 
 SITE_ID = 1
+
+CSRF_FAILURE_VIEW='concertapp.lib.errorviews.csrf_failure'

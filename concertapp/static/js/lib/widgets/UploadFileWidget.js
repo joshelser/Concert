@@ -104,7 +104,7 @@ var UploadFileWidget = Widget.extend({
         var actualUploadForm = this.panel.uploadFormElement;
 
         /* Put our file chooser into this form */
-        actualUploadForm.html(this.fileChooser);
+        actualUploadForm.append(this.fileChooser);
 
         /* Get unique upload id */
         $.ajax({
@@ -142,7 +142,7 @@ var UploadFileWidget = Widget.extend({
         var actualUploadForm = this.panel.uploadFormElement;
 
         /* Put our file chooser into this form */
-        actualUploadForm.html(this.fileChooser);
+        actualUploadForm.append(this.fileChooser);
 
         /* Put our upload_id into this form as well*/
         actualUploadForm.append($('<input />').attr({
