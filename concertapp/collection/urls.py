@@ -15,15 +15,7 @@ admin.autodiscover()
 urlpatterns = patterns('concertapp.collection.views',
     # /collections goes to Manage collections
     url(r'^$', 'manage_collections', name='manage_collections'),
-    
-    # Delete collection
-    url(r'^delete/$', 'delete_collection', name='delete_collection'),
-    
-    # retrieve collections
-    url(r'^usercollections/$', 'user_collections', name='user_collections'),
-    # requests
-    url(r'^userrequests/$', 'user_requests', name='user_requests'),
-    
+        
     ###
     #   JSON/AJAX
     ###

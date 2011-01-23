@@ -79,61 +79,6 @@ def search_collections(request, query):
     
         
 
-###
-#   Delete a collection
-#
-#   @param  request.POST['id']        String  - The id of the collection to delete.
-###
-@login_required
-def delete_collection(request):
-    if not(request.POST):
-        return HttpResponseRedirect('/collections/')
-    
-    col = Collection.objects.get(pk=request.POST['id'])
-    
-    # Only the admin can delete the collection
-    if(request.user == col.admin):    
-        col.delete()
-    
-        return HttpResponse('success')
-    else:
-        return HttpResponse('error')
-    
-###
-#   Retrieve a JSON list of the collections this user is a member of
-#   This is used on every page (for the organize dropdown)
-###
-@login_required
-def user_collections(request):
-    
-    user = request.user
-    
-    # Get all collections for which we are a member
-    results = user.get_profile().get_collections_dict()
-        
-    
-    #   Serialize results into JSON response        
-    return HttpResponse(
-        simplejson.dumps(results),
-        content_type = 'application/json'
-    )
-
-###
-#   Retrieve a JSON list of the collections that this user has requested to join.
-#   This is used on the settings page.
-###
-@login_required
-def user_requests(request):
-    user = request.user
-    
-    results = user.get_profile().get_requests_dict()
-    
-    #   Serialize results into JSON response        
-    return HttpResponse(
-        simplejson.dumps(results),
-        content_type = 'application/json'
-    )
-    
 
 ###
 #   Retrieve a JSON object of the info associated with a collection
@@ -162,28 +107,6 @@ def collection_info(request, collection_id):
         simplejson.dumps(result),
         content_type = 'application/json'
     )
-    
-###
-#   User sends a collection join request
-@login_required
-def join_collection(request, collection_id):
-    user = request.user
-    
-    collection = Collection.objects.get(pk = collection_id)
-    
-    response = {
-        'status': 'error or success', 
-        'notification': '', 
-    }
-    
-    try:
-        collection.add_request(user)
-        response['status'] = 'success'
-    except Exception, e:
-        response['status'] = 'error'
-        response['notification'] = str(e)
-    
-    return HttpResponse(simplejson.dumps(response), content_type='application/json')
     
 ###
 #   User decides to revoke join request
@@ -242,15 +165,8 @@ def approve_request(request, collection_id, user_id):
     
     response = {}
     if request.user != collection.admin:
-        response['status'] = 'error'
-        response['notification'] = 'You do not have sufficient privileges'
+        raise Exception('You do not have sufficient privileges.')
     else:
-        try:
-            collection.accept_request(user)
-            response['status'] = 'success'
-        except Exception, e:
-            response['notification'] = str(e)
-            response['status'] = 'error'
-
-    return HttpResponse(simplejson.dumps(response), content_type='application/json')
+        collection.accept_request(user)
+        return HttpResponse()
     

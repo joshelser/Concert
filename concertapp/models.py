@@ -222,6 +222,13 @@ class RequestJoinCollectionEvent(Event):
     
     def __unicode__(self):
         return str(self.requesting_user) + " requested to join " + str(self.collection)
+        
+class RequestDeniedEvent(Event):
+    requesting_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.requesting_user) + " was denied from " + str(self.collection)
+
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -329,11 +336,7 @@ class Collection(models.Model):
             req.accept()
         except ObjectDoesNotExist:
             raise Exception("You can't add a user to a collection they haven't requested to join")
-        
-    def add_request(self,user):        
-        req = Request(user = user, collection = self).init()
-        return req
-        
+                
     ###
     #   This is when a user decides that they don't actually want to join a
     #   collection, or when an administrator denies a request.
@@ -353,47 +356,77 @@ class Collection(models.Model):
 #   A collection join request.
 ###
 class Request(models.Model):
+    REQUEST_STATUS_CHOICES = (
+        ('a', 'Approved'),
+        ('d', 'Denied'),
+        ('p', 'Pending')
+    )
     user = models.ForeignKey(User)
     collection = models.ForeignKey(Collection)
+    status = models.CharField(max_length=1, choices=REQUEST_STATUS_CHOICES, default='p')
     
-    ###
-    #   Validate errors
-    ###
-    def init(self):
+    def save(self, *args, **kwargs):
+        isNew = False
+        if not self.pk:
+            isNew = True
+            
         
-        user = self.user
-        collection = self.collection
+        # If this is a new request
+        if isNew:
+            user = self.user
+            collection = self.collection
+
+            # Make sure user exists
+            if user not in User.objects.all():
+                raise Exception("user does not exist")
+
+            # Make sure user is not already a member of the collection
+            if user in collection.users.all():
+                raise Exception("You are already a member of this collection.")
+
+            # See if this request already exists
+            try:
+                possibleDuplicate = Request.objects.get(user = user, collection = collection)
+            except ObjectDoesNotExist:
+                # If it does not, we are legit
+                super(Request, self).save(*args, **kwargs)
+                
+                # Create event
+                event = RequestJoinCollectionEvent(requesting_user = user, collection = collection)
+                event.save()
+
+                # done
+                return self 
+
+            # The object already exists
+            raise Exception('Your request to join this group has already been submitted.')
+        # This is not a new request, but instead is being updated
+        else:
+            oldRequest = Request.objects.get(id=self.id)
+            oldStatus = oldRequest.status
+            # If status has changed
+            if self.status != oldStatus:
+                
+                # request was pending but is now approved
+                if oldStatus == 'p' and self.status == 'a':
+                    self._accept()
+                
+                # request was pending but is now denied
+                elif oldStatus == 'p' and self.status == 'd':
+                    self._deny();
+                    
+                else:
+                    # Request was already approved or denied, and can't be changed.
+                    if oldStatus == 'a':
+                        raise Exception('Request has been approved already.')
+                    else:
+                        raise Exception('Request has been denied already.')
         
-        # Make sure user exists
-        if user not in User.objects.all():
-            raise Exception("user dne")
-            
-        # Make sure user is not already a member of the collection
-        if user in collection.users.all():
-            raise Exception("You are already a member of this collection.")
-        
-        # See if this request already exists
-        try:
-            possibleDuplicate = Request.objects.get(user = user, collection = collection)
-        except ObjectDoesNotExist:
-            # If it does not, we are legit
-            self.save()
-            
-            # Create event
-            event = RequestJoinCollectionEvent(requesting_user = user, collection = collection)
-            event.save()
-            
-            # Done
-            return self
-            
-            
-        # The object already exists
-        raise Exception('Your request to join this group has already been submitted.')
         
     ###
     #   When the request is accepted.
     ###
-    def accept(self):
+    def _accept(self):
         
         user = self.user
         collection = self.collection
@@ -405,25 +438,13 @@ class Request(models.Model):
         event = JoinCollectionEvent(new_user = user, collection = collection)
         event.save()
         
-        # Remove request object
-        self.delete()
-        
     ###
     #   When the request is to be revoked or denied.
-    #   TODO: Determine if we should delete this event.
     ###
-    def remove(self):
-        user = self.user
-        collection = self.collection
-        
-        # Delete request event
-        event = RequestJoinCollectionEvent.objects.get(requesting_user = user, collection = self)
-        event.delete()
-        
-        # Delete request
-        self.delete()
-        
-        
+    def _deny(self):
+        # Create proper event
+        event = RequestDeniedEvent(requesting_user = self.user, collection = self.collection)
+        event.save()
         
             
 
