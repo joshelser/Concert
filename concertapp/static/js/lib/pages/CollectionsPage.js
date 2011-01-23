@@ -111,6 +111,12 @@ CollectionsPage.prototype.initData = function() {
     var userAdminCollectionsData = this.userAdminCollectionsData;
     for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
         var collectionData = userAdminCollectionsData[i];
+
+        /* The current user is an administrator of this collection, this is info
+            that might come in handy later */
+        collectionData['user_is_admin'] = true;
+        /* Turn requests into set of models */
+        collectionData['requests'] = new RequestSet(collectionData['requests']);
         
         /* Grab this collection from our seen collections */
         var collection = seenCollections.get(collectionData.id);
@@ -121,9 +127,8 @@ CollectionsPage.prototype.initData = function() {
             seenCollections.add(collection);
         }
         
-        /* The current user is an administrator of this collection, this is info
-            that might come in handy later */
-        collection.set({'user_is_admin': true});
+        /* Update this object with any new information that may be available */
+        collection.set(collectionData);
         
         /* Add the collection silently so views aren't updated right away */
         userAdminCollections.add(collection, {silent: true});

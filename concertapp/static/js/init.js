@@ -42,7 +42,6 @@ function initializeUI(pagePath, data) {
         };
 
         /* Run the initializer function for this page. */
-        var page = new pageInitializers[pagePath](data);
-        com.concertsoundorganizer.page = page;
+        com.concertsoundorganizer.page = new pageInitializers[pagePath](data);
     });
 }

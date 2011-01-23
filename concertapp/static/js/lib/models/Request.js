@@ -13,13 +13,28 @@ var Request = Backbone.Model.extend({
      *  @constructor
      **/
     initialize: function() {
-
         
-    },
+        var user = this.get('user');
+        if(!(user instanceof Backbone.Model)) {
+            var seenUsers = com.concertsoundorganizer.data.seenUsers;
+            /* If we've seen this user object before, it will be defined here */
+            var seenUser = seenUsers.get(user.id);
+            if(seenUser) {
+                user = seenUser;
+            }
+            else {
+                user = new User(user);
+                seenUsers.add(user);
+            }
+            
+            this.set({user: user});
+        }
+        
+    },/*
     set: function(attrs, options) {
         var userData = attrs['user'];
         /* If a user was sent in as a JSON object, make sure we treat it as a
-            User object */
+            User object 
         if(userData && typeof(userData) == 'object') {
             var newUser = new User(userData);
             attrs['user'] = newUser;
@@ -28,7 +43,7 @@ var Request = Backbone.Model.extend({
         var collectionData = attrs['collection'];
         /**
          *  If the collection was sent in as JSON, do the same.
-         **/
+         *
          if(collectionData && typeof(collectionData) == 'object') {
              var newCollection = new Collection(collectionData);
             attrs['collection'] = newCollection;
@@ -36,7 +51,7 @@ var Request = Backbone.Model.extend({
          
          return Backbone.Model.prototype.set.call(this, attrs, options);
         
-    }, 
+    }, */
     url: function() {
         var base = '/api/1/request/';
         var id = this.get('id');

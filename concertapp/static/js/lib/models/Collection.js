@@ -15,14 +15,10 @@ var Collection = Backbone.Model.extend({
      **/
     initialize: function() {
         
-        
-        /* Requests attribute should be a RequestSet */
-        var oldRequests = this.get('requests');
-        
-        var newRequests = new RequestSet;
-        newRequests.refresh(oldRequests);        
-        this.set({'requests': newRequests});
-        
+        var reqs = this.get('requests');
+        if(typeof(reqs) != 'undefined' && !(reqs instanceof Backbone.collection)) {
+            throw new Error('Requests attribute must be a Backbone.collection');
+        }
     },
     url: function() {
         var base = '/api/1/collection/';

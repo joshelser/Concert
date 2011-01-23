@@ -31,7 +31,9 @@ LoggedInPage.prototype.init = function(params) {
     this.user = user;
     
     /* Collection of users we have seen */
-    this.seenUsers = new UserSet;
+    var seenUsers = new UserSet;
+    this.seenUsers = seenUsers;
+    com.concertsoundorganizer.data.seenUsers = seenUsers;
 
     
     /* Every page needs the collections that this user is a member of */
@@ -49,6 +51,7 @@ LoggedInPage.prototype.init = function(params) {
     /* Any page that has collections represented will require a master list of collections we have seen */
     var seenCollections = new CollectionSet;
     this.seenCollections = seenCollections;
+    com.concertsoundorganizer.data.seenCollections = seenCollections;
     
         
     
