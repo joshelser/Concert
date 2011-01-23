@@ -80,33 +80,6 @@ def search_collections(request, query):
         
 
 
-###
-#   Retrieve a JSON object of the info associated with a collection
-@login_required
-def collection_info(request, collection_id):
-    user = request.user
-    
-    # Get collection
-    collection = Collection.objects.get(pk = collection_id)
-    
-    # Create object to serialize 
-    result = {
-        'id': collection.id, 
-        'name': collection.name, 
-        'users': [], 
-    }
-    # Build user data into object
-    for user in collection.users.all():
-        result['users'].append({
-            'id': user.id, 
-            'username': user.username, 
-        })
-        
-    #   Serialize results into JSON response        
-    return HttpResponse(
-        simplejson.dumps(result),
-        content_type = 'application/json'
-    )
     
 ###
 #   User decides to revoke join request
@@ -129,44 +102,4 @@ def revoke_request(request, collection_id):
         response['notification'] = str(e)
         response['status'] = 'error'
     return HttpResponse(simplejson.dumps(response), content_type='application/json')
-    
-###
-#   Administrator denies a join request.  This is different than revoke_request 
-#   because request.user must be the administrator of the group.
-###
-@login_required
-def deny_request(request, collection_id, user_id):
-    
-    user = User.objects.get(pk = user_id)
-    
-    collection = Collection.objects.get(pk = collection_id)
-    
-    response = {}
-    if request.user != collection.admin:
-        response['status'] = 'error'
-        response['notification'] = 'You do not have sufficient privileges.'
-    else:
-        try:
-            collection.remove_request(user)
-            response['status'] = 'success'
-        except Exception, e:
-            response['notification'] = str(e)
-            response['status'] = 'error'
-
-    return HttpResponse(simplejson.dumps(response), content_type='application/json')
-    
-###
-#   Administrator approves a join request.
-###
-@login_required
-def approve_request(request, collection_id, user_id):
-    user = User.objects.get(pk = user_id)
-    collection = Collection.objects.get(pk = collection_id)
-    
-    response = {}
-    if request.user != collection.admin:
-        raise Exception('You do not have sufficient privileges.')
-    else:
-        collection.accept_request(user)
-        return HttpResponse()
     
