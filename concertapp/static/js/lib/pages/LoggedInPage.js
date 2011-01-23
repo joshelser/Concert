@@ -73,11 +73,11 @@ LoggedInPage.prototype.initData = function() {
     
     /* We have now seen our user */
     this.seenUsers.add(user);
-
-    /* Populate the collections object with all of the data from the server */
-    this.userMemberCollections.refresh(this.userMemberCollectionsData);
     
-    /* We have now seen all of the above collections */
-    this.seenCollections.add(this.userMemberCollections.models);
+    /* And all of the collections that the user is a member of */
+    this.seenCollections.refresh(this.userMemberCollectionsData);
+
+    /* Populate the collections object with all of these models */
+    this.userMemberCollections.add(this.seenCollections.models);
     
 };

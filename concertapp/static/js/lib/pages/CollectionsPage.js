@@ -29,7 +29,7 @@ CollectionsPage.prototype.init = function(params) {
     }
     this.requestData = requestData;
     
-    /*  Backbone collection that will hold the Concert Collection objects
+    /*  Backbone set that will hold the Concert Collection objects
         that the user has requested to join */
     var userRequests = new RequestSet;
     this.userRequests = userRequests;
@@ -45,7 +45,7 @@ CollectionsPage.prototype.init = function(params) {
     }
     this.userAdminCollectionsData = userAdminCollectionsData;    
     
-    /*  Backbone collection that will hold Concert Collection objects that the
+    /*  Backbone set that will hold Concert Collection objects that the
         user is an administrator of */
     var userAdminCollections = new CollectionSet;
     this.userAdminCollections = userAdminCollections;
@@ -73,7 +73,7 @@ CollectionsPage.prototype.init = function(params) {
     this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
     /**
-     *  This panel will allow the user to manage the collectiosn they are a 
+     *  This panel will allow the user to manage the collectionsuser they are a 
      *  member of (excluding the ones they are an administrator of)
      **/
     var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
