@@ -39,9 +39,12 @@ var CollectionSearchResultWidget = Widget.extend({
      *  collection.
      **/
     joinCollection: function() {
+        /* Initially just create the request object with the urls as attributes.
+            when it comes back from the server it will have all of the proper
+            data */
         this.userRequests.create({
-            collection: this.model.url(), 
-            user: this.user.url() 
+            collection: this.model, 
+            user: this.user
         });
         
         this.render();

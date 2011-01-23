@@ -84,18 +84,15 @@ var CollectionRequestWidget = Widget.extend({
      **/
     approveRequestConfirm: function() {
         /* Show a confirm dialog */
-        /*
         com.concertsoundorganizer.notifier.confirm({
             title: "Are you sure?", 
-            content: "Are you sure you want to allow: "+this.userWidget.container.html()+" to organize this collection?", 
+            content: "Are you sure you want to allow: "+this.model.user.get('username')+" to organize this collection?", 
             confirmCallback: function(me) {
                 return function() {
                     me.approveRequest();
                 }
             }(this), 
         });
-        */
-        console.log('Approve: '+this.model.get('username'));
     },
     /**
      *  This should be called when the actual request is to be approved.
@@ -107,8 +104,9 @@ var CollectionRequestWidget = Widget.extend({
             function(me){
                 return function(data, status) {
                     if(status == 'success' && data.status == 'success') {
-                        me.panel.toggleLoadingNotification();
-                        me.panel.retrieveAndUpdateCollections();
+                        /*me.panel.toggleLoadingNotification();
+                        me.panel.retrieveAndUpdateCollections();*/
+                        this.model.set({})
                     }
                     else {
                         com.concertsoundorganizer.notifier.alert({
@@ -120,6 +118,9 @@ var CollectionRequestWidget = Widget.extend({
             }(this)
         );
 
+    },
+    approved: function() {
+        
     }
     
     

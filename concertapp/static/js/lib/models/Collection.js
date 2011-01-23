@@ -19,6 +19,9 @@ var Collection = Backbone.Model.extend({
         if(typeof(reqs) != 'undefined' && !(reqs instanceof Backbone.collection)) {
             throw new Error('Requests attribute must be a Backbone.collection');
         }
+        else if(typeof(reqs) == 'undefined') {
+            this.set({'requests': new RequestSet});
+        }
     },
     url: function() {
         var base = '/api/1/collection/';

@@ -146,8 +146,21 @@
     initialize : function(){},
 
     // Return a copy of the model's `attributes` object.
-    toJSON : function() {
-      return _.clone(this.attributes);
+    toJSON : function(options) {
+      options || (options = {});
+      if(options.recursive) {
+        var newAttrs = _.clone(this.attributes);
+        for(var key in newAttrs) {
+          var attr = newAttrs[key];
+          if((attr instanceof Backbone.Model) || (attr instanceof Backbone.Collection)) {
+            newAttrs[key] = attr.toJSON({recursive: true});
+          }
+        }
+        return newAttrs;
+      }
+      else {
+        return _.clone(this.attributes);        
+      }
     },
 
     // Get the value of an attribute.
@@ -415,8 +428,12 @@
 
     // The JSON representation of a Collection is an array of the
     // models' attributes.
-    toJSON : function() {
-      return this.map(function(model){ return model.toJSON(); });
+    toJSON : function(options) {
+      return this.map(function(options){ 
+        return function(model){ 
+          return model.toJSON(options); 
+        }; 
+      }(options) );
     },
 
     // Add a model, or list of models to the set. Pass **silent** to avoid
