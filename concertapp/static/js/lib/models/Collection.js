@@ -10,18 +10,21 @@
  **/
 var Collection = Backbone.Model.extend({
     
-    /**
-     *  @constructor
-     **/
-    initialize: function() {
+    set: function(attributes, options) {
         
-        var reqs = this.get('requests');
-        if(typeof(reqs) != 'undefined' && !(reqs instanceof Backbone.collection)) {
-            throw new Error('Requests attribute must be a Backbone.collection');
+        var reqs = attributes.requests;
+        /* If we're trying to set the requests and it is not a collection */
+        if(reqs && !(reqs instanceof Backbone.Collection)) {
+            /* Create new collection of request objects */
+            attributes.requests = new RequestSet(attributes.requests);
         }
-        else if(typeof(reqs) == 'undefined') {
-            this.set({'requests': new RequestSet});
+        /* Requests member is not being set now, and it hasn't been set yet */
+        else if(!reqs && !this.get('requests')) {
+            /* Set it to an empty set in case we want to add requests */
+            attributes.requests = new RequestSet;
         }
+        
+        Backbone.Model.prototype.set.call(this, attributes, options);
     },
     url: function() {
         var base = '/api/1/collection/';
@@ -72,6 +75,10 @@ var Collection = Backbone.Model.extend({
  *  while lowercase collection just means a set or array)
  *  @class
  **/
-var CollectionSet = Backbone.Collection.extend({
-    model: Collection
+var CollectionSet = ConcertBackboneCollection.extend({
+    model: Collection,
+    
+    getSeenInstances : function() {
+        return com.concertsoundorganizer.datasetManager.seenCollections;
+    },
 });

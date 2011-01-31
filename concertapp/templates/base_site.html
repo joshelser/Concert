@@ -27,6 +27,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/vendor/backbone.js"></script>
     
     {# Models #}
+    <script src="/js/lib/models/ConcertBackboneCollection.js"></script>
     <script src="/js/lib/models/Collection.js"></script>
     <script src="/js/lib/models/User.js"></script>
     <script src="/js/lib/models/Request.js"></script>
@@ -41,6 +42,11 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/helpers/AnimatedDots.js"></script>
     <script src="/js/lib/helpers/UIHelpers.js"></script>
     <script src="/js/lib/helpers/BackboneSync.js"></script>
+    
+    {# Dataset managers #}
+    <script src="/js/lib/datasetmanagers/DatasetManager.js"></script>
+    <script src="/js/lib/datasetmanagers/LoggedInDatasetManager.js"></script>
+    <script src="/js/lib/datasetmanagers/CollectionsPageDatasetManager.js"></script>
 
     {# Buttons #}
     <script src="/js/lib/buttons/Button.js"></script>

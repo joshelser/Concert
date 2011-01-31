@@ -14,6 +14,9 @@ var Request = Backbone.Model.extend({
      **/
     initialize: function() {
         
+        /**
+         *  TODO: Generalize this for each model type
+         **/
         var user = this.get('user');
         if(!(user instanceof Backbone.Model)) {
             if(typeof(user) == 'string') {
@@ -24,7 +27,7 @@ var Request = Backbone.Model.extend({
                 user_id = user.id;
             }
             
-            var seenUsers = com.concertsoundorganizer.data.seenUsers;
+            var seenUsers = com.concertsoundorganizer.datasetManager.seenUsers;
             /* If we've seen this user object before, it will be defined here */
             var seenUser = seenUsers.get(user_id);
             if(seenUser) {
@@ -40,7 +43,7 @@ var Request = Backbone.Model.extend({
         
         var collection = this.get('collection');
         if(!(collection instanceof Backbone.Model)) {
-            var seenCollections = com.concertsoundorganizer.data.seenCollections;
+            var seenCollections = com.concertsoundorganizer.datasetManager.seenCollections;
             
             /* If we've seen this collection before, use that one */
             var seenCollection = seenCollections.get(collection.id);

@@ -22,8 +22,8 @@ if(!com.concertsoundorganizer.compatibility) {
 if(!com.concertsoundorganizer.ajax) {
     com.concertsoundorganizer.ajax = {};
 }
-if(!com.concertsoundorganizer.data) {
-    com.concertsoundorganizer.data = {};
+if(!com.concertsoundorganizer.datasetManager) {
+    com.concertsoundorganizer.datasetManager = {};
 }
 
 

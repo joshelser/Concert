@@ -19,37 +19,10 @@ CollectionsPage.prototype = new LoggedInPage();
 CollectionsPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
-    var userMemberCollections = this.userMemberCollections;
-    
-    /** The raw collection data for the collections that the current user has
-        requested to join **/
-    var requestData = params.requests;
-    if(typeof(requestData) == 'undefined') {
-        throw new Error('params.requests is undefined');
-    }
-    this.requestData = requestData;
-    
-    /*  Backbone set that will hold the Concert Collection objects
-        that the user has requested to join */
-    var userRequests = new RequestSet;
-    this.userRequests = userRequests;
     
     
-    /**
-     *  The raw collection data for collections that the current user is an
-     *  administrator of.
-     **/
-    var userAdminCollectionsData = params.adminCollections;
-    if(typeof(userAdminCollectionsData) == 'undefined') {
-        throw new Error('params.adminCollections is undefined');
-    }
-    this.userAdminCollectionsData = userAdminCollectionsData;    
-    
-    /*  Backbone set that will hold Concert Collection objects that the
-        user is an administrator of */
-    var userAdminCollections = new CollectionSet;
-    this.userAdminCollections = userAdminCollections;
-    
+    var datasetManager = this.datasetManager;
+        
 
     /**
      *  Create "create/join collection panel"
@@ -68,7 +41,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageAdminCollectionsPanel = new ManageAdminCollectionsPanel({
         page: this,
         el: $('#manage_admin_collections_panel'),
-        set: userAdminCollections
+        set: datasetManager.userAdminCollections
     });
     this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
@@ -79,7 +52,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
         page: this, 
         el: $('#manage_member_collections_panel'), 
-        set: userMemberCollections
+        set: datasetManager.userMemberCollections
     });
     this.manageMemberCollectionsPanel = manageMemberCollectionsPanel;
     
@@ -90,51 +63,13 @@ CollectionsPage.prototype.init = function(params) {
     var manageRequestsPanel = new ManageRequestsPanel({
         page: this, 
         el: $('#manage_request_collections_panel'), 
-        set: userRequests
+        set: datasetManager.userRequests
     });
     this.manageRequestsPanel = manageRequestsPanel;
     
-    this.initData();
+    this.datasetManager.loadData();
 };
 
-/**
- *  This is called from init.  Here we will initialize the data sets for collections
- **/
-CollectionsPage.prototype.initData = function() {
-    LoggedInPage.prototype.initData.call(this);
-    
-    var seenCollections = this.seenCollections;
-    
-    /* We must merge these collections into our list of seen collections, so we 
-        don't have duplicate instances of any collection */
-    var userAdminCollections = this.userAdminCollections;
-    var userAdminCollectionsData = this.userAdminCollectionsData;
-    for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
-        var collectionData = userAdminCollectionsData[i];
-
-        /* The current user is an administrator of this collection, this is info
-            that might come in handy later */
-        collectionData['user_is_admin'] = true;
-        /* Turn requests into set of models */
-        collectionData['requests'] = new RequestSet(collectionData['requests']);
-        
-        /* Grab this collection from our seen collections */
-        var collection = seenCollections.get(collectionData.id);
-        if(!collection) {
-            /* The collection has not been seen or instantiated yet, so we'll
-                create it now. */
-            collection = new Collection(collectionData);
-            seenCollections.add(collection);
-        }
-        
-        /* Update this object with any new information that may be available */
-        collection.set(collectionData);
-        
-        /* Add the collection silently so views aren't updated right away */
-        userAdminCollections.add(collection, {silent: true});
-    }
-    /* Trigger a refresh event so views are updated. */
-    userAdminCollections.trigger('refresh');
-        
-    this.userRequests.refresh(this.requestData);
+CollectionsPage.prototype.createDatasetManager = function(params) {
+    return new CollectionsPageDatasetManager(params);
 };
