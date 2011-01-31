@@ -8,23 +8,27 @@
  *  A Collection object represents a django Collection object.
  *  @class
  **/
-var Collection = Backbone.Model.extend({
+var Collection = ConcertBackboneModel.extend({
     
-    set: function(attributes, options) {
-        
-        var reqs = attributes.requests;
-        /* If we're trying to set the requests and it is not a collection */
-        if(reqs && !(reqs instanceof Backbone.Collection)) {
-            /* Create new collection of request objects */
-            attributes.requests = new RequestSet(attributes.requests);
-        }
-        /* Requests member is not being set now, and it hasn't been set yet */
-        else if(!reqs && !this.get('requests')) {
-            /* Set it to an empty set in case we want to add requests */
-            attributes.requests = new RequestSet;
-        }
-        
-        Backbone.Model.prototype.set.call(this, attributes, options);
+    oneToManyAttributes: function() {
+        return [
+            {
+                attr: 'requests', 
+                collectionType: RequestSet
+            },
+            {
+                attr: 'users', 
+                collectionType: UserSet
+            }
+        ];
+    },
+    foreignKeyAttributes: function() {
+        return [
+            {
+                attr: 'admin', 
+                model: User, 
+            }
+        ]
     },
     url: function() {
         var base = '/api/1/collection/';

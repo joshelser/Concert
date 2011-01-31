@@ -45,19 +45,22 @@ class MyResource(ModelResource):
         ###
         #   A helper function that will get the dicts of any sub-bundles.
         ###
-        def get_recursive_bundle_data(bundleOrAttr):
+        def get_recursive_bundle_data(attr):
             # If we are looking at a bundle
-            if type(bundleOrAttr) == Bundle:
+            if type(attr) == Bundle:
                 # We will re-construct all of the attributes as dicts, they
                 # are currently either bundles or attributes.
                 data = {}
                 # For each attribute
-                for key in bundleOrAttr.data:
+                for key in attr.data:
                     # Get bundle data
-                    data[key] = get_recursive_bundle_data(bundleOrAttr.data[key])
+                    data[key] = get_recursive_bundle_data(attr.data[key])
+            # If we are looking at list, must run this function on elements
+            elif type(attr) == list:
+                data = [get_recursive_bundle_data(x) for x in attr]
             # we are looking at an attribute, just pass it back through recursion.
             else:
-                data = bundleOrAttr
+                data = attr
                 
             return data
             

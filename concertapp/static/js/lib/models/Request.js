@@ -58,7 +58,7 @@ var Request = Backbone.Model.extend({
         }
         
     },/*
-    set: function(attrs, options) {
+    collectionType function(attrs, options) {
         var userData = attrs['user'];
         /* If a user was sent in as a JSON object, make sure we treat it as a
             User object 
@@ -94,6 +94,9 @@ var Request = Backbone.Model.extend({
 /**
  *  A set of Request objects.
  **/
-var RequestSet = Backbone.Collection.extend({
+var RequestSet = ConcertBackboneCollection.extend({
     model: Request, 
+    getSeenInstances: function() {
+        return com.concertsoundorganizer.datasetManager.seenRequests;
+    }, 
 });

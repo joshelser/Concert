@@ -9,7 +9,7 @@
  *  @class
  *  @extends    Backbone.Model
  **/ 
-var User = Backbone.Model.extend({
+var User = ConcertBackboneModel.extend({
     /**
      *  @constructor
      **/
@@ -33,7 +33,10 @@ var User = Backbone.Model.extend({
  *  Users represents a collection of django User objects.
  *  @class
  **/
-var UserSet = Backbone.Collection.extend({
-    model: User
+var UserSet = ConcertBackboneCollection.extend({
+    model: User,
+    getSeenInstances: function() {
+        return com.concertsoundorganizer.datasetManager.seenUsers;
+    }, 
 });
 
