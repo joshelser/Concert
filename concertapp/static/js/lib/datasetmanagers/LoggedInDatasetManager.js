@@ -39,14 +39,15 @@ LoggedInDatasetManager.prototype.init = function(params) {
     this.userMemberCollections = new CollectionSet;
     
     /* Any page that has collections represented will require a master list of collections we have seen */
-    this.seenCollections = new CollectionSet;
+    this.seenInstances['Collection'] = new CollectionSet;
+
 
     /* Master list of requests */
-    this.seenRequests = new RequestSet;
+    this.seenInstances['Request'] = new RequestSet;
 
 
     /* We will need to maintain a list of users that we have seen */
-    this.seenUsers = new UserSet;
+    this.seenInstances['User'] = new UserSet;
     
     /* We will keep a reference to the current user */
     this.user = new User;
@@ -66,7 +67,6 @@ LoggedInDatasetManager.prototype.loadData = function() {
      **/
     var user = this.user;
     user.set(dataToLoad['userData']);
-    this.seenUsers.add(user);
     /* done with user data */
     dataToLoad['userData'] = null;
     
@@ -75,6 +75,5 @@ LoggedInDatasetManager.prototype.loadData = function() {
      **/
     var userMemberCollections = this.userMemberCollections;
     userMemberCollections.refresh(dataToLoad['userMemberCollectionsData']);
-    this.seenCollections.add(userMemberCollections.models)
     
 };

@@ -56,44 +56,21 @@ CollectionsPageDatasetManager.prototype.loadData = function() {
     
     var dataToLoad = this._dataToLoad;
     
-    var seenCollections = this.seenCollections;
+    var seenInstances = com.concertsoundorganizer.datasetManager.seenInstances['Collection'];
     
-    var seenRequests = this.seenRequests;
     
-    /* We must merge these collections into our list of seen collections, so we 
-        don't have duplicate instances of any collection */
     var userAdminCollections = this.userAdminCollections;
     var userAdminCollectionsData = dataToLoad.userAdminCollectionsData;
-    /* So, for each data object */
     for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
-        var collectionData = userAdminCollectionsData[i];
-
         /* The current user is an administrator of this collection, this is info
             that might come in handy later */
-        collectionData['user_is_admin'] = true;
-        
-        
-        /* Grab this collection from our seen collections 
-        var collection = seenCollections.get(collectionData.id);
-        if(!collection) {
-            /* The collection has not been seen or instantiated yet, so we'll
-                create it now. 
-            collection = new Collection(collectionData);
-            seenCollections.add(collection);
-        }
-        
-        /* Update this object with any new information that may be available 
-        collection.set(collectionData);
-        
-        /* Add the collection silently so views aren't updated right away 
-        userAdminCollections.add(collection, {silent: true});*/
+        userAdminCollectionsData[i]['user_is_admin'] = true;
     }
-    /* Trigger a refresh event so views are updated. */
-/*    userAdminCollections.trigger('refresh');*/
     userAdminCollections.refresh(userAdminCollectionsData);
-
     /* We're done with the admin collections data */
     dataToLoad.userAdminCollectionsData = null;
         
-    //this.userRequests.refresh(this.requestData);
+    var seenRequests = this.seenInstances['Request'];
+    this.userRequests.refresh(dataToLoad.requestData);
+    dataToLoad.requestData = null;
 };

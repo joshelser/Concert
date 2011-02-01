@@ -41,9 +41,6 @@ var CreateJoinCollectionPanel = Panel.extend({
         var searchResults = new CollectionSet;
         this.searchResults = searchResults;
         
-        /* A reference to our page's seen collections */
-        this.seenCollections = this.page.seenCollections;
-        
         /* Another model object for the exact result (if one exists) */
         this.exactResult = null;
 

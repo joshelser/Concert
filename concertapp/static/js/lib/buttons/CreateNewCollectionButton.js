@@ -76,7 +76,7 @@ CreateNewCollectionButton.prototype.click = function() {
         success: function(userMemberCollections, userAdminCollections, panel) {
             return function(model, response) {
                 model.set({'user_is_admin': true});
-                com.concertsoundorganizer.datasetManager.seenCollections.add(model);
+                Collection.prototype.seenInstances.add(model);
                 userAdminCollections.add(model);
                 userMemberCollections.add(model);
                 /* Reset the search field */

@@ -40,6 +40,7 @@ var Collection = ConcertBackboneModel.extend({
             return base;
         }
     },
+    name: 'Collection',
     /**
      *  Here we will join the collection.  This will happen when the user presses the
      *  join button.
@@ -69,7 +70,7 @@ var Collection = ConcertBackboneModel.extend({
                 }; 
             }(this)
         );
-    }
+    },
 });
 
 
@@ -81,8 +82,4 @@ var Collection = ConcertBackboneModel.extend({
  **/
 var CollectionSet = ConcertBackboneCollection.extend({
     model: Collection,
-    
-    getSeenInstances : function() {
-        return com.concertsoundorganizer.datasetManager.seenCollections;
-    },
 });

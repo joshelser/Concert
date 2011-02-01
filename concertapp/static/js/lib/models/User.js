@@ -26,7 +26,8 @@ var User = ConcertBackboneModel.extend({
         else {
             return base;
         }
-    }, 
+    },
+    name: 'User', 
 });
 
 /**
@@ -34,9 +35,6 @@ var User = ConcertBackboneModel.extend({
  *  @class
  **/
 var UserSet = ConcertBackboneCollection.extend({
-    model: User,
-    getSeenInstances: function() {
-        return com.concertsoundorganizer.datasetManager.seenUsers;
-    }, 
+    model: User
 });
 
