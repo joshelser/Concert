@@ -67,6 +67,7 @@ LoggedInDatasetManager.prototype.loadData = function() {
      **/
     var user = this.user;
     user.set(dataToLoad['userData']);
+    this.seenInstances['User'].add(user);
     /* done with user data */
     dataToLoad['userData'] = null;
     
