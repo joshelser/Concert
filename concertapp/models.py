@@ -320,12 +320,13 @@ class Collection(models.Model):
     admin = models.ForeignKey(User)
     users = models.ManyToManyField(User, related_name = "collections")
 
-    def init(self):
-        self.save()
-        if self.users.count() == 0:
-            self.users.add(self.admin)
-            JoinCollectionEvent(new_user = self.admin, collection = self).save()
-        self.save()
+    ###
+    # Called from save when object is first created.
+    ###
+    def _init(self, *args, **kwargs):
+        # Need to save to get pk for relation
+        super(Collection, self).save(*args, **kwargs)
+        JoinCollectionEvent(new_user = self.admin, collection = self).save()
 
     ###
     #   When an administrator accepts a user's request for approval.
@@ -351,6 +352,22 @@ class Collection(models.Model):
         
     def __unicode__(self):
         return str(self.name)
+        
+    ###
+    # Handle stuff on save.
+    ###
+    
+    def save(self, *args, **kwargs):
+        isNew = False
+        if not self.pk:
+            isNew = True
+
+            # If this is a new collection
+            if isNew:
+                # Initialize 
+                self._init(*args, **kwargs)
+
+                return super(Collection, self).save(*args, **kwargs)
 
 ###
 #   A collection join request.

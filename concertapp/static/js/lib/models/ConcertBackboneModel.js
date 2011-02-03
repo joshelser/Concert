@@ -48,19 +48,22 @@ var ConcertBackboneModel = Backbone.Model.extend({
                 /* If we're trying to set the related model and it is not
                     a collection */
                 if(models && !(models instanceof Backbone.Collection)) {
-                    
-                    /* It is either a list of strings or objects */
-                    if(models[0] && (models[0] instanceof Object)) {
+                    /* It is either a list of strings or objects, or empty list */
+                    if(models[0] && typeof(models[0]) == 'object') {
                         /* Create new collection of request objects */
                         attributes[manyToMany.attr] = new manyToMany.collectionType(models);
                         
                     }
-                    else if(models[0] && typeof(models[0]) == "string") {
+                    else if(models[0] && typeof(models[0]) == 'string') {
                         /* We've got a list of urls */
                         throw new Error('Not handling related objs as urls currently, send the full object.');
                     }
+                    else if(models.length == 0){
+                        /* Set it to an empty set in case we want to add requests */
+                        attributes[manyToMany.attr] = new manyToMany.collectionType;
+                    }
                     else {
-                        throw new Error('Do not know how to handle this attribute: '+models);
+                        throw new Error('Do not know how to handle object');
                     }
                     
                 }

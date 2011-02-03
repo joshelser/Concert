@@ -20,7 +20,7 @@ var getUrl = function(object) {
 
 Backbone.sync = function(method, model, options) {
     var type = methodMap[method];
-
+    
     // Default JSON-request options.
     var params = _.extend({
         type:         type,
@@ -33,14 +33,28 @@ Backbone.sync = function(method, model, options) {
     if (!params.url) {
         params.url = getUrl(model) || urlError();
     }
+    
 
     // Ensure that we have the appropriate request data.
     if (!params.data && model && (method == 'create' || method == 'update')) {
         var data = model.toJSON();
+        
         for(var key in data) {
             var attr = data[key];
+            /* This makes sure that only the URL of a related object is sent */
             if(attr instanceof Backbone.Model) {
                 data[key] = data[key].url();
+            }
+            /* This makes sure that only URLS of related objects in 
+            collections are sent */
+            else if(attr instanceof Backbone.Collection) {
+                /* Create list of urls */
+                data[key] = [];
+                attr.each(function(result){
+                    return function(obj) {
+                        result.push(obj.url());
+                    }
+                }(data[key]));
             }
         }
         params.data = JSON.stringify(data);
@@ -64,7 +78,7 @@ Backbone.sync = function(method, model, options) {
             };
         }
     }
-
+    
     // Make the request.
     $.ajax(params);
 };

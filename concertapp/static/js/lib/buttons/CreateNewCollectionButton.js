@@ -32,22 +32,7 @@ CreateNewCollectionButton.prototype.init = function(params) {
     }
     this.panel = panel;
     
-    var modelManager = com.concersoundorganizer.modelManager;
     
-    /* A reference to the collection sets that we will need to add the new 
-        collection to if the user decides to create it */
-    var userAdminCollections = null;
-    if(typeof(userAdminCollections) == 'undefined') {
-        throw new Error('params.userAdminCollections is undefined');
-    }
-    this.userAdminCollections = userAdminCollections;
-    
-    var userMemberCollections = params.userMemberCollections;
-    if(typeof(userMemberCollections) == 'undefined') {
-        throw new Error('params.userMemberCollections is undefined');
-    }
-    this.userMemberCollections = userMemberCollections;
-
     /* The name that the user has entered for the new collection */
     var newCollectionName = params.newCollectionName;
     if(typeof(newCollectionName) == 'undefined') {
@@ -55,7 +40,6 @@ CreateNewCollectionButton.prototype.init = function(params) {
     }
     this.newCollectionName = newCollectionName;
     
-    this.user = panel.page.user;
     
 };
 
@@ -64,26 +48,35 @@ CreateNewCollectionButton.prototype.init = function(params) {
  *  create a new collection.
  **/
 CreateNewCollectionButton.prototype.click = function() {
+
+    var modelManager = com.concertsoundorganizer.modelManager;
+    var user = modelManager.user;
     
     /* Create new collection */
     var newCollection = new Collection({
         name: this.newCollectionName,
-        users: [], 
-        admin: this.user.url()
+        users: new UserSet(user),
+        admin: user
     });
     
+    
     /* Save to server */
-    newCollection.save({}, {
+    newCollection.save(null, {
         /* On successful save */
-        success: function(userMemberCollections, userAdminCollections, panel) {
+        success: function(panel, modelManager) {
             return function(model, response) {
                 model.set({'user_is_admin': true});
-                Collection.prototype.seenInstances.add(model);
-                userAdminCollections.add(model);
-                userMemberCollections.add(model);
+                modelManager.userAdminCollections.add(model);
+                modelManager.userMemberCollections.add(model);
                 /* Reset the search field */
                 panel.resetForm();
             };
-        }(this.userMemberCollections, this.userAdminCollections, this.panel)
+        }(this.panel, modelManager),
+        error: function(resp){
+            com.concertsoundorganizer.notifier.alert({
+                title: 'Error', 
+                content: 'Collection was not created.  An error has occurred: '+resp
+            });
+        }
     });
 };

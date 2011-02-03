@@ -155,24 +155,7 @@ class CollectionResource(MyResource):
             except AttributeError, e:
                 object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list)
 
-        return object_list
-    
-    ###
-    #   When creating a new collection
-    ###
-    def obj_create(self, bundle, request, **kwargs):
-        # Be sure that the current user will be sent in as the admin of the group
-        kwargs['admin'] = request.user
-        
-        # Do magic
-        bundle = super(CollectionResource, self).obj_create(bundle, request, **kwargs)
-                
-        # Now we can call our init method
-        bundle.obj.init() 
-        
-        return bundle
-
-    
+        return object_list    
     
 
 ###
