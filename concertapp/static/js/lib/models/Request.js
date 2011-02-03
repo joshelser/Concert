@@ -11,7 +11,7 @@
  **/ 
 var Request = ConcertBackboneModel.extend({
     
-    foreignKeyAttributes: function () {
+    foreignKeyAttributes: function() {
         return [
             {
                 attr: 'user', 

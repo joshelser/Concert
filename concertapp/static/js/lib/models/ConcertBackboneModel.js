@@ -40,7 +40,7 @@ var ConcertBackboneModel = Backbone.Model.extend({
         var oneToManyAttributes = this.oneToManyAttributes();
         var foreignKeyAttributes = this.foreignKeyAttributes();
         
-        if(oneToManyAttributes) {
+        if(attributes && oneToManyAttributes) {
             for(var i = 0, il = oneToManyAttributes.length; i < il; i++) {
                 var manyToMany = oneToManyAttributes[i];
                 
@@ -77,36 +77,41 @@ var ConcertBackboneModel = Backbone.Model.extend({
             }
         }
         
-        if(foreignKeyAttributes) {
+        if(attributes && foreignKeyAttributes) {
             /* For each foreign key attribute */
             for(var i = 0, il = foreignKeyAttributes.length; i < il; i++) {
                 var foreignKey = foreignKeyAttributes[i];
                 
-                var model = attributes[foreignKey.attr];
-                /* If we're trying to set this attribute and it is not a model */
-                if(model && !(models instanceof Backbone.Model)) {
-                    /* It might be an object */
-                    if(model && (model instanceof Object)) {
-                        
-                        /* If so we need to check with the dataset manager */
-                        var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[foreignKey.model.prototype.name];
-                        
-                        var possibleDuplicate = seenInstances.get(model.id);
+                /* If we're trying to set this attribute */
+                if(foreignKey.attr in attributes) {
+                    
+                    var model = attributes[foreignKey.attr];
 
-                        /* If there is a duplicate */
-                        if(possibleDuplicate) {
-                            /* Send the attributes to the duplicate incase there are new ones */
-                            possibleDuplicate.set(model);
+                    /*  and it is not a model */
+                    if(!(model instanceof Backbone.Model)) {
+                        /* It might be an object */
+                        if(model && (model instanceof Object)) {
 
-                            /* Use duplicate moving forward */
-                            attributes[foreignKey.attr] = possibleDuplicate;
-                        }            
-                        /* If not, create a new one */
-                        else {
-                            attributes[foreignKey.attr] = new foreignKey.model(model);
-                            seenInstances.add(attributes[foreignKey.attr]);
+                            /* If so we need to check with the dataset manager */
+                            var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[foreignKey.model.prototype.name];
+
+                            var possibleDuplicate = seenInstances.get(model.id);
+
+                            /* If there is a duplicate */
+                            if(possibleDuplicate) {
+                                /* Send the attributes to the duplicate incase there are new ones */
+                                possibleDuplicate.set(model);
+
+                                /* Use duplicate moving forward */
+                                attributes[foreignKey.attr] = possibleDuplicate;
+                            }            
+                            /* If not, create a new one */
+                            else {
+                                attributes[foreignKey.attr] = new foreignKey.model(model);
+                                seenInstances.add(attributes[foreignKey.attr]);
+                            }
+
                         }
-                        
                     }
                 }
             }

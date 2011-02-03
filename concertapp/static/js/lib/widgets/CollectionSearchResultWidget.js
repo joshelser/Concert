@@ -34,20 +34,11 @@ var CollectionSearchResultWidget = Widget.extend({
         'click .collection_info_button': 'showCollectionInfo', 
     }, 
     /**
-     *  This will be executed when a user decides to join a collection.  Here
-     *  we instantiate a new request object and put it into the userRequests 
-     *  collection.
+     *  This will be executed when a user decides to join a collection.  Tell 
+     *  model manager what we want to do.
      **/
     joinCollection: function() {
-        /* Initially just create the request object with the urls as attributes.
-            when it comes back from the server it will have all of the proper
-            data */
-        this.userRequests.create({
-            collection: this.model, 
-            user: this.user
-        });
-        
-        this.render();
+        com.concertsoundorganizer.modelManager.request_to_join(this.model);
     }, 
     showCollectionInfo: function() {
         console.log('showCollectionInfo');

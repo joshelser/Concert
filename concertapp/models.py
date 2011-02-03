@@ -229,6 +229,12 @@ class RequestDeniedEvent(Event):
     def __unicode__(self):
         return str(self.requesting_user) + " was denied from " + str(self.collection)
 
+class RequestRevokedEvent(Event):
+    requesting_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.requesting_user) + " revoked join request from " + str(self.collection)
+
 
 class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
@@ -376,7 +382,8 @@ class Request(models.Model):
     REQUEST_STATUS_CHOICES = (
         ('a', 'Approved'),
         ('d', 'Denied'),
-        ('p', 'Pending')
+        ('p', 'Pending'),
+        ('r', 'Revoked')
     )
     user = models.ForeignKey(User)
     collection = models.ForeignKey(Collection)
@@ -404,25 +411,36 @@ class Request(models.Model):
             # See if this request already exists
             try:
                 possibleDuplicate = Request.objects.get(user = user, collection = collection)
+                # The object already exists, check its current state.
+                
+                # If it is still pending, error
+                if possibleDuplicate.status == 'p':
+                    raise Exception('Your request to join this group has already been submitted.')
+                # If request was revoked, but user is trying to make it pending
+                elif possibleDuplicate.status == 'r' and self.status == 'p':
+                    # Make it pending again
+                    possibleDuplicate.status = 'p'
+                    # This will create a join event
+                    possibleDuplicate.save()
+                
             except ObjectDoesNotExist:
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
                 
-                # Create event
-                event = RequestJoinCollectionEvent(requesting_user = user, collection = collection)
-                event.save()
+                self._new_request()
 
                 # done
                 return self 
 
-            # The object already exists
-            raise Exception('Your request to join this group has already been submitted.')
+            
         # This is not a new request, but instead is being updated
         else:
             oldRequest = Request.objects.get(id=self.id)
             oldStatus = oldRequest.status
             # If status has changed
             if self.status != oldStatus:
+                # Save current state for relations
+                super(Request, self).save(*args, **kwargs)
                 
                 # request was pending but is now approved
                 if oldStatus == 'p' and self.status == 'a':
@@ -430,7 +448,15 @@ class Request(models.Model):
                 
                 # request was pending but is now denied
                 elif oldStatus == 'p' and self.status == 'd':
-                    self._deny();
+                    self._deny()
+                    
+                # request was revoked
+                elif oldStatus == 'p' and self.status == 'r':
+                    self._revoke()
+                    
+                # request was revoked but then requested again
+                elif oldStatus == 'r' and self.status == 'p':
+                    self._new_request()
                     
                 else:
                     # Request was already approved or denied, and can't be changed.
@@ -438,6 +464,7 @@ class Request(models.Model):
                         raise Exception('Request has been approved already.')
                     else:
                         raise Exception('Request has been denied already.')
+                        
         
         
     ###
@@ -456,12 +483,30 @@ class Request(models.Model):
         event.save()
         
     ###
-    #   When the request is to be revoked or denied.
+    #   When the request is denied.
     ###
     def _deny(self):
         # Create proper event
         event = RequestDeniedEvent(requesting_user = self.user, collection = self.collection)
         event.save()
+        
+    ###
+    #   When request is revoked
+    ###
+    def _revoke(self):
+        event = RequestRevokedEvent(requesting_user = self.user, collection = self.collection)
+        event.save()
+        
+    ###
+    #   When this is a new request
+    ###
+    def _new_request(self):
+        # Create event
+        event = RequestJoinCollectionEvent(requesting_user = self.user, collection = self.collection)
+        event.save()
+        
+
+        
         
             
 

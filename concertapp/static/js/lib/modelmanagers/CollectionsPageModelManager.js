@@ -74,3 +74,70 @@ CollectionsPageModelManager.prototype.loadData = function() {
     this.userRequests.refresh(dataToLoad.requestData);
     dataToLoad.requestData = null;
 };
+
+/**
+ *  Create a new collection.  The user who is logged in is the administrator, as
+ *  there is no other way to create a collection in Concert.
+ *
+ *  @param  {String}    name    -   The name of the new collection.
+ **/
+CollectionsPageModelManager.prototype.create_new_collection = function(name) {
+    var user = this.user;
+    
+    /* Create new collection */
+    var newCollection = new Collection({
+        name: name,
+        users: new UserSet(user),
+        admin: user,
+        'user_is_admin': true,
+        'num_users': 1
+    });
+    
+    /* Add to collections */
+    this.userAdminCollections.add(newCollection);
+    this.userMemberCollections.add(newCollection);
+    
+
+    /* Save to server */
+    newCollection.save(null, {
+        /* On error, we must delete */
+        error: function(newCollection) {
+            return function(resp){
+                com.concertsoundorganizer.notifier.alert({
+                    title: 'Error', 
+                    content: 'Collection was not created.  An error has occurred.'
+                });
+                newCollection.destroy();
+            };
+        }(newCollection)
+    });
+};
+
+/**
+ *  Request to join a collection.  This can be moved to a parent class if the
+ *  functionality is desired in other pages.
+ *
+ *  @param  {Collection}    col    -    The Concert Collection that we are requesting
+ *  to join.
+ **/
+CollectionsPageModelManager.prototype.request_to_join = function(col) {
+    var newRequest = new Request({
+        collection: col, 
+        user: this.user
+    });
+    
+    newRequest.save(null, {
+        error: function(newRequest){
+            return function(resp) {
+                com.concertsoundorganizer.notifier.alert({
+                    title: 'Error', 
+                    content: 'Request was not sent.  An error has occurred.'
+                });
+                newRequest.destroy();
+            };
+        }(newRequest)
+    });
+    
+    this.userRequests.add(newRequest);
+};
+

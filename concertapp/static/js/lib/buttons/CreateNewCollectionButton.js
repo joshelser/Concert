@@ -48,41 +48,9 @@ CreateNewCollectionButton.prototype.init = function(params) {
  *  create a new collection.
  **/
 CreateNewCollectionButton.prototype.click = function() {
-
-    var modelManager = com.concertsoundorganizer.modelManager;
-    var user = modelManager.user;
+   /* Call corresponding method on model manager */ com.concertsoundorganizer.modelManager.create_new_collection(this.newCollectionName);
+   
+   this.panel.resetForm();
+   
     
-    /* Create new collection */
-    var newCollection = new Collection({
-        name: this.newCollectionName,
-        users: new UserSet(user),
-        admin: user
-    });
-    
-    /* 
-    */
-    
-    
-    /* Save to server */
-    newCollection.save(null, {
-        /* On successful save */
-        success: function(panel, modelManager) {
-            return function(model, response) {
-                model.set({'user_is_admin': true});
-                modelManager.userAdminCollections.add(model);
-                modelManager.userMemberCollections.add(model);
-                /* Reset the search field */
-                panel.resetForm();
-            };
-        }(this.panel, modelManager),
-        error: function(panel) {
-            return function(resp){
-                com.concertsoundorganizer.notifier.alert({
-                    title: 'Error', 
-                    content: 'Collection was not created.  An error has occurred.'
-                });
-                panel.resetForm();
-            };
-        }(this.panel)
-    });
 };
