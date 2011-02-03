@@ -286,7 +286,7 @@
       options.success = function(resp) {
         if (!model.set(model.parse(resp), options)) return false;
         if (success) success(model, resp);
-      };
+      };      
       options.error = wrapError(options.error, model, options);
       var method = this.isNew() ? 'create' : 'update';
       (this.sync || Backbone.sync)(method, this, options);

@@ -112,7 +112,7 @@ var ConcertBackboneModel = Backbone.Model.extend({
             }
         }
         
-        Backbone.Model.prototype.set.call(this, attributes, options);
+        return Backbone.Model.prototype.set.call(this, attributes, options);
     },
     oneToManyAttributes: function(){
         return null;

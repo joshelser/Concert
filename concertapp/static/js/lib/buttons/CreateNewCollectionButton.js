@@ -59,6 +59,9 @@ CreateNewCollectionButton.prototype.click = function() {
         admin: user
     });
     
+    /* 
+    */
+    
     
     /* Save to server */
     newCollection.save(null, {
@@ -72,11 +75,14 @@ CreateNewCollectionButton.prototype.click = function() {
                 panel.resetForm();
             };
         }(this.panel, modelManager),
-        error: function(resp){
-            com.concertsoundorganizer.notifier.alert({
-                title: 'Error', 
-                content: 'Collection was not created.  An error has occurred: '+resp
-            });
-        }
+        error: function(panel) {
+            return function(resp){
+                com.concertsoundorganizer.notifier.alert({
+                    title: 'Error', 
+                    content: 'Collection was not created.  An error has occurred.'
+                });
+                panel.resetForm();
+            };
+        }(this.panel)
     });
 };

@@ -78,7 +78,7 @@ Backbone.sync = function(method, model, options) {
             };
         }
     }
-    
+
     // Make the request.
     $.ajax(params);
 };
