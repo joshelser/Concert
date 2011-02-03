@@ -32,9 +32,11 @@ CreateNewCollectionButton.prototype.init = function(params) {
     }
     this.panel = panel;
     
+    var modelManager = com.concersoundorganizer.modelManager;
+    
     /* A reference to the collection sets that we will need to add the new 
         collection to if the user decides to create it */
-    var userAdminCollections = params.userAdminCollections;
+    var userAdminCollections = null;
     if(typeof(userAdminCollections) == 'undefined') {
         throw new Error('params.userAdminCollections is undefined');
     }

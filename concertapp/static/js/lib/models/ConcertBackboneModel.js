@@ -86,7 +86,7 @@ var ConcertBackboneModel = Backbone.Model.extend({
                     if(model && (model instanceof Object)) {
                         
                         /* If so we need to check with the dataset manager */
-                        var seenInstances = com.concertsoundorganizer.datasetManager.seenInstances[foreignKey.model.prototype.name];
+                        var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[foreignKey.model.prototype.name];
                         
                         var possibleDuplicate = seenInstances.get(model.id);
 

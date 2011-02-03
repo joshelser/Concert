@@ -17,9 +17,9 @@ function Page(params) {
 
 Page.prototype.init = function(params) {
     /* Create dataset manager */
-    var datasetManager = this.createDatasetManager(params);
-    this.datasetManager = datasetManager;
-    com.concertsoundorganizer.datasetManager = datasetManager;
+    var modelManager = this.createModelManager(params);
+    this.modelManager = modelManager;
+    com.concertsoundorganizer.modelManager = modelManager;
     
 };
 
@@ -29,6 +29,6 @@ Page.prototype.init = function(params) {
  *
  *  @param  {Object}    params    - The parameters that were sent to init.
  **/
-Page.prototype.createDatasetManager = function(params) {
-    return new DatasetManager(params);
+Page.prototype.createModelManager = function(params) {
+    return new ModelManager(params);
 };

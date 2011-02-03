@@ -1,5 +1,5 @@
 /**
- *  @file       LoggedInDatasetManager.js
+ *  @file       LoggedInModelManager.js
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
@@ -8,15 +8,15 @@
  *  below will be necessary on any logged in page.
  *  @class
  **/
-function LoggedInDatasetManager(params) {
+function LoggedInModelManager(params) {
     if(params) {
         this.init(params);
     }
 }
-LoggedInDatasetManager.prototype = new DatasetManager();
+LoggedInModelManager.prototype = new ModelManager();
 
-LoggedInDatasetManager.prototype.init = function(params) {
-    DatasetManager.prototype.init.call(this, params);
+LoggedInModelManager.prototype.init = function(params) {
+    ModelManager.prototype.init.call(this, params);
     
     var dataToLoad = this._dataToLoad;
     
@@ -58,7 +58,7 @@ LoggedInDatasetManager.prototype.init = function(params) {
  *  Here we will create all of the Backbone objects that are needed from data that
  *  was loaded initially.
  **/
-LoggedInDatasetManager.prototype.loadData = function() {
+LoggedInModelManager.prototype.loadData = function() {
     
     var dataToLoad = this._dataToLoad;
     

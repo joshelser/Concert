@@ -27,7 +27,7 @@ LoggedInPage.prototype.init = function(params) {
     this.globalOptionsPanel = new GlobalOptionsPanel({
         page: this, 
         el: $('#global_options_panel'),
-        userMemberCollections: this.datasetManager.userMemberCollections
+        userMemberCollections: this.modelManager.userMemberCollections
     });
     
 };
@@ -35,6 +35,6 @@ LoggedInPage.prototype.init = function(params) {
 /**
  *  Our dataset manager is this one.
  **/
-LoggedInPage.prototype.createDatasetManager = function(params) {
-    return new LoggedInDatasetManager(params);
+LoggedInPage.prototype.createModelManager = function(params) {
+    return new LoggedInModelManager(params);
 };

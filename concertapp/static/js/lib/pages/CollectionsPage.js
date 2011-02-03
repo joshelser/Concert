@@ -21,7 +21,7 @@ CollectionsPage.prototype.init = function(params) {
 
     
     
-    var datasetManager = this.datasetManager;
+    var modelManager = this.modelManager;
         
 
     /**
@@ -41,7 +41,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageAdminCollectionsPanel = new ManageAdminCollectionsPanel({
         page: this,
         el: $('#manage_admin_collections_panel'),
-        set: datasetManager.userAdminCollections
+        set: modelManager.userAdminCollections
     });
     this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
     
@@ -52,7 +52,7 @@ CollectionsPage.prototype.init = function(params) {
     var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
         page: this, 
         el: $('#manage_member_collections_panel'), 
-        set: datasetManager.userMemberCollections
+        set: modelManager.userMemberCollections
     });
     this.manageMemberCollectionsPanel = manageMemberCollectionsPanel;
     
@@ -63,13 +63,13 @@ CollectionsPage.prototype.init = function(params) {
     var manageRequestsPanel = new ManageRequestsPanel({
         page: this, 
         el: $('#manage_request_collections_panel'), 
-        set: datasetManager.userRequests
+        set: modelManager.userRequests
     });
     this.manageRequestsPanel = manageRequestsPanel;
     
-    this.datasetManager.loadData();
+    this.modelManager.loadData();
 };
 
-CollectionsPage.prototype.createDatasetManager = function(params) {
-    return new CollectionsPageDatasetManager(params);
+CollectionsPage.prototype.createModelManager = function(params) {
+    return new CollectionsPageModelManager(params);
 };

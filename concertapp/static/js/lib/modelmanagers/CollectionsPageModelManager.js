@@ -1,5 +1,5 @@
 /**
- *  @file       CollectionsPageDatasetManager.js
+ *  @file       CollectionsPageModelManager.js
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
@@ -7,18 +7,18 @@
  *  
  *  @class
  **/
-function CollectionsPageDatasetManager(params) {
+function CollectionsPageModelManager(params) {
     if(params) {
         this.init(params);
     }
 }
-CollectionsPageDatasetManager.prototype = new LoggedInDatasetManager();
+CollectionsPageModelManager.prototype = new LoggedInModelManager();
 
 /**
  *  @constructor
  **/
-CollectionsPageDatasetManager.prototype.init = function(params) {
-    LoggedInDatasetManager.prototype.init.call(this, params);
+CollectionsPageModelManager.prototype.init = function(params) {
+    LoggedInModelManager.prototype.init.call(this, params);
 
     var dataToLoad = this._dataToLoad;
     
@@ -51,19 +51,19 @@ CollectionsPageDatasetManager.prototype.init = function(params) {
     
 };
 
-CollectionsPageDatasetManager.prototype.loadData = function() {
-    LoggedInDatasetManager.prototype.loadData.call(this);
+CollectionsPageModelManager.prototype.loadData = function() {
+    LoggedInModelManager.prototype.loadData.call(this);
     
     var dataToLoad = this._dataToLoad;
     
-    var seenInstances = com.concertsoundorganizer.datasetManager.seenInstances['Collection'];
+    var seenInstances = com.concertsoundorganizer.modelManager.seenInstances['Collection'];
     
     
     var userAdminCollections = this.userAdminCollections;
     var userAdminCollectionsData = dataToLoad.userAdminCollectionsData;
     for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
-        /* The current user is an administrator of this collection, this is info
-            that might come in handy later */
+        /* The current user is an administrator of this collection, store this 
+            instead of comparing user later */
         userAdminCollectionsData[i]['user_is_admin'] = true;
     }
     userAdminCollections.refresh(userAdminCollectionsData);

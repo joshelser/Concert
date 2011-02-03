@@ -19,7 +19,7 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
         /* If the model hasn't yet been instantiated */
         if(!(model instanceof Backbone.Model)) {
             /* Check with dataset manager to see if it already exists */
-            var seenInstances = com.concertsoundorganizer.datasetManager.seenInstances[this.model.prototype.name];
+            var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[this.model.prototype.name];
             
             var possibleDuplicate = seenInstances.get(model.id);
 
