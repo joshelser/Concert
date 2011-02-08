@@ -5,32 +5,53 @@ from django.http import HttpRequest
 from django.contrib.auth import authenticate, login
 import json
 
+# For random string generation
+import random
+import string
+
+
 import unittest
 from django.test import TestCase as DjangoTestCase
 
+    
+
 ###
-#   This test creates a user, and creates a collection, then the user requests
-#   to join this collection.
+#   Create a collection
 ###
-class UserCollectionRequestTestCase(unittest.TestCase):
+class UserCollectionTestCase(unittest.TestCase):
+    # Helper to generate random strings
+    def randomString(self, N):
+        return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
     
     def setUp(self):
-        # Helper to generate random strings
-        def randomString(N):
-            import random
-            import string
-            return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
-            
-        user = User.objects.create(username=randomString(5), password=randomString(5))
-        admin = User.objects.create(username=randomString(5), password=randomString(5))
-        collection = Collection.objects.create(name=randomString(5), admin=admin)
-        self.user = user
+        admin = User.objects.create(username=self.randomString(5), password=self.randomString(5))
+        collection = Collection.objects.create(name=self.randomString(5), admin=admin)
         self.admin = admin
         self.collection = collection
         
+    # Make sure CreateCollectionEvent was created
     def runTest(self):
-        # user requests to join the collection
-        self.request = Request.objects.create(user = self.user, collection = self.collection)
+        CreateCollectionEvent.objects.get(admin=self.admin, collection=self.collection)
+        
+
+###
+#   User requests to join collection
+###
+class UserCollectionRequestTestCase(UserCollectionTestCase):
+    
+    def setUp(self):
+        super(UserCollectionRequestTestCase, self).setUp()
+        
+        # Create user
+        self.user = User.objects.create(username=self.randomString(5), password=self.randomString(5))
+        
+        # User requests to join collection
+        self.request = Request.objects.create(user=self.user, collection=self.collection)
+        
+        
+    def runTest(self):
+        # RequestJoinCollectionEvent should have been created
+        event = RequestJoinCollectionEvent.objects.get(requesting_user = self.user, collection = self.collection)
         
 ###
 #   In this test, a user requests to join a collection (as above), then the
@@ -41,13 +62,19 @@ class UserCollectionRequestAcceptTestCase(UserCollectionRequestTestCase):
     def setUp(self):
         super(UserCollectionRequestAcceptTestCase, self).setUp()
         
+        # Delete join request
+        self.request.delete()
+        
+        # Add user to collection
+        self.collection.users.add(self.user)
+        self.collection.save()
+        
+        # reload collection from db
+        self.collection = Collection.objects.get(pk=self.collection.pk)
+        
     def runTest(self):
         super(UserCollectionRequestAcceptTestCase, self).runTest()
-        
-        # Accept join request
-        self.request.status = 'a'
-        self.request.save()
-        
+
         # Make sure that the user is now a member of the collection
         self.assertTrue(self.user in self.collection.users.all())
         
