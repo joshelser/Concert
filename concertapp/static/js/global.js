@@ -25,5 +25,8 @@ if(!com.concertsoundorganizer.ajax) {
 if(!com.concertsoundorganizer.modelManager) {
     com.concertsoundorganizer.modelManager = {};
 }
+if(!com.concertsoundorganizer.helpers) {
+    com.concertsoundorganizer.helpers = {};
+}
 
 

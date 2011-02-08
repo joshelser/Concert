@@ -124,5 +124,14 @@ var ConcertBackboneModel = Backbone.Model.extend({
     },
     foreignKeyAttributes: function() {
         return null;
-    }
+    },
+    /**
+     *  Display modal error to user when error occurs.
+     **/
+     save : function(attrs, options) {
+         var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
+         
+         return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
+     }
+    
 });

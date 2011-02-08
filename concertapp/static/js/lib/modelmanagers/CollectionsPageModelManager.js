@@ -100,16 +100,12 @@ CollectionsPageModelManager.prototype.create_new_collection = function(name) {
 
     /* Save to server */
     newCollection.save(null, {
-        /* On error, we must delete */
-        error: function(newCollection) {
-            return function(resp){
-                com.concertsoundorganizer.notifier.alert({
-                    title: 'Error', 
-                    content: 'Collection was not created.  An error has occurred.'
-                });
+        error_callback: function(newCollection) {
+            return function() {
                 newCollection.destroy();
-            };
-        }(newCollection)
+            }
+        }(newCollection), 
+        error_message: 'Collection was not created'
     });
 };
 
@@ -127,15 +123,12 @@ CollectionsPageModelManager.prototype.request_to_join = function(col) {
     });
     
     newRequest.save(null, {
-        error: function(newRequest){
-            return function(resp) {
-                com.concertsoundorganizer.notifier.alert({
-                    title: 'Error', 
-                    content: 'Request was not sent.  An error has occurred.'
-                });
-                newRequest.destroy();
+        error_callback: function(newRequest) {
+            return function() {
+                newRequest.destroy();                
             };
-        }(newRequest)
+        }(newRequest),
+        error_message: 'Request was not sent'
     });
     
     this.userRequests.add(newRequest);

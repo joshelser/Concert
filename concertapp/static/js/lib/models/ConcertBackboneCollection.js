@@ -16,10 +16,6 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
      **/
     _add : function(model, options) {
         
-        console.log('adding');
-        console.log('model:');
-        console.log(model);
-
         var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[this.model.prototype.name];
 
         /* If the model hasn't yet been instantiated */
@@ -45,5 +41,15 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
         }
 
         return Backbone.Collection.prototype._add.call(this, model, options);
-    }
+    },
+    
+    /**
+     *  Display modal error to user when error occurs.
+     **/
+     save : function(attrs, options) {
+         var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
+         
+         return Backbone.Collection.prototype.save.call(this, attrs, wrapErrorHelper(options));
+     }
+    
 });

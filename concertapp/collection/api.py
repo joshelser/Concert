@@ -291,6 +291,9 @@ class RequestResource(MyResource):
             # Accept join request, this will delete the object.
             # TODO: Determine how to do correct permissions here
             request_obj.accept()
+            
+            print >> sys.stderr, "debug:\n"
+            sys.stderr.flush()
 
             return HttpAccepted()
         except ObjectDoesNotExist:

@@ -82,3 +82,40 @@ Backbone.sync = function(method, model, options) {
     // Make the request.
     $.ajax(params);
 };
+
+/**
+ *  Helps to display error to user.
+ **/
+com.concertsoundorganizer.helpers.wrapError = function(options) {
+    /* Get error messsage provided from caller */
+     var error_message = options.error_message;
+     if(typeof(error_message) == 'undefined') {
+        error_message = 'An error has occurred';
+     }
+     
+     /* Wrap error callback */
+     options.error = function(error_message, callback) {
+         return function(model, resp) {
+             resp = JSON.parse(resp.responseText);
+             if(resp.error_message) {
+                 error_message += ': '+resp.error_message;
+             }
+             else {
+                 error_message += '.';
+             }
+
+             /* display error to the user */
+             com.concertsoundorganizer.notifier.alert({
+                 title: 'Error', 
+                 content: error_message
+             });
+             
+             if(callback) {
+                 callback();
+             }
+         }
+         
+     }(error_message, options.error_callback);
+     
+     return options;
+}
