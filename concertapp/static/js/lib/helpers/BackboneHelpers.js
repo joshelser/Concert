@@ -86,13 +86,19 @@ Backbone.sync = function(method, model, options) {
 /**
  *  Helps to display error to user.
  **/
-com.concertsoundorganizer.helpers.wrapError = function(options) {
-    /* Get error messsage provided from caller */
-     var error_message = options.error_message;
-     if(typeof(error_message) == 'undefined') {
-        error_message = 'An error has occurred';
+ com.concertsoundorganizer.helpers.wrapError = function(options) {
+     if(options){
+         /* Get error messsage provided from caller */
+         var error_message = options.error_message;        
      }
-     
+     else {
+         options = {};
+     }
+
+     if(typeof(error_message) == 'undefined') {
+         var error_message = 'An error has occurred';
+     }
+
      /* Wrap error callback */
      options.error = function(error_message, callback) {
          return function(model, resp) {
@@ -109,13 +115,13 @@ com.concertsoundorganizer.helpers.wrapError = function(options) {
                  title: 'Error', 
                  content: error_message
              });
-             
+
              if(callback) {
                  callback();
              }
          }
-         
-     }(error_message, options.error_callback);
-     
-     return options;
-}
+
+         }(error_message, options.error_callback);
+
+         return options;
+     }
