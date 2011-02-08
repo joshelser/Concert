@@ -12,6 +12,7 @@ from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_key
 from tastypie.http import *
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf.urls.defaults import *
 
 from urlparse import parse_qs
 
@@ -267,13 +268,35 @@ class CollectionRequestResource(CollectionResource):
 class RequestResource(MyResource):
     user = fields.ForeignKey(UserResource, 'user')
     collection = fields.ForeignKey(CollectionResource, 'collection', full=True)
-    status = fields.CharField('status')
 
     class Meta:
         queryset = Request.objects.all()
 
         authorization = RequestAuthorization()
         authentication = DjangoAuthentication()
+        
+    def override_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w/-]*)/accept%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('accept_request'), name="api_accept_request"),
+        ]
+        
+    ###
+    #   Custom method to accept a request to join a collection.
+    ###        
+    def accept_request(self, request, *args, **kwargs):
+        try:
+            # Get request object
+            request_obj = Request.objects.get(pk=kwargs['pk'])
+
+            # Accept join request, this will delete the object.
+            # TODO: Determine how to do correct permissions here
+            request_obj.accept()
+
+            return HttpResponse()
+        except ObjectDoesNotExist:
+            return HttpResponse(status=410)
+        
+        
 
 
 ###

@@ -108,25 +108,7 @@ def concert_post_save_receiver(sender, **kwargs):
         # If a user was created
         if kwargs['created']:
             # Create the user's profile
-            concert_user = ConcertUser(user = user)
-            concert_user.save()
-        return
-    # If a collection was saved
-    elif sender == Collection:
-        collection = kwargs['instance']
-        
-        # If a collection was created
-        if kwargs['created']:
-            # CreateCollectionEvent
-            CreateCollectionEvent.objects.create(admin=collection.admin, collection=collection)
-    # If a request was saved
-    elif sender == Request:
-        request = kwargs['instance']
-        
-        # If a request was created
-        if kwargs['created']:
-            # Request to join collection event
-            RequestJoinCollectionEvent.objects.create(requesting_user=request.user,collection=request.collection)
+            ConcertUser.objects.create(user = user)
     
 ###
 # create_concert_user is bound to the post_save signal.  So everytime a model 
@@ -356,6 +338,14 @@ class Collection(models.Model):
 
     def __unicode__(self):
         return str(self.name)
+        
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Make sure we're in the database
+            super(Collection, self).save(*args, **kwargs)
+
+            # CreateCollectionEvent
+            CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
 
 ###
 #   A collection join request.  Should be deleted when action is taken.
@@ -391,50 +381,16 @@ class Request(models.Model):
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
                 
-                self._new_request()
-
-                # done
-                return self 
-
-            
-        # This is not a new request, but instead is being updated
-        else:
-            oldRequest = Request.objects.get(id=self.id)
-            oldStatus = oldRequest.status
-            # If status has changed
-            if self.status != oldStatus:
-                # Save current state for relations
-                super(Request, self).save(*args, **kwargs)
-                
-                # request was pending but is now approved
-                if oldStatus == 'p' and self.status == 'a':
-                    self._accept()
-                
-                # request was pending but is now denied
-                elif oldStatus == 'p' and self.status == 'd':
-                    self._deny()
-                    
-                # request was revoked
-                elif oldStatus == 'p' and self.status == 'r':
-                    self._revoke()
-                    
-                # request was revoked but then requested again
-                elif oldStatus == 'r' and self.status == 'p':
-                    self._new_request()
-                    
-                else:
-                    # Request was already approved or denied, and can't be changed.
-                    if oldStatus == 'a':
-                        raise Exception('Request has been approved already.')
-                    else:
-                        raise Exception('Request has been denied already.')
-                        
-        
+                # Request to join collection event
+                RequestJoinCollectionEvent.objects.create(
+                    requesting_user=self.user, 
+                    collection=self.collection
+                )
         
     ###
-    #   When the request is accepted.
+    #   When the request is accepted, we no longer need ourself.
     ###
-    def _accept(self):
+    def accept(self):
         
         user = self.user
         collection = self.collection
@@ -445,6 +401,8 @@ class Request(models.Model):
         # Create event
         event = JoinCollectionEvent(new_user = user, collection = collection)
         event.save()
+        
+        self.delete()
         
     ###
     #   When the request is denied.
@@ -460,17 +418,6 @@ class Request(models.Model):
     def _revoke(self):
         event = RequestRevokedEvent(requesting_user = self.user, collection = self.collection)
         event.save()
-        
-    ###
-    #   When this is a new request
-    ###
-    def _new_request(self):
-        # Create event
-        event = RequestJoinCollectionEvent(requesting_user = self.user, collection = self.collection)
-        event.save()
-        
-
-        
         
             
 

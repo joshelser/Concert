@@ -62,13 +62,19 @@ class UserCollectionRequestAcceptTestCase(UserCollectionRequestTestCase):
     def setUp(self):
         super(UserCollectionRequestAcceptTestCase, self).setUp()
         
+        # Delete join request
+        self.request.delete()
+        
+        # Add user to collection
+        self.collection.users.add(self.user)
+        self.collection.save()
+        
+        # reload collection from db
+        self.collection = Collection.objects.get(pk=self.collection.pk)
+        
     def runTest(self):
         super(UserCollectionRequestAcceptTestCase, self).runTest()
-        
-        # Accept join request
-        self.request.status = 'a'
-        self.request.save()
-        
+
         # Make sure that the user is now a member of the collection
         self.assertTrue(self.user in self.collection.users.all())
         
