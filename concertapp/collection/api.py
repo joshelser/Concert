@@ -292,9 +292,9 @@ class RequestResource(MyResource):
             # TODO: Determine how to do correct permissions here
             request_obj.accept()
 
-            return HttpResponse()
+            return HttpAccepted()
         except ObjectDoesNotExist:
-            return HttpResponse(status=410)
+            return HttpGone()
         
         
 
