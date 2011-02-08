@@ -97,23 +97,42 @@ class ConcertUser(models.Model):
         
     
 ###
-# create_concert_user is a callback function used to create a ConcertUser
-# - described above - simultaneously with the creation of a django User.
+#   This method is called whenever a model is saved.  Depending on which model
+#   was saved, we determine wether or not to do things.
 ###
-def create_concert_user_receiver(sender, **kwargs):
-    if sender != User:
+def concert_post_save_receiver(sender, **kwargs):
+    # If a user was saved
+    if sender == User:
+        user = kwargs['instance']
+
+        # If a user was created
+        if kwargs['created']:
+            # Create the user's profile
+            concert_user = ConcertUser(user = user)
+            concert_user.save()
         return
+    # If a collection was saved
+    elif sender == Collection:
+        collection = kwargs['instance']
+        
+        # If a collection was created
+        if kwargs['created']:
+            # CreateCollectionEvent
+            CreateCollectionEvent.objects.create(admin=collection.admin, collection=collection)
+    # If a request was saved
+    elif sender == Request:
+        request = kwargs['instance']
+        
+        # If a request was created
+        if kwargs['created']:
+            # Request to join collection event
+            RequestJoinCollectionEvent.objects.create(requesting_user=request.user,collection=request.collection)
     
-    user = kwargs['instance']
-    if kwargs['created']:
-        concert_user = ConcertUser(user = user)
-        concert_user.save()
 ###
 # create_concert_user is bound to the post_save signal.  So everytime a model 
-# object gets saved, the create_concert_user checks if it's a User that is getting
-# saved, then creates the ConcertUser  
+# object gets saved, the create_concert_user does stuff.
 ###
-post_save.connect(create_concert_user_receiver)
+post_save.connect(concert_post_save_receiver)
 
 ###
 # An abstract class (abstract by Concert semantics, not Django) used to house
@@ -215,6 +234,15 @@ class JoinCollectionEvent(Event):
 
     def __unicode__(self):
         return str(self.new_user) + " joined " + str(self.collection)        
+
+###
+#   An event that is created when a collection is created.
+###
+class CreateCollectionEvent(Event):
+    admin = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.admin) + " created " + str(self.collection)        
     
 
 class RequestJoinCollectionEvent(Event):
@@ -326,68 +354,15 @@ class Collection(models.Model):
     admin = models.ForeignKey(User)
     users = models.ManyToManyField(User, related_name = "collections")
 
-    ###
-    # Called from save when object is first created.
-    ###
-    def _init(self, *args, **kwargs):
-        # Need to save to get pk for relation
-        super(Collection, self).save(*args, **kwargs)
-        JoinCollectionEvent(new_user = self.admin, collection = self).save()
-
-    ###
-    #   When an administrator accepts a user's request for approval.
-    ###
-    def accept_request(self,user):
-        try:
-            req = Request.objects.get(user = user, collection = self)
-            req.accept()
-        except ObjectDoesNotExist:
-            raise Exception("You can't add a user to a collection they haven't requested to join")
-                
-    ###
-    #   This is when a user decides that they don't actually want to join a
-    #   collection, or when an administrator denies a request.
-    ###
-    def remove_request(self,user):
-        try:
-            req = Request.objects.get(user = user, collection = self)
-            req.remove()
-        except ObjectDoesNotExist:
-            raise Exception('This request does not exist')
-        
-        
     def __unicode__(self):
         return str(self.name)
-        
-    ###
-    # Handle stuff on save.
-    ###
-    
-    def save(self, *args, **kwargs):
-        isNew = False
-        if not self.pk:
-            isNew = True
-
-            # If this is a new collection
-            if isNew:
-                # Initialize 
-                self._init(*args, **kwargs)
-
-                return super(Collection, self).save(*args, **kwargs)
 
 ###
-#   A collection join request.
+#   A collection join request.  Should be deleted when action is taken.
 ###
 class Request(models.Model):
-    REQUEST_STATUS_CHOICES = (
-        ('a', 'Approved'),
-        ('d', 'Denied'),
-        ('p', 'Pending'),
-        ('r', 'Revoked')
-    )
     user = models.ForeignKey(User)
     collection = models.ForeignKey(Collection)
-    status = models.CharField(max_length=1, choices=REQUEST_STATUS_CHOICES, default='p')
     
     def save(self, *args, **kwargs):
         isNew = False
@@ -406,23 +381,12 @@ class Request(models.Model):
 
             # Make sure user is not already a member of the collection
             if user in collection.users.all():
-                raise Exception("You are already a member of this collection.")
+                raise Exception('You are already a member of this collection.')
 
             # See if this request already exists
             try:
                 possibleDuplicate = Request.objects.get(user = user, collection = collection)
-                # The object already exists, check its current state.
-                
-                # If it is still pending, error
-                if possibleDuplicate.status == 'p':
-                    raise Exception('Your request to join this group has already been submitted.')
-                # If request was revoked, but user is trying to make it pending
-                elif possibleDuplicate.status == 'r' and self.status == 'p':
-                    # Make it pending again
-                    possibleDuplicate.status = 'p'
-                    # This will create a join event
-                    possibleDuplicate.save()
-                
+                raise Exception('Your request to join this group has already been submitted.')
             except ObjectDoesNotExist:
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
