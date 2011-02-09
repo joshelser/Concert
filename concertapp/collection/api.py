@@ -179,8 +179,8 @@ class MemberCollectionResource(CollectionResource):
         
         
         # Here we ignore the incomming argument, and only send forth the
-        # collections that the user is a member of.        
-        object_list = super(MemberCollectionResource, self).apply_authorization_limits(request, user.collection_set.all())
+        # collections that the user is a member of.
+        object_list = super(MemberCollectionResource, self).apply_authorization_limits(request, user.collections.all())
         
         return object_list
         
