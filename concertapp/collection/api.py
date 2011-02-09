@@ -346,11 +346,7 @@ class RequestResource(MyResource):
             
             # If request was revoked
             if oldStatus == 'p' and newStatus == 'r':
-                # Create corresponding event
-                RequestRevokedEvent.objects.create(requesting_user = bundle.obj.user, collection = bundle.obj.collection)
-                
-                # Delete request object from server
-                bundle.obj.delete()
+                bundle.obj.revoke()
 
     
         return bundle
