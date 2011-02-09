@@ -219,6 +219,12 @@ class JoinCollectionEvent(Event):
     def __unicode__(self):
         return str(self.new_user) + " joined " + str(self.collection)        
 
+class LeaveCollectionEvent(Event):
+    old_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.new_user) + " left " + str(self.collection)        
+
 ###
 #   An event that is created when a collection is created.
 ###

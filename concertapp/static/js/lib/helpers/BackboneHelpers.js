@@ -102,7 +102,14 @@ Backbone.sync = function(method, model, options) {
      /* Wrap error callback */
      options.error = function(error_message, callback) {
          return function(model, resp) {
-             resp = JSON.parse(resp.responseText);
+             var responseText = resp.responseText;
+             if(resp && responseText != '') {
+                 resp = JSON.parse(responseText);                 
+             }
+             else {
+                 resp = {};
+             }
+             
              if(resp.error_message) {
                  error_message += ': '+resp.error_message;
              }

@@ -146,8 +146,16 @@ class CollectionResource(MyResource):
         return bundle
         
     def obj_update(self, bundle, request=None, **kwargs):
+        print >> sys.stderr, "bundle:\n"+str(bundle)
+        sys.stderr.flush()
         
-        bundle = super(CollectionResource, self).obj_update(self, bundle, request, **kwargs)
+        # Save
+        bundle = super(CollectionResource, self).obj_update(bundle, request, **kwargs)
+        
+        print >> sys.stderr, "bundle:\n"+str(bundle)
+        sys.stderr.flush()
+        
+        
         
         return bundle
         
@@ -272,36 +280,6 @@ class RequestResource(MyResource):
         
         
     ###
-    #   Custom method to accept a request to join a collection.
-    ###        
-#    def accept_request(self, request, *args, **kwargs):
-#        try:
-#            # Get request object
-#            request_obj = Request.objects.get(pk=kwargs['pk'])#
-
-            # Accept join request, this will delete the object.
-            # TODO: Determine how to do correct permissions here
-#            request_obj.accept()
-            
-#            return HttpAccepted()
-#        except ObjectDoesNotExist:
-#            return HttpGone()
-            
-    ###
-    #   Revoke a join collection request
-    ###
-#    def revoke_request(self, request, *args, **kwargs):
- #       try:
-  #          request_obj = Request.objects.get(pk=kwargs['pk'])
-        
-            # Revoke the join request, will delete the object
-   #         request_obj.revoke()
-        
-    #        return HttpAccepted()
-     #   except ObjectDoesNotExist:
-      #      return HttpGone()
-        
-    ###
     #   When a request is created, create corresponding events.
     ###    
     def obj_create(self, bundle, request=None, **kwargs):
@@ -323,7 +301,7 @@ class RequestResource(MyResource):
         # Get old and new status
         oldStatus = bundle.obj.status
         
-        newStatus = self.deserialize(request, request.raw_post_data)['status']
+        newStatus = bundle.data['status']
 
         # Save
         bundle = super(RequestResource, self).obj_update(bundle, request, **kwargs)
