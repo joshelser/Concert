@@ -29,15 +29,19 @@ class RequestTestCase(DjangoTestCase):
         resp = self.client.login(username='test_user', password='test_user')
         #self.assertEqual(resp, True)
         
-        api_prefix = '/api/1/'
+
 
 
         # collection administrator should be able to view request
         #resp = self.client.get('/api/1/request/'+str(self.request.id)+'/', data={'format': 'json'})
         # Should be allowed because user2 made the request
         #self.assertEqual(resp.status_code, 200)
-        
 
+        #############################
+        # Testing Tag functionality #
+        #############################
+
+        api_prefix = '/api/1/'
         
         # tag not created yet
         resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
@@ -59,4 +63,9 @@ class RequestTestCase(DjangoTestCase):
         resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 200) #make sure API gets the created tag
 
-        
+
+        #delete a tag
+        resp = self.client.delete(os.path.join(api_prefix, "tag/1/"))
+        self.assertEqual(resp.status_code, 204)
+        self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
+
