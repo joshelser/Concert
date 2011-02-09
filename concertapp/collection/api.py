@@ -284,6 +284,7 @@ class CollectionRequestResource(CollectionResource):
 class RequestResource(MyResource):
     user = fields.ForeignKey(UserResource, 'user')
     collection = fields.ForeignKey(CollectionResource, 'collection', full=True)
+    status = fields.CharField('status', default='p')
 
     class Meta:
         queryset = Request.objects.all()
@@ -291,40 +292,36 @@ class RequestResource(MyResource):
         authorization = RequestAuthorization()
         authentication = DjangoAuthentication()
         
-    def override_urls(self):
-        return [
-            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w/-]*)/accept%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('accept_request'), name="api_accept_request"),
-        ]
         
     ###
     #   Custom method to accept a request to join a collection.
     ###        
-    def accept_request(self, request, *args, **kwargs):
-        try:
-            # Get request object
-            request_obj = Request.objects.get(pk=kwargs['pk'])
+#    def accept_request(self, request, *args, **kwargs):
+#        try:
+#            # Get request object
+#            request_obj = Request.objects.get(pk=kwargs['pk'])#
 
             # Accept join request, this will delete the object.
             # TODO: Determine how to do correct permissions here
-            request_obj.accept()
+#            request_obj.accept()
             
-            return HttpAccepted()
-        except ObjectDoesNotExist:
-            return HttpGone()
+#            return HttpAccepted()
+#        except ObjectDoesNotExist:
+#            return HttpGone()
             
     ###
     #   Revoke a join collection request
     ###
-    def revoke_request(self, request, *args, **kwargs):
-        try:
-            request_obj = Request.objects.get(pk=kwargs['pk'])
+#    def revoke_request(self, request, *args, **kwargs):
+ #       try:
+  #          request_obj = Request.objects.get(pk=kwargs['pk'])
         
             # Revoke the join request, will delete the object
-            request_obj.revoke()
+   #         request_obj.revoke()
         
-            return HttpAccepted()
-        except ObjectDoesNotExist:
-            return HttpGone()
+    #        return HttpAccepted()
+     #   except ObjectDoesNotExist:
+      #      return HttpGone()
         
     ###
     #   When a request is created, create corresponding events.
@@ -340,6 +337,33 @@ class RequestResource(MyResource):
         
         return bundle
         
+
+    ###
+    #   When a request is updated, create event if necessary
+    ###
+    def obj_update(self, bundle, request=None, **kwargs):
+        # Get old and new status
+        oldStatus = bundle.obj.status
+        
+        newStatus = self.deserialize(request, request.raw_post_data)['status']
+
+        # Save
+        bundle = super(RequestResource, self).obj_update(bundle, request, **kwargs)
+        
+        # Determine how request has changed
+        if oldStatus is not newStatus:
+            
+            # If request was revoked
+            if oldStatus == 'p' and newStatus == 'r':
+                # Create corresponding event
+                RequestRevokedEvent.objects.create(requesting_user = bundle.obj.user, collection = bundle.obj.collection)
+                
+                # Delete request object from server
+                bundle.obj.delete()
+
+    
+        return bundle
+            
         
 
 

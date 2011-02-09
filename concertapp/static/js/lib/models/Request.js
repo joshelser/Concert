@@ -34,8 +34,24 @@ var Request = ConcertBackboneModel.extend({
         }
     },
     name: 'Request', 
+    /**
+     *  When a user would like to revoke the request to join a collection.
+     **/
     revoke: function() {
-        
+        var previousStatus = this.get('status');
+        this.set({
+            status: 'r'
+        });
+        this.save(null, {
+            error_message: 'Couldn\'t revoke request', 
+            error_callback: function(me, previousStatus) {
+                return function() {
+                    me.set({
+                        status: previousStatus
+                    });
+                };
+            }(this, previousStatus)
+        });
     }, 
 });
 

@@ -346,8 +346,15 @@ class Collection(models.Model):
 #   A collection join request.  Should be deleted when action is taken.
 ###
 class Request(models.Model):
+    REQUEST_STATUS_CHOICES = (
+            ('a', 'Approved'),
+            ('d', 'Denied'),
+            ('p', 'Pending'),
+            ('r', 'Revoked')
+        )
     user = models.ForeignKey(User)
     collection = models.ForeignKey(Collection)
+    status = models.CharField(max_length=1, choices=REQUEST_STATUS_CHOICES, default='p')
     
     def save(self, *args, **kwargs):
         isNew = False
