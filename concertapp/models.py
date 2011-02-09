@@ -435,20 +435,21 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
-    def init(self):
-        event = TagCreatedEvent(tag = self, collection = self.collection)
-        event.save()
-        self.save()        
+    def save(self):        
+        # to ensure that the tag is unique, we call a full_clean on this model
+        # instance, which will call clean(self) bellow
+        self.full_clean()
 
-    def add_segment(self,audio_segment,user):
-        self.segments.add(audio_segment)
-        self.save()
-        event = AudioSegmentTaggedEvent(audio_segment = audio_segment,
-                                        tag = self,
-                                        tagging_user = user,
-                                        collection = self.collection)
-        event.save()        
-
+        super(Tag,self).save()       
+        if not self.pk or not Tag.objects.filter(pk=self.pk):
+            event = TagCreatedEvent(tag = self, collection = self.collection)
+            event.save()
+ 
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if Tag.objects.filter(name = self.name, collection = self.collection):
+            raise ValidationError('Tag\'s must have unique names!')
+        
     def delete(self):
         # Get all segments with this tag
         segments = self.segments.all()

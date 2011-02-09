@@ -1,6 +1,7 @@
 from concertapp.lib.api import *
 from concertapp.models import *
 from concertapp.users.api import *
+from concertapp.collection.api import CollectionResource
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -36,6 +37,10 @@ class TagAuthorization(ConcertAuthorization):
             return False
 
 class TagResource(MyResource):
+    creator = fields.ForeignKey(UserResource, 'creator', full=True)
+    collection = fields.ForeignKey(CollectionResource, "collection", full = True)
+
+
     class Meta:
         authentication = DjangoAuthentication()
         authorization = TagAuthorization()
@@ -48,12 +53,11 @@ class TagResource(MyResource):
         bundle = super(TagResource, self).obj_create(bundle, request, **kwargs)
         
         # If there were no errors creating
-        TagCreatedEvent(tag = bundle.obj, collection = bundle.obj.collection).save()
+        #TagCreatedEvent.objects.create(tag = bundle.obj, collection = bundle.obj.collection)
         
         return bundle
         
-    def obj_update(self, bundle, request=None, **kwargs):
-        
+    def obj_update(self, bundle, request=None, **kwargs):        
         bundle = super(TagResource, self).obj_update(self, bundle, request, **kwargs)
         
         return bundle

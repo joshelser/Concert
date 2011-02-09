@@ -1,8 +1,9 @@
-content_type="content-type:application/json";
+#!/bin/bash
+
+content_type="";
 url_base="http://localhost:8000";
-api_url="/api/1/collection/";
-session_id="cbdc39b163bfeec5ba497e22fdbd99ce";
-json_data='{"name":"curled_coll_3","users":["/api/1/user/1/"],"admin":"/api/1/user/1/","user_is_admin":true,"requests":[]}';
+api_url="/api/1/tag/";
+session_id="34003fe8203856325dba0761b1d73d09";
+json_data='{"name":"new_tag","creator":"/api/1/user/1/","collection":"/api/1/collection/1/","pk":4}';
 
-
-curl -H $content_type "$url_base$api_url" --data-binary $json_data -b "sessionid=$session_id";
+curl -H "content-type:application/json" "$url_base$api_url" --data-binary $json_data -b "sessionid=$session_id";
