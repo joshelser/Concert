@@ -46,14 +46,13 @@ class RequestTestCase(DjangoTestCase):
         # tag not created yet
         resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 410) #make sure API doesn't return anything 
-        self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
-
+        self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
 
         # create a tag
-        resp = self.client.put(os.path.join(api_prefix, "tag/1/"), 
+        resp = self.client.post(os.path.join(api_prefix, "tag/"), 
                       data = '{"name":"new_tag","creator":"/api/1/user/1/","collection":"/api/1/collection/1/"}',
                       content_type = 'application/json')
-        self.assertEqual(resp.status_code, 201) #make sure API created tag
+        self.assertEqual(resp.status_code, 200) #make sure API created tag
         try:
             Tag.objects.get(name = "new_tag")
         except Tag.DoesNotExist:
@@ -62,7 +61,16 @@ class RequestTestCase(DjangoTestCase):
         # try and grab the created tag
         resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 200) #make sure API gets the created tag
-
+        
+        
+        #modify a tag
+        resp = self.client.put(os.path.join(api_prefix, "tag/1/"),
+                                data = '{"name":"new_tag_new_name","id":1, "collection":"/api/1/collection/1/","creator":"/api/1/user/1/"}',
+                                content_type = 'application/json')
+        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(len(Tag.objects.filter(name = "new_tag")),0)
+        self.assertEqual(len(Tag.objects.filter(name = "new_tag_new_name")),1)
+                
 
         #delete a tag
         resp = self.client.delete(os.path.join(api_prefix, "tag/1/"))

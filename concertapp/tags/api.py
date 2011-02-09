@@ -50,16 +50,14 @@ class TagResource(MyResource):
         
     def obj_create(self, bundle, request=None, **kwargs):        
         # Create
-        bundle = super(TagResource, self).obj_create(bundle, request, **kwargs)
-        
-        # If there were no errors creating
-        #TagCreatedEvent.objects.create(tag = bundle.obj, collection = bundle.obj.collection)
-        
-        return bundle
-        
-    def obj_update(self, bundle, request=None, **kwargs):        
-        bundle = super(TagResource, self).obj_update(self, bundle, request, **kwargs)
-        
-        return bundle
+        return super(TagResource, self).obj_create(bundle, request, **kwargs)
 
+    # right now tag events are still created in the model.
+    # TODO: decide if this is correct
+    #     # If there were no errors creating
+    #     #TagCreatedEvent.objects.create(tag = bundle.obj, collection = bundle.obj.collection)
+    
+    #     return bundle
+        
+    
     
