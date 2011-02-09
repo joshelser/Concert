@@ -157,6 +157,22 @@ class CollectionResource(MyResource):
                 object_list = super(CollectionResource, self).apply_authorization_limits(request, object_list)
 
         return object_list    
+        
+    def obj_create(self, bundle, request=None, **kwargs):        
+        # Create
+        bundle = super(CollectionResource, self).obj_create(bundle, request, **kwargs)
+        
+        # If there were no errors creating
+        CreateCollectionEvent.objects.create(admin=bundle.obj.admin, collection=bundle.obj)
+        
+        return bundle
+        
+    def obj_update(self, bundle, request=None, **kwargs):
+        
+        bundle = super(CollectionResource, self).obj_update(self, bundle, request, **kwargs)
+        
+        return bundle
+        
     
 
 ###
@@ -292,12 +308,37 @@ class RequestResource(MyResource):
             # TODO: Determine how to do correct permissions here
             request_obj.accept()
             
-            print >> sys.stderr, "debug:\n"
-            sys.stderr.flush()
-
             return HttpAccepted()
         except ObjectDoesNotExist:
             return HttpGone()
+            
+    ###
+    #   Revoke a join collection request
+    ###
+    def revoke_request(self, request, *args, **kwargs):
+        try:
+            request_obj = Request.objects.get(pk=kwargs['pk'])
+        
+            # Revoke the join request, will delete the object
+            request_obj.revoke()
+        
+            return HttpAccepted()
+        except ObjectDoesNotExist:
+            return HttpGone()
+        
+    ###
+    #   When a request is created, create corresponding events.
+    ###    
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle = super(RequestResource, self).obj_create(bundle, request, **kwargs)
+        
+        # Request to join collection event
+        RequestJoinCollectionEvent.objects.create(
+            requesting_user=bundle.obj.user, 
+            collection=bundle.obj.collection
+        )
+        
+        return bundle
         
         
 

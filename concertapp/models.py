@@ -137,6 +137,8 @@ class Event(models.Model):
         if type(self)==Event:
             raise Exception("Event is abstract, but not through Django semantics (e.g., 'Class Meta: abstract = True' is NOT set).\nYou must use one of the Event subclasses")
         else:
+            # TODO: Fix this, this should only be users who are a member
+            # of the collection of interest.
             self.real_type = self._get_real_type()
             super(Event,self).save(kwargs)
             for user in self.collection.users.all():
@@ -339,13 +341,6 @@ class Collection(models.Model):
     def __unicode__(self):
         return str(self.name)
         
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            # Make sure we're in the database
-            super(Collection, self).save(*args, **kwargs)
-
-            # CreateCollectionEvent
-            CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
 
 ###
 #   A collection join request.  Should be deleted when action is taken.
@@ -365,10 +360,6 @@ class Request(models.Model):
             user = self.user
             collection = self.collection
 
-            # Make sure user exists
-            if user not in User.objects.all():
-                raise Exception("user does not exist")
-
             # Make sure user is not already a member of the collection
             if user in collection.users.all():
                 raise Exception('You are already a member of this collection.')
@@ -381,11 +372,6 @@ class Request(models.Model):
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
                 
-                # Request to join collection event
-                RequestJoinCollectionEvent.objects.create(
-                    requesting_user=self.user, 
-                    collection=self.collection
-                )
         
     ###
     #   When the request is accepted, we no longer need ourself.
@@ -415,9 +401,11 @@ class Request(models.Model):
     ###
     #   When request is revoked
     ###
-    def _revoke(self):
+    def revoke(self):
         event = RequestRevokedEvent(requesting_user = self.user, collection = self.collection)
         event.save()
+        
+        self.delete()
         
             
 

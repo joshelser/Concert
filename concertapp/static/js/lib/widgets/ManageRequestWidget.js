@@ -31,9 +31,7 @@ var ManageRequestWidget = Widget.extend({
         'click .revoke_request': 'revokeRequest', 
     }, 
     revokeRequest: function(){
-        /* Revoke join request.  TODO: Handle errors */
-        this.model.save({
-            status: 'r'
-        });
+        /* Revoke join request. */
+        this.model.revoke();
     }, 
 });

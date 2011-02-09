@@ -34,6 +34,9 @@ var Request = ConcertBackboneModel.extend({
         }
     },
     name: 'Request', 
+    revoke: function() {
+        
+    }, 
 });
 
 /**

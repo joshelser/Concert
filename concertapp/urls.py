@@ -11,11 +11,16 @@ from tastypie.api import Api
 
 from concertapp.collection.api import *
 from concertapp.users.api import *
+from concertapp.event.api import *
 
 api1 = Api(api_name='1')
 api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
+
+# Events
+api1.register(EventResource())
+api1.register(RequestJoinCollectionEventResource())
 
 admin.autodiscover()
 
