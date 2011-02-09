@@ -15,6 +15,17 @@ class DjangoAuthentication(Authentication):
     def is_authenticated(self, request, **kwargs):
         return request.user.is_authenticated()
 
+
+    
+class ConcertAuthorization(Authorization):
+    def is_authorized(self, request, object=None):
+        #   User must be logged in, authentication backend should have set
+        #   request.user
+        if not hasattr(request, 'user'):
+            return False
+            
+        return True
+
 ###
 #   This is for things that we need on each resource.
 ###

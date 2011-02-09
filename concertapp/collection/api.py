@@ -23,15 +23,6 @@ from concertapp.lib.api import *
 
 from concertapp.users.api import *
 
-
-class ConcertAuthorization(Authorization):
-    def is_authorized(self, request, object=None):
-        #   User must be logged in, authentication backend should have set
-        #   request.user
-        if not hasattr(request, 'user'):
-            return False
-            
-        return True
         
 
 
