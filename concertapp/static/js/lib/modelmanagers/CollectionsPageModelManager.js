@@ -89,8 +89,7 @@ CollectionsPageModelManager.prototype.create_new_collection = function(name) {
         name: name,
         users: new UserSet(user),
         admin: user,
-        'user_is_admin': true,
-        'num_users': 1
+        'user_is_admin': true
     });
     
     /* Add to collections */

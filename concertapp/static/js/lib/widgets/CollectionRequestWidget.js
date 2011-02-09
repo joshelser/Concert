@@ -47,37 +47,21 @@ var CollectionRequestWidget = Widget.extend({
      **/
     denyRequestConfirm: function() {
         /* Show a confirm dialog */
-        /*
         com.concertsoundorganizer.notifier.confirm({
             title: "Are you sure?", 
-            content: "Are you sure you want to deny: "+this.userWidget.container.html()+" from this collection?", 
+            content: "Are you sure you want to deny "+this.model.get('user').get('username')+" from this collection?", 
             confirmCallback: function(me){
                 return function() {
                     me.denyRequest();
                 }
             }(this)
-        });*/
-        
-        console.log('Deny: '+this.model.get('username'));
+        });
     },
     /**
      *  This is when the user confirms that he/she wants to deny a request.
      **/
     denyRequest: function() {
-        $.getJSON('deny/'+this.collection_id+'/'+this.user_id+'/', 
-            function(me){
-                return function(data, status) {
-                    if(status == 'success' && data.status == 'success') {
-                    }
-                    else {
-                        com.concertsoundorganizer.notifier.alert({
-                            title: "Error", 
-                            content: "An error occurred: "+data.notification, 
-                        });
-                    }
-                };
-            }(this)
-        );
+        this.model.deny();
     },
     /**
      *  This is called when the user clicks the accept request button.
@@ -86,7 +70,7 @@ var CollectionRequestWidget = Widget.extend({
         /* Show a confirm dialog */
         com.concertsoundorganizer.notifier.confirm({
             title: "Are you sure?", 
-            content: "Are you sure you want to allow: "+this.model.user.get('username')+" to organize this collection?", 
+            content: "Are you sure you want to allow "+this.model.get('user').get('username')+" to organize this collection?", 
             confirmCallback: function(me) {
                 return function() {
                     me.approveRequest();
@@ -98,31 +82,7 @@ var CollectionRequestWidget = Widget.extend({
      *  This should be called when the actual request is to be approved.
      **/
     approveRequest: function() {
-        this.panel.toggleLoadingNotification();
-
-        $.getJSON('approve/'+this.collection_id+'/'+this.user_id+'/', 
-            function(me){
-                return function(data, status) {
-                    if(status == 'success' && data.status == 'success') {
-                        /*me.panel.toggleLoadingNotification();
-                        me.panel.retrieveAndUpdateCollections();*/
-                        this.model.set({})
-                    }
-                    else {
-                        com.concertsoundorganizer.notifier.alert({
-                            title: "Error", 
-                            content: "An error occurred: "+data.notification, 
-                        });
-                    }
-                };
-            }(this)
-        );
-
-    },
-    approved: function() {
-        
+        this.model.approve();
     }
-    
-    
 });
 

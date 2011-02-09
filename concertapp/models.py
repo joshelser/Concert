@@ -219,6 +219,12 @@ class JoinCollectionEvent(Event):
     def __unicode__(self):
         return str(self.new_user) + " joined " + str(self.collection)        
 
+class LeaveCollectionEvent(Event):
+    old_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return str(self.new_user) + " left " + str(self.collection)        
+
 ###
 #   An event that is created when a collection is created.
 ###
@@ -400,10 +406,12 @@ class Request(models.Model):
     ###
     #   When the request is denied.
     ###
-    def _deny(self):
+    def deny(self):
         # Create proper event
         event = RequestDeniedEvent(requesting_user = self.user, collection = self.collection)
         event.save()
+        
+        self.delete()
         
     ###
     #   When request is revoked
