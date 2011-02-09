@@ -106,19 +106,6 @@ class CollectionResource(MyResource):
     def set_search_term(self, term):
         self._meta.search_term = term
         
-    ###
-    #   Before sending object out, add the number of users so it doesn't have to 
-    #   be calculated on client-side
-    ###
-    def dehydrate(self, bundle):
-        
-        userCount = len(bundle.data['users'])
-        
-        bundle.data['num_users'] = userCount
-        
-        
-        return bundle
-        
         
     ###
     #   Make sure the user is an admin if they are trying to modify or delete the 
@@ -347,6 +334,12 @@ class RequestResource(MyResource):
             # If request was revoked
             if oldStatus == 'p' and newStatus == 'r':
                 bundle.obj.revoke()
+            elif oldStatus == 'p' and newStatus == 'a':
+                bundle.obj.accept()
+            elif oldStatus == 'p' and newStatus == 'd':
+                bundle.obj.deny()
+            else:
+                raise Exception('Request cannot be changed after status is no longer pending.')
 
     
         return bundle

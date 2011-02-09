@@ -51,26 +51,7 @@ var Collection = ConcertBackboneModel.extend({
             user: com.concertsoundorganizer.page.user.url(), 
             collection: this.url()
         });
-    }, 
-    /**
-     *  Revoke a request to join this collection.
-     **/
-    revokeRequest: function() {
-        var collection_id = this.id;
-
-        $.getJSON('revoke/'+collection_id, 
-            function(me){ 
-                return function(data, status){
-                    if(status == 'success' && data.status == 'success') {
-                        me.trigger('revoke_success');
-                    }
-                    else {
-                        me.trigger('revoke_error', data.notification);
-                    }
-                }; 
-            }(this)
-        );
-    },
+    }
 });
 
 

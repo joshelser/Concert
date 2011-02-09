@@ -7,7 +7,18 @@
                 ${user.get("username")}                            
             </div>
         </div>
-        <button class="approve_request">Approve</button>
-        <button class="deny_request">Deny</button>
+        {{if status == 'p'}}
+            <button class="approve_request">Approve</button>
+            <button class="deny_request">Deny</button>
+            {{else}}{{if status == 'd'}}
+                Denied
+                {{else}}{{if status == 'r'}}
+                    Revoked
+                    {{else}}{{if status == 'a'}}
+                        Accepted
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        {{/if}}
     </div>
 {% endverbatim %}
