@@ -1,16 +1,11 @@
-
-from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.authentication import Authentication, BasicAuthentication
-from tastypie.resources import ModelResource, Resource
-
-from tastypie.bundle import Bundle
-
-import sys
-
-from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
-from tastypie.http import *
-
 from concertapp.lib.api import *
+from tastypie.authentication import Authentication, BasicAuthentication
+from tastypie.authorization import DjangoAuthorization, Authorization
+from tastypie.bundle import Bundle
+from tastypie.http import *
+from tastypie.resources import ModelResource, Resource
+from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
+import sys
 
 ###
 #   Just make sure that the user is logged into Django
