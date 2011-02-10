@@ -46,18 +46,5 @@ class TagResource(MyResource):
         authorization = TagAuthorization()
         
         queryset = Tag.objects.all()
-
-        
-    def obj_create(self, bundle, request=None, **kwargs):        
-        # Create
-        return super(TagResource, self).obj_create(bundle, request, **kwargs)
-
-    # right now tag events are still created in the model.
-    # TODO: decide if this is correct
-    #     # If there were no errors creating
-    #     #TagCreatedEvent.objects.create(tag = bundle.obj, collection = bundle.obj.collection)
-    
-    #     return bundle
-        
     
     
