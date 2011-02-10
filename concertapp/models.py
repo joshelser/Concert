@@ -276,6 +276,14 @@ class Collection(models.Model):
     def __unicode__(self):
         return str(self.name)
         
+    ###
+    #   When a new collection is created, make CreateCollectionEvent.
+    ###
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super(Collection, self).save(*args, **kwargs)
+            CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
+        
 
 ###
 #   A collection join request.  Should be deleted when action is taken.
