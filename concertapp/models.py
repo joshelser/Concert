@@ -283,7 +283,8 @@ class Collection(models.Model):
         if not self.pk:
             super(Collection, self).save(*args, **kwargs)
             CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
-        
+        else:
+            super(Collection, self).save(*args, **kwargs)
 
 ###
 #   A collection join request.  Should be deleted when action is taken.
@@ -320,6 +321,8 @@ class Request(models.Model):
                     requesting_user=user,
                     collection=collection
                 )
+        else:
+            super(Request, self).save(*args, **kwargs)
             
                 
         
@@ -377,7 +380,7 @@ class Tag(models.Model):
         # instance, which will call clean(self) bellow
         self.full_clean()
 
-        super(Tag,self).save()       
+        super(Tag,self).save()
         if not self.pk or not Tag.objects.filter(pk=self.pk):
             event = TagCreatedEvent(tag = self, collection = self.collection)
             event.save()
