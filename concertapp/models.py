@@ -190,65 +190,72 @@ class AudioSegment(models.Model):
     audio = models.ForeignKey('Audio')
     creator = models.ForeignKey(User)
 
-    # TODO: ensure that the clean makes it so no
-    # two segments in any collection have the same name
-    
-    def init(self):
-        if self.id and AudioSegment.objects.filter(pk=self.id):
-            raise Exception("You can only initalize an object once")
-        self.save()
-        event = AudioSegmentCreatedEvent(audio_segment = self,
-                                         collection = self.audio.collection)
-        event.save()
+    def save(self,*args, **kwargs):
+        self.full_clean()
 
-    def resegment(self, name, beginning, end, user):
-        return self.audio.segment(name, beginning, end, user)
+        super(Request, self).save(*args, **kwargs)
 
+        if not self.id or not AudioSegment.objects.filter(pk=self.id):
+            event = AudioSegmentCreatedEvent(audio_segment = self, collection = self.audio.collection)
+            event.save()
 
-    def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):
-        tag, created = Tag.objects.get_or_create(collection = self.audio.collection,
-                                                     name = tag_name,
-                                                     defaults={'creator':user})
-        if created:
-            tag.init()
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if AudioSegment.objects.filter(name = self.name, collection = self.collection):
+            raise ValidationError('Audio Segments must have unique names!')
 
 
-        segment = self.audio.segment(name, beginning, end, user)
-        segment.tag(tag, user)
-        
-    
-    def tag(self, tag_name, user):
-        tag, created = Tag.objects.get_or_create(name = tag_name, 
-                                                 collection = self.audio.collection, 
-                                                 defaults = {'creator':user})
-        if created:
-            tag.init()
-
-        event = AudioSegmentTaggedEvent(audio_segment = self, 
-                                        tag = tag,
-                                        tagging_user = user,
-                                        collection = self.audio.collection)
-        event.save()
-
-        self.tags.add(tag)
-        
-        return tag
-
-    def untag(self, tag):
-        if type(tag) == str:
-            try:
-                tag = Tag.objects.get(name = tag)
-            except Tag.DoesNotExist:
-                raise Exception("Tag doesn't exist")
-
-        if tag not in self.tags.all():
-            raise Exception("Segment isn't tagged with the given tag")
-        
-        self.tags.remove(tag)
-        event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,
-                                                    tag = tag,
-                                                    collection = self.audio.collection)
-        event.active=False
+    #######################################################################################
+    # # Old Functions from when we were doing manipulation in the view instead of the api #
+    # def resegment(self, name, beginning, end, user):                                    #
+    #     return self.audio.segment(name, beginning, end, user)                           #
+    #                                                                                     #
+    #                                                                                     #
+    # def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):                 #
+    #     tag, created = Tag.objects.get_or_create(collection = self.audio.collection,    #
+    #                                                  name = tag_name,                   #
+    #                                                  defaults={'creator':user})         #
+    #     if created:                                                                     #
+    #         tag.init()                                                                  #
+    #                                                                                     #
+    #                                                                                     #
+    #     segment = self.audio.segment(name, beginning, end, user)                        #
+    #     segment.tag(tag, user)                                                          #
+    #                                                                                     #
+    #                                                                                     #
+    # def tag(self, tag_name, user):                                                      #
+    #     tag, created = Tag.objects.get_or_create(name = tag_name,                       #
+    #                                              collection = self.audio.collection,    #
+    #                                              defaults = {'creator':user})           #
+    #     if created:                                                                     #
+    #         tag.init()                                                                  #
+    #                                                                                     #
+    #     event = AudioSegmentTaggedEvent(audio_segment = self,                           #
+    #                                     tag = tag,                                      #
+    #                                     tagging_user = user,                            #
+    #                                     collection = self.audio.collection)             #
+    #     event.save()                                                                    #
+    #                                                                                     #
+    #     self.tags.add(tag)                                                              #
+    #                                                                                     #
+    #     return tag                                                                      #
+    #                                                                                     #
+    # def untag(self, tag):                                                               #
+    #     if type(tag) == str:                                                            #
+    #         try:                                                                        #
+    #             tag = Tag.objects.get(name = tag)                                       #
+    #         except Tag.DoesNotExist:                                                    #
+    #             raise Exception("Tag doesn't exist")                                    #
+    #                                                                                     #
+    #     if tag not in self.tags.all():                                                  #
+    #         raise Exception("Segment isn't tagged with the given tag")                  #
+    #                                                                                     #
+    #     self.tags.remove(tag)                                                           #
+    #     event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,               #
+    #                                                 tag = tag,                          #
+    #                                                 collection = self.audio.collection) #
+    #     event.active=False                                                              #
+    #######################################################################################
         
     def tag_list(self):
         tags = self.tag_set.all()
@@ -388,7 +395,7 @@ class Tag(models.Model):
     def clean(self):
         from django.core.exceptions import ValidationError
         if Tag.objects.filter(name = self.name, collection = self.collection):
-            raise ValidationError('Tag\'s must have unique names!')
+            raise ValidationError('Tags must have unique names!')
         
     def delete(self):
         # Get all segments with this tag
@@ -499,7 +506,7 @@ class Audio(models.Model):
     #
     #   @throws     audiotools.EncodingError - upon encoding error
     #   @throws     probably other stuff.
-    def init(self, f):
+    def save(self, f):
         # Get original filename of uploaded file
         name = str(f)
         self.name = name
