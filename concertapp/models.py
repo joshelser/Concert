@@ -300,13 +300,7 @@ class Request(models.Model):
     status = models.CharField(max_length=1, choices=REQUEST_STATUS_CHOICES, default='p')
     
     def save(self, *args, **kwargs):
-        isNew = False
         if not self.pk:
-            isNew = True
-            
-        
-        # If this is a new request
-        if isNew:
             user = self.user
             collection = self.collection
 
@@ -321,6 +315,12 @@ class Request(models.Model):
             except ObjectDoesNotExist:
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
+                # Create event
+                RequestJoinCollectionEvent.objects.create(
+                    requesting_user=user,
+                    collection=collection
+                )
+            
                 
         
     ###

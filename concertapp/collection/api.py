@@ -136,29 +136,6 @@ class CollectionResource(MyResource):
 
         return object_list    
         
-    def obj_create(self, bundle, request=None, **kwargs):        
-        # Create
-        bundle = super(CollectionResource, self).obj_create(bundle, request, **kwargs)
-        
-        # If there were no errors creating
-        CreateCollectionEvent.objects.create(admin=bundle.obj.admin, collection=bundle.obj)
-        
-        return bundle
-        
-    def obj_update(self, bundle, request=None, **kwargs):
-        print >> sys.stderr, "bundle:\n"+str(bundle)
-        sys.stderr.flush()
-        
-        # Save
-        bundle = super(CollectionResource, self).obj_update(bundle, request, **kwargs)
-        
-        print >> sys.stderr, "bundle:\n"+str(bundle)
-        sys.stderr.flush()
-        
-        
-        
-        return bundle
-        
     
 
 ###
@@ -276,23 +253,7 @@ class RequestResource(MyResource):
         queryset = Request.objects.all()
 
         authorization = RequestAuthorization()
-        authentication = DjangoAuthentication()
-        
-        
-    ###
-    #   When a request is created, create corresponding events.
-    ###    
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(RequestResource, self).obj_create(bundle, request, **kwargs)
-        
-        # Request to join collection event
-        RequestJoinCollectionEvent.objects.create(
-            requesting_user=bundle.obj.user, 
-            collection=bundle.obj.collection
-        )
-        
-        return bundle
-        
+        authentication = DjangoAuthentication()        
 
     ###
     #   When a request is updated, create event if necessary
@@ -300,7 +261,6 @@ class RequestResource(MyResource):
     def obj_update(self, bundle, request=None, **kwargs):
         # Get old and new status
         oldStatus = bundle.obj.status
-        
         newStatus = bundle.data['status']
 
         # Save
