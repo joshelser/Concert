@@ -506,7 +506,7 @@ class Audio(models.Model):
     #
     #   @throws     audiotools.EncodingError - upon encoding error
     #   @throws     probably other stuff.
-    def save(self, f):
+    def init(self, f):
         # Get original filename of uploaded file
         name = str(f)
         self.name = name
