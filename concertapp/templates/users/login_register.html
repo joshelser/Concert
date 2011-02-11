@@ -2,11 +2,10 @@
 
 
 {% block middle %}
-
+<h2>Login</h2>
 {% if login_form.errors %}
 <p class = 'error'>Your username and password didn't match. Please try again.</p>
 {% endif %}
-
 <form method="post" action="{% url concertapp.users.views.login_register %}">
   {% csrf_token %}
   {{ login_form.username.label_tag }}
@@ -19,6 +18,7 @@
   <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
+<h2>Register</h2>
 <form method = "post" action="{% url concertapp.users.views.login_register %}">
   {% csrf_token %}
   {{ register_form.as_table }}

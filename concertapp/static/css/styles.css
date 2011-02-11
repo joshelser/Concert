@@ -13,7 +13,7 @@
 
 /*	Resets
 	------	*/
-
+/*
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
 p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
 img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
@@ -32,11 +32,11 @@ a img {border: 0;}
 
 figure {position: relative;}
 figure img {width: 100%;}
-
+*/
 
 /*	Typography presets
 	------------------	*/
-
+/*
 .gigantic {
 	font-size: 110px;
 	line-height: 120px;
@@ -69,7 +69,7 @@ h3 {
 	font-size: 13px;
 	line-height: 18px;
 } 
-
+*/
 
 /*	Slightly more condensed layout
 	60 px columns, 24 px gutters, 60 px margins, 768 px total
@@ -77,6 +77,7 @@ h3 {
 	1     2      3      4      5      6      7      8     
 	60px  144px  228px  312px  396px  480px  564px  648px	*/
 
+/*
 body {
 	background: rgb(232,232,232);
 	padding: 1em 0 0 0;
@@ -92,14 +93,14 @@ body {
 	height: 600px;
 	background: rgb(60,97,158);
 }
-
+*/
 
 /*	13-column layout - typical layout
 	60 px columns, 24 px gutters, 72 px margins, 1212 px total (extra space for scrollbars)
 	---------------------------------------------------------------------------------------
 	1     2      3      4      5      6      7      8      9      10     11     12     13
 	60px  144px  228px  312px  396px  480px  564px  648px  732px  816px  900px  984px  1068px	*/
-
+/*
 @media only screen and (min-width: 1212px) {
 	
 	body {
@@ -108,6 +109,7 @@ body {
 	}
 	
 }
+*/
 
 
 /*	5-column layout - don't need
@@ -144,9 +146,64 @@ body {
 /***********************    End Less Framework  ************************/
 
 
+/*	Resets
+	------	*/
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
+p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
+img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 1;
+}
+
+article, aside, figure, figure img, figcaption, hgroup,
+footer, header, nav, section {
+	display: block;
+}
+
+a img {border: 0;}
+
+figure {position: relative;}
+figure img {width: 100%;}
+
+/**
+ *  Typography Presets
+ **/
+h1 {
+	font-size: 3em;
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.4em;
+}
+
+body {
+	font: 12px 'Helvetica', Verdana, Arial, sans-serif;;
+}
+
+.small {
+	font-size: 13px;
+	line-height: 18px;
+}
+
 /**
  *  Page layout
  **/
+
+body {
+	background: rgb(232,232,232);
+	padding: 1em 0 0 0;
+	width: 960px;
+	-webkit-tap-highlight-color: rgb(255,255,0);
+	margin: auto;
+}
+
 div.layout {
     display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -157,10 +214,22 @@ div.layout_top {
 div.layout_middle {
     width: 100%;
     display: -webkit-box;
-    -webkit-box-orient: horizontal;
+    -webkit-box-orient: vertical;
 }
 div.layout_bottom {
-    width: 100%;
+	width: 100%;
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+}
+div.layout_left {
+	width:50%;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+div.layout_right {
+	width: 50%;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
 }
 
 
@@ -176,11 +245,6 @@ div.panel {
     
     /* Default height and width values (for testing) */
     min-height: 120px;
-    /* Every panel has a padding of 1em */
-    padding: 1em;
-    /* And a margin of -2em to offset this padding 
-        (padding does not affect size of block element) */
-    margin: -2em;
     
 }
 
@@ -233,16 +297,16 @@ div#global_options_panel_contents {
 
 div#global_options_panel_left {
     /* Flex makes sure the box will take 1/3 of the container */
-    -webkit-box-flex: 1;
+    width: 320;
 }
 div#global_options_panel_middle {
     text-align: center;
-    -webkit-box-flex: 1;
+	width: 320;
 }
 
 div#global_options_panel_right {
-    -webkit-box-flex: 1;
-    
+	width: 320;
+    -webkit-box-pack: end;
     /* Contents (buttons) will also be horizontally spread using the box model */
     -webkit-box-orient: horizontal;
     display: -webkit-box;
