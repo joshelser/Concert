@@ -53,6 +53,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
+DEV_MEDIA_URL = '/media/'
+PRODUCTION_MEDIA_URL = '/media/'
+MEDIA_DEV_MODE = DEBUG
+GLOBAL_MEDIA_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -73,6 +77,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'mediagenerator.middleware.MediaMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,6 +86,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfResponseMiddleware',
     
     'concertapp.lib.ConcertMiddleware.ConcertBootstrapDataMiddleware',
+    
     
     # Keep this one at the bottom so we can feel secure about things
     'concertapp.lib.ConcertMiddleware.ConcertCSRFMiddleware',
@@ -101,6 +108,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.markup',
+    'mediagenerator',
     'tastypie',
     'concertapp',
 )
@@ -134,3 +142,9 @@ DEFAULT_FROM_EMAIL = 'apg552@gmail.com'
 SITE_ID = 1
 
 CSRF_FAILURE_VIEW='concertapp.lib.errorviews.csrf_failure'
+
+MEDIA_BUNDLES = (
+    ('main.css',
+        'css/styles.sass',
+    ),
+)

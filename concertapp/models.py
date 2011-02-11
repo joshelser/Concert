@@ -22,77 +22,6 @@ import os, tempfile, sys
 class ConcertUser(models.Model):
     user = models.ForeignKey(User, unique = True)
     unread_events = models.ManyToManyField('Event')
-    
-    ###
-    #   Convert all properties of general interest to a serializable dictionary
-    ###
-    def to_dict(self):
-        user = self.user
-        
-        return {
-            'username': user.username, 
-            'id': user.id, 
-        }
-        
-    
-    ###
-    #   This function will get all of the collections that a user is a member
-    #   of in a dict that can be serialized.  This includes collections
-    #   that the user is an administrator of.
-    ###
-    def get_collections_dict(self):
-        user = self.user
-        
-        # Get all collections this user is a member of
-        collections = user.collection_set.all()
-
-
-        # We will return this when we are done
-        results = []
-        
-
-        # For each of these collections
-        for col in collections:
-            # Build json results
-            results.append(col.to_dict(user))
-
-            
-        return results
-        
-    ###
-    #   gets all of join requests for collections that the user is an administrator
-    #   of, and that the user has requested to join, and returns all of this
-    #   data
-    ###
-    def get_requests_dict(self):
-        user = self.user
-
-        # Get all collections this user has requested to join
-        join_requests = user.collection_join_requests.all()
-
-        # We will return this when we are done
-        results = []
-
-        # For each of the join requests, add them to the collection list as well
-        for col in join_requests:
-            results.append(col.to_dict(user))
-            
-        return results
-    
-    ###
-    #   Get all of the collections that this user is an administrator of.
-    ###
-    def get_admin_collections_dict(self):
-        user = self.user
-        
-        collections = user.collection_set.filter(admin=user)
-        
-        results = []
-        
-        for col in collections:
-            results.append(col.to_dict(user))
-            
-        return results
         
         
     
@@ -261,65 +190,72 @@ class AudioSegment(models.Model):
     audio = models.ForeignKey('Audio')
     creator = models.ForeignKey(User)
 
-    # TODO: ensure that the clean makes it so no
-    # two segments in any collection have the same name
-    
-    def init(self):
-        if self.id and AudioSegment.objects.filter(pk=self.id):
-            raise Exception("You can only initalize an object once")
-        self.save()
-        event = AudioSegmentCreatedEvent(audio_segment = self,
-                                         collection = self.audio.collection)
-        event.save()
+    def save(self,*args, **kwargs):
+        self.full_clean()
 
-    def resegment(self, name, beginning, end, user):
-        return self.audio.segment(name, beginning, end, user)
+        super(Request, self).save(*args, **kwargs)
 
+        if not self.id or not AudioSegment.objects.filter(pk=self.id):
+            event = AudioSegmentCreatedEvent(audio_segment = self, collection = self.audio.collection)
+            event.save()
 
-    def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):
-        tag, created = Tag.objects.get_or_create(collection = self.audio.collection,
-                                                     name = tag_name,
-                                                     defaults={'creator':user})
-        if created:
-            tag.init()
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if AudioSegment.objects.filter(name = self.name, collection = self.collection):
+            raise ValidationError('Audio Segments must have unique names!')
 
 
-        segment = self.audio.segment(name, beginning, end, user)
-        segment.tag(tag, user)
-        
-    
-    def tag(self, tag_name, user):
-        tag, created = Tag.objects.get_or_create(name = tag_name, 
-                                                 collection = self.audio.collection, 
-                                                 defaults = {'creator':user})
-        if created:
-            tag.init()
-
-        event = AudioSegmentTaggedEvent(audio_segment = self, 
-                                        tag = tag,
-                                        tagging_user = user,
-                                        collection = self.audio.collection)
-        event.save()
-
-        self.tags.add(tag)
-        
-        return tag
-
-    def untag(self, tag):
-        if type(tag) == str:
-            try:
-                tag = Tag.objects.get(name = tag)
-            except Tag.DoesNotExist:
-                raise Exception("Tag doesn't exist")
-
-        if tag not in self.tags.all():
-            raise Exception("Segment isn't tagged with the given tag")
-        
-        self.tags.remove(tag)
-        event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,
-                                                    tag = tag,
-                                                    collection = self.audio.collection)
-        event.active=False
+    #######################################################################################
+    # # Old Functions from when we were doing manipulation in the view instead of the api #
+    # def resegment(self, name, beginning, end, user):                                    #
+    #     return self.audio.segment(name, beginning, end, user)                           #
+    #                                                                                     #
+    #                                                                                     #
+    # def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):                 #
+    #     tag, created = Tag.objects.get_or_create(collection = self.audio.collection,    #
+    #                                                  name = tag_name,                   #
+    #                                                  defaults={'creator':user})         #
+    #     if created:                                                                     #
+    #         tag.init()                                                                  #
+    #                                                                                     #
+    #                                                                                     #
+    #     segment = self.audio.segment(name, beginning, end, user)                        #
+    #     segment.tag(tag, user)                                                          #
+    #                                                                                     #
+    #                                                                                     #
+    # def tag(self, tag_name, user):                                                      #
+    #     tag, created = Tag.objects.get_or_create(name = tag_name,                       #
+    #                                              collection = self.audio.collection,    #
+    #                                              defaults = {'creator':user})           #
+    #     if created:                                                                     #
+    #         tag.init()                                                                  #
+    #                                                                                     #
+    #     event = AudioSegmentTaggedEvent(audio_segment = self,                           #
+    #                                     tag = tag,                                      #
+    #                                     tagging_user = user,                            #
+    #                                     collection = self.audio.collection)             #
+    #     event.save()                                                                    #
+    #                                                                                     #
+    #     self.tags.add(tag)                                                              #
+    #                                                                                     #
+    #     return tag                                                                      #
+    #                                                                                     #
+    # def untag(self, tag):                                                               #
+    #     if type(tag) == str:                                                            #
+    #         try:                                                                        #
+    #             tag = Tag.objects.get(name = tag)                                       #
+    #         except Tag.DoesNotExist:                                                    #
+    #             raise Exception("Tag doesn't exist")                                    #
+    #                                                                                     #
+    #     if tag not in self.tags.all():                                                  #
+    #         raise Exception("Segment isn't tagged with the given tag")                  #
+    #                                                                                     #
+    #     self.tags.remove(tag)                                                           #
+    #     event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,               #
+    #                                                 tag = tag,                          #
+    #                                                 collection = self.audio.collection) #
+    #     event.active=False                                                              #
+    #######################################################################################
         
     def tag_list(self):
         tags = self.tag_set.all()
@@ -347,6 +283,15 @@ class Collection(models.Model):
     def __unicode__(self):
         return str(self.name)
         
+    ###
+    #   When a new collection is created, make CreateCollectionEvent.
+    ###
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super(Collection, self).save(*args, **kwargs)
+            CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
+        else:
+            super(Collection, self).save(*args, **kwargs)
 
 ###
 #   A collection join request.  Should be deleted when action is taken.
@@ -363,13 +308,7 @@ class Request(models.Model):
     status = models.CharField(max_length=1, choices=REQUEST_STATUS_CHOICES, default='p')
     
     def save(self, *args, **kwargs):
-        isNew = False
         if not self.pk:
-            isNew = True
-            
-        
-        # If this is a new request
-        if isNew:
             user = self.user
             collection = self.collection
 
@@ -384,6 +323,14 @@ class Request(models.Model):
             except ObjectDoesNotExist:
                 # If it does not, we are legit
                 super(Request, self).save(*args, **kwargs)
+                # Create event
+                RequestJoinCollectionEvent.objects.create(
+                    requesting_user=user,
+                    collection=collection
+                )
+        else:
+            super(Request, self).save(*args, **kwargs)
+            
                 
         
     ###
@@ -440,7 +387,7 @@ class Tag(models.Model):
         # instance, which will call clean(self) bellow
         self.full_clean()
 
-        super(Tag,self).save()       
+        super(Tag,self).save()
         if not self.pk or not Tag.objects.filter(pk=self.pk):
             event = TagCreatedEvent(tag = self, collection = self.collection)
             event.save()
@@ -448,7 +395,7 @@ class Tag(models.Model):
     def clean(self):
         from django.core.exceptions import ValidationError
         if Tag.objects.filter(name = self.name, collection = self.collection):
-            raise ValidationError('Tag\'s must have unique names!')
+            raise ValidationError('Tags must have unique names!')
         
     def delete(self):
         # Get all segments with this tag

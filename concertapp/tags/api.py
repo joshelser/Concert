@@ -4,15 +4,10 @@ from concertapp.users.api import *
 from concertapp.collection.api import CollectionResource
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from tastypie import fields
 from tastypie.authentication import Authentication, BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.http import *
-from tastypie.resources import ModelResource, Resource
-from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
-from urlparse import parse_qs
-
 
 ###
 #   Make sure that the user who is trying to modify the board is the administrator.
@@ -46,18 +41,3 @@ class TagResource(MyResource):
         authorization = TagAuthorization()
         
         queryset = Tag.objects.all()
-
-        
-    def obj_create(self, bundle, request=None, **kwargs):        
-        # Create
-        return super(TagResource, self).obj_create(bundle, request, **kwargs)
-
-    # right now tag events are still created in the model.
-    # TODO: decide if this is correct
-    #     # If there were no errors creating
-    #     #TagCreatedEvent.objects.create(tag = bundle.obj, collection = bundle.obj.collection)
-    
-    #     return bundle
-        
-    
-    
