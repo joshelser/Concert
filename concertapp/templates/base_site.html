@@ -8,13 +8,14 @@ The base template for all pages.  All page templates will use this.
 
 {% load extra_template_tags %}
 {% load panels %}
+{% load media %}
 
 <!DOCTYPE>
 
 <html>
   <head>
     <title>Concert</title>
-    <link rel=StyleSheet href="/css/styles.css" type="text/css" media=screen>
+    {% include_media 'main.css' %}
 
     {# Global namespaces and variables #}
     <script src="/js/global.js"></script>
