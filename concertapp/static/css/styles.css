@@ -1,644 +1,423 @@
-/**
-*  @file styles.css
-*  Global styles that all pages use.
-**/
+/*  @file styles.sass
+ *  Global styles that all pages use. */
+/*  Resets */
+/* line 14, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 
-
-/*******************************	Less Framework 3    **********************/
-    /**
-     *  by Joni Korpi
-     *  http://lessframework.com	
-     **/
-
-
-/*	Resets
-	------	*/
-/*
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
-img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
-fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, address, cite, code, del, dfn, em, img, ins,
+q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, fieldset, form,
+label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
+/* line 22, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 article, aside, figure, figure img, figcaption, hgroup,
 footer, header, nav, section {
-	display: block;
+  display: block;
 }
 
-a img {border: 0;}
-
-figure {position: relative;}
-figure img {width: 100%;}
-*/
-
-/*	Typography presets
-	------------------	*/
-/*
-.gigantic {
-	font-size: 110px;
-	line-height: 120px;
-	letter-spacing: -2px;
+/* line 26, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+a img {
+  border: 0;
 }
 
-.huge {
-	font-size: 68px;
-	line-height: 72px;
-	letter-spacing: -1px;
+/* line 29, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+figure {
+  position: relative;
 }
 
-.large, h1 {
-	font-size: 3em;
+/* line 32, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+figure img {
+  width: 100%;
 }
 
-.big, h2 {
-	font-size: 1.5em;
-}
-
-h3 {
-    font-size: 1.4em;
-}
-
-.normal, body {
-	font: 12px 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;;
-}
-
-.small {
-	font-size: 13px;
-	line-height: 18px;
-} 
-*/
-
-/*	Slightly more condensed layout
-	60 px columns, 24 px gutters, 60 px margins, 768 px total
-	---------------------------------------------------------
-	1     2      3      4      5      6      7      8     
-	60px  144px  228px  312px  396px  480px  564px  648px	*/
-
-/*
-body {
-	background: rgb(232,232,232);
-	padding: 1em 0 0 0;
-	width: 648px;
-	-webkit-tap-highlight-color: rgb(255,255,0);
-	margin: auto;
-}
-
-::selection 	 {background: rgb(255,255,0);}
-::-moz-selection {background: rgb(255,255,0);}
-
-#example {
-	height: 600px;
-	background: rgb(60,97,158);
-}
-*/
-
-/*	13-column layout - typical layout
-	60 px columns, 24 px gutters, 72 px margins, 1212 px total (extra space for scrollbars)
-	---------------------------------------------------------------------------------------
-	1     2      3      4      5      6      7      8      9      10     11     12     13
-	60px  144px  228px  312px  396px  480px  564px  648px  732px  816px  900px  984px  1068px	*/
-/*
-@media only screen and (min-width: 1212px) {
-	
-	body {
-		padding: 1em 0 0 0;
-		width: 1068px;
-	}
-	
-}
-*/
-
-
-/*	5-column layout - don't need
-	60 px columns, 24 px gutters, 42 px margins, 480 px total
-	---------------------------------------------------------
-	1     2      3      4      5
-	60px  144px  228px  312px  396px	
-
-@media only screen and (max-width: 767px) and (min-width: 480px) {
-	
-	body {
-		padding: 60px 42px 0;
-		width: 396px;
-	}
-	
-}
-
-
-/*	3-column layout - don't need
-	60 px columns, 24 px gutters, 46 px margins, 320 px total
-	---------------------------------------------------------
-	1     2      3
-	60px  144px  228px	
-
-@media only screen and (max-width: 479px) {
-	
-	body {
-		padding: 48px 46px 0;
-		width: 228px;
-	}
-	
-}
-*/
-/***********************    End Less Framework  ************************/
-
-
-/*	Resets
-	------	*/
-
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
-img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
-fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 1;
-}
-
-article, aside, figure, figure img, figcaption, hgroup,
-footer, header, nav, section {
-	display: block;
-}
-
-a img {border: 0;}
-
-figure {position: relative;}
-figure img {width: 100%;}
-
-/**
- *  Typography Presets
- **/
+/*Typography Presets */
+/* line 38, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 h1 {
-	font-size: 3em;
+  font-size: 3em;
 }
 
+/* line 41, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 h2 {
-	font-size: 1.5em;
+  font-size: 1.5em;
 }
 
+/* line 44, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 h3 {
-    font-size: 1.4em;
+  font-size: 1.4em;
 }
 
+/* line 47, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 body {
-	font: 12px 'Helvetica', Verdana, Arial, sans-serif;;
+  font: 12px "Helvetica", Verdana, Arial, sans-serif;
 }
 
-.small {
-	font-size: 13px;
-	line-height: 18px;
-}
-
-/**
- *  Page layout
- **/
-
+/*Page layout */
+/* line 53, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 body {
-	background: rgb(232,232,232);
-	padding: 1em 0 0 0;
-	width: 960px;
-	-webkit-tap-highlight-color: rgb(255,255,0);
-	margin: auto;
+  background: #eeeef3;
+  padding: 0;
+  width: 960px;
+  margin: auto;
 }
 
+/* line 59, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout {
-    display: -webkit-box;
-	-webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
+
+/* line 63, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout_top {
-    width: 100%;
+  width: 100%;
+  height: 60px;
+  margin-top: 20px;
 }
+
+/* line 68, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout_middle {
-    width: 100%;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
+
+/* line 73, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout_bottom {
-	width: 100%;
-	display: -webkit-box;
-	-webkit-box-orient: horizontal;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
 }
+
+/* line 78, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout_left {
-	width:50%;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
+  width: 50%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
+
+/* line 83, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.layout_right {
-	width: 50%;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
+  width: 50%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
 
-
-/**
- *  Panels
- **/
-
-/* This is a panel on the UI, used for many things. */
-div.panel {
-    /*  Need this so the "panel_loader" will display correctly 
-        (see div.panel_loader) */
-    position: relative;
-    
-    /* Default height and width values (for testing) */
-    min-height: 120px;
-    
-}
-
-/* This is the div that shows a loading notification on each panel */
-div.panel_loader {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: gray;
-    text-align: center;
-    opacity: 0;
-    z-index: -1;
-}
-
-/* This is the actual loading notification (Animation or "Loading...") */
-div.panel_loader_notification {
-    position: relative;
-    top: 50%;
-    height: 1em;
-    margin-top: -0.5em;
-    color: white;
-}
-
-/* This class is added when the panel loader is to be displayed */
-div.panel_loader_enabled {
-    opacity: 0.7;
-    z-index: 9999;
-}
-
-
-/**
- *  Page Header.  We use the CSS3 box layout here, for more info:
- *  http://hacks.mozilla.org/2010/04/the-css-3-flexible-box-model/
- *  http://www.w3.org/TR/css3-box/#types
- **/
-div#global_options_panel {
-    width: 100%;
-    margin-top: 0;
-    -webkit-box-orient: horizontal;
-    display: -webkit-box;
-}
-
-div#global_options_panel_contents {
-    width: 100%;
-    /* The three sections of this panel are horizontal */
-    -webkit-box-orient: horizontal;
-    /* CSS3 awesomeness (will need to remove the -webkit when this is standard) */
-    display: -webkit-box;
-}
-
-div#global_options_panel_left {
-    /* Flex makes sure the box will take 1/3 of the container */
-    width: 320;
-}
-div#global_options_panel_middle {
-    text-align: center;
-	width: 320;
-}
-
-div#global_options_panel_right {
-	width: 320;
-    -webkit-box-pack: end;
-    /* Contents (buttons) will also be horizontally spread using the box model */
-    -webkit-box-orient: horizontal;
-    display: -webkit-box;
-}
-
-div.global_options_panel_button {
-    margin-right: 0.5em;
-    margin-left: 0.5em;
-}
-
-
-
-/**
- *  Page-specific layout
- **/
-
-/* Settings Page */
-div.create_join_panel {
-    -webkit-box-flex: 4;
-}
-div.social_panel {
-    -webkit-box-flex: 1;
-}
-div.manage_collections_panel {
-}
-
-div.create_join_widget {
-}
-div.collection_info_widget_container {
-}
-
-/* Dashboard */
-div#concert_info_panel{
-    -webkit-box-flex: 1;
-}
-
-div#recent_events_panel {
-    -webkit-box-flex: 1;
-}
-ul#recent_events {
-    list-style:inside;
-}
-
-/**
- *  Audio list panel
- **/
- 
-/**
- *  File widget
- **/
+/*File widget */
+/* line 92, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.file_widget {
-    display: table-row;
-    padding: 0;
-    margin: 0;
+  display: table-row;
+  padding: 0;
+  margin: 0;
 }
+
+/* line 97, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.file_thumb {
-    display: table-cell;    
+  display: table-cell;
 }
+
+/* line 100, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 img.file_thumb_img {
-    width: 6em;
-    height: 3em;
+  width: 6em;
+  height: 3em;
 }
+
+/* line 104, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.file_info {
-    vertical-align: middle;
-    display: table-cell;
-    padding-left: 1em;
+  vertical-align: middle;
+  display: table-cell;
+  padding-left: 1em;
 }
+
+/* line 109, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.file_actions {
-    padding-left: 1em;
-    vertical-align: middle;
-    display: table-cell;
+  padding-left: 1em;
+  vertical-align: middle;
+  display: table-cell;
 }
 
-
-/**
- *  Buttons
- **/
- 
+/*Buttons */
+/* line 117, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.button.disabled {
-    cursor: default;
-    opacity: 0.5;
+/* line 120, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+button.disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
+/* line 124, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.image-button {
-    background-color: transparent;
-    width: 16px;
-    height: 16px;
-    border: 0;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  border: 0;
 }
+
+/* line 130, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.text-button {
-    padding: 0.5em;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.2);    
+  padding: 0.5em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* line 135, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.cross {
-    background-image: url('/graphics/icons/cross.png');
+  background-image: url("/graphics/icons/cross.png");
 }
+
+/* line 138, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.settings {
-/*    background-image: url('/paths/settings.svg');*/
-    background-size: 1000%;
-    background-position: 50% 50%;
-    height: 50px;
-    width: 50px;
+  /*    background-image: url('/paths/settings.svg') */
+  background-size: 1000%;
+  background-position: 50% 50%;
+  height: 50px;
+  width: 50px;
 }
 
-
-/**     Large Icon Buttons      **/
+/*    Large Icon Buttons      */
 /* Container */
+/* line 149, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.large-icon-button {
-    height: 60px;
-    width: 60px;
-    cursor: pointer;
-    text-align: center;
+  height: 60px;
+  width: 60px;
+  cursor: pointer;
+  text-align: center;
 }
+
 /* Icon */
+/* line 156, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.large-icon-button-icon {
-    height: 40px;
-    width: 40px;
+  height: 40px;
+  width: 40px;
 }
+
 /* Label */
+/* line 161, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 label.large-icon-button-label {
-    cursor: pointer;
+  cursor: pointer;
 }
+
+/* line 164, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 label.large-icon-button-label.hover {
-    text-decoration:underline;
+  text-decoration: underline;
 }
 
+/*********************** Modal Overlay Styles *********************** */
 /* blue */
+/* line 172, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .blue {
-    color: #d9eef7;
-    border: solid 1px #0076a3;
-    background: #0095cd;
-    background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
-    background: -moz-linear-gradient(top,  #00adee,  #0078a5);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+  color: #d9eef7;
+  border: solid 1px #0076a3;
+  background: #0095cd;
+  background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+  background: -moz-linear-gradient(top, #00adee, #0078a5);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
 }
+
+/* line 180, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.blue:hover {
-    background: #007ead;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
-    background: -moz-linear-gradient(top,  #0095cc,  #00678e);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+  background: #007ead;
+  background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+  background: -moz-linear-gradient(top, #0095cc, #00678e);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
 }
+
+/* line 186, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.blue:active {
-    color: #80bed6;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
-    background: -moz-linear-gradient(top,  #0078a5,  #00adee);
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
+  color: #80bed6;
+  background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+  background: -moz-linear-gradient(top, #0078a5, #00adee);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
 }
 
-
-
-
-
-
-
-/** 
- *  Overlay modal box
- **/
+/*Overlay modal box */
+/* line 195, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay {
-    outline: 0 !important;
-    display: none;
+  outline: 0 !important;
+  display: none;
 }
 
+/* line 199, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-background {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 999999;
-    background: rgba(230, 235, 209, .7);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 999999;
+  background: rgba(230, 235, 209, 0.7);
 }
 
-
+/* line 206, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-pane {
-    top: 40%;
-    left: 40%;
-    position: absolute;
-    z-index: 10000001;
-    min-width: 200px;
-    
-    -webkit-box-shadow: 0px 0px 4px #241F1B;
-    
+  top: 40%;
+  left: 40%;
+  position: absolute;
+  z-index: 10000001;
+  min-width: 200px;
+  -webkit-box-shadow: 0px 0px 4px #241f1b;
 }
 
+/* line 214, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-content {
-    background: #201913;
-    /*padding: 10% 15% 10% 15%;*/
-    padding: 0.8em;
-    color: white;
-    border-left: 2px solid #4D433B;
-    border-right: 2px solid #4D433B;
-    border-bottom: 2px solid #4D433B;
-    
-    max-width: 768px;
-    max-height: 512px;
-    overflow: auto;
+  background: #201913;
+  /*padding: 10% 15% 10% 15% */
+  padding: 0.8em;
+  color: white;
+  border-left: 2px solid #4d433b;
+  border-right: 2px solid #4d433b;
+  border-bottom: 2px solid #4d433b;
+  max-width: 768px;
+  max-height: 512px;
+  overflow: auto;
 }
 
+/* line 226, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-header {
-    padding: 0.8em;
-    
+  padding: 0.8em;
 }
 
+/* line 229, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 h2.modal-overlay-header {
-    display: inline;
-    float: left;
-    
+  display: inline;
+  float: left;
 }
 
+/* line 233, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 button.modal-overlay-close-button {
-    display: inline;
-    float: right;
-    margin-left: 1em;
+  display: inline;
+  float: right;
+  margin-left: 1em;
 }
 
+/* line 238, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-close-button {
-    float: right;
-    margin-right: 1em;
-    margin-top: 1em;
+  float: right;
+  margin-right: 1em;
+  margin-top: 1em;
 }
 
+/* line 243, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-confirm {
-    background: -webkit-gradient(
-        linear, 
-        left top, 
-        left bottom, 
-        color-stop(0,#00adee), 
-        color-stop(0.2,#00adee), 
-        color-stop(1,#0078a5)
-    );
-    
-    border: solid 1px #0076a3;
-    
-    padding: 1em 0em;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #00adee), color-stop(0.2, #00adee), color-stop(1, #0078a5));
+  border: solid 1px #0076a3;
+  padding: 1em 0em;
 }
 
+/* line 248, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 div.modal-overlay-confirm button {
-    float: right;
-    margin-right: 1em;
-    margin-left: 1em;
+  float: right;
+  margin-right: 1em;
+  margin-left: 1em;
 }
 
-
-/**
-*  Misc visuals
-**/
-
+/* Misc visuals */
 /* Corner radius */
+/* line 257, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-tl {
-    -moz-border-radius-topleft: 0.5em;
-    -webkit-border-top-left-radius: 0.5em;
-    border-top-left-radius: 0.5em;
+  -moz-border-radius-topleft: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  border-top-left-radius: 0.5em;
 }
+
+/* line 262, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-tr {
-    -moz-border-radius-topright: 0.5em;
-    -webkit-border-top-right-radius: 0.5em;
-    border-top-right-radius: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+  border-top-right-radius: 0.5em;
 }
+
+/* line 267, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-bl {
-    -moz-border-radius-bottomleft: 0.5em;
-    -webkit-border-bottom-left-radius: 0.5em;
-    border-bottom-left-radius: 0.5em;
+  -moz-border-radius-bottomleft: 0.5em;
+  -webkit-border-bottom-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
 }
+
+/* line 272, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-br {
-    -moz-border-radius-bottomright: 0.5em;
-    -webkit-border-bottom-right-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+  -moz-border-radius-bottomright: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
+
+/* line 277, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-top {
-    -moz-border-radius-topleft: 0.5em;
-    -webkit-border-top-left-radius: 0.5em;
-    border-top-left-radius: 0.5em;
-    -moz-border-radius-topright: 0.5em;
-    -webkit-border-top-right-radius: 0.5em;
-    border-top-right-radius: 0.5em;
+  -moz-border-radius-topleft: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  border-top-left-radius: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+  border-top-right-radius: 0.5em;
 }
+
+/* line 285, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-bottom {
-    -moz-border-radius-bottomleft: 0.5em;
-    -webkit-border-bottom-left-radius: 0.5em;
-    border-bottom-left-radius: 0.5em;
-    -moz-border-radius-bottomright: 0.5em;
-    -webkit-border-bottom-right-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+  -moz-border-radius-bottomleft: 0.5em;
+  -webkit-border-bottom-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  -moz-border-radius-bottomright: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
+
+/* line 293, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-right {
-    -moz-border-radius-topright: 0.5em;
-    -webkit-border-top-right-radius: 0.5em;
-    border-top-right-radius: 0.5em;
-    -moz-border-radius-bottomright: 0.5em;
-    -webkit-border-bottom-right-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  -moz-border-radius-bottomright: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
+
+/* line 301, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-left {
-    -moz-border-radius-topleft: 0.5em;
-    -webkit-border-top-left-radius: 0.5em;
-    border-top-left-radius: 0.5em;
-    -moz-border-radius-bottomleft: 0.5em;
-    -webkit-border-bottom-left-radius: 0.5em;
-    border-bottom-left-radius: 0.5em;
+  -moz-border-radius-topleft: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  border-top-left-radius: 0.5em;
+  -moz-border-radius-bottomleft: 0.5em;
+  -webkit-border-bottom-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
 }
+
+/* line 309, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .corner-all {
-    -moz-border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  border-radius: 0.5em;
 }
 
-/**
- *  Div-tables
- **/
+/* Div-tables */
+/* line 318, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .table {
-    display: table;
-}
-.table-row {
-    display: table-row;
-}
-.table-cell {
-    display: table-cell;
+  display: table;
 }
 
-/**
- *  Utilities, hacks
- **/
- 
+/* line 321, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+.table-row {
+  display: table-row;
+}
+
+/* line 324, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
+.table-cell {
+  display: table-cell;
+}
+
+/*Utilities, hacks */
+/* line 330, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .clear {
-    clear: both;
+  clear: both;
 }
+
+/* line 333, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .hidden {
-    visibility: hidden;
+  visibility: hidden;
 }
+
+/* line 336, /Users/amywieliczka/izzie/Concert/concertapp/static/css/styles.sass */
 .floatLeft {
-    float: left;
+  float: left;
 }
