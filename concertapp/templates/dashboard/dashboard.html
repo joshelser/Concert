@@ -3,11 +3,17 @@
 {% load extra_template_tags %}
 {% load panels %}
 
-{% block middle %}
+{% block left %}
 
-    {# concert_info and recent events panels #}
+    {# concert_info #}
 
     {% panel 'dashboard/partials/concert_info.html' 'Concert Info' 'concert_info' %}
+
+{% endblock %}
+
+{% block right %}
+
+    {# recent events panels #}
 
     {% panel 'dashboard/partials/recent_events.html' 'Recent Events' 'recent_events' %}
 

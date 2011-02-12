@@ -146,5 +146,7 @@ CSRF_FAILURE_VIEW='concertapp.lib.errorviews.csrf_failure'
 MEDIA_BUNDLES = (
     ('main.css',
         'css/styles.sass',
+        'css/panels.sass',
+        'css/pages.sass'
     ),
 )

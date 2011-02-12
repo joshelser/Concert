@@ -2,23 +2,24 @@
  *  @file styles.sass
  *  Global styles that all pages use. */
 
+
+
 $background: #eeeef3
 $focus: #f8f8fa
 $accent: #2e2e35
 $sugar: #b4b4ba
 
-/*	Resets
- *  ------	*/
 
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, 
-p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, 
-img, ins, q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, 
-fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
+/**	Resets **/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, 
+blockquote, pre, a, abbr, address, cite, code, del, dfn, em, img, ins, 
+q, small, strong, sub, sup, dl, dt, dd, ol, ul, li, fieldset, form, 
+label, legend, table, caption, tbody, tfoot, thead, tr, th, td
     margin: 0
     padding: 0
     border: 0
 
-article, aside, figure, figure img, figcaption, hgroup,
+article, aside, figure, figure img, figcaption, hgroup, 
 footer, header, nav, section 
     display: block
 
@@ -31,9 +32,9 @@ figure
 figure img 
     width: 100%
 
-/**
- *  Typography Presets
- **/
+
+
+/** Typography Presets **/
 h1 
     font-size: 3em
 
@@ -46,10 +47,9 @@ h3
 body 
     font: 12px 'Helvetica', Verdana, Arial, sans-serif
 
-/**
- *  Page layout
- **/
 
+
+/** Page layout **/
 body 
     background: $background
     padding: 0
@@ -62,6 +62,8 @@ div.layout
 
 div.layout_top 
     width: 100%
+    height: 60px
+    margin-top: 20px
 
 div.layout_middle 
     width: 100%
@@ -82,196 +84,86 @@ div.layout_right
     width: 50%
     display: -webkit-box
     -webkit-box-orient: vertical
-
-/**
- *  Panels
- **/
-
-/* This is a panel on the UI, used for many things. */
-div.panel 
-    /*  Need this so the "panel_loader" will display correctly 
-        (see div.panel_loader) */
-    position: relative
     
-    /* Default height and width values (for testing) */
-    min-height: 120px
 
-/* This is the div that shows a loading notification on each panel */
-div.panel_loader 
-    position: absolute
-    width: 100%
-    height: 100%
-    background-color: gray
-    text-align: center
-    opacity: 0
-    z-index: -1
-
-/* This is the actual loading notification (Animation or "Loading...") */
-div.panel_loader_notification 
-    position: relative
-    top: 50%
-    height: 1em
-    margin-top: -0.5em
-    color: white
-
-/* This class is added when the panel loader is to be displayed */
-div.panel_loader_enabled 
-    opacity: 0.7
-    z-index: 9999
-
-
-/**
- *  Page Header.  We use the CSS3 box layout here, for more info:
- *  http://hacks.mozilla.org/2010/04/the-css-3-flexible-box-model/
- *  http://www.w3.org/TR/css3-box/#types
- **/
-div#global_options_panel 
-    width: 100%
-    margin-top: 0
-    -webkit-box-orient: horizontal
-    display: -webkit-box
-
-div#global_options_panel_contents 
-    width: 100%
-    -webkit-box-orient: horizontal
-    display: -webkit-box
-
-div#global_options_panel_left 
-    width: 320
     
-div#global_options_panel_middle 
-    text-align: center
-    width: 320
 
-div#global_options_panel_right 
-    width: 320
-    -webkit-box-pack: end
-    /* Contents (buttons) will also be horizontally spread using the box model */
-    -webkit-box-orient: horizontal
-    display: -webkit-box
-
-div.global_options_panel_button 
-    margin-right: 0.5em
-    margin-left: 0.5em
-    
-    
-/**
- *  Page-specific layout
- **/
-
-/* Settings Page */
-div.create_join_panel 
-    -webkit-box-flex: 4
-    
-div.social_panel 
-    -webkit-box-flex: 1
-    
-div.manage_collections_panel 
-
-div.create_join_widget 
-
-div.collection_info_widget_container 
-
-/* Dashboard */
-div#concert_info_panel
-    -webkit-box-flex: 1
-
-div#recent_events_panel 
-    -webkit-box-flex: 1
-
-ul#recent_events 
-    list-style:inside
-
-/**
- *  Audio list panel
- **/
-
-/**
- *  File widget
- **/
-
+/** File widget **/
 div.file_widget 
     display: table-row
     padding: 0
     margin: 0
-    
+
 div.file_thumb 
     display: table-cell
-    
+
 img.file_thumb_img 
     width: 6em
     height: 3em
-    
+
 div.file_info 
     vertical-align: middle
     display: table-cell
     padding-left: 1em
-    
+
 div.file_actions 
     padding-left: 1em
     vertical-align: middle
     display: table-cell    
-    
-/**
- *  Buttons
- **/
 
+
+
+/** Buttons **/
 button
     cursor: pointer
 
-.button.disabled 
+button.disabled 
     cursor: default
     opacity: 0.5
-    
+
 button.image-button 
     background-color: transparent
     width: 16px
     height: 16px
     border: 0
-    
+
 button.text-button 
     padding: 0.5em
     text-shadow: 0 1px 1px rgba(0,0,0,0.3)
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.2)
-    
+
 button.cross 
     background-image: url('/graphics/icons/cross.png')
-    
+
 button.settings 
     /*    background-image: url('/paths/settings.svg') */
     background-size: 1000%
     background-position: 50% 50%
     height: 50px
     width: 50px
-    
-/**     Large Icon Buttons      **/
 
+
+
+/**     Large Icon Buttons      **/
 /* Container */
 div.large-icon-button 
     height: 60px
     width: 60px
     cursor: pointer
     text-align: center
-    
+
 /* Icon */
 button.large-icon-button-icon 
     height: 40px
     width: 40px
-    
+
 /* Label */
 label.large-icon-button-label 
     cursor: pointer
-    
+
 label.large-icon-button-label.hover 
     text-decoration: underline
-    
-    
-    
-    
-    
-    
-    
-    
+
 
 
 /************************ Modal Overlay Styles ************************/
@@ -284,13 +176,13 @@ label.large-icon-button-label.hover
     background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5))
     background: -moz-linear-gradient(top,  #00adee,  #0078a5)
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5')
-    
+
 button.blue:hover 
     background: #007ead
     background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e))
     background: -moz-linear-gradient(top,  #0095cc,  #00678e)
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e')
-    
+
 button.blue:active 
     color: #80bed6
     background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee))
@@ -299,10 +191,7 @@ button.blue:active
 
 
 
-
-/** 
- *  Overlay modal box
- **/
+/** Overlay modal box **/
 div.modal-overlay 
     outline: 0 !important
     display: none
@@ -361,31 +250,30 @@ div.modal-overlay-confirm button
     margin-right: 1em
     margin-left: 1em
 
-/**
- *  Misc visuals
- **/
 
+
+/**  Misc visuals **/
 /* Corner radius */
 .corner-tl 
     -moz-border-radius-topleft: 0.5em
     -webkit-border-top-left-radius: 0.5em
     border-top-left-radius: 0.5em
-    
+
 .corner-tr 
     -moz-border-radius-topright: 0.5em
     -webkit-border-top-right-radius: 0.5em
     border-top-right-radius: 0.5em
-    
+
 .corner-bl 
     -moz-border-radius-bottomleft: 0.5em
     -webkit-border-bottom-left-radius: 0.5em
     border-bottom-left-radius: 0.5em
-    
+
 .corner-br 
     -moz-border-radius-bottomright: 0.5em
     -webkit-border-bottom-right-radius: 0.5em
     border-bottom-right-radius: 0.5em
-    
+
 .corner-top 
     -moz-border-radius-topleft: 0.5em
     -webkit-border-top-left-radius: 0.5em
@@ -393,7 +281,7 @@ div.modal-overlay-confirm button
     -moz-border-radius-topright: 0.5em
     -webkit-border-top-right-radius: 0.5em
     border-top-right-radius: 0.5em
-    
+
 .corner-bottom 
     -moz-border-radius-bottomleft: 0.5em
     -webkit-border-bottom-left-radius: 0.5em
@@ -424,10 +312,9 @@ div.modal-overlay-confirm button
     border-radius: 0.5em
     
 
-/**
- *  Div-tables
- **/
 
+
+/**  Div-tables **/
 .table 
     display: table
 
@@ -437,10 +324,9 @@ div.modal-overlay-confirm button
 .table-cell 
     display: table-cell
 
-/**
- *  Utilities, hacks
- **/
 
+
+/** Utilities, hacks **/
 .clear 
     clear: both
 

@@ -3,27 +3,23 @@
 {% load extra_template_tags %}
 {% load panels %}
 
-{% block bottom %}
+{% block left %}
 
-    {% block left %}
+    {# Create/join collection and manage collections panels #}
 
-        {# Create/join collection and manage collections panels #}
+    {% panel 'collections/partials/create_join_collection_panel.html' 'Create/Join a Collection' 'create_join' %}
 
-        {% panel 'collections/partials/create_join_collection_panel.html' 'Create/Join a Collection' 'create_join' %}
-
-        {% panel 'collections/partials/manage_admin_collections_panel.html' 'Manage Your Collections' 'manage_admin_collections' %}
+    {% panel 'collections/partials/manage_admin_collections_panel.html' 'Manage Your Collections' 'manage_admin_collections' %}
     
-        {% panel 'collections/partials/manage_member_collections_panel.html' 'Manage Your Memberships' 'manage_member_collections' %}
+    {% panel 'collections/partials/manage_member_collections_panel.html' 'Manage Your Memberships' 'manage_member_collections' %}
 
-        {% panel 'collections/partials/manage_request_collections_panel.html' 'Manage Your Requests' 'manage_request_collections' %}
+    {% panel 'collections/partials/manage_request_collections_panel.html' 'Manage Your Requests' 'manage_request_collections' %}
 
-    {% endblock %}
+{% endblock %}
 
-    {% block right %}
+{% block right %}
 
-        {% panel 'collections/partials/social_panel.html' 'Who else is using Concert?' 'social' %}
-
-    {% endblock %}
+    {% panel 'collections/partials/social_panel.html' 'Who else is using Concert?' 'social' %}
 
 {% endblock %}
 
