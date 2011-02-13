@@ -8,10 +8,9 @@
 {% endcomment %}
 
 {% block middle %}
-    {#  We have an overview waveform viewer panel #}
-    {% panel 'partials/panel.html' 'Overview Waveform' 'overview_waveform' %}
-    {% panel 'partials/panel.html' 'Detail Waveform' 'detail_waveform' %}
-    {% panel 'partials/panel.html' 'Tag Panel' 'tag_list' %}
+    {#  We have two waveform viewer panels #}
+    {% panel 'partials/overview_waveform_panel.html' 'Overview Waveform' 'overview_waveform' %}
+    {% panel 'partials/detail_waveform_panel.html' 'Detail Waveform' 'detail_waveform' %}
 {% endblock %}
 
 {% block left %}
