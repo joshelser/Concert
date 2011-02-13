@@ -506,7 +506,7 @@ class Audio(models.Model):
     #
     #   @throws     audiotools.EncodingError - upon encoding error
     #   @throws     probably other stuff.
-    def init(self, f):
+    def save(self, f):
         # Get original filename of uploaded file
         name = str(f)
         self.name = name
@@ -554,7 +554,7 @@ class Audio(models.Model):
         audioHelpers.toMp3(mp3Input, mp3Output)
         
         # Generate the waveform onto disk
-        self.generate_waveform()
+        self._generate_waveform()
 
         self.save()
         
@@ -610,40 +610,11 @@ class Audio(models.Model):
         if(self.id):
             super(Audio, self).delete()
 
-    def segment(self, name, beginning, end, user):
-        segment = AudioSegment(name = name,
-                               beginning = beginning,
-                               end = end,
-                               creator = user,
-                               audio = self)
-        segment.init()
-        
-        return segment
-
-
-    def segment_and_tag(self, seg_name, beginning, end, tag_name, user):
-        tag, created = Tag.objects.get_or_create(collection = self.collection,
-                                                 name = tag_name,
-                                                 defaults={'creator':user})
-        if created:
-            tag.init()
-
-        segment = AudioSegment(name = seg_name,
-                               beginning = beginning,
-                               end = end,
-                               audio = self,
-                               creator = user)
-        segment.init()
-        segment.tag(tag, user)
-
-        return tag
-
-
     ##
     # Generate all the waveforms for this audio object.  
     #   TODO: transition these audioFormats calls to the new audio library.
     #
-    def generate_waveform(self):
+    def _generate_waveform(self):
         wavPath = os.path.join(MEDIA_ROOT, self.wavfile.name)
         wavName = os.path.split(wavPath)[-1]
         # Create the wav object
