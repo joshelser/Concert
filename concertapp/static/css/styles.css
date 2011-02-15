@@ -176,6 +176,9 @@ button.large-icon-button-icon {
 
 label.large-icon-button-label {
   cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: .75em;
 }
 
 
