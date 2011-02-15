@@ -8,14 +8,15 @@
 {% block panel_content %}
 <div id="global_options_panel_left">
   <h1>Concert</h1>
-  <div class="login_info">
-      Logged in as {{user.username}}.
+  <div id="logout_info">
+      {{user.username}}
+      <a href="/logout">Logout</a>
   </div>
   <!--<h2>{{ page_name }}</h2>-->
 </div>
 
 <div id="global_options_panel_middle">
-  <label for="collection_selector">Organize:</label>
+  <label for="collection_selector">Collections:</label>
   <select id="collection_selector" class="collection_selector">
   </select>
 </div>
@@ -28,9 +29,5 @@
   
   {% large_icon_button 'Upload Audio' 'upload' '/audio/upload' 'Upload audio to a collection' 'global_options_panel_button' %}
   
-  <div class="logout_info">
-      <a href="/logout">Logout</a>
-  </div>
-
 </div>
 {% endblock %}
