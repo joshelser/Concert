@@ -57,6 +57,34 @@ div#global_options_panel_contents {
 
 div#global_options_panel_left {
     width: 300px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: start;
+}
+
+div#global_options_panel_left h1 {
+    font-family: "Geosans Light", "Helvetica", Verdana, Arial, sans-serif;
+    letter-spacing: 1.25em;
+    font-size: 1.5em;
+    font-weight: normal;
+    text-transform: lowercase;
+    display: -webkit-box;
+    -webkit-box-flex: 1;
+}
+
+div#global_options_panel_left div#logout_info {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: .75em;
+    margin-left: 2em;
+    margin-top: 1em;
+    display: -webkit-box;
+    -webkit-box-flex: 1;
+    -webkit-box-align: baseline;
+}
+
+div#global_options_panel_left div#logout_info a{
+    margin-left: 1em;
 }
 
 div#global_options_panel_middle {
@@ -95,8 +123,9 @@ div#overview_waveform_panel_contents {
 div#overview_waveform_panel_top {
     background-color: #2e2e35;
     color: #f8f8fa;
-    width: 900px;
-    height: 60px;
+    width: 898px;
+    height: 58px;
+    border: 1px solid white;
 }
 
 div#overview_waveform_panel_bottom {
@@ -162,7 +191,9 @@ div#detail_waveform_panel_buf_left {
 div#detail_waveform_panel_view {
     background-color: #2e2e35;
     color: #f8f8fa;
-    width: 820px;
+    width: 818px;
+    height: 198px;
+    border: 1px solid white;
 }
 
 div#detail_waveform_panel_buf_right {
@@ -185,9 +216,10 @@ div#detail_waveform_panel_bottom {
 
 div#detail_waveform_panel_tags {
     background-color: #b4b4ba;
-    width: 860px;
-    height: 20px;
+    width: 858px;
+    height: 18px;
     padding: 20px;
+    border: 1px solid white;
 }
 
 span.tags {
