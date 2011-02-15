@@ -438,13 +438,13 @@ class SegmentComment(Comment):
 
 class Audio(models.Model):
     name = models.CharField(max_length = 100)
+    uploader = models.ForeignKey(User)
+    collection = models.ForeignKey('Collection')
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
     mp3file = models.FileField(upload_to = 'audio/')
-    uploader = models.ForeignKey(User)
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
-    collection = models.ForeignKey('Collection')
 
     ###
     #   Do everything necessary when an audio object is first created.
@@ -453,7 +453,11 @@ class Audio(models.Model):
     #
     #   @throws     audiotools.EncodingError - upon encoding error
     #   @throws     probably other stuff.
-    def save(self, f):
+    def save(self, f = None, *args, **kwargs):
+        # if we're updating not initializing
+        if not f:
+            return super(Audio,self).save(*args,**kwargs)
+            
         # Get original filename of uploaded file
         name = str(f)
         self.name = name
@@ -467,9 +471,9 @@ class Audio(models.Model):
         inputFilePath = f.temporary_file_path()
         
         #   Create files with dummy contents but with proper names.
-        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'))
-        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'))
-        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'))
+        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'), save = False)
+        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'), save = False)
+        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'), save = False)
         
         #   Now we have an auto-generated name from Python, and we know where
         #   we should put the converted audio files
@@ -478,15 +482,15 @@ class Audio(models.Model):
         wavInput = f.temporary_file_path()
         # output was determined above
         wavOutput = os.path.join(MEDIA_ROOT, self.wavfile.name)
-        
+
         #   the ogg file will be encoded from the normalized wav file
         oggInput = wavOutput
         oggOutput = os.path.join(MEDIA_ROOT, self.oggfile.name)
-        
+                
         #   and so will the mp3
         mp3Input = wavOutput
         mp3Output = os.path.join(MEDIA_ROOT, self.mp3file.name)
-        
+
         #   now overwrite the dummy files with the actual encodes
         
         # We will first normalize the wav file (convert to proper sample rate,
@@ -503,7 +507,7 @@ class Audio(models.Model):
         # Generate the waveform onto disk
         self._generate_waveform()
 
-        self.save()
+        super(Audio, self).save(*args, **kwargs)
         
         event = AudioUploadedEvent(audio = self, collection = self.collection)
         event.save()

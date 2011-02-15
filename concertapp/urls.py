@@ -1,24 +1,22 @@
+from concertapp.collection.api import CollectionResource, RequestResource 
+from concertapp.event.api import *
+from concertapp.audio.api import AudioResource
+from concertapp.tags.api import TagResource
+from concertapp.users.api import UserResource
 from django.conf import settings
 from django.conf.urls.defaults import *
+from django.contrib import admin
 from django.views.generic.simple import redirect_to
+from tastypie.api import Api
 import django.contrib.auth.views
 import os
-
-from django.contrib import admin
-
-
-from tastypie.api import Api
-
-from concertapp.collection.api import *
-from concertapp.users.api import *
-from concertapp.event.api import *
-from concertapp.tags.api import *
 
 api1 = Api(api_name='1')
 api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
 api1.register(TagResource())
+api1.register(AudioResource())
 
 # Events
 api1.register(EventResource())

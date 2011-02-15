@@ -1,6 +1,4 @@
-
 from concertapp.models import *
-
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpRequest
@@ -13,43 +11,47 @@ import unittest
 #   Here we will test the API for requests (not yet working because authorization)
 #   in tastypie is pooped
 ###
-class RequestTestCase(DjangoTestCase):
+class APITestCase(DjangoTestCase):
+
     def setUp(self):
         self.adminUser = User.objects.create_user('test_user', 'testemail@somewhere.com', 'test_user')
         
         self.collection = Collection.objects.create(name='test_collection', admin=self.adminUser)
         
         self.requestingUser = User.objects.create_user('test_user2', 'testemail2@somewhere.com', 'test_user2')
-        
+
+        self.api_prefix = '/api/1/'
+
         #self.request = self.collection.add_request(self.requestingUser)
 
-    def runTest(self):
+    def testCollection(self):
         
         # login as collection administrator
         resp = self.client.login(username='test_user', password='test_user')
         #self.assertEqual(resp, True)
-        
-
-
 
         # collection administrator should be able to view request
         #resp = self.client.get('/api/1/request/'+str(self.request.id)+'/', data={'format': 'json'})
         # Should be allowed because user2 made the request
         #self.assertEqual(resp.status_code, 200)
 
+    def testTag(self):                
         #############################
-        # Testing Tag functionality #
+        # Testing Tag functionality  #
+        # TODO: Test proper authorization #
         #############################
 
-        api_prefix = '/api/1/'
+
+        # login as collection administrator
+        resp = self.client.login(username='test_user', password='test_user')
         
         # tag not created yet
-        resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
+        resp = self.client.get(os.path.join(self.api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 410) #make sure API doesn't return anything 
         self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
 
         # create a tag
-        resp = self.client.post(os.path.join(api_prefix, "tag/"), 
+        resp = self.client.post(os.path.join(self.api_prefix, "tag/"), 
                       data = '{"name":"new_tag","creator":"/api/1/user/1/","collection":"/api/1/collection/1/"}',
                       content_type = 'application/json')
         self.assertEqual(resp.status_code, 200) #make sure API created tag
@@ -59,21 +61,62 @@ class RequestTestCase(DjangoTestCase):
             self.fail("tag wasn't created")
 
         # try and grab the created tag
-        resp = self.client.get(os.path.join(api_prefix, "tag/1/"))
+        resp = self.client.get(os.path.join(self.api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 200) #make sure API gets the created tag
         
         
         #modify a tag
-        resp = self.client.put(os.path.join(api_prefix, "tag/1/"),
+        old_tag_id = Tag.objects.get(name='new_tag').pk
+        resp = self.client.put(os.path.join(self.api_prefix, "tag/1/"),
                                 data = '{"name":"new_tag_new_name","id":1, "collection":"/api/1/collection/1/","creator":"/api/1/user/1/"}',
                                 content_type = 'application/json')
         self.assertEqual(resp.status_code, 204)
-        self.assertEqual(len(Tag.objects.filter(name = "new_tag")),0)
-        self.assertEqual(len(Tag.objects.filter(name = "new_tag_new_name")),1)
+        self.assertEqual(len(Tag.objects.filter(name = "new_tag", pk = old_tag_id)),0)
+        self.assertEqual(len(Tag.objects.filter(name = "new_tag_new_name", pk = old_tag_id)),1)
                 
 
         #delete a tag
-        resp = self.client.delete(os.path.join(api_prefix, "tag/1/"))
+        resp = self.client.delete(os.path.join(self.api_prefix, "tag/1/"))
         self.assertEqual(resp.status_code, 204)
         self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
+
+    def testAudio(self):
+        # login as collection administrator
+        resp = self.client.login(username='test_user', password='test_user')
+        
+        # audio obj not created yet
+        resp = self.client.get(os.path.join(self.api_prefix, "audio/1/"))
+        self.assertEqual(resp.status_code, 410) #make sure API doesn't return anything 
+        
+        self.assertQuerysetEqual(Audio.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
+
+        # TODO: Until there is a clean, production worthy method for uploading files via REST (tastypie)
+        # creating audio objects will be done non-restfully.
+        resp = self.client.post(os.path.join(self.api_prefix, "audio/"), 
+                                data = "{'garbage':'json'}",
+                                content_type = 'application/json')
+        self.assertEqual(resp.status_code, 405) #make sure POST isn't supported by the API
+        
+        #Create an audio obj through a view 
+        audio_file = open('./test_audio_files/beer.wav')
+        resp = self.client.post('/audio/upload/', data = {'audio':audio_file,'collection_id':1})
+        self.assertEqual(resp.status_code, 200) # audio created
+                                
+        # try and get the created audio obj
+        resp = self.client.get(os.path.join(self.api_prefix, "audio/1/"))
+        self.assertEqual(resp.status_code, 200) #make sure API gets the created audio obj
+
+        #modify an audio obj
+        resp = self.client.put(os.path.join(self.api_prefix, "audio/1/"),
+                                data = '{"name":"new_audio_new_name", "id":1, "collection":"/api/1/collection/1/","uploader":"/api/1/user/1/"}',
+                                content_type = 'application/json')
+        print resp
+        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(len(Audio.objects.filter(name = "new_audio")),0)
+        self.assertEqual(len(Audio.objects.filter(name = "new_audio_new_name")),1)
+
+        #delete an audio obj
+        resp = self.client.delete(os.path.join(self.api_prefix, "audio/1/"))
+        self.assertEqual(resp.status_code, 204)
+        self.assertQuerysetEqual(Audio.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
 
