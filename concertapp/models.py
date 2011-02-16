@@ -1,4 +1,4 @@
-from concertapp.audio import audioFormats, audioHelpers
+from concertapp. import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -323,9 +323,6 @@ class Request(models.Model):
         event.save()
         
         self.delete()
-        
-            
-
 
 class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
@@ -348,9 +345,11 @@ class Tag(models.Model):
             event.save()
  
     def clean(self):
-        from django.core.exceptions import ValidationError
-        if Tag.objects.filter(name = self.name, collection = self.collection):
-            raise ValidationError('Tags must have unique names!')
+        # make sure new tags have unique names 
+        if not Tag.objects.filter(pk=self.pk):
+            from django.core.exceptions import ValidationError
+            if Tag.objects.filter(name = self.name, collection = self.collection):
+                raise ValidationError('Tags must have unique names!')
         
     def delete(self):
         # Get all segments with this tag
@@ -590,4 +589,4 @@ class Audio(models.Model):
 
         # Save the path relative to the media_dir
         self.waveformViewer = viewerImgPath
-        self.waveformEditor = editorImgPath    
+        self.waveformEditor = editorImgPath 
