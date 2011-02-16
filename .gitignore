@@ -8,3 +8,5 @@ concertapp/media/images/*
 !concertapp/media/images/.gitignore
 Concert.tmproj
 *.autosave
+#*
+api_tester.sh
