@@ -203,59 +203,6 @@ class AudioSegment(models.Model):
         from django.core.exceptions import ValidationError
         if AudioSegment.objects.filter(name = self.name, collection = self.collection):
             raise ValidationError('Audio Segments must have unique names!')
-
-
-    #######################################################################################
-    # # Old Functions from when we were doing manipulation in the view instead of the api #
-    # def resegment(self, name, beginning, end, user):                                    #
-    #     return self.audio.segment(name, beginning, end, user)                           #
-    #                                                                                     #
-    #                                                                                     #
-    # def resegment_and_tag(self,seg_name,beggining,end, tag_name, user):                 #
-    #     tag, created = Tag.objects.get_or_create(collection = self.audio.collection,    #
-    #                                                  name = tag_name,                   #
-    #                                                  defaults={'creator':user})         #
-    #     if created:                                                                     #
-    #         tag.init()                                                                  #
-    #                                                                                     #
-    #                                                                                     #
-    #     segment = self.audio.segment(name, beginning, end, user)                        #
-    #     segment.tag(tag, user)                                                          #
-    #                                                                                     #
-    #                                                                                     #
-    # def tag(self, tag_name, user):                                                      #
-    #     tag, created = Tag.objects.get_or_create(name = tag_name,                       #
-    #                                              collection = self.audio.collection,    #
-    #                                              defaults = {'creator':user})           #
-    #     if created:                                                                     #
-    #         tag.init()                                                                  #
-    #                                                                                     #
-    #     event = AudioSegmentTaggedEvent(audio_segment = self,                           #
-    #                                     tag = tag,                                      #
-    #                                     tagging_user = user,                            #
-    #                                     collection = self.audio.collection)             #
-    #     event.save()                                                                    #
-    #                                                                                     #
-    #     self.tags.add(tag)                                                              #
-    #                                                                                     #
-    #     return tag                                                                      #
-    #                                                                                     #
-    # def untag(self, tag):                                                               #
-    #     if type(tag) == str:                                                            #
-    #         try:                                                                        #
-    #             tag = Tag.objects.get(name = tag)                                       #
-    #         except Tag.DoesNotExist:                                                    #
-    #             raise Exception("Tag doesn't exist")                                    #
-    #                                                                                     #
-    #     if tag not in self.tags.all():                                                  #
-    #         raise Exception("Segment isn't tagged with the given tag")                  #
-    #                                                                                     #
-    #     self.tags.remove(tag)                                                           #
-    #     event = AudioSegmentTaggedEvent.objects.get(audio_segment = self,               #
-    #                                                 tag = tag,                          #
-    #                                                 collection = self.audio.collection) #
-    #     event.active=False                                                              #
-    #######################################################################################
         
     def tag_list(self):
         tags = self.tag_set.all()
@@ -491,13 +438,13 @@ class SegmentComment(Comment):
 
 class Audio(models.Model):
     name = models.CharField(max_length = 100)
+    uploader = models.ForeignKey(User)
+    collection = models.ForeignKey('Collection')
     wavfile = models.FileField(upload_to = 'audio/')
     oggfile = models.FileField(upload_to = 'audio/')
     mp3file = models.FileField(upload_to = 'audio/')
-    uploader = models.ForeignKey(User)
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
-    collection = models.ForeignKey('Collection')
 
     ###
     #   Do everything necessary when an audio object is first created.
@@ -506,7 +453,11 @@ class Audio(models.Model):
     #
     #   @throws     audiotools.EncodingError - upon encoding error
     #   @throws     probably other stuff.
-    def init(self, f):
+    def save(self, f = None, *args, **kwargs):
+        # if we're updating not initializing
+        if not f:
+            return super(Audio,self).save(*args,**kwargs)
+            
         # Get original filename of uploaded file
         name = str(f)
         self.name = name
@@ -520,9 +471,9 @@ class Audio(models.Model):
         inputFilePath = f.temporary_file_path()
         
         #   Create files with dummy contents but with proper names.
-        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'))
-        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'))
-        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'))
+        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'), save = False)
+        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'), save = False)
+        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'), save = False)
         
         #   Now we have an auto-generated name from Python, and we know where
         #   we should put the converted audio files
@@ -531,15 +482,15 @@ class Audio(models.Model):
         wavInput = f.temporary_file_path()
         # output was determined above
         wavOutput = os.path.join(MEDIA_ROOT, self.wavfile.name)
-        
+
         #   the ogg file will be encoded from the normalized wav file
         oggInput = wavOutput
         oggOutput = os.path.join(MEDIA_ROOT, self.oggfile.name)
-        
+                
         #   and so will the mp3
         mp3Input = wavOutput
         mp3Output = os.path.join(MEDIA_ROOT, self.mp3file.name)
-        
+
         #   now overwrite the dummy files with the actual encodes
         
         # We will first normalize the wav file (convert to proper sample rate,
@@ -554,9 +505,9 @@ class Audio(models.Model):
         audioHelpers.toMp3(mp3Input, mp3Output)
         
         # Generate the waveform onto disk
-        self.generate_waveform()
+        self._generate_waveform()
 
-        self.save()
+        super(Audio, self).save(*args, **kwargs)
         
         event = AudioUploadedEvent(audio = self, collection = self.collection)
         event.save()
@@ -610,40 +561,11 @@ class Audio(models.Model):
         if(self.id):
             super(Audio, self).delete()
 
-    def segment(self, name, beginning, end, user):
-        segment = AudioSegment(name = name,
-                               beginning = beginning,
-                               end = end,
-                               creator = user,
-                               audio = self)
-        segment.init()
-        
-        return segment
-
-
-    def segment_and_tag(self, seg_name, beginning, end, tag_name, user):
-        tag, created = Tag.objects.get_or_create(collection = self.collection,
-                                                 name = tag_name,
-                                                 defaults={'creator':user})
-        if created:
-            tag.init()
-
-        segment = AudioSegment(name = seg_name,
-                               beginning = beginning,
-                               end = end,
-                               audio = self,
-                               creator = user)
-        segment.init()
-        segment.tag(tag, user)
-
-        return tag
-
-
     ##
     # Generate all the waveforms for this audio object.  
     #   TODO: transition these audioFormats calls to the new audio library.
     #
-    def generate_waveform(self):
+    def _generate_waveform(self):
         wavPath = os.path.join(MEDIA_ROOT, self.wavfile.name)
         wavName = os.path.split(wavPath)[-1]
         # Create the wav object

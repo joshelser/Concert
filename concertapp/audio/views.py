@@ -70,55 +70,45 @@ def upload_audio(request):
     user = request.user
     
     username = user.username
-    
+
     if request.method == 'POST':
         # The id for this upload (we will use this at the end)
-        #upload_id = request.POST['upload_id']
+        # upload_id = request.POST['upload_id']
         
         # The file being uploaded
-        f = request.FILES['audio']
-        
-        
+        f = request.FILES['audio']        
+
+
         # The collection that this audio object is to be associated with.
         try:
             col = Collection.objects.get(id = request.POST['collection_id'])
         except ObjectDoesNotExist, e:
-            return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')
-
-        
+            return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')        
         
         #   new audio object
         audio = Audio(uploader = user, collection=col)
 
-        
         try:
             #   initialize audio object (this will take a while as we have to encode)
-            audio.init(f)
+            audio.save(f)
         except audiotools.UnsupportedFile, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('Error: Unsupported file type.', mimetype='text/plain')
+            return HttpResponse('Error: Unsupported file type.', mimetype='text/plain', status = 500)
         except audiotools.PCMReaderError, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('Error reading file.', mimetype='text/plain')
+            return HttpResponse('Error reading file.', mimetype='text/plain', status = 500)
         except IOError, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('An error occured while file handling: '+str(e), mimetype='text/plain')
+            return HttpResponse('An error occured while file handling: '+str(e), mimetype='text/plain', status = 500)
         except Exception, e:
             audio.delete()
-            return HttpResponse('Error: '+str(e), mimetype='text/plain')
-            
-            
-            
-        
-                        
-        return HttpResponse('success', mimetype='text/plain')
-        
-        
+            return HttpResponse('Error: '+str(e), mimetype='text/plain', status = 500)
 
-        
+        return HttpResponse('success', mimetype='text/plain', status = 200)
+                
     else :        
         return TemplateResponse(request, 'audio/upload_audio.html', {
             'page_name': 'Upload Audio',
