@@ -193,16 +193,24 @@ class AudioSegment(models.Model):
     def save(self,*args, **kwargs):
         self.full_clean()
 
-        super(Request, self).save(*args, **kwargs)
-
+        new = False
         if not self.id or not AudioSegment.objects.filter(pk=self.id):
+            new = True
+
+        super(AudioSegment, self).save(*args, **kwargs)
+
+        if new:
             event = AudioSegmentCreatedEvent(audio_segment = self, collection = self.audio.collection)
             event.save()
+            
 
     def clean(self):
-        from django.core.exceptions import ValidationError
-        if AudioSegment.objects.filter(name = self.name, collection = self.collection):
-            raise ValidationError('Audio Segments must have unique names!')
+        # if the audio segment is new, make sure it has a unique name (relative to the other segments
+        # in the collection
+        if not AudioSegment.objects.filter(pk=self.id):    
+            from django.core.exceptions import ValidationError
+            if AudioSegment.objects.filter(name = self.name, audio__collection = self.audio.collection):
+                raise ValidationError('Audio Segments must have unique names!')
         
     def tag_list(self):
         tags = self.tag_set.all()

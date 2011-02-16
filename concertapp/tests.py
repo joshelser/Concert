@@ -25,7 +25,6 @@ class APITestCase(DjangoTestCase):
         #self.request = self.collection.add_request(self.requestingUser)
 
     def testCollection(self):
-        
         # login as collection administrator
         resp = self.client.login(username='test_user', password='test_user')
         #self.assertEqual(resp, True)
@@ -40,7 +39,6 @@ class APITestCase(DjangoTestCase):
         # Testing Tag functionality  #
         # TODO: Test proper authorization #
         #############################
-
 
         # login as collection administrator
         resp = self.client.login(username='test_user', password='test_user')
@@ -119,4 +117,55 @@ class APITestCase(DjangoTestCase):
         resp = self.client.delete(os.path.join(self.api_prefix, "audio/1/"))
         self.assertEqual(resp.status_code, 204)
         self.assertQuerysetEqual(Audio.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
+
+
+    def testAudioSegment(self):                
+        #############################
+        # Testing Tag functionality  #
+        # TODO: Test proper authorization #
+        #############################
+
+
+        # login as collection administrator
+        resp = self.client.login(username='test_user', password='test_user')
+        
+        # audio segment not created yet
+        resp = self.client.get(os.path.join(self.api_prefix, "audiosegment/1/"))
+        self.assertEqual(resp.status_code, 410) #make sure API doesn't return anything 
+        self.assertQuerysetEqual(Tag.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
+
+
+        # create an audio obj for the to-be audio segment
+        audio_file = open('./test_audio_files/beer.wav')
+        resp = self.client.post('/audio/upload/', data = {'audio':audio_file,'collection_id':1})
+        audio_id = Audio.objects.get(name = 'beer.wav').pk
+
+        # create an audiosegment
+        resp = self.client.post(os.path.join(self.api_prefix, "audiosegment/"), 
+                                data = '{"name":"new_audio_segment","creator":"/api/1/user/1/","beginning":"1","end":"5", "audio":"/api/1/audio/' + str(audio_id) + '/"}',
+                                content_type = 'application/json')
+        self.assertEqual(resp.status_code, 200) #make sure API created audio segment
+        try:
+            AudioSegment.objects.get(name = "new_audio_segment")
+        except AudioSegment.DoesNotExist:
+            self.fail("audiosegment wasn't created")
+
+        # try and grab the created tag
+        resp = self.client.get(os.path.join(self.api_prefix, "audiosegment/1/"))
+        self.assertEqual(resp.status_code, 200) #make sure API gets the created audiosegment
+   
+        #modify a audio segment
+        old_audiosegment_id = AudioSegment.objects.get(name='new_audio_segment').pk
+        resp = self.client.put(os.path.join(self.api_prefix, "audiosegment/1/"),
+                               data = '{"name":"new_audio_segment_new_name","creator":"/api/1/user/1/","beginning":"1","end":"5","audio":"/api/1/audio/1/"}',
+                               content_type = 'application/json')
+        print resp
+        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(len(AudioSegment.objects.filter(name = "new_audio_segment", pk = old_audiosegment_id)),0)
+        self.assertEqual(len(AudioSegment.objects.filter(name = "new_audio_segment_new_name", pk = old_audiosegment_id)),1)
+                
+        #delete a audio segment
+        resp = self.client.delete(os.path.join(self.api_prefix, "audiosegment/1/"))
+        self.assertEqual(resp.status_code, 204)
+        self.assertQuerysetEqual(AudioSegment.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
 

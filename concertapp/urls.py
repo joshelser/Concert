@@ -3,6 +3,7 @@ from concertapp.event.api import *
 from concertapp.audio.api import AudioResource
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
+from concertapp.audiosegments.api import AudioSegmentResource
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
@@ -17,6 +18,7 @@ api1.register(UserResource())
 api1.register(RequestResource())
 api1.register(TagResource())
 api1.register(AudioResource())
+api1.register(AudioSegmentResource())
 
 # Events
 api1.register(EventResource())
