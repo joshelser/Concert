@@ -27,12 +27,37 @@ class APITestCase(DjangoTestCase):
     def testCollection(self):
         # login as collection administrator
         resp = self.client.login(username='test_user', password='test_user')
+        
+        # Make sure administrator is a member of collection
+        self.assertTrue(self.adminUser in self.collection.users.all())
+        
+        
         #self.assertEqual(resp, True)
 
         # collection administrator should be able to view request
         #resp = self.client.get('/api/1/request/'+str(self.request.id)+'/', data={'format': 'json'})
         # Should be allowed because user2 made the request
         #self.assertEqual(resp.status_code, 200)
+        
+        # Make sure we can access user list through nested resource
+        resp = self.client.get(self.api_prefix+'collection/'+str(self.collection.pk)+'/users/')
+        self.assertEqual(resp.status_code, 200)
+    
+        # Test adding a user through the nested resource
+        newUser = User.objects.create_user('test_user3', 'testemail3@somewhere.com', 'test_user3')
+        resp = self.client.post(self.api_prefix+'collection/'+str(self.collection.pk)+'/users/',
+            json.dumps({
+                'id': str(newUser.pk), 
+                'username': newUser.username
+            }), content_type = 'application/json')
+        self.assertEqual(resp.status_code, 200) # Make sure user was added to list
+        
+        # Double make sure user was added to list by checking collection's users
+        self.collection = Collection.objects.get(pk = self.collection.pk)
+        print "self.collection.users.all():\n"+str(self.collection.users.all())
+        self.assertTrue(newUser in self.collection.users.all())
+        
+        
 
     def testTag(self):                
         #############################

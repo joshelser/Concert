@@ -242,8 +242,16 @@ class Collection(models.Model):
     #   When a new collection is created, make CreateCollectionEvent.
     ###
     def save(self, *args, **kwargs):
+        # If collection is new
         if not self.pk:
             super(Collection, self).save(*args, **kwargs)
+
+            # If admin is not in users list
+            if self.admin not in self.users.all():
+                # Add them in there
+                self.users.add(self.admin)
+
+            # Create event
             CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
         else:
             super(Collection, self).save(*args, **kwargs)

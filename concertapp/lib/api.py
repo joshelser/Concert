@@ -4,6 +4,8 @@ from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.bundle import Bundle
 from tastypie.http import *
 from tastypie.resources import ModelResource, Resource
+from tastypie import fields
+from django.conf.urls.defaults import url
 from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
 import sys
 
@@ -93,4 +95,23 @@ class MyResource(ModelResource):
         )
         resp['location'] = self.get_resource_uri(updated_bundle)
         resp.code = 201
-        return resp                              
+        return resp        
+        
+    ###
+    #   This helps us with nested resources.
+    #   source: https://gist.github.com/809993
+    ###                      
+    def override_urls(self):
+        urls = []
+
+        for name, field in self.fields.items():
+            if isinstance(field, fields.ToManyField):
+                print field.to_class
+                resource = r"^(?P<resource_name>{resource_name})/(?P<{related_name}>.+)/{related_resource}/$".format(
+                    resource_name=self._meta.resource_name, 
+                    related_name=field.related_name,
+                    related_resource=field.attribute,
+                    )
+                resource = url(resource, field.to_class().wrap_view('get_list'), name="api_dispatch_detail")
+                urls.append(resource)
+        return urls
