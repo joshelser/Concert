@@ -83,7 +83,7 @@ def upload_audio(request):
         try:
             col = Collection.objects.get(id = request.POST['collection_id'])
         except ObjectDoesNotExist, e:
-            return HttpResponse('Error: Invalid collection chosen.', mimetype='text/plain')        
+            raise Exception('Invalid collection chosen.')
         
         #   new audio object
         audio = Audio(uploader = user, collection=col)
@@ -94,20 +94,20 @@ def upload_audio(request):
         except audiotools.UnsupportedFile, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('Error: Unsupported file type.', mimetype='text/plain', status = 500)
+            raise Exception('Unsupported file type.')
         except audiotools.PCMReaderError, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('Error reading file.', mimetype='text/plain', status = 500)
+            raise Exception('Error reading file.')
         except IOError, e:
             # Delete audio object that was partially created.
             audio.delete()
-            return HttpResponse('An error occured while file handling: '+str(e), mimetype='text/plain', status = 500)
+            raise Exception('An error occured while file handling: '+str(e))
         except Exception, e:
             audio.delete()
-            return HttpResponse('Error: '+str(e), mimetype='text/plain', status = 500)
+            raise Exception(str(e))
 
-        return HttpResponse('success', mimetype='text/plain', status = 200)
+        return HttpResponse(status = 200)
                 
     else :        
         return TemplateResponse(request, 'audio/upload_audio.html', {

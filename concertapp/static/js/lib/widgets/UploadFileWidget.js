@@ -112,17 +112,17 @@ var UploadFileWidget = Widget.extend({
             url: 'get_id/', 
             success: function(me) {
                 return function(data, status, xhr) {
-                    if(typeof(data.status) != 'undefined' && data.status == 'success') {
-                        /* We have a unique upload_id now. */
-                        me.upload_id = data.upload_id;
+                    /* We have a unique upload_id now. */
+                    me.upload_id = data.upload_id;
 
-                        /* Move forward */
-                        me.uploadFile();
-                    }
-                    else {
-                        me.handleUploadError(data);
-                    }
+                    /* Move forward */
+                    me.uploadFile();
                 };
+            }(this),
+            error: function(me){
+                return function(data, status) {
+                    me.handleUploadError(data);
+                }
             }(this)
         });
     },
@@ -164,22 +164,20 @@ var UploadFileWidget = Widget.extend({
             },
             success: function(me) {
                 return function(data, status, xhr) {
-                    if(data.match('<pre style="word-wrap: break-word; white-space: pre-wrap;">success</pre>')) {
+                    /* The file was hopefully uploaded */
+                    me.encodingWaiting = false;
 
-                        /* The file was hopefully uploaded */
-                        me.encodingWaiting = false;
-
-                        com.concertsoundorganizer.notifier.alert({
-                            title: 'Success!', 
-                            content: 'Your file uploaded successfully.', 
-                        });
-
-                    }
-                    else {
-                        me.handleUploadError(data);
-                    }
+                    com.concertsoundorganizer.notifier.alert({
+                        title: 'Success!', 
+                        content: 'Your file uploaded successfully.', 
+                    });
                 };
-            }(this)
+            }(this),
+            error: function(me) {
+                return function(data, status) {
+                    me.handleUploadError(data);
+                }
+            }(this) 
         });
 
         this.startProgressTracking();
