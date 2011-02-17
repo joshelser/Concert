@@ -18,6 +18,6 @@ DashboardPage.prototype = new LoggedInPage();
 DashboardPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
+    this.modelManager.loadData();
 
-    this.initData();
 }
