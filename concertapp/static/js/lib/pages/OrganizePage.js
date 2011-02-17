@@ -18,8 +18,8 @@ OrganizePage.prototype = new LoggedInPage();
 OrganizePage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
 
-    /*  Create waveform viewer panel */
-    this.viewerPanel = new WaveformViewerPanel({
+    /*  Create waveform overview panel */
+    this.viewerPanel = new OverviewWaveformPanel({
         page: this, 
         container: $('#waveform_viewer_panel'), 
     });
@@ -33,4 +33,6 @@ OrganizePage.prototype.init = function(params) {
         segmentWidgetTemplate: $('#segment_widget_template')
     });
     
+    
+    this.modelManager.loadData();
 }

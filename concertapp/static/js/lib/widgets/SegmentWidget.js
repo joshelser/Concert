@@ -7,16 +7,10 @@
 /**
  *  This is the widget associated with an audio segment on the organize page.
  *	@class
+ *  @extends    Widget
  **/
-function SegmentWidget(params) {
-    if(params) {
-        this.init(params);
-    }
-}
-SegmentWidget.prototype = new Widget();
-
-SegmentWidget.prototype.init = function(params) {
-    Widget.prototype.init.call(this, params);
-
-    
-}
+var SegmentWidget = Widget.extend({
+    initialize: function() {
+        
+    }, 
+});

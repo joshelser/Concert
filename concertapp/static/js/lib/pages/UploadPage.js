@@ -17,7 +17,7 @@ UploadPage.prototype = new LoggedInPage();
 
 UploadPage.prototype.init = function(params) {
     LoggedInPage.prototype.init.call(this, params);
-
+    
     /**
      *  Create UploadPanel
      **/
@@ -25,5 +25,9 @@ UploadPage.prototype.init = function(params) {
         page: this, 
         el: $('#upload_audio_panel')
     });
+    
+    
+    this.modelManager.loadData();
+    
     
 }
