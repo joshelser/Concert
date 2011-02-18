@@ -41,7 +41,7 @@ class APITestCase(DjangoTestCase):
         
         # Make sure we can access user list through nested resource
         resp = self.client.get(self.api_prefix+'collection/'+str(self.collection.pk)+'/users/')
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200, 'Can\'t view list of users through nested resource.')
     
         # Test adding a user through the nested resource
         newUser = User.objects.create_user('test_user3', 'testemail3@somewhere.com', 'test_user3')
@@ -50,7 +50,7 @@ class APITestCase(DjangoTestCase):
                 'id': str(newUser.pk), 
                 'username': newUser.username
             }), content_type = 'application/json')
-        self.assertEqual(resp.status_code, 200) # Make sure user was added to list
+        self.assertEqual(resp.status_code, 200, 'Can\'t modify nested resource.') # Make sure user was added to list
         
         # Double make sure user was added to list by checking collection's users
         self.collection = Collection.objects.get(pk = self.collection.pk)

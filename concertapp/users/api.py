@@ -5,14 +5,16 @@
 from tastypie.resources import ModelResource
 from concertapp.models import *
 from django.contrib.auth.models import User
+from concertapp.lib.api import ConcertAuthorization, DjangoAuthentication
 
 from concertapp.collection.api import *
 
 class UserResource(MyResource):
     class Meta:
         queryset = User.objects.all()
+        authentication = DjangoAuthentication()
+        authorization = ConcertAuthorization()
         fields = ['id', 'username',]
-        allowed_methods = ['get']
 
 ###
 #   This resource is for a single user.

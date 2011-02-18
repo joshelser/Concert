@@ -5,7 +5,7 @@ from tastypie.bundle import Bundle
 from tastypie.http import *
 from tastypie.resources import ModelResource, Resource
 from tastypie import fields
-from django.conf.urls.defaults import url
+from django.conf.urls.defaults import *
 from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
 import sys
 
@@ -106,12 +106,17 @@ class MyResource(ModelResource):
 
         for name, field in self.fields.items():
             if isinstance(field, fields.ToManyField):
-                print field.to_class
+                # instantiate the sub resource
+                #subresource = field.to_class()
+
                 resource = r"^(?P<resource_name>{resource_name})/(?P<{related_name}>.+)/{related_resource}/$".format(
                     resource_name=self._meta.resource_name, 
                     related_name=field.related_name,
                     related_resource=field.attribute,
                     )
-                resource = url(resource, field.to_class().wrap_view('get_list'), name="api_dispatch_detail")
+                resource = url(resource, field.to_class().wrap_view('dispatch_list'), name="api_dispatch_detail")
                 urls.append(resource)
+                
+                # Need to do something like this?
+#                urls.append((r'^(?P<resource_name>'+self._meta.resource_name+')/', include(subresource.urls)))
         return urls
