@@ -189,6 +189,7 @@ class AudioSegment(models.Model):
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
     audio = models.ForeignKey('Audio')
     creator = models.ForeignKey(User)
+    collection = models.ForeignKey('Collection')
 
     def save(self,*args, **kwargs):
         self.full_clean()

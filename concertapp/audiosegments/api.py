@@ -40,3 +40,23 @@ class AudioSegmentResource(MyResource):
         authorization = AudioSegmentAuthorization()
         
         queryset = AudioSegment.objects.all()
+
+###
+#   A resource for audio segments from a single collection
+###        
+class CollectionAudioSegmentResource(AudioSegmentResource):
+    
+    class Meta(AudioSegmentResource.Meta):
+        collection = None
+        
+    def set_collection(self, collection):
+        self._meta.collection = collection
+        
+    ###
+    #   Only retrieve audio segments for a specific collection
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        if not self._meta.collection:
+            raise Exception('You must call set_collection on this resource first')
+            
+        return super(CollectionAudioSegmentResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))

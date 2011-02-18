@@ -30,7 +30,7 @@ class AudioAuthorization(ConcertAuthorization):
 
 class AudioResource(MyResource):
     uploader = fields.ForeignKey(UserResource, 'uploader', full=True)
-    collection = fields.ForeignKey(CollectionResource, "collection", full = True)
+    collection = fields.ForeignKey(CollectionResource, "collection")
 
     class Meta:
         authentication = DjangoAuthentication()
@@ -41,3 +41,29 @@ class AudioResource(MyResource):
         allowed_methods = ['get','put','delete']
     
         excludes = ['wavfile','oggfile','mp3file','waveformViewer','waveformEditor']
+
+###
+#   Only retrieve audio objects from a single collection.  Used for bootstrapping.
+###
+class CollectionAudioResource(AudioResource):
+    
+    class Meta(AudioResource.Meta):
+        collection = None
+    
+    def set_collection(self, collection):
+        self._meta.collection = collection
+    
+    ###
+    #   Return only audio objects for a specific collection.
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        if not self._meta.collection:
+            raise Exception('Must call set_collection before using this resource.')
+            
+        return super(CollectionAudioResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))
+        
+
+
+
+
+        
