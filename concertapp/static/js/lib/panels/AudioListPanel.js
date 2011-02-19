@@ -64,14 +64,13 @@ var AudioListPanel = Panel.extend({
         /* temporary frag for dom additions */
         var frag = document.createDocumentFragment();
         
-                
         this.files.each(function(fileWidgetTemplate, panel, frag) {
             return function(obj) {
                 /* Create a file widget */
                 var widget = new FileWidget({
                     template: fileWidgetTemplate, 
                     model: obj, 
-                    panel: panel 
+                    panel: panel,
                 });
                 
                 frag.appendChild(widget.el);

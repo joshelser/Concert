@@ -15,10 +15,8 @@ var FileWidget = Widget.extend({
     initialize: function() {
         Widget.prototype.initialize.call(this);
 
-        var params = this.options;
+        var params = this.options;        
         
-        
-
         _.bindAll(this, "render");
         this.render();
     },
@@ -26,6 +24,15 @@ var FileWidget = Widget.extend({
         Widget.prototype.render.call(this);
         
         return this;
-    }
+    },
+    events: {
+        'click': 'select_file'
+    }, 
+    /**
+     *  This is called when this file was selected in the list.
+     **/
+    select_file: function() {
+        com.concertsoundorganizer.modelManager.select_audio({files: [this.model]});
+    }, 
 });
 

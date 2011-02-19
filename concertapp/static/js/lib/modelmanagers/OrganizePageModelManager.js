@@ -50,6 +50,12 @@ OrganizePageModelManager.prototype.init = function(params) {
     same reason as above */
     this.collectionAudioSegments = new AudioSegmentSet;
     
+    /* Here we will store the audio segments and files that are selected (from the
+    audio list panel).  Currently only one segment/file can be selected at once, so 
+    the total cardinality of these sets will be 1. */
+    this.selectedAudioSegments = new AudioSegmentSet;
+    this.selectedAudioFiles = new AudioFileSet;
+    
 };
 
 OrganizePageModelManager.prototype.loadData = function() {
@@ -62,4 +68,24 @@ OrganizePageModelManager.prototype.loadData = function() {
     
     this.collectionAudioSegments.refresh(dataToLoad.segmentData);
     dataToLoad.segmentData = null;
+};
+
+/**
+ *  Use this when files are to be selected on the user interface
+ **/
+OrganizePageModelManager.prototype.select_audio = function(params) {
+    var files = params.files;
+    if(typeof(files) == 'undefined') {
+        files = [];
+    }
+    
+    var segments = params.segments;
+    if(typeof(segments) == 'undefined') {
+        segments = [];
+    }
+    
+    /* remove previously selected segments and select new ones */
+    this.selectedAudioSegments.refresh(segments, {silent: true});
+    /* Remove previously selected files and select new ones */
+    this.selectedAudioFiles.refresh(files);
 };

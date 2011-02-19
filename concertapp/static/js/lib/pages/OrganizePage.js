@@ -20,10 +20,18 @@ OrganizePage.prototype.init = function(params) {
     
     var modelManager = this.modelManager;
     
-    /*  Create waveform overview panel */
+    /*  Create waveform overview panel 
     this.viewerPanel = new OverviewWaveformPanel({
         page: this, 
         container: $('#waveform_viewer_panel'), 
+    });*/
+    
+    /* Create waveform detail panel */
+    this.detailPanel = new DetailWaveformPanel({
+        page: this, 
+        el: $('#detail_waveform_panel'),
+        selectedAudioSegments: modelManager.selectedAudioSegments,
+        selectedAudioFiles: modelManager.selectedAudioFiles 
     });
     
     
@@ -32,7 +40,7 @@ OrganizePage.prototype.init = function(params) {
         page: this, 
         el: $('#audio_list_panel'),
         files: modelManager.collectionAudioFiles,
-        segments: modelManager.collectionAudioSegments 
+        segments: modelManager.collectionAudioSegments
     });
 
     
