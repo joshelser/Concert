@@ -12,10 +12,10 @@ from tastypie.http import *
 ###
 #   Make sure that the user who is trying to modify the board is the administrator.
 ###
-class AudioAuthorization(ConcertAuthorization):
+class AudioFileAuthorization(ConcertAuthorization):
     def is_authorized(self, request, object=None):
         
-        if super(AudioAuthorization, self).is_authorized(request, object):
+        if super(AudioFileAuthorization, self).is_authorized(request, object):
             
             #   If there is an object to authorize
             if object:
@@ -28,13 +28,13 @@ class AudioAuthorization(ConcertAuthorization):
         else:
             return False
 
-class AudioResource(MyResource):
+class AudioFileResource(MyResource):
     uploader = fields.ForeignKey(UserResource, 'uploader', full=True)
     collection = fields.ForeignKey(CollectionResource, "collection")
 
     class Meta:
         authentication = DjangoAuthentication()
-        authorization = AudioAuthorization()
+        authorization = AudioFileAuthorization()
         
         queryset = Audio.objects.all()        
 
@@ -45,9 +45,9 @@ class AudioResource(MyResource):
 ###
 #   Only retrieve audio objects from a single collection.  Used for bootstrapping.
 ###
-class CollectionAudioResource(AudioResource):
+class CollectionAudioFileResource(AudioFileResource):
     
-    class Meta(AudioResource.Meta):
+    class Meta(AudioFileResource.Meta):
         collection = None
     
     def set_collection(self, collection):
@@ -60,7 +60,7 @@ class CollectionAudioResource(AudioResource):
         if not self._meta.collection:
             raise Exception('Must call set_collection before using this resource.')
             
-        return super(CollectionAudioResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))
+        return super(CollectionAudioFileResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))
         
 
 

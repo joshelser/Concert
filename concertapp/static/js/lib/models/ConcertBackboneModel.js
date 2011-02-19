@@ -132,6 +132,17 @@ var ConcertBackboneModel = Backbone.Model.extend({
          var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
          
          return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
-     }
+     },
+     
+     url: function() {
+         var base = this.base_url;
+         var id = this.get('id');
+         if(id) {
+             return base+id+'/';
+         }
+         else {
+             return base;
+         }
+     },
     
 });

@@ -36,3 +36,7 @@ OrganizePage.prototype.init = function(params) {
     
     this.modelManager.loadData();
 }
+
+OrganizePage.prototype.createModelManager = function(params) {
+    return new OrganizePageModelManager(params);
+};

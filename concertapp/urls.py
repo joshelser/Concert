@@ -1,6 +1,6 @@
 from concertapp.collection.api import CollectionResource, RequestResource 
 from concertapp.event.api import *
-from concertapp.audio.api import AudioResource
+from concertapp.audio.api import AudioFileResource
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
 from concertapp.audiosegments.api import AudioSegmentResource
@@ -17,7 +17,7 @@ api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
 api1.register(TagResource())
-api1.register(AudioResource())
+api1.register(AudioFileResource())
 api1.register(AudioSegmentResource())
 
 # Events

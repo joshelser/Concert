@@ -30,16 +30,7 @@ var Collection = ConcertBackboneModel.extend({
             }
         ]
     },
-    url: function() {
-        var base = '/api/1/collection/';
-        var id = this.get('id');
-        if(id) {
-            return base+id+'/';
-        }
-        else {
-            return base;
-        }
-    },
+    base_url: '/api/1/collection/',
     name: 'Collection',
     /**
      *  When a user wants to join a collection.

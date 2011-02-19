@@ -36,7 +36,7 @@ from concertapp.audiosegments.api import *
 @user_is_member_and_collection_exists
 def organize_collection(request, collection_id, col, user):
     
-    audioResource = CollectionAudioResource()
+    audioResource = CollectionAudioFileResource()
     audioResource.set_collection(col)
     
     segmentResource = CollectionAudioSegmentResource()

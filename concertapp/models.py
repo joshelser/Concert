@@ -187,7 +187,7 @@ class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
-    audio = models.ForeignKey('Audio')
+    audioFile = models.ForeignKey('Audio')
     creator = models.ForeignKey(User)
     collection = models.ForeignKey('Collection')
 
