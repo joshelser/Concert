@@ -27,30 +27,8 @@
     {# and some client-side templates #}
     <script id="file_widget_template" type="text/x-jquery-tmpl">
         {% verbatim %}
-        <div id="file_widget-${id}" class="file_widget">
-            <div id="file_thumb-${id}" class="file_thumb">
-                <img src="${waveformViewer}" id="file_thumb_img-${id}" class="file_thumb_img"/>                
-            </div>
-            <div id="file_info-${id}" class="file_info">
-                <div id="file_name-${id}" class="file_name">
-                    ${name}
-                </div>
-                <div id="file_uploader-${id}" class="file_uploader">
-                    by ${uploader.username}
-                </div>
-                <div id="file_segments-${id}" class="file_segments">
-                    {{if segments.length}}
-                        Segments: <div id="file_segments_list-${id}" class="file_segments_list">
-                            {{each(i, segment) segments}}
-                                ${segment.name}
-                            {{/each}}
-                        </div>
-                    {{/if}}
-                </div>                
-            </div>
-            <div id="file_actions-${id}" class="file_actions">
-                buttons here
-            </div>
+        <div class="file_widget">
+            ${name}
         </div>
         {% endverbatim %}
     </script>

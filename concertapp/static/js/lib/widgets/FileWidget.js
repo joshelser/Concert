@@ -23,6 +23,7 @@ var FileWidget = Widget.extend({
         this.render();
     },
     render: function() {
+        Widget.prototype.render.call(this);
         
         return this;
     }

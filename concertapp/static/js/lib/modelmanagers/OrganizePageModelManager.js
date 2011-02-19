@@ -57,7 +57,7 @@ OrganizePageModelManager.prototype.loadData = function() {
     
     var dataToLoad = this._dataToLoad;
     
-    this.collectionAudioFiles.refresh(dataToLoad.fileData);
+    this.collectionAudioFiles.refresh(dataToLoad.fileData, {silent: true});
     dataToLoad.fileData = null;
     
     this.collectionAudioSegments.refresh(dataToLoad.segmentData);
