@@ -222,6 +222,40 @@ div#detail_waveform_panel_tags {
     border: 1px solid white;
 }
 
+div#audiolist_panel_contents {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+div.file_widget {
+    width: 408px;
+    height: 70px;
+    border: 1px solid #000000;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    padding: 5px;
+}
+
+div.file_widget_icon {
+    width: 78px;
+    height: 68px;
+    border: 1px solid #000000;
+}
+
+div.file_widget_info {
+    width: 315px;
+    height: 70px;
+    padding-left: 5px;
+}
+
+div#create_join_panel, div#manage_admin_collections_panel, div#manage_member_collections_panel, div#manage_request_collections_panel {
+    height: 100px;
+}
+
+div#create_join_input_container {
+    align: center;
+}
+
 span.tags {
     text-transform: uppercase;
     font-weight: bold;

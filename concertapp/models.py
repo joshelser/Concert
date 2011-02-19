@@ -462,6 +462,7 @@ class Audio(models.Model):
     mp3file = models.FileField(upload_to = 'audio/')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
+#    duration = models.DecimalField(max_digits = 8, decimal_places = 2)
 
     ###
     #   Do everything necessary when an audio object is first created.

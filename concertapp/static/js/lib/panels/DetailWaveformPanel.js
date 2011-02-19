@@ -39,6 +39,26 @@ var DetailWaveformPanel = Panel.extend({
         }
         this.topLeftContainer = topLeftContainer;
         
+        /* The template for the top right of the panel */
+        var topRightFileTemplate = $('#detail_waveform_top_right_file_template');
+        if(typeof(topRightFileTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_right_file_template\') is undefined');
+        }
+        else if(topRightFileTemplate.length == 0) {
+            throw new Error('topRightFileTemplate not found');
+        }
+        this.topRightFileTemplate = topRightFileTemplate;
+        
+        /* The container for the top right content */
+        var topRightContainer = $('#detail_waveform_panel_top_right');
+        if(typeof(topRightContainer) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_top_right\') is undefined');
+        }
+        else if(topRightContainer.length == 0) {
+            throw new Error('topRightContainer not found');
+        }
+        this.topRightContainer = topRightContainer;
+        
         /* The model manager's selected files */
         var selectedAudioFiles = params.selectedAudioFiles;
         if(typeof(selectedAudioFiles) == 'undefined') {
@@ -75,7 +95,14 @@ var DetailWaveformPanel = Panel.extend({
         }
         else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
             /* Load the top left content with our audio file */
-            this.topLeftContainer.html(this.topLeftFileTemplate.tmpl(selectedAudioFiles.first().toJSON()));
+            this.topLeftContainer.html(
+                this.topLeftFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
+            );
+            
+            /*Load the top right content with our audio file */
+            this.topRightContainer.html(
+                this.topRightFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
+            );
         }
         else if(selectedAudioFiles.length && selectedAudioSegments.length){
             throw Error('Not yet implemented multiple selection')            

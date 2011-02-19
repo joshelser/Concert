@@ -24,34 +24,22 @@
 {% endblock %}
 
 {% block clientside %}
+
     {# and some client-side templates #}
     <script id="file_widget_template" type="text/x-jquery-tmpl">
-        {% verbatim %}
-        <div class="file_widget">
-            ${name}
-        </div>
-        {% endverbatim %}
+        {% include 'organize/clientside/file_widget_template.html' %}
     </script>
 
-
     <script id="segment_widget_template" type="text/x-jquery-tmpl">
-        <div id="segment_widget-${id}" class="segment_widget">
-            <div id="segment_name-${id}" class="segment_name">
-                ${name}
-            </div>
-            <div id="segment_creator-${id}" class="segment_creator">
-                by ${creator.username}
-            </div>
-            <div id="segment_audio-${id}" class="segment_audio">
-                from: <span id="segment_audio_name-${id}" class="segment_audio_name">
-                    ${audio.name}
-                </span>
-            </div>
-        </div>
+        {% include 'organize/clientside/segment_widget_template.html' %}
     </script>
     
     <script id="detail_waveform_top_left_file_template" type="text/x-jquery-tmpl">
         {% include 'organize/clientside/detail_waveform_top_left_file.html' %}
+    </script>
+    
+    <script id="detail_waveform_top_right_file_template" type="text/x-jquery-tmpl">
+        {% include 'organize/clientside/detail_waveform_top_right_file.html' %}
     </script>
 
 {% endblock %}
