@@ -139,7 +139,7 @@ class AudioUploadedEvent(Event):
     audioFile = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
 
     def __unicode__(self):
-        return str(self.audio.uploader) + " uploaded file '" + self.audio.name + "'."
+        return str(self.audioFile.uploader) + " uploaded file '" + self.audioFile.name + "'."
 
 
 class JoinCollectionEvent(Event):
