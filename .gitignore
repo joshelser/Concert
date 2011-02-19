@@ -8,3 +8,4 @@ concertapp/media/images/*
 !concertapp/media/images/.gitignore
 Concert.tmproj
 *.autosave
+*.wsgi
