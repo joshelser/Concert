@@ -253,7 +253,8 @@ div#create_join_panel, div#manage_admin_collections_panel, div#manage_member_col
 }
 
 div#create_join_input_container {
-    align: center;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
 }
 
 span.tags {

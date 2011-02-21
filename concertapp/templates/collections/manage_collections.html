@@ -28,11 +28,7 @@
 
     {#  an auto complete result when searching for a group #}
     <script id="create_join_result_template" type="text/x-jquery-tmpl">
-        <div class="create-join-result table-row" id="create_join_result-${id}">
-            <div class="collection_name-${id}" class="collection_name table-cell">${name}</div>
-            <button id="collection_info_button-${id}" class="text_button collection_info_button table-cell">Info</button>
-            <button id="collection_join_button-${id}" class="text_button collection_join_button table-cell">Join</button>
-        </div>
+        {% include 'collections/clientside/create_join_result_template.html' %}
     </script>
 
     {#  the first "create collection" result when no groups are found. #}
