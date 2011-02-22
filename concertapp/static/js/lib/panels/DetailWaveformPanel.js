@@ -7,15 +7,15 @@
 /**
  *  Panel that displays larger waveform on organize page.
  *  @class
- *  @extends    Panel
+ *  @extends    WaveformPanel
  **/
-var DetailWaveformPanel = Panel.extend({
+var DetailWaveformPanel = WaveformPanel.extend({
     
     /**
      *  @constructor
      **/
     initialize: function() {
-        Panel.prototype.initialize.call(this);
+        WaveformPanel.prototype.initialize.call(this);
 
         var params = this.options;
         
@@ -77,64 +77,25 @@ var DetailWaveformPanel = Panel.extend({
         }
         this.waveformImageTemplate = waveformImageTemplate;
         
-        /* The model manager's selected files */
-        var selectedAudioFiles = params.selectedAudioFiles;
-        if(typeof(selectedAudioFiles) == 'undefined') {
-            throw new Error('params.selectedAudioFiles is undefined');
-        }
-        this.selectedAudioFiles = selectedAudioFiles;
-        
-        /* The model manager's selected audio segments */
-        var selectedAudioSegments = params.selectedAudioSegments;
-        if(typeof(selectedAudioSegments) == 'undefined') {
-            throw new Error('params.selectedAudioSegments is undefined');
-        }
-        this.selectedAudioSegments = selectedAudioSegments;
-        
-
-        _.bindAll(this, "render");
-        selectedAudioSegments.bind('refresh', this.render);
-        selectedAudioSegments.bind('add', this.render);
-        selectedAudioSegments.bind('remove', this.render);
-        selectedAudioFiles.bind('refresh', this.render);
-        selectedAudioFiles.bind('add', this.render);
-        selectedAudioFiles.bind('remove', this.render);
     },
-
-    render: function() {
-        Panel.prototype.render.call(this);
+    /**
+     *  Called from parent class when an audio file has been selected on the UI.
+     **/
+    audio_file_selected: function(selectedAudioFile) {
+        var selectedAudioFileJSON = selectedAudioFile.toJSON();
+        /* Load the top left content with our audio file */
+        this.topLeftContainer.html(
+            this.topLeftFileTemplate.tmpl(selectedAudioFileJSON)
+        );
         
-        var selectedAudioFiles = this.selectedAudioFiles;
-        var selectedAudioSegments = this.selectedAudioSegments;
+        /* Load the top right content with our audio file */
+        this.topRightContainer.html(
+            this.topRightFileTemplate.tmpl(selectedAudioFileJSON)
+        );
         
-        /* If there was an audio segment selected */
-        if(selectedAudioSegments.length == 1 && selectedAudioFiles.length == 0) {
-            throw new Error('Not yet implemented selecting audio segment');
-        }
-        else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
-            var selectedAudioFile = selectedAudioFiles.first().toJSON();
-            /* Load the top left content with our audio file */
-            this.topLeftContainer.html(
-                this.topLeftFileTemplate.tmpl(selectedAudioFile)
-            );
-            
-            /* Load the top right content with our audio file */
-            this.topRightContainer.html(
-                this.topRightFileTemplate.tmpl(selectedAudioFile)
-            );
-            
-            /* Load the waveform viewer with the audio files' waveform image */
-            var waveformImageElement = this.waveformImageTemplate.tmpl(selectedAudioFile)
-            
-            this.imageContainerElement.html(waveformImageElement);
-        }
-        else if(selectedAudioFiles.length && selectedAudioSegments.length){
-            throw Error('Not yet implemented multiple selection')            
-        }
-        else {
-            throw Error('Not yet implemented when nothing is selected')
-        }
+        /* Load the waveform viewer with the audio files' waveform image */
+        var waveformImageElement = this.waveformImageTemplate.tmpl(selectedAudioFileJSON)
         
-        return this;
-    }
+        this.imageContainerElement.html(waveformImageElement);
+    }, 
 });
