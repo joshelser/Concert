@@ -31,6 +31,8 @@ class AudioFileAuthorization(ConcertAuthorization):
 class AudioFileResource(MyResource):
     uploader = fields.ForeignKey(UserResource, 'uploader', full=True)
     collection = fields.ForeignKey(CollectionResource, "collection")
+    detailWaveform = fields.FileField('detailWaveform')
+    overviewWaveform = fields.FileField('overviewWaveform')
 
     class Meta:
         authentication = DjangoAuthentication()
@@ -40,7 +42,7 @@ class AudioFileResource(MyResource):
 
         allowed_methods = ['get','put','delete']
     
-        excludes = ['wavfile','oggfile','mp3file','waveformViewer','waveformEditor']
+        excludes = ['wavfile','oggfile','mp3file']
 
 ###
 #   Only retrieve audio objects from a single collection.  Used for bootstrapping.

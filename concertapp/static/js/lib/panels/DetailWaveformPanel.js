@@ -59,6 +59,24 @@ var DetailWaveformPanel = Panel.extend({
         }
         this.topRightContainer = topRightContainer;
         
+        var imageContainerElement = $('#detail_waveform_panel_view');
+        if(typeof(imageContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_view\') is undefined');
+        }
+        else if(imageContainerElement.length == 0) {
+            throw new Error('imageContainerElement not found');
+        }
+        this.imageContainerElement = imageContainerElement;
+        
+        var waveformImageTemplate = $('#detail_waveform_image_template');
+        if(typeof(waveformImageTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_image_template\') is undefined');
+        }
+        else if(waveformImageTemplate.length == 0) {
+            throw new Error('waveformImageTemplate not found');
+        }
+        this.waveformImageTemplate = waveformImageTemplate;
+        
         /* The model manager's selected files */
         var selectedAudioFiles = params.selectedAudioFiles;
         if(typeof(selectedAudioFiles) == 'undefined') {
@@ -94,15 +112,21 @@ var DetailWaveformPanel = Panel.extend({
             throw new Error('Not yet implemented selecting audio segment');
         }
         else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
+            var selectedAudioFile = selectedAudioFiles.first().toJSON();
             /* Load the top left content with our audio file */
             this.topLeftContainer.html(
-                this.topLeftFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
+                this.topLeftFileTemplate.tmpl(selectedAudioFile)
             );
             
-            /*Load the top right content with our audio file */
+            /* Load the top right content with our audio file */
             this.topRightContainer.html(
-                this.topRightFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
+                this.topRightFileTemplate.tmpl(selectedAudioFile)
             );
+            
+            /* Load the waveform viewer with the audio files' waveform image */
+            var waveformImageElement = this.waveformImageTemplate.tmpl(selectedAudioFile)
+            
+            this.imageContainerElement.html(waveformImageElement);
         }
         else if(selectedAudioFiles.length && selectedAudioSegments.length){
             throw Error('Not yet implemented multiple selection')            
