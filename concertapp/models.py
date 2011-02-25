@@ -454,14 +454,17 @@ class SegmentComment(Comment):
     
 
 class Audio(models.Model):
+    DETAIL_WAVEFORM_LOCATION = 'images/detail/'
+    OVERVIEW_WAVEFORM_LOCATION = 'images/overview/'
+    AUDIO_LOCATION = 'audio/'
     name = models.CharField(max_length = 100)
     uploader = models.ForeignKey(User)
     collection = models.ForeignKey('Collection')
-    wavfile = models.FileField(upload_to = 'audio/')
-    oggfile = models.FileField(upload_to = 'audio/')
-    mp3file = models.FileField(upload_to = 'audio/')
-    waveformViewer = models.ImageField(upload_to = 'images/viewers')
-    waveformEditor = models.ImageField(upload_to = 'images/editors')
+    wavfile = models.FileField(upload_to = AUDIO_LOCATION)
+    oggfile = models.FileField(upload_to = AUDIO_LOCATION)
+    mp3file = models.FileField(upload_to = AUDIO_LOCATION)
+    detailWaveform = models.ImageField(upload_to = DETAIL_WAVEFORM_LOCATION)
+    overviewWaveform = models.ImageField(upload_to = OVERVIEW_WAVEFORM_LOCATION)
 #    duration = models.DecimalField(max_digits = 8, decimal_places = 2)
 
     ###
@@ -555,14 +558,14 @@ class Audio(models.Model):
             os.unlink(self.mp3file.name)
 
         # Remove viewer
-        if(self.waveformViewer and os.path.exists(self.waveformViewer.name)):
-            #self.waveformViewer.delete(save=False)
-            os.unlink(self.waveformViewer.name)
+        if(self.overviewWaveform and os.path.exists(self.overviewWaveform.name)):
+            #self.overviewWaveform.delete(save=False)
+            os.unlink(self.overviewWaveform.name)
 
         # Remove editor image
-        if(self.waveformEditor and os.path.exists(self.waveformEditor.name)):
-            #self.waveformEditor.delete(save=False)
-            os.unlink(self.waveformEditor.name)
+        if(self.detailWaveform and os.path.exists(self.detailWaveform.name)):
+            #self.detailWaveform.delete(save=False)
+            os.unlink(self.detailWaveform.name)
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audioFile = self)
@@ -581,23 +584,29 @@ class Audio(models.Model):
 
     ##
     # Generate all the waveforms for this audio object.  
-    #   TODO: transition these audioFormats calls to the new audio library.
     #
     def _generate_waveform(self):
-        wavPath = os.path.join(MEDIA_ROOT, self.wavfile.name)
-        wavName = os.path.split(wavPath)[-1]
-        # Create the wav object
-        wavObj = audioFormats.Wav(wavPath)
-        length = wavObj.getLength()
+        # Relative path to our wave file (from MEDIA_ROOT)
+        wavPath = self.wavfile.name
+        # Absolute path to our wave file
+        wavPathAbsolute = os.path.join(MEDIA_ROOT, wavPath)
+        # Name of our wave file
+        wavName = self.wavfile.name.split(self.wavfile.field.upload_to)[1]
+        
+        # Get length of audio (samples)
+        length = audioHelpers.getLength(wavPathAbsolute)
+        
 
-        # Name of the image for the waveform viewer (small waveform image) 
-        viewerImgPath = 'images/viewers/'+wavName + '_800.png'    
-        wavObj.generateWaveform(os.path.join(MEDIA_ROOT, viewerImgPath), 800, 110)
+        # Path to the image for the waveform overview (relative to MEDIA_ROOT)
+        overviewImgPath = self.overviewWaveform.field.upload_to + wavName + '.png'
+        
+        # Generate image
+        audioHelpers.generateWaveform(wavPathAbsolute, os.path.join(MEDIA_ROOT, overviewImgPath), 898, 58)
 
         # Name of the image for the waveform editor (large waveform image)
-        editorImgPath = 'images/editors/'+wavName + '_' + str(5 * length) + '.png'
-        wavObj.generateWaveform(os.path.join(MEDIA_ROOT, editorImgPath), 5 * length, 585)
+        detailImgPath = self.detailWaveform.field.upload_to + wavName + '.png'
+        audioHelpers.generateWaveform(wavPathAbsolute, os.path.join(MEDIA_ROOT, detailImgPath), 10 * length, 198)
 
         # Save the path relative to the media_dir
-        self.waveformViewer = viewerImgPath
-        self.waveformEditor = editorImgPath    
+        self.overviewWaveform = overviewImgPath
+        self.detailWaveform = detailImgPath
