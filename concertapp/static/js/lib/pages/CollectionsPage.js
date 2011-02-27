@@ -137,4 +137,13 @@ var CollectionsPage = LoggedInPage.extend({
         this.modelManager.create_new_collection(col_name);
         
     }, 
+    
+    /**
+     *  When a user revokes her/his request to join a collection.
+     *
+     *  @param  {Request}    req    -   The request that is being revoked.
+     **/
+    revoke_request: function(req) {
+        req.revoke();
+    }
 });
