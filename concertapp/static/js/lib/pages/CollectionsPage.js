@@ -97,5 +97,44 @@ var CollectionsPage = LoggedInPage.extend({
                 }
             }(req) 
         });
+    },
+    /**
+     *  When an administrator wishes to delete a collection.
+     *
+     *  @param  {Collection}    col    -    The collection we're deleting
+     **/
+    deleteCollectionWithConfirm: function(col) {
+        /* First confirm with the user that this is what they would like to do */
+        /* TODO: Remove this text */
+        com.concertsoundorganizer.notifier.confirm({
+            title: 'Are you sure?', 
+            content: 'Are you sure you want to delete '+col.get('name')+'<br />All associated audio will be removed from Concert.',
+            confirmCallback: function(col) {
+                return function() {
+                    col.destroy({
+                        success: function(model, response) {
+                        },
+                        error: function(model, response) {
+                            com.concertsoundorganizer.notifier.alert({
+                                title: 'Error', 
+                                content: 'An Error occurred: '+response.responseText
+                            });
+                        }
+                    });
+                };
+            }(col)
+        });
+    },
+    /**
+     *  When a user creates a new collection.
+     *
+     *  @param  {String}    col_name    -   The name of the new collection
+     **/
+    createNewCollection: function(col_name) {
+        
+        /* For now just use the model manager's method.  TODO: Figure out
+        how to better organize this. */
+        this.modelManager.create_new_collection(col_name);
+        
     }, 
 });
