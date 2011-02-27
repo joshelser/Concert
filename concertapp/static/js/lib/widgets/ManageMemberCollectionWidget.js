@@ -33,18 +33,10 @@ var ManageMemberCollectionWidget = Widget.extend({
     events: {
         'click button.leave_collection': 'leave_collection_confirm'
     }, 
+    /**
+     *  When a user clicks the leave collection button
+     **/
     leave_collection_confirm: function() {
-        com.concertsoundorganizer.notifier.confirm({
-            title: 'Are you sure?', 
-            content: 'Are you sure you want to leave '+this.model.get('name')+'?<br />You will no longer be able to work on this collection\'s assets.', 
-            confirmCallback: function(me) {
-                return function() {
-                    me.leave_collection();
-                };
-            }(this)
-        });
-    },
-    leave_collection: function() {
-        this.model.leave();
-    }, 
+        this.panel.page.leave_collection_with_confirm(this.model);
+    }
 });

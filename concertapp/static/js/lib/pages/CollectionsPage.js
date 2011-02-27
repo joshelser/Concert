@@ -145,5 +145,21 @@ var CollectionsPage = LoggedInPage.extend({
      **/
     revoke_request: function(req) {
         req.revoke();
+    },
+    /**
+     *  When a user decides to leave a collection.
+     *
+     *  @param  {Collection}    col    -    The collection she/he is leaving.
+     **/
+    leave_collection_with_confirm: function(col) {
+        com.concertsoundorganizer.notifier.confirm({
+            title: 'Are you sure?', 
+            content: 'Are you sure you want to leave '+col.get('name')+'?<br />You will no longer be able to work on this collection\'s assets.', 
+            confirmCallback: function(col) {
+                return function() {
+                    col.leave();
+                };
+            }(col)
+        });
     }
 });
