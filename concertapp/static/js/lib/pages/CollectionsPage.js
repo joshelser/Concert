@@ -78,8 +78,24 @@ var CollectionsPage = LoggedInPage.extend({
                 return function() {
                     req.deny();
                 }
-            }(this)
+            }(req)
         });
-        
+    }, 
+    /**
+     *  When an administrator approves a join request.
+     *
+     *  @param  {Request}    req    -   The request object to be approved.
+     **/
+    approveRequestWithConfirm: function(req) {
+        /* Show a confirm dialog */
+        com.concertsoundorganizer.notifier.confirm({
+            title: "Are you sure?", 
+            content: "Are you sure you want to allow "+req.get('user').get('username')+" to organize this collection?", 
+            confirmCallback: function(req) {
+                return function() {
+                    req.approve();
+                }
+            }(req) 
+        });
     }, 
 });

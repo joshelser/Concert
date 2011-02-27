@@ -47,28 +47,14 @@ var CollectionRequestWidget = Widget.extend({
      *  controller.
      **/
     denyRequestConfirm: function() {
-        this.page.denyRequestWithConfirm(this.model);
+        this.panel.page.denyRequestWithConfirm(this.model);
     },
     /**
-     *  This is called when the user clicks the accept request button.
+     *  This is called when the user clicks the accept request button.  Throw
+     *  to controller.
      **/
     approveRequestConfirm: function() {
-        /* Show a confirm dialog */
-        com.concertsoundorganizer.notifier.confirm({
-            title: "Are you sure?", 
-            content: "Are you sure you want to allow "+this.model.get('user').get('username')+" to organize this collection?", 
-            confirmCallback: function(me) {
-                return function() {
-                    me.approveRequest();
-                }
-            }(this), 
-        });
-    },
-    /**
-     *  This should be called when the actual request is to be approved.
-     **/
-    approveRequest: function() {
-        this.model.approve();
+        this.panel.page.approveRequestWithConfirm(this.model);
     }
 });
 
