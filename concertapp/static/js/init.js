@@ -35,7 +35,7 @@ function initializeUI(pagePath, data) {
         /* For each page, run JS corresponding to that page */
         var pageInitializers = {
             '/login/': LoginPage,
-            '/dashboard/': DashboardPage,
+            '/dashboard/': LoggedInPage,
             '/collections/': CollectionsPage,
             '/audio/upload/': UploadPage,
             '/organize/collection/': OrganizePage

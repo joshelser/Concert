@@ -43,25 +43,11 @@ var CollectionRequestWidget = Widget.extend({
         'click .deny_request': 'denyRequestConfirm'
     }, 
     /**
-     *  This is called when the user clicks the deny request button.
+     *  This is called when the user clicks the deny request button.  Throw to
+     *  controller.
      **/
     denyRequestConfirm: function() {
-        /* Show a confirm dialog */
-        com.concertsoundorganizer.notifier.confirm({
-            title: "Are you sure?", 
-            content: "Are you sure you want to deny "+this.model.get('user').get('username')+" from this collection?", 
-            confirmCallback: function(me){
-                return function() {
-                    me.denyRequest();
-                }
-            }(this)
-        });
-    },
-    /**
-     *  This is when the user confirms that he/she wants to deny a request.
-     **/
-    denyRequest: function() {
-        this.model.deny();
+        this.page.denyRequestWithConfirm(this.model);
     },
     /**
      *  This is called when the user clicks the accept request button.

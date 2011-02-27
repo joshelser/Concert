@@ -51,8 +51,8 @@ CollectionsPageModelManager.prototype.init = function(params) {
     
 };
 
-CollectionsPageModelManager.prototype.loadData = function() {
-    LoggedInModelManager.prototype.loadData.call(this);
+CollectionsPageModelManager.prototype._loadData = function() {
+    LoggedInModelManager.prototype._loadData.call(this);
     
     var dataToLoad = this._dataToLoad;
     
