@@ -11,9 +11,6 @@
  *  @extends    Backbone.Controller
  **/
 var Page = Backbone.Controller.extend({
-    /**
-     *  @constructor
-     **/
     initialize: function(params) {
         /* Create dataset manager */
         var modelManager = this._initializeModelManager(params);

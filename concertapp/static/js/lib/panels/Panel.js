@@ -14,7 +14,6 @@
 var Panel = Backbone.View.extend({
     
     /**
-     *  @constructor
      *  @param  params.container        jQuery object - container for panel  
      *  @param  params.page             Page - the page that this panel belongs to
      *  @param  params.loading          Boolean -   Wether or not this panel is         

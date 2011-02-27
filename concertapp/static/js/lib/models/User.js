@@ -10,9 +10,6 @@
  *  @extends    Backbone.Model
  **/ 
 var User = ConcertBackboneModel.extend({
-    /**
-     *  @constructor
-     **/
     initialize: function() {
         
     }, 

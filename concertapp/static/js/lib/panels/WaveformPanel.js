@@ -10,10 +10,6 @@
  *  @extends    Panel
  **/
 var WaveformPanel = Panel.extend({
-    
-    /**
-     *  @constructor
-     **/
     initialize: function() {
         Panel.prototype.initialize.call(this);
 

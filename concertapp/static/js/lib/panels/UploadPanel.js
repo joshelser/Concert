@@ -8,11 +8,7 @@
  *  The panel that contains the upload form for the user to upload multiple files.
  *  @class
  **/
-var UploadPanel = Panel.extend({
-    
-    /**
-     *  @constructor
-     **/    
+var UploadPanel = Panel.extend({    
     initialize: function() {
         Panel.prototype.initialize.call(this);
 
