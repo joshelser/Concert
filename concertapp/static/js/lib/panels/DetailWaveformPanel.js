@@ -55,9 +55,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
         }
         this.topRightContainer = topRightContainer;
         
-        var imageContainerElement = $('#detail_waveform_panel_view');
+        var imageContainerElement = $('#detail_waveform_panel_waveform_container');
         if(typeof(imageContainerElement) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_view\') is undefined');
+            throw new Error('$(\'#detail_waveform_panel_waveform_container\') is undefined');
         }
         else if(imageContainerElement.length == 0) {
             throw new Error('imageContainerElement not found');

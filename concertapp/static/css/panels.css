@@ -192,8 +192,13 @@ div#detail_waveform_panel_view {
     background-color: #2e2e35;
     color: #f8f8fa;
     width: 818px;
-    height: 198px;
+    height: 238px;
     border: 1px solid white;
+    
+    position: absolute;
+    /* Do not allow waveform to overflow window */
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 div#detail_waveform_panel_buf_right {
@@ -204,6 +209,9 @@ div#detail_waveform_panel_buf_right {
     padding-bottom: 40px;
     padding-left: 15px;
     padding-right: 15px;
+    
+    /* Because the view element is absolute */
+    margin-left: 818px;
 }
 
 div#detail_waveform_panel_bottom {
@@ -222,9 +230,30 @@ div#detail_waveform_panel_tags {
     border: 1px solid white;
 }
 
+div#detail_waveform_panel_waveform_and_timecode {
+    position: absolute;
+}
+
+div#detail_waveform_panel_waveform_container {
+
+}
+
+div#detail_waveform_panel_timecode {
+    height: 40px;
+    background-color: gray;
+}
+
 div#audiolist_panel_contents {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+}
+
+/**
+ *  Waveform images
+ **/
+img.waveform_image {
+    display: block;
+
 }
 
 div.file_widget {
