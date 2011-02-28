@@ -1,4 +1,4 @@
-from concertapp.models import Audio, Collection
+from concertapp.models import AudioFile, Collection
 from django import forms
 from django.forms import ModelForm
 

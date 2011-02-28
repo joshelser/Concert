@@ -4,6 +4,9 @@ from concertapp.audio.api import AudioFileResource
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
 from concertapp.audiosegments.api import AudioSegmentResource
+# We can import the views explicitly here because there are only like
+# 3 server-side URLS in the entire program.
+from concertapp.organize.views import organize_collection
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
@@ -52,8 +55,9 @@ urlpatterns = patterns('',
     # audio urls (upload_audio and audio utilities)
     (r'^audio/', include('concertapp.audio.urls')), 
 
-    # organize urls (audio organization view, heart of program)
-    (r'^organize/', include('concertapp.organize.urls')),
+    #   Organize audio (for a collection)
+    url(r'organize/collection/(?P<collection_id>[\d]+)$', organize_collection, name='organize_collection'),
+    
     
     # REST api
     (r'^api/', include(api1.urls)),

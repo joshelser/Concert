@@ -135,8 +135,8 @@ class AudioSegmentTaggedEvent(Event):
         return str(self.tagging_user) + " tagged '" + str(self.audio_segment.name) + "' with tag '" + self.tag.name + "'."
 
 
-class AudioUploadedEvent(Event):
-    audioFile = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
+class AudioFileUploadedEvent(Event):
+    audioFile = models.ForeignKey("AudioFile", related_name = "audio_uploaded_event")
 
     def __unicode__(self):
         return str(self.audioFile.uploader) + " uploaded file '" + self.audioFile.name + "'."
@@ -187,7 +187,7 @@ class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
-    audioFile = models.ForeignKey('Audio')
+    audioFile = models.ForeignKey('AudioFile')
     creator = models.ForeignKey(User)
     collection = models.ForeignKey('Collection')
 
@@ -453,7 +453,7 @@ class SegmentComment(Comment):
         super(SegmentComment,self).delete()
     
 
-class Audio(models.Model):
+class AudioFile(models.Model):
     DETAIL_WAVEFORM_LOCATION = 'images/detail/'
     OVERVIEW_WAVEFORM_LOCATION = 'images/overview/'
     AUDIO_LOCATION = 'audio/'
@@ -477,7 +477,7 @@ class Audio(models.Model):
     def save(self, f = None, *args, **kwargs):
         # if we're updating not initializing
         if not f:
-            return super(Audio,self).save(*args,**kwargs)
+            return super(AudioFile,self).save(*args,**kwargs)
             
         # Get original filename of uploaded file
         name = str(f)
@@ -531,9 +531,9 @@ class Audio(models.Model):
         # Save duration of audio file in seconds
         self.duration = audioHelpers.getLength(wavOutput)
 
-        super(Audio, self).save(*args, **kwargs)
+        super(AudioFile, self).save(*args, **kwargs)
         
-        event = AudioUploadedEvent(audioFile = self, collection = self.collection)
+        event = AudioFileUploadedEvent(audioFile = self, collection = self.collection)
         event.save()
         
         
@@ -577,13 +577,13 @@ class Audio(models.Model):
         for segment in segments:
             segment.delete()
 
-        for event in AudioUploadedEvent.objects.filter(audioFile=self):
+        for event in AudioFileUploadedEvent.objects.filter(audioFile=self):
             event.active = False
 
         # Send delete up if necessary.  This will not happen if the audio object
         #   has not called save()
         if(self.id):
-            super(Audio, self).delete()
+            super(AudioFile, self).delete()
 
     ##
     # Generate all the waveforms for this audio object.  
