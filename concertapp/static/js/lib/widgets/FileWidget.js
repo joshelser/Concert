@@ -32,7 +32,7 @@ var FileWidget = Widget.extend({
      *  This is called when this file was selected in the list.
      **/
     select_file: function() {
-        com.concertsoundorganizer.modelManager.select_audio({files: [this.model]});
+        this.panel.page.select_audio({files: [this.model]});
     }, 
 });
 

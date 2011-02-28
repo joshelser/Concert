@@ -15,6 +15,9 @@ var OrganizePage = LoggedInPage.extend({
     }, 
     _initializeViews: function() {
         LoggedInPage.prototype._initializeViews.call(this);
+        
+        var modelManager = this.modelManager;
+        
         /*  Create waveform overview panel */
         this.overviewPanel = new OverviewWaveformPanel({
             page: this, 
@@ -40,5 +43,16 @@ var OrganizePage = LoggedInPage.extend({
             segments: modelManager.collectionAudioSegments
         });
         
+    }, 
+    
+    /**
+     *  When a user selects some audio from the audio list.
+     *
+     *  @param  {Object}    params    - The audio files and segments that were
+     *  selected.
+     **/
+    select_audio: function(params) {
+        /* Right now just delegate to model manager */
+        this.modelManager.select_audio(params);
     }, 
 });
