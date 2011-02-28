@@ -4,9 +4,12 @@ from concertapp.audio.api import AudioFileResource
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
 from concertapp.audiosegments.api import AudioSegmentResource
+
 # We can import the views explicitly here because there are only like
 # 3 server-side URLS in the entire program.
 from concertapp.organize.views import organize_collection
+from concertapp.dashboard.views import dashboard
+
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
@@ -46,10 +49,10 @@ urlpatterns = patterns('',
 
     (r'^reset_pass_confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
 
-    # Dashboard urls
-    (r'^dashboard/', include('concertapp.dashboard.urls')),
+    # Dashboard page
+    url(r'^dashboard/$', dashboard, name='dashboard'),
 
-    # collection urls (manage collections and organize audio)
+    # collections urls (manage collections and organize audio)
     (r'^collections/', include('concertapp.collection.urls')),
 
     # audio urls (upload_audio and audio utilities)

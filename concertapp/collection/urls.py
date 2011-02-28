@@ -20,5 +20,8 @@ urlpatterns = patterns('concertapp.collection.views',
     #   JSON/AJAX
     ###
     # Search collections
+    # TODO: move this to tastypie custom urls and actual view code to API as well.
+    #   then there will only be one URL for the collections page and we can remove
+    #   this file.
     url(r'^search/(?P<query>.+)/$', 'search_collections', name='search_collections'),
 )
