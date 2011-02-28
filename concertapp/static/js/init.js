@@ -18,9 +18,6 @@
  **/
 function initializeUI(pagePath, data) {
     $(document).ready(function(){
-        /* Make all fields in the future that have the "autoClear" class on them    
-            autoclear */
-        initializeAutoClearFieldBehavior();
 
         /* Make global notifier object that we can use anywhere to notify the user */
         com.concertsoundorganizer.notifier = new Notifier({});
@@ -40,6 +37,9 @@ function initializeUI(pagePath, data) {
             '/audio/upload/': UploadPage,
             '/organize/collection/': OrganizePage
         };
+        
+        /* Check browser problems */
+        detectBrowserCompatibility()
 
         /* Run the initializer function for this page. */
         com.concertsoundorganizer.page = new pageInitializers[pagePath](data);

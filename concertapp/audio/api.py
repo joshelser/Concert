@@ -33,6 +33,9 @@ class AudioFileResource(MyResource):
     collection = fields.ForeignKey(CollectionResource, "collection")
     detailWaveform = fields.FileField('detailWaveform')
     overviewWaveform = fields.FileField('overviewWaveform')
+    # Just naming these fields on the resources 'mp3' and 'ogg'
+    mp3 = fields.FileField('mp3file')
+    ogg = fields.FileField('oggfile')
 
     class Meta:
         authentication = DjangoAuthentication()
@@ -42,7 +45,7 @@ class AudioFileResource(MyResource):
 
         allowed_methods = ['get','put','delete']
     
-        excludes = ['wavfile','oggfile','mp3file']
+        excludes = ['wavfile', 'mp3file', 'oggfile']
 
 ###
 #   Only retrieve audioFile objects from a single collection.  Used for bootstrapping.

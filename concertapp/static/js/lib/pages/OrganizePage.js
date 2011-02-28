@@ -43,6 +43,14 @@ var OrganizePage = LoggedInPage.extend({
             segments: modelManager.collectionAudioSegments
         });
         
+        /* This is our HTML5 audio player */
+        var audio = new Audio();
+        audio.autoplay = false;
+        this.audio = audio;
+        
+        /* This is the type of audio file we will use */
+        this.audioType = com.concertsoundorganizer.compatibility.audioType;
+        
     }, 
     
     /**
@@ -54,5 +62,35 @@ var OrganizePage = LoggedInPage.extend({
     select_audio: function(params) {
         /* Right now just delegate to model manager */
         this.modelManager.select_audio(params);
+        
+        var files = params.files;
+        var segments = params.segments;
+        files || (files = []);
+        segments || (segments = []);
+        
+        if(files.length && segments.length) {
+            throw new Error('Not implemented multiple selection.');
+        }
+        else if(files.length == 1) {
+            /* Selecting a file */
+            this.select_audio_file(files[0]);
+        }
+        else if(segments.length == 1) {
+            /* Selecting an audio segment */
+            this.select_audio_segment(segments[0]);
+        }
+        else {
+            throw new Error('Not implemented.');
+        }
     }, 
+    
+    /**
+     *  When a user has selected a single audio file.
+     *
+     *  @param  {AudioFile}    audioFile    -   The AudioFile model instance
+     **/
+    select_audio_file: function(audioFile) {
+        var audiosrc = audioFile.get(this.audioType);
+        
+    },
 });
