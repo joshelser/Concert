@@ -1,4 +1,4 @@
-from concertapp.audio import audioFormats, audioHelpers
+from concertapp.audio import audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -465,7 +465,7 @@ class Audio(models.Model):
     mp3file = models.FileField(upload_to = AUDIO_LOCATION)
     detailWaveform = models.ImageField(upload_to = DETAIL_WAVEFORM_LOCATION)
     overviewWaveform = models.ImageField(upload_to = OVERVIEW_WAVEFORM_LOCATION)
-#    duration = models.DecimalField(max_digits = 8, decimal_places = 2)
+    duration = models.DecimalField(max_digits = 8, decimal_places = 2, default=-1.0)
 
     ###
     #   Do everything necessary when an audio object is first created.
@@ -527,6 +527,9 @@ class Audio(models.Model):
         
         # Generate the waveform onto disk
         self._generate_waveform()
+        
+        # Save duration of audio file in seconds
+        self.duration = audioHelpers.getLength(wavOutput)
 
         super(Audio, self).save(*args, **kwargs)
         

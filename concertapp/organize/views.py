@@ -12,7 +12,7 @@ import os, hashlib, tempfile, audiotools, json
 
 from concertapp.models  import *
 
-from concertapp.audio import audioFormats, audioHelpers
+from concertapp.audio import audioHelpers
 from concertapp.audio.waveform import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
