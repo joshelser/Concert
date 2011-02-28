@@ -46,10 +46,24 @@ var OrganizePage = LoggedInPage.extend({
         /* This is our HTML5 audio player */
         var audio = new Audio();
         audio.autoplay = false;
+        audio.preload = 'auto';
         this.audio = audio;
         
         /* This is the type of audio file we will use */
         this.audioType = com.concertsoundorganizer.compatibility.audioType;
+        
+        /* When the space button is pressed, pause/play our audio */
+        $(window).bind('keydown', function(me) {
+            return function(e) {
+                
+                if(e.keyCode == 32) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    me.play_pause();
+                }
+            };
+        }(this));
         
     }, 
     
@@ -90,7 +104,25 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {AudioFile}    audioFile    -   The AudioFile model instance
      **/
     select_audio_file: function(audioFile) {
+        /* The proper audio source for this browser */
         var audiosrc = audioFile.get(this.audioType);
         
+        this.audio.src = audiosrc;
     },
+    
+    /**
+     *  When a user presses the space bar
+     **/
+    play_pause: function() {
+        /* Get HTML5 audio object */
+        var audio = this.audio;
+        
+        if(audio.paused) {
+            audio.play();
+        }
+        else {
+            audio.pause();
+        }
+    }, 
+    
 });
