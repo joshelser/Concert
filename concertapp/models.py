@@ -460,9 +460,9 @@ class AudioFile(models.Model):
     name = models.CharField(max_length = 100)
     uploader = models.ForeignKey(User)
     collection = models.ForeignKey('Collection')
-    wavfile = models.FileField(upload_to = AUDIO_LOCATION)
-    oggfile = models.FileField(upload_to = AUDIO_LOCATION)
-    mp3file = models.FileField(upload_to = AUDIO_LOCATION)
+    wav = models.FileField(upload_to = AUDIO_LOCATION)
+    ogg = models.FileField(upload_to = AUDIO_LOCATION)
+    mp3 = models.FileField(upload_to = AUDIO_LOCATION)
     detailWaveform = models.ImageField(upload_to = DETAIL_WAVEFORM_LOCATION)
     overviewWaveform = models.ImageField(upload_to = OVERVIEW_WAVEFORM_LOCATION)
     duration = models.DecimalField(max_digits = 8, decimal_places = 2, default=-1.0)
@@ -492,9 +492,9 @@ class AudioFile(models.Model):
         inputFilePath = f.temporary_file_path()
         
         #   Create files with dummy contents but with proper names.
-        self.wavfile.save(wavName, SimpleUploadedFile(wavName, 'temp contents'), save = False)
-        self.oggfile.save(oggName, SimpleUploadedFile(oggName, 'temp contents'), save = False)
-        self.mp3file.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'), save = False)
+        self.wav.save(wavName, SimpleUploadedFile(wavName, 'temp contents'), save = False)
+        self.ogg.save(oggName, SimpleUploadedFile(oggName, 'temp contents'), save = False)
+        self.mp3.save(mp3Name, SimpleUploadedFile(mp3Name, 'temp contents'), save = False)
         
         #   Now we have an auto-generated name from Python, and we know where
         #   we should put the converted audio files
@@ -502,15 +502,15 @@ class AudioFile(models.Model):
         # The input is the temporary uploaded file location
         wavInput = f.temporary_file_path()
         # output was determined above
-        wavOutput = os.path.join(MEDIA_ROOT, self.wavfile.name)
+        wavOutput = os.path.join(MEDIA_ROOT, self.wav.name)
 
         #   the ogg file will be encoded from the normalized wav file
         oggInput = wavOutput
-        oggOutput = os.path.join(MEDIA_ROOT, self.oggfile.name)
+        oggOutput = os.path.join(MEDIA_ROOT, self.ogg.name)
                 
         #   and so will the mp3
         mp3Input = wavOutput
-        mp3Output = os.path.join(MEDIA_ROOT, self.mp3file.name)
+        mp3Output = os.path.join(MEDIA_ROOT, self.mp3.name)
 
         #   now overwrite the dummy files with the actual encodes
         
@@ -540,25 +540,25 @@ class AudioFile(models.Model):
     # Delete the current audio file from the filesystem
     def delete(self):
         
-        # Remove wavfile from this object, and delete file on filesystem.
-        if(self.wavfile and os.path.exists(self.wavfile.name)):
+        # Remove wav from this object, and delete file on filesystem.
+        if(self.wav and os.path.exists(self.wav.name)):
             # These lines should delete the files, but i'm getting an error that
             #   I don't understand.
-            #self.wavfile.delete(save=False)
+            #self.wav.delete(save=False)
             
             #   So instead, lets just delete the file manually.
-            os.unlink(self.wavfile.name)
+            os.unlink(self.wav.name)
 
             
-        # Remove oggfile
-        if(self.oggfile and os.path.exists(self.oggfile.name)):
-            #self.oggfile.delete(save=False)
-            os.unlink(self.oggfile.name)
+        # Remove ogg
+        if(self.ogg and os.path.exists(self.ogg.name)):
+            #self.ogg.delete(save=False)
+            os.unlink(self.ogg.name)
         
-        # Remove mp3file
-        if(self.mp3file and os.path.exists(self.mp3file.name)):
-            #self.mp3file.delete(save=False)
-            os.unlink(self.mp3file.name)
+        # Remove mp3
+        if(self.mp3 and os.path.exists(self.mp3.name)):
+            #self.mp3.delete(save=False)
+            os.unlink(self.mp3.name)
 
         # Remove viewer
         if(self.overviewWaveform and os.path.exists(self.overviewWaveform.name)):
@@ -590,11 +590,11 @@ class AudioFile(models.Model):
     #
     def _generate_waveform(self):
         # Relative path to our wave file (from MEDIA_ROOT)
-        wavPath = self.wavfile.name
+        wavPath = self.wav.name
         # Absolute path to our wave file
         wavPathAbsolute = os.path.join(MEDIA_ROOT, wavPath)
         # Name of our wave file
-        wavName = self.wavfile.name.split(self.wavfile.field.upload_to)[1]
+        wavName = self.wav.name.split(self.wav.field.upload_to)[1]
         
         # Get length of audio (samples)
         length = audioHelpers.getLength(wavPathAbsolute)

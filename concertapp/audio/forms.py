@@ -9,4 +9,4 @@ from django.forms import ModelForm
 class UploadFileForm(ModelForm):
     class Meta:
         model = AudioFile
-        fields = ('wavfile')
+        fields = ('wav')
