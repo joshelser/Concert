@@ -18,6 +18,16 @@ var OrganizePage = LoggedInPage.extend({
         
         var modelManager = this.modelManager;
         
+        /* This is our HTML5 audio player */
+        var audio = new Audio();
+        audio.autoplay = false;
+        audio.preload = 'auto';
+        this.audio = audio;
+        
+        /* This is the type of audio file we will use */
+        this.audioType = com.concertsoundorganizer.compatibility.audioType;
+        
+        
         /*  Create waveform overview panel */
         this.overviewPanel = new OverviewWaveformPanel({
             page: this, 
@@ -43,14 +53,6 @@ var OrganizePage = LoggedInPage.extend({
             segments: modelManager.collectionAudioSegments
         });
         
-        /* This is our HTML5 audio player */
-        var audio = new Audio();
-        audio.autoplay = false;
-        audio.preload = 'auto';
-        this.audio = audio;
-        
-        /* This is the type of audio file we will use */
-        this.audioType = com.concertsoundorganizer.compatibility.audioType;
         
         /* When the space button is pressed, pause/play our audio */
         $(window).bind('keydown', function(me) {
@@ -118,7 +120,7 @@ var OrganizePage = LoggedInPage.extend({
         var audio = this.audio;
         
         if(audio.paused) {
-            audio.play();
+            audio.play();            
         }
         else {
             audio.pause();
