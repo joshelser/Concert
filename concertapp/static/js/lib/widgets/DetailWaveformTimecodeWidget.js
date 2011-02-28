@@ -21,7 +21,7 @@ var DetailWaveformTimecodeWidget = Widget.extend({
             throw new Error('params.audio is undefined');
         }
         this.audio = audio;
-
+        
         _.bindAll(this, "render");
     },
 
@@ -33,14 +33,9 @@ var DetailWaveformTimecodeWidget = Widget.extend({
         /* Width of widget */
         var width = el.width();
         
-        console.log('width:');
-        console.log(width);
-        
         
         /* Duration of audio */
-        var duration = this.audio.duration;
-        console.log('duration:');
-        console.log(duration);
+        var duration = this.panel.page.modelManager.selectedAudioFiles.first().get('duration');
         
         /* Pixels per second */
         var pxPerSecond = width / duration;
@@ -53,9 +48,6 @@ var DetailWaveformTimecodeWidget = Widget.extend({
                     var height = canvas.height;
                     var width = canvas.width;
                     
-                    console.log('width:');
-                    console.log(width);
-
                     /* Begin our cursor at the top left corner of the canvas */
                     var cursor = {
                         x: 0, 
@@ -69,17 +61,27 @@ var DetailWaveformTimecodeWidget = Widget.extend({
 
                     ctx.beginPath();
                     
-                    /* For each second */
-                    for(var i = 0; i < duration; i++) {
+                    /* Place long marker every 10 seconds */
+                    for(var i = 0; i < duration; i+=10) {
                         /* Draw marker for this second */
                         
                         /* Move cursor horizontally */
-                        cursor.x += i*pxPerSecond;
+                        cursor.x = i*pxPerSecond;
                         cursor.y = 0;
                         ctx.moveTo(cursor.x, cursor.y);
                         
                         /* Draw a vertical line at current point */
                         ctx.lineTo(cursor.x, cursor.y+(height*0.75));
+                        ctx.stroke();
+                    }
+                    
+                    /* Place short marker every 10 seconds (on multiples of 5) */
+                    for(var i = 5; i < duration; i+=10) {
+                        cursor.x = i*pxPerSecond;
+                        cursor.y = 0;
+                        ctx.moveTo(cursor.x, cursor.y);
+                        
+                        ctx.lineTo(cursor.x, cursor.y+(height * 0.33));
                         ctx.stroke();
                     }
                     ctx.closePath();
