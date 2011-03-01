@@ -59,7 +59,7 @@ urlpatterns = patterns('',
     (r'^audio/', include('concertapp.audio.urls')), 
 
     #   Organize audio (for a collection)
-    url(r'organize/collection/(?P<collection_id>[\d]+)$', organize_collection, name='organize_collection'),
+    url(r'organize/collection/(?P<collection_id>[\d]+)/$', organize_collection, name='organize_collection'),
     
     
     # REST api

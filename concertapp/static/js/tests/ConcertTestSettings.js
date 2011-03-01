@@ -30,6 +30,6 @@
   ConcertTestSettings.newCollectionName = '6q273oieyhujsdkf';
   
   /* Wether or not to display a million lines of zombie.js output */
-  ConcertTestSettings.debug = true;
+  ConcertTestSettings.debug = false;
   
 }).call(this);
