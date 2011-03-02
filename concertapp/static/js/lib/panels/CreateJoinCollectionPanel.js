@@ -15,7 +15,6 @@ var CreateJoinCollectionPanel = Panel.extend({
     /**
     *  Initialize all stuffs.  We have an element for the input, as well as for the
     *  results.
-    *   @constructor
     **/    
     initialize: function() {
         Panel.prototype.initialize.call(this);

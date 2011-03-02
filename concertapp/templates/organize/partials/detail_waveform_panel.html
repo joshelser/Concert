@@ -13,16 +13,38 @@
     </div>
 </div>
 <div id="detail_waveform_panel_middle" class="detail_waveform_panel_middle">
-    <div id="detail_waveform_panel_buf_left" class="detail_waveform_panel_buf_left">
+    <div id="detail_waveform_panel_buf_left" class="detail_waveform_panel_buf">
         <b>< <</b>
     </div>
+    
+    {# The view window #}
     <div id="detail_waveform_panel_view" class="detail_waveform_panel_view">
-        {# detail waveform image injected here #}
+        
+        {# The div that we will move #}
+        <div id="detail_waveform_panel_waveform_and_timecode">
+            
+            <div id="detail_waveform_panel_waveform_container">
+                {# detail waveform image injected here #}
+            </div>
+
+            <div id="detail_waveform_panel_timecode">
+                {# Timecode will be injected here #}
+            </div>
+            
+        </div>
     </div>
-    <div id="detail_waveform_panel_buf_right" class="detail_waveform_panel_buf_right">
+    
+    
+    <div id="detail_waveform_panel_buf_right" class="detail_waveform_panel_buf">
         <b>> ></b>
     </div>
 </div>
-<div id="detail_waveform_panel_bottom" class="detail_waveform_panel_bottom">time</div>
+
+{% comment %}
+<div id="detail_waveform_panel_bottom" class="detail_waveform_panel_bottom">
+    {# Nothing? #}
+</div>
+{% endcomment %}
+
 <div id="detail_waveform_panel_tags" class="detail_waveform_panel_tags"><span class="tags">tag</font></div>
 {% endblock %}

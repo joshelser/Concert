@@ -18,6 +18,7 @@ LoggedInModelManager.prototype = new ModelManager();
 LoggedInModelManager.prototype.init = function(params) {
     ModelManager.prototype.init.call(this, params);
     
+    
     var dataToLoad = this._dataToLoad;
     
     /* Get data for user */
@@ -65,7 +66,7 @@ LoggedInModelManager.prototype.init = function(params) {
  *  Here we will create all of the Backbone objects that are needed from data that
  *  was loaded initially.
  **/
-LoggedInModelManager.prototype.loadData = function() {
+LoggedInModelManager.prototype._loadData = function() {
     
     var dataToLoad = this._dataToLoad;
     

@@ -5,36 +5,6 @@
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
  
-/**
- *  This will auto clear the fields that have a class "autoClear" on them.
- *  The placeholder text is from the "data-placeholder" attribute of the 
- *  element.
- **/
-function initializeAutoClearFieldBehavior(){
-    
-    /* Make jQuery local for performance */
-    var $ = jQuery;
-    
-    $('input.autoClear').live('focus', function(event) {
-        /*  If the placeholder attribute hasn't been set yet */
-        if (!$(this).data('placeholder')) {
-            /* save what is in the field */
-            $(this).data('placeholder', $(this).val());
-        }
-        
-        /* If the text field was just focused and has the placeholder text */
-        if ($(this).val() == $(this).data('placeholder')) {
-            /* remove placeholder text */
-            $(this).val('');
-        }
-    }).live('blur', function(event) {        
-        /* When field is blurred, put placeholder text back */
-        if ($.trim($(this).val()) == '') {
-            $(this).val($(this).data('placeholder'));
-        }
-    });
-    
-}
 
 /**
  *  Preloads all images via an image beacon to the server.
@@ -50,8 +20,7 @@ function preloadImages(urls) {
 
 /**
  *  Detect browser compatibility problems, and notify user of any issues.  Should
- *  be called on intro page, and the user should not be allowed to go further if
- *  there are problems.
+ *  be called on each page to ensure we have the compatibility variables set.
  **/
 function detectBrowserCompatibility() {
     var notifier = com.concertsoundorganizer.notifier;
@@ -61,10 +30,10 @@ function detectBrowserCompatibility() {
      **/
     if(Modernizr.audio) {
         if(Modernizr.audio.ogg) {
-            com.concertsoundorganizer.compatibility.audiotype = 'ogg';
+            com.concertsoundorganizer.compatibility.audioType = 'ogg';
         }
         else if(Modernizr.audio.mp3) {
-            com.concertsoundorganizer.compatibility.audiotype = 'mp3';
+            com.concertsoundorganizer.compatibility.audioType = 'mp3';
         }
         else {
             /* TODO: Handle this case */

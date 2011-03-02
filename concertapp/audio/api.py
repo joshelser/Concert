@@ -1,5 +1,5 @@
 from concertapp.lib.api import *
-from concertapp.models import Audio
+from concertapp.models import AudioFile
 from concertapp.users.api import *
 from concertapp.collection.api import CollectionResource
 from django.conf.urls.defaults import *
@@ -19,7 +19,7 @@ class AudioFileAuthorization(ConcertAuthorization):
             
             #   If there is an object to authorize
             if object:
-                #   Make sure that the person modifying is in the collection that the audio object
+                #   Make sure that the person modifying is in the collection that the audioFile object
                 #   belongs to.
                 return (request.user in object.collection.users.all())
             else:
@@ -33,19 +33,21 @@ class AudioFileResource(MyResource):
     collection = fields.ForeignKey(CollectionResource, "collection")
     detailWaveform = fields.FileField('detailWaveform')
     overviewWaveform = fields.FileField('overviewWaveform')
+    mp3 = fields.FileField('mp3')
+    ogg = fields.FileField('ogg')
 
     class Meta:
         authentication = DjangoAuthentication()
         authorization = AudioFileAuthorization()
         
-        queryset = Audio.objects.all()        
+        queryset = AudioFile.objects.all()        
 
         allowed_methods = ['get','put','delete']
     
-        excludes = ['wavfile','oggfile','mp3file']
+        excludes = ['wav']
 
 ###
-#   Only retrieve audio objects from a single collection.  Used for bootstrapping.
+#   Only retrieve audioFile objects from a single collection.  Used for bootstrapping.
 ###
 class CollectionAudioFileResource(AudioFileResource):
     
@@ -56,7 +58,7 @@ class CollectionAudioFileResource(AudioFileResource):
         self._meta.collection = collection
     
     ###
-    #   Return only audio objects for a specific collection.
+    #   Return only audioFile objects for a specific collection.
     ###
     def apply_authorization_limits(self, request, object_list):
         if not self._meta.collection:

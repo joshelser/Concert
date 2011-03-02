@@ -23,7 +23,7 @@ class AudioSegmentAuthorization(ConcertAuthorization):
             #   If there is an object to authorize
             if object:
                 #   Make sure that the person modifying is in the collection that the audiosegment belongs to.
-                return (request.user in object.audio.collection.users.all())
+                return (request.user in object.audioFile.collection.users.all())
             else:
                 #   TODO: This currently is always the case (tastypie issues)
                 return True

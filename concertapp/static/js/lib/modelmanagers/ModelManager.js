@@ -26,3 +26,10 @@ ModelManager.prototype.init = function(params) {
     this.seenInstances = {};
     
 };
+
+/**
+ *  Called when data is to be loaded.
+ **/
+ModelManager.prototype._loadData = function() {
+    return;
+};

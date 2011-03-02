@@ -30,8 +30,11 @@ var ManageRequestWidget = Widget.extend({
     events: {
         'click .revoke_request': 'revokeRequest', 
     }, 
+    /**
+     *  Called when user clicks the revoke request button
+     **/
     revokeRequest: function(){
         /* Revoke join request. */
-        this.model.revoke();
+        this.panel.page.revoke_request(this.model);
     }, 
 });

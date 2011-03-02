@@ -7,17 +7,20 @@
 /**
  *  Functionality associated with the dashboard page.
  *	@class
+ *  @extends    LoggedInPage
  **/
-function DashboardPage(params) {
-    if(params) {
-        this.init(params);
+var DashboardPage = LoggedInPage.extend({
+    /**
+     *  Our dataset manager is this one.
+     **/
+    _initializeModelManager: function(params) {
+        return new LoggedInModelManager(params);
+    }, 
+    
+    /**
+     *  
+     **/
+    _initializeViews: function() {
+        LoggedInPage.prototype._initializeViews.call(this);
     }
-}
-DashboardPage.prototype = new LoggedInPage();
-
-DashboardPage.prototype.init = function(params) {
-    LoggedInPage.prototype.init.call(this, params);
-
-    this.modelManager.loadData();
-
-}
+});

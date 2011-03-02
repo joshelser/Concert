@@ -7,27 +7,21 @@
 /**
  *  All of the panels associated with the Upload Page.
  *	@class
+ *  @extends    LoggedInPage
  **/
-function UploadPage(params) {
-    if(params) {
-        this.init(params);
-    }
-}
-UploadPage.prototype = new LoggedInPage();
-
-UploadPage.prototype.init = function(params) {
-    LoggedInPage.prototype.init.call(this, params);
-    
-    /**
-     *  Create UploadPanel
-     **/
-    this.uploadPanel = new UploadPanel({
-        page: this, 
-        el: $('#upload_audio_panel')
-    });
-    
-    
-    this.modelManager.loadData();
-    
-    
-}
+var UploadPage = LoggedInPage.extend({
+    _initializeModelManager: function(params) {
+        return new LoggedInModelManager(params);
+    }, 
+    _initializeViews: function() {
+        LoggedInPage.prototype._initializeViews.call(this);
+        /**
+         *  Create UploadPanel
+         **/
+        this.uploadPanel = new UploadPanel({
+            page: this, 
+            el: $('#upload_audio_panel')
+        });
+        
+    }, 
+});

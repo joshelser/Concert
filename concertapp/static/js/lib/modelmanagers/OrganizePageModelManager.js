@@ -58,8 +58,8 @@ OrganizePageModelManager.prototype.init = function(params) {
     
 };
 
-OrganizePageModelManager.prototype.loadData = function() {
-    LoggedInModelManager.prototype.loadData.call(this);
+OrganizePageModelManager.prototype._loadData = function() {
+    LoggedInModelManager.prototype._loadData.call(this);
     
     var dataToLoad = this._dataToLoad;
     

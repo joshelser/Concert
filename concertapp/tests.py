@@ -111,7 +111,7 @@ class APITestCase(DjangoTestCase):
         resp = self.client.get(os.path.join(self.api_prefix, "audio/1/"))
         self.assertEqual(resp.status_code, 410) #make sure API doesn't return anything 
         
-        self.assertQuerysetEqual(Audio.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
+        self.assertQuerysetEqual(AudioFile.objects.filter(pk=1),[]) #make sure there truely isn't anything to return   
 
         # TODO: Until there is a clean, production worthy method for uploading files via REST (tastypie)
         # creating audio objects will be done non-restfully.
@@ -135,13 +135,13 @@ class APITestCase(DjangoTestCase):
                                 content_type = 'application/json')
         print resp
         self.assertEqual(resp.status_code, 204)
-        self.assertEqual(len(Audio.objects.filter(name = "new_audio")),0)
-        self.assertEqual(len(Audio.objects.filter(name = "new_audio_new_name")),1)
+        self.assertEqual(len(AudioFile.objects.filter(name = "new_audio")),0)
+        self.assertEqual(len(AudioFile.objects.filter(name = "new_audio_new_name")),1)
 
         #delete an audio obj
         resp = self.client.delete(os.path.join(self.api_prefix, "audio/1/"))
         self.assertEqual(resp.status_code, 204)
-        self.assertQuerysetEqual(Audio.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
+        self.assertQuerysetEqual(AudioFile.objects.filter(pk=1),[]) #make sure there truely isn't anything to return
 
 
     def testAudioSegment(self):                
@@ -163,7 +163,7 @@ class APITestCase(DjangoTestCase):
         # create an audio obj for the to-be audio segment
         audio_file = open('./test_audio_files/beer.wav')
         resp = self.client.post('/audio/upload/', data = {'audio':audio_file,'collection_id':1})
-        audio_id = Audio.objects.get(name = 'beer.wav').pk
+        audio_id = AudioFile.objects.get(name = 'beer.wav').pk
 
         # create an audiosegment
         resp = self.client.post(os.path.join(self.api_prefix, "audiosegment/"), 

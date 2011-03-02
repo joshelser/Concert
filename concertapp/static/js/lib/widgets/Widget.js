@@ -16,7 +16,6 @@ var Widget = Backbone.View.extend({
      *  The widget is not inserted into the DOM in this class.  That is for whoever
      *  is instantiating the widget to take care of.
      *
-     *  @constructor
      *  @param  params.template        jQuery tmpl object   -   THe template.
      *  @param  params.panel        Panel object that we belong to.  
      **/    
