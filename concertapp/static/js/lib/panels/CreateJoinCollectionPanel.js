@@ -79,6 +79,8 @@ var CreateJoinCollectionPanel = Panel.extend({
         searchResults.bind('refresh', this.render);        
     },
     render: function() {
+        this.createResultsElement.empty();
+        
         /* There was no exact match, so we can create this collection */
         if(!this.exactResult && this.currentTerm != '') {
 
