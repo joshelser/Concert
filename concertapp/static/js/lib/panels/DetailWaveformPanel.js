@@ -55,23 +55,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
         }
         this.topRightContainer = topRightContainer;
         
-        var imageContainerElement = $('#detail_waveform_panel_waveform_container');
-        if(typeof(imageContainerElement) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_waveform_container\') is undefined');
-        }
-        else if(imageContainerElement.length == 0) {
-            throw new Error('imageContainerElement not found');
-        }
-        this.imageContainerElement = imageContainerElement;
-        
-        var waveformImageTemplate = $('#detail_waveform_image_template');
-        if(typeof(waveformImageTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_image_template\') is undefined');
-        }
-        else if(waveformImageTemplate.length == 0) {
-            throw new Error('waveformImageTemplate not found');
-        }
-        this.waveformImageTemplate = waveformImageTemplate;
         
         var timecodeContainerElement = $('#detail_waveform_panel_timecode');
         if(typeof(timecodeContainerElement) == 'undefined') {
@@ -106,20 +89,17 @@ var DetailWaveformPanel = WaveformPanel.extend({
             this.topRightFileTemplate.tmpl(selectedAudioFileJSON)
         );
         
-        /* Load the waveform viewer with the audio files' waveform image */
-        var waveformImageElement = this.waveformImageTemplate.tmpl(selectedAudioFileJSON);
+        var waveformImageElement = this.waveformImageElement;
         
-        /* TODO: Once we get the highlight widget up and running, it should
-        throw an event when its waveform image has been loaded, which will
-        then trigger the timecode widget's rendering */
-        setTimeout(function(timecodeWidget){
+        /* When waveform image has loaded */
+        waveformImageElement.one('load', function(me) {
             return function() {
-                timecodeWidget.render();
+                /* Draw timecode */
+                me.timecodeWidget.render();
             };
-        }(this.timecodeWidget), 500);
-        /* Re-render timecode widget (for now) 
-        this.timecodeWidget.render();*/
+        }(this));
         
-        this.imageContainerElement.html(waveformImageElement);
+        /* Load the waveform viewer with the audio files' waveform image */
+        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
     }, 
 });

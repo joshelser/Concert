@@ -29,6 +29,16 @@ var WaveformPanel = Panel.extend({
         }
         this.selectedAudioSegments = selectedAudioSegments;
         
+        /* The image element */
+        var waveformImageElement = this.el.find('.waveform_image');
+        if(typeof(waveformImageElement) == 'undefined') {
+            throw new Error('this.el.find(\'.waveform_image\') is undefined');
+        }
+        else if(waveformImageElement.length == 0) {
+            throw new Error('waveformImageElement not found');
+        }
+        this.waveformImageElement = waveformImageElement;
+        
 
         _.bindAll(this, "render");
         selectedAudioSegments.bind('refresh', this.render);
