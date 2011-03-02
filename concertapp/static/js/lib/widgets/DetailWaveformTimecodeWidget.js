@@ -27,8 +27,12 @@ var DetailWaveformTimecodeWidget = Widget.extend({
 
     render: function() {
         Widget.prototype.render.call(this);
-        
         var el = this.el;
+        
+        /** TODO: Remove all this stuff once we refactor the selected audio files */
+        if(this.panel.page.modelManager.selectedAudioFiles.length == 0) {
+            return false;
+        }
         
         /* Duration of audio */
         var duration = this.panel.page.modelManager.selectedAudioFiles.first().get('duration');
