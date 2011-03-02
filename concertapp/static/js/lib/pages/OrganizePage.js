@@ -120,7 +120,8 @@ var OrganizePage = LoggedInPage.extend({
         var audio = this.audio;
         
         if(audio.paused) {
-            audio.play();            
+            audio.play();
+            
         }
         else {
             audio.pause();
