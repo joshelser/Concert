@@ -42,7 +42,6 @@ var DetailWaveformTimecodeWidget = Widget.extend({
         
         /* Draw timecode with canvas */
         $g().size(width, el.height())
-            .background('white')
             .add(function(pxPerSecond, duration) {
                 return function(ctx, canvas) {
                     var height = canvas.height;
