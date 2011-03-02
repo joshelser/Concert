@@ -22,12 +22,24 @@ var DetailWaveformPlayheadWidget = Widget.extend({
         }
         this.audio = audio;
         
-        this.parent_element = this.el.parent();
+        this.parentElement = this.el.parent();
         
         _.bindAll(this, "render");
     },
 
     render: function() {
         return this;
+    },
+    
+    audio_file_selected: function(selectedAudioFile) {
+        var duration = selectedAudioFile.get('duration');
+        this.fileDuration = duration;
+    },
+    
+    animate: function() {
+        console.log("hello");
+        var pxPerSecond = 10;
+        var leftPx = this.audio.currentTime * pxPerSecond
+        this.el.css('left', leftPx);
     }
 });
