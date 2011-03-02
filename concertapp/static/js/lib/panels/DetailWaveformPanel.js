@@ -91,15 +91,18 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
         var waveformImageElement = this.waveformImageElement;
         
-        /* When waveform image has loaded */
-        waveformImageElement.one('load', function(me) {
+        var whenImageHasLoadedCallback = function(me) {
             return function() {
                 /* Draw timecode */
-                me.timecodeWidget.render();
+                me.timecodeWidget.render();                
             };
-        }(this));
+        }(this);
+        
+        /* When waveform image has loaded */
+        waveformImageElement.imagesLoaded(whenImageHasLoadedCallback);
         
         /* Load the waveform viewer with the audio files' waveform image */
-        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
+        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));
+        
     }, 
 });

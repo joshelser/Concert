@@ -30,18 +30,17 @@ var DetailWaveformTimecodeWidget = Widget.extend({
         
         var el = this.el;
         
-        /* Width of widget */
-        var width = el.width();
-        
-        
         /* Duration of audio */
         var duration = this.panel.page.modelManager.selectedAudioFiles.first().get('duration');
         
-        /* Pixels per second */
-        var pxPerSecond = width / duration;
+        /* Pixels per second currently is 10 because we only have one zoom level */
+        var pxPerSecond = 10;
+        
+        /* Clear canvas */
+        this.el.empty();
         
         /* Draw timecode with canvas */
-        $g().size(width, el.height())
+        $g().size(pxPerSecond*duration, el.height())
             .add(function(pxPerSecond, duration) {
                 return function(ctx, canvas) {
                     var height = canvas.height;

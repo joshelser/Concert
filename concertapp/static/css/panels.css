@@ -234,6 +234,7 @@ div#detail_waveform_panel_waveform_container {
 
 div#detail_waveform_panel_timecode {
     height: 40px;
+    width: 100%;
     background-color: gray;
 }
 
