@@ -73,6 +73,22 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.timecodeWidget = timecodeWidget;
         
+        /* The container for the playhead widget */
+        var playheadContainerElement = $('#detail_waveform_panel_playhead');
+        if(typeof(playheadContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_playhead\') is undefined');
+        }
+        else if(playheadContainerElement.length == 0) {
+            throw new Error('playheadContainerElement not found');
+        }
+        this.playheadContainerElement = playheadContainerElement;
+        
+        var playheadWidget = new DetailWaveformPlayheadWidget({
+            el: playheadContainerElement,
+            panel: this,
+            audio: this.page.audio
+        });
+        this.playheadWidget = playheadWidget;
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.

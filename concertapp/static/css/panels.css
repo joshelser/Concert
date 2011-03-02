@@ -207,6 +207,15 @@ div#detail_waveform_panel_view {
     overflow-y: hidden;
 }
 
+div #detail_waveform_panel_playhead {
+    background-color: #FF0000;
+    color: #FF0000;
+    height: 253px;
+    width: 3px;
+    z-index: 6;
+    position: absolute;
+    left: 40px;
+}
 
 div#detail_waveform_panel_bottom {
     background-color: #f8f8fa;
@@ -224,7 +233,7 @@ div#detail_waveform_panel_tags {
     border: 1px solid white;
 }
 
-div#detail_waveform_panel_waveform_and_timecode {
+div#detail_waveform_panel_waveform_timecode_playhead {
     position: absolute;
 }
 
@@ -234,8 +243,11 @@ div#detail_waveform_panel_waveform_container {
 
 div#detail_waveform_panel_timecode {
     height: 40px;
-    width: 100%;
     background-color: gray;
+
+    position: absolute;
+    top: 200px;
+    z-index: 2;
 }
 
 div#audiolist_panel_contents {
@@ -248,7 +260,8 @@ div#audiolist_panel_contents {
  **/
 img.waveform_image {
     display: block;
-
+    z-index: 1;
+    position: absolute;
 }
 
 div.file_widget {
