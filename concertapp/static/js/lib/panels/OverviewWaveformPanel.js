@@ -14,7 +14,13 @@ var OverviewWaveformPanel = WaveformPanel.extend({
     initialize: function() {
         WaveformPanel.prototype.initialize.call(this)
         
-        
+        /* Instantiate widget for playhead */
+        var playheadWidget = new WaveformPlayheadWidget({
+            el: this.playheadContainerElement,
+            panel: this,
+            audio: this.page.audio
+        });
+        this.playheadWidget = playheadWidget;
     }, 
     
     /**

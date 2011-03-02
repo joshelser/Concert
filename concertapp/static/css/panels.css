@@ -133,6 +133,15 @@ div#overview_waveform_panel_bottom {
     height: 20px;
 }
 
+div #overview_waveform_panel_playhead {
+    background-color: #FF0000;
+    color: #FF0000;
+    height: 58px;
+    width: 1px;
+    z-index: 6;
+    position: absolute;
+}
+
 /*Detail Waveform Panel */
 div#detail_waveform_panel {
     width: 900px;
@@ -211,10 +220,9 @@ div #detail_waveform_panel_playhead {
     background-color: #FF0000;
     color: #FF0000;
     height: 253px;
-    width: 3px;
+    width: 1px;
     z-index: 6;
     position: absolute;
-    left: 40px;
 }
 
 div#detail_waveform_panel_bottom {

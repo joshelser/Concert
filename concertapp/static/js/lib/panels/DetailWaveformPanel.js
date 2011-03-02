@@ -73,18 +73,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.timecodeWidget = timecodeWidget;
         
-        /* The container for the playhead widget */
-        var playheadContainerElement = $('#detail_waveform_panel_playhead');
-        if(typeof(playheadContainerElement) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_playhead\') is undefined');
-        }
-        else if(playheadContainerElement.length == 0) {
-            throw new Error('playheadContainerElement not found');
-        }
-        this.playheadContainerElement = playheadContainerElement;
-        
-        var playheadWidget = new DetailWaveformPlayheadWidget({
-            el: playheadContainerElement,
+        /* Instantiate widget for playhead */
+        var playheadWidget = new WaveformPlayheadWidget({
+            el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
         });

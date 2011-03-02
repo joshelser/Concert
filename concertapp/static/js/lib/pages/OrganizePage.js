@@ -121,11 +121,12 @@ var OrganizePage = LoggedInPage.extend({
         
         if(audio.paused) {
             audio.play();
-            var playheadInterval = setInterval(function(playheadWidget) {
+            var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
                 return function() {
-                    playheadWidget.animate();
+                    detailPlayheadWidget.animate();
+                    overviewPlayheadWidget.animate();
                 };
-            }(this.detailPanel.playheadWidget), 
+            }(this.detailPanel.playheadWidget, this.overviewPanel.playheadWidget), 
                 com.concertsoundorganizer.animation.speed);
             this.playheadInterval = playheadInterval;
         }

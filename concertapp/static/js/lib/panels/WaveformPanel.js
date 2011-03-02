@@ -39,6 +39,15 @@ var WaveformPanel = Panel.extend({
         }
         this.waveformImageElement = waveformImageElement;
         
+        /* The container for the playhead widget */
+        var playheadContainerElement = this.el.find('.playhead');
+        if(typeof(playheadContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_playhead\') is undefined');
+        }
+        else if(playheadContainerElement.length == 0) {
+            throw new Error('playheadContainerElement not found');
+        }
+        this.playheadContainerElement = playheadContainerElement;
 
         _.bindAll(this, "render");
         selectedAudioSegments.bind('refresh', this.render);
