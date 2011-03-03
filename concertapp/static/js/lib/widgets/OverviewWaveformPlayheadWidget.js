@@ -17,7 +17,5 @@ var OverviewWaveformPlayheadWidget = WaveformPlayheadWidget.extend({
     audio_file_selected: function(selectedAudioFile) {
         WaveformPlayheadWidget.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.pxPerSecond = this.el.parent().width() / this.fileDuration;
-        console.log(this.el.parent().width());
-        console.log(this.fileDuration);
     },
 });
