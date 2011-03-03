@@ -126,17 +126,23 @@ var WaveformHighlighterComponent = Component.extend({
      *  @param  {Number}    x    -  The x-coordinate where the drag has stopped.
      **/
     endDrag: function(x) {
+        this.lastDragEndX = x;
         
         this.dragging = false;
         
         /* Now determine what the time of the highlight was relative to the audio
         file */
         var dragStartX = this.lastDragStartX;
-        var dragEndX = this.lastDragEndX;
+        var dragEndX = x;
+        /* If this was just a click */
+        if(dragStartX == dragEndX) {
+            /* Don't do anything */
+            return;
+        }
         var startTime = Math.min(dragStartX, dragEndX)/10;
         var endTime = Math.max(dragStartX, dragEndX)/10;
         
-        /* Highlight */
+        /* Tell panel about highlight */
         this.panel.new_waveform_highlight(startTime, endTime);
         
     }, 
