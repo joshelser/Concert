@@ -79,6 +79,8 @@ var OrganizePage = LoggedInPage.extend({
         /* Right now just delegate to model manager */
         this.modelManager.select_audio(params);
         
+        this.pause();
+        
         var files = params.files;
         var segments = params.segments;
         files || (files = []);
@@ -120,20 +122,28 @@ var OrganizePage = LoggedInPage.extend({
         var audio = this.audio;
         
         if(audio.paused) {
-            audio.play();
-            var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
-                return function() {
-                    detailPlayheadWidget.animate();
-                    overviewPlayheadWidget.animate();
-                };
-            }(this.detailPanel.playheadWidget, this.overviewPanel.playheadWidget), 
-                com.concertsoundorganizer.animation.speed);
-            this.playheadInterval = playheadInterval;
+            this.play();
         }
         else {
-            audio.pause();
-            clearInterval(this.playheadInterval);
+            this.pause();
         }
     }, 
+    
+    play: function() {
+        this.audio.play();
+        var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
+            return function() {
+                detailPlayheadWidget.animate();
+                overviewPlayheadWidget.animate();
+            };
+        }(this.detailPanel.playheadWidget, this.overviewPanel.playheadWidget), 
+            com.concertsoundorganizer.animation.speed);
+        this.playheadInterval = playheadInterval;
+    },
+    
+    pause: function() {
+        this.audio.pause();
+        clearInterval(this.playheadInterval);        
+    },
     
 });
