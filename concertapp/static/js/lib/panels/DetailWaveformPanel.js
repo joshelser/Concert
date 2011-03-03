@@ -82,20 +82,22 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.playheadWidget = playheadWidget;
         
         
-        var highlighterElement = $('#detail_waveform_panel_highlight');
-        if(typeof(highlighterElement) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_highlight\') is undefined');
+        var highlightContainerElement = $('#detail_waveform_panel_highlight_container');
+        if(typeof(highlightContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_highlight_container\') is undefined');
         }
-        else if(highlighterElement.length == 0) {
-            throw new Error('highlighterElement not found');
+        else if(highlightContainerElement.length == 0) {
+            throw new Error('highlightContainerElement not found');
         }
-        this.highlighterElement = highlighterElement;
+        this.highlightContainerElement = highlightContainerElement;
         
         /* a highlighter component so we can highlight things */
-        var highlighter = new WaveformHighlighterComponent({
-            el: highlighterElement, 
+        var highlighter = new DetailWaveformHighlighterComponent({
+            el: highlightContainerElement, 
             panel: this, 
         });
+        this.highlighter = highlighter;
+        
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.
@@ -116,17 +118,21 @@ var DetailWaveformPanel = WaveformPanel.extend({
         var waveformImageElement = this.waveformImageElement;
         
         /* When waveform image has loaded */
-        waveformImageElement.imagesLoaded(function(me) {
+        waveformImageElement.imagesLoaded(function(me, selectedAudioFile) {
             return function() {
                 /* Draw timecode */
                 me.timecodeWidget.render();
+                
+                /* Set up highlighter */
+                me.highlighter.audio_file_selected(selectedAudioFile);
             };            
-        }(this));
+        }(this, selectedAudioFile));
         
         /* Load the waveform viewer with the audio files' waveform image */
         this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
         
         this.playheadWidget.reset();
-                
+        
+        
     }, 
 });

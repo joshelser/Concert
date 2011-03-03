@@ -265,9 +265,13 @@ div#audiolist_panel_contents {
 /**
  *  Waveform highlight
  **/
-div.highlight {
+div.highlight_container {
   z-index: 300;
   position: absolute;
+}
+div.highlight {
+  height: 100%;
+  position: relative;
   background-color: white;
   opacity: 0.5;
 }
@@ -277,7 +281,7 @@ div.highlight.disabled {
   visibility: hidden;
 }
 
-div#detail_waveform_panel_highlight {
+div#detail_waveform_panel_highlight_container {
   height: 253px;
 }
 
