@@ -73,13 +73,14 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.timecodeWidget = timecodeWidget;
         
-        /* Instantiate widget for playhead */
+        /* Instantiate component for playhead */
         var playheadWidget = new WaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
         });
         this.playheadWidget = playheadWidget;
+        
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.
