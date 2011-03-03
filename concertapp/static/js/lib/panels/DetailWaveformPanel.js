@@ -98,13 +98,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.highlighter = highlighter;
         
-        $(highlighter).bind('highlight', function(e, data) {
-            console.log('e:');
-            console.log(e);
-            console.log('data:');
-            console.log(data);
-        });
-        
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.
@@ -139,7 +132,15 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
         
         this.playheadWidget.reset();
-        
-        
+    }, 
+    
+    /**
+     *  Called from highlight when an area of the waveform is highlighted.
+     *
+     *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
+     *  @param  {Number}    endTime    -    The time of the highlight end.
+     **/
+    new_waveform_highlight: function(startTime, endTime) {
+        this.page.new_waveform_highlight(startTime, endTime);
     }, 
 });

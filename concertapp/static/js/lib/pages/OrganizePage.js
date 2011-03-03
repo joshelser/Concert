@@ -146,4 +146,17 @@ var OrganizePage = LoggedInPage.extend({
         clearInterval(this.playheadInterval);        
     },
     
+    /**
+     *  This is called when an area of the waveform was highlighted by the user.
+     *
+     *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
+     *  @param  {Number}    endTime    -    The time of the highlight end.
+     **/
+    new_waveform_highlight: function(startTime, endTime) {
+        console.log('startTime:');
+        console.log(startTime);
+        console.log('endTime:');
+        console.log(endTime);
+    }, 
+    
 });
