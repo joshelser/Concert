@@ -31,6 +31,7 @@ var OverviewWaveformPanel = WaveformPanel.extend({
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
+        this.playheadWidget.reset();
         
     }, 
 })

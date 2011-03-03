@@ -52,5 +52,9 @@ var WaveformPlayheadWidget = Widget.extend({
     animate: function() {
         var leftPx = this.audio.currentTime * this.pxPerSecond
         this.el.css('left', leftPx);
+    },
+    
+    reset: function() {
+        this.el.css('left', '0px');
     }
 });
