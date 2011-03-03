@@ -1,5 +1,5 @@
 /**
- *  @file       DetailWaveformTimecodeWidget.js
+ *  @file       DetailWaveformTimecodeComponent.js
  *  
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
@@ -9,7 +9,7 @@
  *  @class
  *  @extends    Widget
  **/
-var DetailWaveformTimecodeWidget = Widget.extend({
+var DetailWaveformTimecodeComponent = Widget.extend({
     initialize: function() {
         Widget.prototype.initialize.call(this);
 

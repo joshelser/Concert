@@ -1,5 +1,5 @@
 /**
- *  @file       WaveformPlayheadWidget.js
+ *  @file       WaveformPlayheadComponent.js
  *  
  *  @author     Amy Wieliczka <amywieliczka [at] gmail.com>
  **/
@@ -9,7 +9,7 @@
  *  @class
  *  @extends    Widget
  **/
-var WaveformPlayheadWidget = Widget.extend({
+var WaveformPlayheadComponent = Widget.extend({
     initialize: function() {
         Widget.prototype.initialize.call(this);
 

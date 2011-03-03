@@ -15,7 +15,7 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         WaveformPanel.prototype.initialize.call(this)
         
         /* Instantiate widget for playhead */
-        var playheadWidget = new OverviewWaveformPlayheadWidget({
+        var playheadWidget = new OverviewWaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio

@@ -66,7 +66,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeContainerElement = timecodeContainerElement;
         
         /* Instantiate widget for timecode */
-        var timecodeWidget = new DetailWaveformTimecodeWidget({
+        var timecodeWidget = new DetailWaveformTimecodeComponent({
             el: timecodeContainerElement, 
             panel: this, 
             audio: this.page.audio
@@ -74,7 +74,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeWidget = timecodeWidget;
         
         /* Instantiate widget for playhead */
-        var playheadWidget = new WaveformPlayheadWidget({
+        var playheadWidget = new WaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
