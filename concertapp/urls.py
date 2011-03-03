@@ -85,7 +85,7 @@ if settings.DEBUG:
         (r'^css/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'css')
         }),
-        (r'^css/(?P<path>.*)$', 'django.views.static.serve', {
+        (r'^fonts/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'fonts')
         }),
         (r'^graphics/(?P<path>.*)$', 'django.views.static.serve', {
