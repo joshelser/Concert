@@ -64,3 +64,14 @@ function domElementsReplace(nodes, container) {
     }
     container.append(frag);    
 }
+
+/**
+ *  Takes an event, and returns the x coordinate of the event relative to the
+ *  event's current target.  Why this isn't in jQuery I don't know.
+ *
+ *  @param  {jQuery.Event}    e    -    The event.
+ **/
+function get_event_x(e) {
+    return e.pageX-$(e.currentTarget).offset().left;
+}
+

@@ -7,11 +7,11 @@
 /**
  *  The widget that displays the timecode underneath the detail waveform.
  *  @class
- *  @extends    Widget
+ *  @extends    Component
  **/
-var DetailWaveformTimecodeComponent = Widget.extend({
+var DetailWaveformTimecodeComponent = Component.extend({
     initialize: function() {
-        Widget.prototype.initialize.call(this);
+        Component.prototype.initialize.call(this);
 
         var params = this.options;
         
@@ -26,7 +26,7 @@ var DetailWaveformTimecodeComponent = Widget.extend({
     },
 
     render: function() {
-        Widget.prototype.render.call(this);
+        Component.prototype.render.call(this);
         var el = this.el;
         
         /** TODO: Remove all this stuff once we refactor the selected audio files */

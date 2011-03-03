@@ -14,6 +14,7 @@ The base template for all pages.  All page templates will use this.
 <html>
   <head>
     <title>Concert</title>
+    <link rel="icon" type="image/png" href="/graphics/logo.png" />
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
     <link rel="stylesheet" type="text/css" href="/css/panels.css">
     <link rel="stylehseet" type="text/css" href="/css/pages.css">
@@ -87,9 +88,12 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/widgets/CollectionInfoWidget.js"></script>
     
     {# Components #}
+    <script src="/js/lib/components/Component.js"></script>
     <script src="/js/lib/components/DetailWaveformTimecodeComponent.js"></script>
     <script src="/js/lib/components/WaveformPlayheadComponent.js"></script>
     <script src="/js/lib/components/OverviewWaveformPlayheadComponent.js"></script>
+    <script src="/js/lib/components/WaveformHighlighterComponent.js"></script>
+    <script src="/js/lib/components/DetailWaveformHighlighterComponent.js"></script>
     
 
     {# Panels #}

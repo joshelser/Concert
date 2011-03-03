@@ -7,11 +7,11 @@
 /**
  *  The widget that displays the playhead superimposed on the detail waveform.
  *  @class
- *  @extends    Widget
+ *  @extends    Component
  **/
-var WaveformPlayheadComponent = Widget.extend({
+var WaveformPlayheadComponent = Component.extend({
     initialize: function() {
-        Widget.prototype.initialize.call(this);
+        Component.prototype.initialize.call(this);
 
         var params = this.options;
         
