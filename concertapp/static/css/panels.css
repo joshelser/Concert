@@ -1,13 +1,18 @@
 /*
 *  Panels
 */
+
+/* FONT IMPORT */
+@font-face {
+  font-family: "GeosansLight";
+  src: url(/fonts/GeosansLight.ttf) format("truetype");
+}
+
 /* This is a panel on the UI, used for many things. */
 div.panel {
     /* default panel values */
     position: relative;
     min-height: 60px;
-    margin-left: 30px;
-    margin-right: 30px;
 }
 
 /* This is the div that shows a loading notification on each panel */
@@ -42,7 +47,7 @@ div.panel_loader_enabled {
 *  http://www.w3.org/TR/css3-box/#types
 */
 div#global_options_panel {
-    width: 900px;
+    width: 960px;
     -webkit-box-orient: horizontal;
     display: -webkit-box;
     margin-top: 20px;
@@ -50,28 +55,32 @@ div#global_options_panel {
 }
 
 div#global_options_panel_contents {
-    width: 900px;
+    width: 100%;
     -webkit-box-orient: horizontal;
     display: -webkit-box;
 }
 
 div#global_options_panel_left {
-    width: 300px;
+    width: 320px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-box-pack: start;
 }
 
 div#global_options_panel_left h1 {
-    font-family: "Geosans Light", "Helvetica", Verdana, Arial, sans-serif;
+    font-family: "GeosansLight", "Helvetica", Verdana, Arial, sans-serif;
     letter-spacing: 1.25em;
     font-size: 1.5em;
     font-weight: normal;
     text-transform: lowercase;
     display: -webkit-box;
     -webkit-box-flex: 1;
+    padding-top: 25px;
+    padding-left: 32px;
+    background: url(/graphics/logo.png) left no-repeat;
 }
 
+/* NOT IN USE AT THE MOMENT
 div#global_options_panel_left div#logout_info {
     text-transform: uppercase;
     font-weight: bold;
@@ -83,21 +92,43 @@ div#global_options_panel_left div#logout_info {
     -webkit-box-align: baseline;
 }
 
+
 div#global_options_panel_left div#logout_info a{
     margin-left: 1em;
 }
 
 div#global_options_panel_middle {
     text-align: center;
-    width: 300px;
-}
+    width: 320px;
+}*/
 
 div#global_options_panel_right {
-    width: 300px;
+	width: 640px;
     -webkit-box-pack: end;
     /* Contents (buttons) will also be horizontally spread using the box model */
     -webkit-box-orient: horizontal;
     display: -webkit-box;
+}
+
+div#global_menu ul{
+	float: right;
+	padding-top: 29px;
+}
+
+div#global_menu li{
+	float: right;
+	padding-left: 20px;
+	list-style: none;
+	font-size: 10px;
+	font-family: Helvetica, sans-serif;
+	text-transform: capitalize;
+}
+
+div#global_menu a:link, a:hover, a:visited{
+	color: #282833;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform:uppercase;
 }
 
 div.global_options_panel_button {
