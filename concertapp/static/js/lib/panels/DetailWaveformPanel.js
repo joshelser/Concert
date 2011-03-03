@@ -98,6 +98,13 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.highlighter = highlighter;
         
+        $(highlighter).bind('highlight', function(e, data) {
+            console.log('e:');
+            console.log(e);
+            console.log('data:');
+            console.log(data);
+        });
+        
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.

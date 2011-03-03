@@ -8,6 +8,7 @@
  *  The component that allows for highlighting functionality on a WaveformPanel.
  *  @class
  *  @extends    Component
+ *  @throws     Highlight   -   When a section of the waveform is highlighted.
  **/
 var WaveformHighlighterComponent = Component.extend({
     initialize: function() {
@@ -35,6 +36,10 @@ var WaveformHighlighterComponent = Component.extend({
         
         /* Where the last drag point was (x-coordinate) */
         this.lastDragEndX = null;
+        
+        /* Cache the duration of the current audio file (we will need it each time
+        we highlight) */
+        this.audioFileDuration = null;
     }, 
     
     _initializeElements: function() {
@@ -124,6 +129,19 @@ var WaveformHighlighterComponent = Component.extend({
         
         this.dragging = false;
         
+        /* Now determine what the time of the highlight was relative to the audio
+        file */
+        var dragStartX = this.lastDragStartX;
+        var dragEndX = this.lastDragEndX;
+        var startTime = Math.min(dragStartX, dragEndX)/10;
+        var endTime = Math.max(dragStartX, dragEndX)/10;
+        
+        /* Throw highlight event */
+        $(this).trigger('highlight', {
+            startTime: startTime, 
+            endTime: endTime
+        });
+        
     }, 
     
     draw_highlight: function() {
@@ -152,8 +170,12 @@ var WaveformHighlighterComponent = Component.extend({
      *  @param  {AudioFile}    selectedAudioFile    -   The audio file object.
      **/
     audio_file_selected: function(selectedAudioFile) {
+        
+        var audioFileDuration = selectedAudioFile.get('duration');
+        this.audioFileDuration = audioFileDuration;
+        
         /* Set width of highlight container element properly */
-        this.el.css('width', selectedAudioFile.get('duration')*10+'px');
+        this.el.css('width', audioFileDuration*10+'px');
     }, 
     
     /**
