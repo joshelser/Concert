@@ -134,12 +134,16 @@ div#overview_waveform_panel_bottom {
 }
 
 div #overview_waveform_panel_playhead {
-    background-color: #FF0000;
-    color: #FF0000;
     height: 58px;
-    width: 1px;
-    z-index: 6;
-    position: absolute;
+}
+
+div.playhead {
+  background-color: #FF0000;
+  color: #FF0000;
+  width: 1px;
+  z-index: 300;
+  position: absolute;
+  
 }
 
 /*Detail Waveform Panel */
@@ -217,12 +221,7 @@ div#detail_waveform_panel_view {
 }
 
 div #detail_waveform_panel_playhead {
-    background-color: #FF0000;
-    color: #FF0000;
     height: 253px;
-    width: 1px;
-    z-index: 6;
-    position: absolute;
 }
 
 div#detail_waveform_panel_bottom {
@@ -255,7 +254,7 @@ div#detail_waveform_panel_timecode {
 
     position: absolute;
     top: 200px;
-    z-index: 2;
+    z-index: 200;
 }
 
 div#audiolist_panel_contents {
@@ -264,11 +263,30 @@ div#audiolist_panel_contents {
 }
 
 /**
+ *  Waveform highlight
+ **/
+div.highlight {
+  z-index: 300;
+  position: absolute;
+  background-color: white;
+  opacity: 0.5;
+}
+
+/* Initially a highlight will be disabled */
+div.highlight.disabled {
+  visibility: hidden;
+}
+
+div#detail_waveform_panel_highlight {
+  height: 253px;
+}
+
+/**
  *  Waveform images
  **/
 img.waveform_image {
     display: block;
-    z-index: 1;
+    z-index: 100;
     position: absolute;
 }
 

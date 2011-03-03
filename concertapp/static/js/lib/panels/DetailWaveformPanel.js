@@ -81,6 +81,21 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.playheadWidget = playheadWidget;
         
+        
+        var highlighterElement = $('#detail_waveform_panel_highlight');
+        if(typeof(highlighterElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_highlight\') is undefined');
+        }
+        else if(highlighterElement.length == 0) {
+            throw new Error('highlighterElement not found');
+        }
+        this.highlighterElement = highlighterElement;
+        
+        /* a highlighter component so we can highlight things */
+        var highlighter = new WaveformHighlighterComponent({
+            el: highlighterElement, 
+            panel: this, 
+        });
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.
