@@ -32,6 +32,9 @@ var WaveformHighlighterComponent = Component.extend({
         
         /* Where the last drag started (x-coordinate) */
         this.lastDragStartX = null;
+        
+        /* Where the last drag point was (x-coordinate) */
+        this.lastDragEndX = null;
     }, 
     
     _initializeElements: function() {
@@ -62,7 +65,7 @@ var WaveformHighlighterComponent = Component.extend({
             return function(e) {
                 e.stopPropagation();
                 
-                me.startDrag(e.offsetX);
+                me.startDrag(get_event_x(e));
             };
         }(this));
         
@@ -71,7 +74,7 @@ var WaveformHighlighterComponent = Component.extend({
                 e.stopPropagation();
                 
                 if(me.dragging) {
-                    me.continueDrag(e.offsetX);
+                    me.continueDrag(get_event_x(e));
                 }
             };
         }(this));
@@ -80,7 +83,7 @@ var WaveformHighlighterComponent = Component.extend({
             return function(e) {
                 e.stopPropagation();
                 
-                me.endDrag(e.offsetX);
+                me.endDrag(get_event_x(e));
             };
         }(this));
     }, 
@@ -99,17 +102,17 @@ var WaveformHighlighterComponent = Component.extend({
         this.lastDragStartX = x;
         /* We are now dragging */
         this.dragging = true;
-        /* Start highlight here */
-        this.highlight.css('left', x+'px');
     }, 
     
     /**
-     *  When a drag is continuing.
+     *  When a drag is continuing.  Called on every mousemove event.
      *
      *  @param  {Number}    x   -   The x-coordinate where the drag is currently.
      **/
     continueDrag: function(x) {
-        this.highlight.css('width', (x-this.lastDragStartX)+'px');
+        this.lastDragEndX = x;
+        
+        this.draw_highlight();
     }, 
     
     /**
@@ -118,10 +121,29 @@ var WaveformHighlighterComponent = Component.extend({
      *  @param  {Number}    x    -  The x-coordinate where the drag has stopped.
      **/
     endDrag: function(x) {
-        this.continueDrag(x);
         
         this.dragging = false;
         
+    }, 
+    
+    draw_highlight: function() {
+        var start = this.lastDragStartX;
+        var end = this.lastDragEndX;
+        
+        /* If the drag is left to right */
+        if(start < end) {
+            this.highlight.css({
+                left: start+'px', 
+                width: (end-start)+'px' 
+            });
+        }
+        /* If the drag is from right to left */
+        else if(start > end) {
+            this.highlight.css({
+                left: end+'px', 
+                width: (start-end)+'px'
+            });
+        }
     }, 
     
     /**
