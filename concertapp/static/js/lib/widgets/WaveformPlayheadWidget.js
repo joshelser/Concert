@@ -23,6 +23,11 @@ var WaveformPlayheadWidget = Widget.extend({
         this.audio = audio;
         
         _.bindAll(this, "render");
+        
+        var pxPerSecond = 10;
+        this.pxPerSecond = pxPerSecond;
+        
+        this.fileDuration = null;
     },
 
     render: function() {
@@ -45,8 +50,7 @@ var WaveformPlayheadWidget = Widget.extend({
      *  moves the playhead to the left the currentTime * 10
      **/
     animate: function() {
-        var pxPerSecond = 10;
-        var leftPx = this.audio.currentTime * pxPerSecond
+        var leftPx = this.audio.currentTime * this.pxPerSecond
         this.el.css('left', leftPx);
     }
 });

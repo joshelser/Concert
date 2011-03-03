@@ -79,5 +79,9 @@ var WaveformPanel = Panel.extend({
         }
         
         return this;
-    },    
+    },
+    
+    audio_file_selected: function(selectedAudioFile) {
+        this.playheadWidget.audio_file_selected(selectedAudioFile);
+    }
 });

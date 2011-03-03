@@ -85,6 +85,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  Called from parent class when an audio file has been selected on the UI.
      **/
     audio_file_selected: function(selectedAudioFile) {
+        WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         var selectedAudioFileJSON = selectedAudioFile.toJSON();
         /* Load the top left content with our audio file */
         this.topLeftContainer.html(
@@ -109,10 +110,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
         
         /* Load the waveform viewer with the audio files' waveform image */
-        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));
-
-        this.playheadWidget.audio_file_selected(selectedAudioFile);
-        
+        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
         
         
     }, 

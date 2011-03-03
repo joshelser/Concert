@@ -15,7 +15,7 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         WaveformPanel.prototype.initialize.call(this)
         
         /* Instantiate widget for playhead */
-        var playheadWidget = new WaveformPlayheadWidget({
+        var playheadWidget = new OverviewWaveformPlayheadWidget({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
@@ -29,6 +29,7 @@ var OverviewWaveformPanel = WaveformPanel.extend({
      *  @param  {AudioFile}    selectedAudioFile    -   The audio file instance
      **/
     audio_file_selected: function(selectedAudioFile) {
+        WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
         
     }, 
