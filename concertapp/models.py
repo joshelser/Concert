@@ -1,4 +1,4 @@
-from concertapp. import audioFormats, audioHelpers
+from concertapp.audio import audioFormats, audioHelpers
 from concertapp.settings import MEDIA_ROOT
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -325,7 +325,7 @@ class Request(models.Model):
         self.delete()
 
 class Tag(models.Model):
-    segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
+    segments = models.ManyToManyField('AudioSegment', related_name = "tags")
     collection = models.ForeignKey('Collection')
     name = models.CharField(max_length = 100)
     time = models.DateTimeField(auto_now_add = True)
