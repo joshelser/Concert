@@ -9,11 +9,13 @@
 
     {% panel 'collections/partials/create_join_collection_panel.html' 'Create/Join a Collection' 'create_join' %}
 
-    {% panel 'collections/partials/manage_admin_collections_panel.html' 'Manage Your Collections' 'manage_admin_collections' %}
-    
-    {% panel 'collections/partials/manage_member_collections_panel.html' 'Manage Your Memberships' 'manage_member_collections' %}
+    {% panel '../templates/partials/panel.html' 'Manage Your Collections' 'manage_collections' %}
 
-    {% panel 'collections/partials/manage_request_collections_panel.html' 'Manage Your Requests' 'manage_request_collections' %}
+    {# panel 'collections/partials/manage_admin_collections_panel.html' 'Manage Your Collections' 'manage_admin_collections' #}
+    
+    {# panel 'collections/partials/manage_member_collections_panel.html' 'Manage Your Memberships' 'manage_member_collections' #}
+
+    {# panel 'collections/partials/manage_request_collections_panel.html' 'Manage Your Requests' 'manage_request_collections' #}
 
 {% endblock %}
 
@@ -34,6 +36,10 @@
     {#  the first "create collection" result when no groups are found. #}
     <script id="create_join_create_new_template" type="text/x-jquery-tmpl">
         {% include 'collections/clientside/create_join_create_new_widget.html' %}
+    </script>
+    
+    <script id="manage_collection_template" type="text/x-jquery-tmpl">
+        {% include "collections/clientside/manage_collection_widget.html" %}
     </script>
 
     <script id="manage_member_collection_template" type="text/x-jquery-tmpl">

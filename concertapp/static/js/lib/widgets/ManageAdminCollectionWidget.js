@@ -62,6 +62,8 @@ var ManageAdminCollectionWidget = Widget.extend({
                     template: template
                 });
                 
+                console.log(req);
+                
                 frag.appendChild(widget.el);
             };
         }(this, this.collectionRequestWidgetTemplate, frag));

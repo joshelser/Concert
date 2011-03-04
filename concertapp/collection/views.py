@@ -29,11 +29,9 @@ from concertapp.collection.api import *
 def manage_collections(request):
     user = request.user
     
-    ar = AdminCollectionResource()
     ur = UserRequestResource()
     
     data = {
-        'adminCollections': ar.as_dict(request),
         'requests': ur.as_dict(request),
     }
     
