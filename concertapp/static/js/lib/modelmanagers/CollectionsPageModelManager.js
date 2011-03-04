@@ -21,21 +21,7 @@ CollectionsPageModelManager.prototype.init = function(params) {
     LoggedInModelManager.prototype.init.call(this, params);
 
     var dataToLoad = this._dataToLoad;
-    
-    /**
-     *  The raw collection data for collections that the current user is an
-     *  administrator of.
-     **/
-    var userAdminCollectionsData = params.adminCollections;
-    if(typeof(userAdminCollectionsData) == 'undefined') {
-        throw new Error('params.adminCollections is undefined');
-    }
-    dataToLoad.userAdminCollectionsData = userAdminCollectionsData;    
-    
-    /*  Backbone set that will hold Concert Collection objects that the
-        user is an administrator of */
-    this.userAdminCollections = new CollectionSet;
-    
+        
     /** The raw collection data for the collections that the current user has
         requested to join **/
     var requestData = params.requests;
