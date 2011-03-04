@@ -76,9 +76,11 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     urlpatterns += patterns('',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT
-        }),
+#   Serving audio files with django doesn't work.  Webkit doesn't understand or 
+#   something.  Use apache.
+#        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+#            'document_root': settings.MEDIA_ROOT
+#        }),
         (r'^js/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root' : os.path.join(settings.STATIC_DOC_ROOT, 'js')
         }),
