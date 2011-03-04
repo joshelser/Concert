@@ -58,18 +58,13 @@ CollectionsPageModelManager.prototype._loadData = function() {
     
     var seenInstances = com.concertsoundorganizer.modelManager.seenInstances['Collection'];
     
-    
-    var userAdminCollections = this.userAdminCollections;
-    var userAdminCollectionsData = dataToLoad.userAdminCollectionsData;
-    for(var i = 0, il = userAdminCollectionsData.length; i < il; i++) {
-        /* The current user is an administrator of this collection, store this 
-            instead of comparing user later */
-        userAdminCollectionsData[i]['user_is_admin'] = true;
+    var userMemberCollections = this.userMemberCollections;
+    for(var i=0, il = userMemberCollections.length; i < il; i++) {
+        if(userMemberCollections.at(i).get('admin') == this.user) {
+            userMemberCollections.at(i).set({'user_is_admin': true});
+        }
     }
-    userAdminCollections.refresh(userAdminCollectionsData);
-    /* We're done with the admin collections data */
-    dataToLoad.userAdminCollectionsData = null;
-        
+            
     var seenRequests = this.seenInstances['Request'];
     this.userRequests.refresh(dataToLoad.requestData);
     dataToLoad.requestData = null;

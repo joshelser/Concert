@@ -27,40 +27,25 @@ var CollectionsPage = LoggedInPage.extend({
         });
         this.createJoinCollectionPanel = createJoinCollectionPanel;
 
-
-        /**
-         *  This panel will allow the user to manage the collections they are an 
-         *  administrator of.
-         **/
-        var manageAdminCollectionsPanel = new ManageAdminCollectionsPanel({
+        var manageCollectionsPanel = new ManageCollectionsPanel({
             page: this,
-            el: $('#manage_admin_collections_panel'),
-            set: modelManager.userAdminCollections
+            el: $('#manage_collections_panel'),
+            userMemberCollectionsSet: modelManager.userMemberCollections,
+            userRequestsSet: modelManager.userRequests
         });
-        this.manageAdminCollectionsPanel = manageAdminCollectionsPanel;
-
-        /**
-         *  This panel will allow the user to manage the collectionsuser they are a 
-         *  member of (excluding the ones they are an administrator of)
-         **/
-        var manageMemberCollectionsPanel = new ManageMemberCollectionsPanel({
-            page: this, 
-            el: $('#manage_member_collections_panel'), 
-            set: modelManager.userMemberCollections
-        });
-        this.manageMemberCollectionsPanel = manageMemberCollectionsPanel;
+        this.manageCollectionsPanel = manageCollectionsPanel;
 
         /**
          *  This panel will allow the user to manage the join requests they have
          *  sent out.
          **/
-        var manageRequestsPanel = new ManageRequestsPanel({
+/*        var manageRequestsPanel = new ManageRequestsPanel({
             page: this, 
             el: $('#manage_request_collections_panel'), 
             set: modelManager.userRequests
         });
         this.manageRequestsPanel = manageRequestsPanel;
-        
+*/        
     },
     
     /**

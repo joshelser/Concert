@@ -84,5 +84,6 @@ LoggedInModelManager.prototype._loadData = function() {
      **/
     var userMemberCollections = this.userMemberCollections;
     userMemberCollections.refresh(dataToLoad['userMemberCollectionsData']);
+    dataToLoad['userMemberCollectionsData'] = null;
     
 };

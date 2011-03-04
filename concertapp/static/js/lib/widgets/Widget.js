@@ -47,6 +47,9 @@ var Widget = Backbone.View.extend({
         if(template) {
             /* render new widget */
             var newel = template.tmpl(this.model.toJSON());
+            if(newel.length != 1) {
+                throw new Error('widgets must have a single containing element');
+            }
             var el = this.el;
             
             /* If this element is currently in the DOM */
