@@ -204,6 +204,8 @@ var WaveformHighlighterComponent = Component.extend({
         this.highlight.css({
             width: '0px'
         });
+        
+        this.panel.waveform_highlight_cleared();
     }
 
 });

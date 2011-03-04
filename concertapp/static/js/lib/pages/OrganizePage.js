@@ -10,6 +10,7 @@
  *  @extends    LoggedInPage
  **/
 var OrganizePage = LoggedInPage.extend({
+    
     _initializeModelManager: function(params) {
         return new OrganizePageModelManager(params);
     }, 
@@ -23,6 +24,10 @@ var OrganizePage = LoggedInPage.extend({
         audio.autoplay = false;
         audio.preload = 'auto';
         this.audio = audio;
+        
+        /* The callback function for an audio loop */
+        this.audioLoopTimeUpdateCallback = null;
+        
         
         /* This is the type of audio file we will use */
         this.audioType = com.concertsoundorganizer.compatibility.audioType;
@@ -108,6 +113,14 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {AudioFile}    audioFile    -   The AudioFile model instance
      **/
     select_audio_file: function(audioFile) {
+        var audio = this.audio;
+        
+        /* when the file is done loading */
+        audio.addEventListener('canplaythrough', function() {
+            console.log('canplaythrough');
+        });
+        
+        
         /* The proper audio source for this browser */
         var audiosrc = audioFile.get(this.audioType);
         
@@ -153,10 +166,48 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
     new_waveform_highlight: function(startTime, endTime) {
-        console.log('startTime:');
-        console.log(startTime);
-        console.log('endTime:');
-        console.log(endTime);
+        /* Start audio loop */
+        this.start_audio_loop(startTime, endTime);
+    },
+    
+    /**
+     *  This is called when a waveform is cleared.
+     **/
+    waveform_highlight_cleared: function() {
+        this.clear_audio_loop();
+    }, 
+    
+    /**
+     *  This is called when a section of a waveform is selected.  It will start
+     *  an interval that will loop a single section of audio.
+     *
+     *  @param  {Number}    startTime    -  The beginning of the loop.
+     *  @param  {Number}    endTime     -   The end of the loop
+     **/
+    start_audio_loop: function(startTime, endTime) {
+        
+        /* This function will be called when a timeupdate event occurs. */
+        var audioLoopTimeUpdateCallback = function(startTime, endTime) {
+            return function(e) {
+                var currentTime = this.currentTime;
+                
+                if(currentTime < startTime || currentTime > endTime) {
+                    this.currentTime = startTime;
+                }
+            };
+        }(startTime, endTime);
+        /* Save so we can unbind later */
+        this.audioLoopTimeUpdateCallback = audioLoopTimeUpdateCallback;
+        
+        /* When audio loop changes time */
+        $(this.audio).bind('timeupdate', audioLoopTimeUpdateCallback);
+    }, 
+    
+    /**
+     *  This is called when a highlight is cleared.
+     **/
+    clear_audio_loop: function() {
+        $(this.audio).unbind('timeupdate', this.audioLoopTimeUpdateCallback);
     }, 
     
 });

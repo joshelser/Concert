@@ -143,4 +143,11 @@ var DetailWaveformPanel = WaveformPanel.extend({
     new_waveform_highlight: function(startTime, endTime) {
         this.page.new_waveform_highlight(startTime, endTime);
     }, 
+    
+    /**
+     *  Called from highlight when it has been cleared.
+     **/
+    waveform_highlight_cleared: function() {
+        this.page.waveform_highlight_cleared();
+    }, 
 });
