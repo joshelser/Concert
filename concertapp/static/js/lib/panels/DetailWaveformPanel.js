@@ -74,7 +74,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeWidget = timecodeWidget;
         
         /* Instantiate component for playhead */
-        var playheadWidget = new WaveformPlayheadComponent({
+        var playheadWidget = new DetailWaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
@@ -150,4 +150,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
     waveform_highlight_cleared: function() {
         this.page.waveform_highlight_cleared();
     }, 
+    
+    scroll_to_time: function(leftPx) {
+        var waveformView = $('#detail_waveform_panel_view');
+        waveformView.animate({scrollLeft: leftPx}, 200, "easeInBounce");
+    }
 });

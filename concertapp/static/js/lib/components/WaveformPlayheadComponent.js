@@ -1,7 +1,7 @@
 /**
  *  @file       WaveformPlayheadComponent.js
  *  
- *  @author     Amy Wieliczka <amywieliczka [at] gmail.com>
+ *  @author     amy wieliczka <amywieliczka [at] gmail.com>
  **/
  
 /**
