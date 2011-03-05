@@ -20,7 +20,6 @@ var DetailWaveformPlayheadComponent = WaveformPlayheadComponent.extend({
      **/
     animate: function() {
         var leftPx = this.audio.currentTime * this.pxPerSecond
-        console.log(this.panel);
         if ((leftPx % 815) <= 5) {
             this.panel.scroll_to_time(leftPx);
         }

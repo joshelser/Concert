@@ -153,6 +153,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
     
     scroll_to_time: function(leftPx) {
         var waveformView = $('#detail_waveform_panel_view');
-        waveformView.animate({scrollLeft: leftPx}, 200, "easeInBounce");
+        waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
     }
 });
