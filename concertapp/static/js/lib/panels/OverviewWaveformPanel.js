@@ -15,12 +15,12 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         WaveformPanel.prototype.initialize.call(this)
         
         /* Instantiate widget for playhead */
-        var playheadWidget = new OverviewWaveformPlayheadComponent({
+        var playheadComponent = new OverviewWaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
         });
-        this.playheadWidget = playheadWidget;
+        this.playheadComponent = playheadComponent;
     }, 
     
     /**
@@ -31,7 +31,7 @@ var OverviewWaveformPanel = WaveformPanel.extend({
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
-        this.playheadWidget.reset();
+        this.playheadComponent.reset();
         
     }, 
 })

@@ -29,6 +29,7 @@ class AudioFileAuthorization(ConcertAuthorization):
             return False
 
 class AudioFileResource(MyResource):
+    name = fields.CharField('name')
     uploader = fields.ForeignKey(UserResource, 'uploader', full=True)
     collection = fields.ForeignKey(CollectionResource, "collection")
     detailWaveform = fields.FileField('detailWaveform')

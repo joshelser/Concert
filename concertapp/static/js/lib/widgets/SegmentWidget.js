@@ -11,6 +11,20 @@
  **/
 var SegmentWidget = Widget.extend({
     initialize: function() {
+        Widget.prototype.initialize.call(this);
         
+        var params = this.options;        
+        
+        _.bindAll(this, "render");
+        this.render();
+    }, 
+    events: {
+        'click': 'select_segment', 
+    }, 
+    /**
+     *  Called when the segment is selected in the list
+     **/
+    select_segment: function() {
+        this.panel.page.select_audio({segments: [this.model]});
     }, 
 });

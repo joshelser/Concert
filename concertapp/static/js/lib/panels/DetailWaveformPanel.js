@@ -74,12 +74,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeWidget = timecodeWidget;
         
         /* Instantiate component for playhead */
-        var playheadWidget = new WaveformPlayheadComponent({
+        var playheadComponent = new WaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
         });
-        this.playheadWidget = playheadWidget;
+        this.playheadComponent = playheadComponent;
         
         
         var highlightContainerElement = $('#detail_waveform_panel_highlight_container');
@@ -131,7 +131,15 @@ var DetailWaveformPanel = WaveformPanel.extend({
         /* Load the waveform viewer with the audio files' waveform image */
         this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
         
-        this.playheadWidget.reset();
+        this.playheadComponent.reset();
+    }, 
+    
+    /**
+     *  Called when audio segment has been selected on the UI.
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        /* Select this segment's audio file */
+        this.audio_file_selected(selectedAudioSegment.get('audioFile'));
     }, 
     
     /**

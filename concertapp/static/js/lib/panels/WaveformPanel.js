@@ -66,22 +66,34 @@ var WaveformPanel = Panel.extend({
         
         /* If there was an audio segment selected */
         if(selectedAudioSegments.length == 1 && selectedAudioFiles.length == 0) {
-            throw new Error('Not yet implemented selecting audio segment');
+            this.audio_segment_selected(selectedAudioSegments.first());
         }
         else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
             this.audio_file_selected(selectedAudioFiles.first());
         }
         else if(selectedAudioFiles.length && selectedAudioSegments.length){
-            throw Error('Not yet implemented multiple selection')            
+            throw Error('Not yet implemented multiple selection');
         }
         else {
-            throw Error('Not yet implemented when nothing is selected')
+            throw Error('Not yet implemented when nothing is selected');
         }
         
         return this;
     },
     
+    /**
+     *  Called when an audio file is selected so we can notify widgets.
+     **/
     audio_file_selected: function(selectedAudioFile) {
-        this.playheadWidget.audio_file_selected(selectedAudioFile);
-    }
+        this.playheadComponent.audio_file_selected(selectedAudioFile);
+    },
+    
+    /**
+     *  Called when an audio segment is selected so we can notify widgets.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - The selected segment
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        this.playheadComponent.audio_segment_selected(selectedAudioSegment);
+    }, 
 });

@@ -44,6 +44,15 @@ var WaveformPlayheadComponent = Component.extend({
         var duration = selectedAudioFile.get('duration');
         this.fileDuration = duration;
     },
+    
+    /**
+     *  called from panel when new audio segment is selected.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - audio segment selected
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        this.fileDuration = selectedAudioSegment.get('audioFile').get('duration');
+    }, 
 
     /**
      *  animate is called from the page every 200 milliseconds

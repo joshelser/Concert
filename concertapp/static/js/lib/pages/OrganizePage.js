@@ -113,19 +113,44 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {AudioFile}    audioFile    -   The AudioFile model instance
      **/
     select_audio_file: function(audioFile) {
+        this._load_audio_file(audioFile, function() {});
+    },
+    
+    /**
+     *  When a user has selected a single audio segment
+     *
+     *  @param  {AudioSegment}    audioSegment    - The AudioSegment selected.
+     **/
+    select_audio_segment: function(audioSegment) {
+        /* Load the audio segment's file into the audio player */
+        this._load_audio_file(audioSegment.get('audioFile'), function(me) {
+            return function() {
+                /* when complete, highlight segment */
+                me.
+            };
+        }(this))
+        
+    }, 
+    
+    /**
+     *  This will load an audio file into the audio player, and fire the callback
+     *  when complete.
+     *
+     *  @param  {AudioFile}    audioFile    -   the file to load.
+     **/
+    _load_audio_file: function(audioFile, callback) {
         var audio = this.audio;
         
         /* when the file is done loading */
-        audio.addEventListener('canplaythrough', function() {
-            console.log('canplaythrough');
-        });
+        $(audio).one('canplaythrough', callback);
         
         
         /* The proper audio source for this browser */
         var audiosrc = audioFile.get(this.audioType);
         
         this.audio.src = audiosrc;
-    },
+        
+    }, 
     
     /**
      *  When a user presses the space bar
@@ -149,7 +174,7 @@ var OrganizePage = LoggedInPage.extend({
                 detailPlayheadWidget.animate();
                 overviewPlayheadWidget.animate();
             };
-        }(this.detailPanel.playheadWidget, this.overviewPanel.playheadWidget), 
+        }(this.detailPanel.playheadComponent, this.overviewPanel.playheadComponent), 
             com.concertsoundorganizer.animation.speed);
         this.playheadInterval = playheadInterval;
     },
@@ -168,6 +193,7 @@ var OrganizePage = LoggedInPage.extend({
     new_waveform_highlight: function(startTime, endTime) {
         /* Start audio loop */
         this.start_audio_loop(startTime, endTime);
+        
     },
     
     /**
