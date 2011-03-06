@@ -113,4 +113,4 @@ def upload_audio(request):
         return TemplateResponse(request, 'audio/upload_audio.html', {
             'page_name': 'Upload Audio',
             'js_page_path': '/audio/upload/',
-        });
+        })

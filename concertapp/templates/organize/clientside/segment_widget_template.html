@@ -1,0 +1,15 @@
+{% load extra_template_tags %}
+
+<div id="segment_widget-${id}" class="segment_widget">
+    <div id="segment_name-${id}" class="segment_name">
+        ${name}
+    </div>
+    <div id="segment_creator-${id}" class="segment_creator">
+        by ${creator.username}
+    </div>
+    <div id="segment_audio-${id}" class="segment_audio">
+        from: <span id="segment_audio_name-${id}" class="segment_audio_name">
+            ${audio.name}
+        </span>
+    </div>
+</div>

@@ -34,20 +34,20 @@ var Panel = Backbone.View.extend({
         /* This is a reference to the panel's contents */
         var contents = container.children('.panel_contents');
         if(typeof(contents) == 'undefined') {
-            throw new Error('contents is undefined for panel: '+container.attr('id'));
+            throw new Error('contents is undefined for panel');
         }
         else if(contents.length == 0) {
-            throw new Error('malformed HTML: contents not found for '+container.attr('id'));
+            throw new Error('malformed HTML: contents not found');
         }
         this.contents = contents;
 
         /* This is a reference to the div that contains the panel's header */
         var header = container.children('.panel_header');
         if(typeof(header) == 'undefined') {
-            throw new Error('header is undefined for panel '+container.attr('id'));
+            throw new Error('header is undefined for panel');
         }
         else if(header.length == 0) {
-            throw new Error('header not found for panel '+container.attr('id'));
+            throw new Error('header not found for panel');
         }
         this.header = header;
 
@@ -55,7 +55,7 @@ var Panel = Backbone.View.extend({
         /* Get the loader element for this panel */
         var loader = container.children('.panel_loader');
         if(typeof(loader) == 'undefined' || loader.length == 0) {
-            throw new Error('Malformed HTML.  No panel_loader element found for panel: '+container.attr('id'));
+            throw new Error('Malformed HTML.  No panel_loader element found for panel');
         }
         this.loader = loader;
 

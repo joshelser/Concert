@@ -11,3 +11,4 @@ Concert.tmproj
 #*
 api_tester.sh
 adams_temp.html
+*.wsgi

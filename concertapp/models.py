@@ -136,7 +136,7 @@ class AudioSegmentTaggedEvent(Event):
 
 
 class AudioUploadedEvent(Event):
-    audio = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
+    audioFile = models.ForeignKey("Audio", related_name = "audio_uploaded_event")
 
     def __unicode__(self):
         return str(self.audio.uploader) + " uploaded file '" + self.audio.name + "'."
@@ -187,8 +187,9 @@ class AudioSegment(models.Model):
     name = models.CharField(max_length = 100)
     beginning = models.DecimalField(max_digits = 10, decimal_places = 2)
     end = models.DecimalField(max_digits = 10, decimal_places = 2)
-    audio = models.ForeignKey('Audio')
+    audioFile = models.ForeignKey('Audio')
     creator = models.ForeignKey(User)
+    collection = models.ForeignKey('Collection')
 
     def save(self,*args, **kwargs):
         self.full_clean()
@@ -242,8 +243,16 @@ class Collection(models.Model):
     #   When a new collection is created, make CreateCollectionEvent.
     ###
     def save(self, *args, **kwargs):
+        # If collection is new
         if not self.pk:
             super(Collection, self).save(*args, **kwargs)
+
+            # If admin is not in users list
+            if self.admin not in self.users.all():
+                # Add them in there
+                self.users.add(self.admin)
+
+            # Create event
             CreateCollectionEvent.objects.create(admin=self.admin, collection=self)
         else:
             super(Collection, self).save(*args, **kwargs)
@@ -452,6 +461,7 @@ class Audio(models.Model):
     mp3file = models.FileField(upload_to = 'audio/')
     waveformViewer = models.ImageField(upload_to = 'images/viewers')
     waveformEditor = models.ImageField(upload_to = 'images/editors')
+#    duration = models.DecimalField(max_digits = 8, decimal_places = 2)
 
     ###
     #   Do everything necessary when an audio object is first created.
@@ -503,7 +513,7 @@ class Audio(models.Model):
         # We will first normalize the wav file (convert to proper sample rate,
         #   etc). NOTE: this doesn't actually mean "normalize" to 0db, but 
         #   hopefully in the future.
-        audioHelpers.toNormalizedWav(wavInput, wavOutput)        
+        audioHelpers.toNormalizedWav(wavInput, wavOutput)
         
         #   Do the same for ogg
         audioHelpers.toOgg(oggInput, oggOutput)
@@ -516,7 +526,7 @@ class Audio(models.Model):
 
         super(Audio, self).save(*args, **kwargs)
         
-        event = AudioUploadedEvent(audio = self, collection = self.collection)
+        event = AudioUploadedEvent(audioFile = self, collection = self.collection)
         event.save()
         
         
@@ -554,13 +564,13 @@ class Audio(models.Model):
             os.unlink(self.waveformEditor.name)
 
         # Get all segments who have this audio object as its parent
-        segments = AudioSegment.objects.filter(audio = self)
+        segments = AudioSegment.objects.filter(audioFile = self)
 
         # Delete all of the segments
         for segment in segments:
             segment.delete()
 
-        for event in AudioUploadedEvent.objects.filter(audio=self):
+        for event in AudioUploadedEvent.objects.filter(audioFile=self):
             event.active = False
 
         # Send delete up if necessary.  This will not happen if the audio object

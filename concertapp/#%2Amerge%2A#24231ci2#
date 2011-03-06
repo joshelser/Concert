@@ -2,10 +2,6 @@ from concertapp.audio.api import AudioResource
 from concertapp.audiosegments.api import AudioSegmentResource
 from concertapp.collection.api import CollectionResource, RequestResource 
 from concertapp.event.api import *
-<<<<<<< HEAD
-=======
-from concertapp.audio.api import AudioFileResource
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
 from django.conf import settings
@@ -21,13 +17,9 @@ api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
 api1.register(TagResource())
-<<<<<<< HEAD
 tag_resource = TagResource()
 audio_seg_resource = AudioSegmentResource()
 api1.register(AudioResource())
-=======
-api1.register(AudioFileResource())
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb
 api1.register(AudioSegmentResource())
 
 # Events

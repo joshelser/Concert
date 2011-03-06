@@ -18,6 +18,9 @@ from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
 from concertapp.decorators import user_is_member_and_collection_exists
 
+from concertapp.audio.api import *
+from concertapp.audiosegments.api import *
+
 
 ###
 #   The main organize page for a collection.  This is where we do it all.
@@ -33,15 +36,21 @@ from concertapp.decorators import user_is_member_and_collection_exists
 @user_is_member_and_collection_exists
 def organize_collection(request, collection_id, col, user):
     
-    files = Audio.objects.filter(collection = col)
-    segments = AudioSegment.objects.filter(audio__collection = col)
+    audioResource = CollectionAudioFileResource()
+    audioResource.set_collection(col)
     
+    segmentResource = CollectionAudioSegmentResource()
+    segmentResource.set_collection(col)
+        
+    data = {
+        'files': audioResource.as_dict(request), 
+        'segments': segmentResource.as_dict(request),
+    }
     
     return TemplateResponse(request, 'organize/organize_collection.html', {
         'page_name': 'Organize '+ col.name,
         'js_page_path': '/organize/collection/',
-        'files': files,
-        'segments': segments,
+        'data': data, 
     });
     
 ###
