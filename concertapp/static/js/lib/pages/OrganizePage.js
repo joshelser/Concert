@@ -37,16 +37,12 @@ var OrganizePage = LoggedInPage.extend({
         this.overviewPanel = new OverviewWaveformPanel({
             page: this, 
             el: $('#overview_waveform_panel'),
-            selectedAudioSegments: modelManager.selectedAudioSegments,
-            selectedAudioFiles: modelManager.selectedAudioFiles
         });
 
         /* Create waveform detail panel */
         this.detailPanel = new DetailWaveformPanel({
             page: this, 
             el: $('#detail_waveform_panel'),
-            selectedAudioSegments: modelManager.selectedAudioSegments,
-            selectedAudioFiles: modelManager.selectedAudioFiles 
         });
 
 
@@ -203,20 +199,10 @@ var OrganizePage = LoggedInPage.extend({
         this.audio.play();
         this.detailPanel.autoscrollBool = true;
         
-        var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
-            return function() {                
-                detailPlayheadWidget.animate();
-                overviewPlayheadWidget.animate();
-            };
-        }(this.detailPanel.playheadComponent, this.overviewPanel.playheadComponent), 
-            com.concertsoundorganizer.animation.speed);
-            
-        this.playheadInterval = playheadInterval;
     },
     
     pause: function() {
         this.audio.pause();
-        clearInterval(this.playheadInterval);        
     },
     
     /**
@@ -246,7 +232,8 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {Number}    endTime     -   The end of the loop
      **/
     start_audio_loop: function(startTime, endTime) {
-        
+        var audio = this.audio;
+                
         /* This function will be called when a timeupdate event occurs. */
         var audioLoopTimeUpdateCallback = function(startTime, endTime) {
             return function(e) {
@@ -260,8 +247,12 @@ var OrganizePage = LoggedInPage.extend({
         /* Save so we can unbind later */
         this.audioLoopTimeUpdateCallback = audioLoopTimeUpdateCallback;
         
+        /* Start audio at beginning of loop */
+        audio.currentTime = startTime;
+        
         /* When audio loop changes time */
-        $(this.audio).bind('timeupdate', audioLoopTimeUpdateCallback);
+        $(audio).bind('timeupdate', audioLoopTimeUpdateCallback);
+        
     }, 
     
     /**

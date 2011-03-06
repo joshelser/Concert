@@ -22,18 +22,21 @@ var WaveformPlayheadComponent = Component.extend({
         }
         this.audio = audio;
         
-        _.bindAll(this, "render");
-        
         var pxPerSecond = 10;
         this.pxPerSecond = pxPerSecond;
         
         this.fileDuration = null;
+        
+        /* As the audio plays, animate playhead */
+        $(audio).bind('timeupdate', function(me) {
+            return function() {
+                /* TODO: inefficient really, we already have access to currentTime
+                here */
+                me.animate();
+            };
+        }(this));
     },
 
-    render: function() {
-        return this;
-    },
-    
     /**
      *  audio_file_selected is called from the panel 
      *  when a new audio file is selected
@@ -55,12 +58,14 @@ var WaveformPlayheadComponent = Component.extend({
     }, 
 
     /**
-     *  animate is called from the page every 200 milliseconds
+     *  animate is called from event handler above.
      *  moves the playhead to the left the currentTime * 10
      **/
     animate: function() {
         var leftPx = this.audio.currentTime * this.pxPerSecond
         this.el.css('left', leftPx);
+        
+        return leftPx;
     },
     
     reset: function() {

@@ -15,12 +15,11 @@ var DetailWaveformPlayheadComponent = WaveformPlayheadComponent.extend({
     },
 
     /**
-     *  animate is called from the page every 200 milliseconds
-     *  moves the playhead to the left the currentTime * 10
+     *  Notify panel that we'ved moved the playhead
      **/
     animate: function() {
-        var leftPx = this.audio.currentTime * this.pxPerSecond        
+        var leftPx = WaveformPlayheadComponent.prototype.animate.call(this);
+
         this.panel.playhead_moved(leftPx);
-        this.el.css('left', leftPx);
     },
 });

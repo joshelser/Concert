@@ -14,21 +14,7 @@ var WaveformPanel = Panel.extend({
         Panel.prototype.initialize.call(this);
 
         var params = this.options;
-                        
-        /* The model manager's selected files */
-        var selectedAudioFiles = params.selectedAudioFiles;
-        if(typeof(selectedAudioFiles) == 'undefined') {
-            throw new Error('params.selectedAudioFiles is undefined');
-        }
-        this.selectedAudioFiles = selectedAudioFiles;
-        
-        /* The model manager's selected audio segments */
-        var selectedAudioSegments = params.selectedAudioSegments;
-        if(typeof(selectedAudioSegments) == 'undefined') {
-            throw new Error('params.selectedAudioSegments is undefined');
-        }
-        this.selectedAudioSegments = selectedAudioSegments;
-        
+                                
         /* The image element */
         var waveformImageElement = this.el.find('.waveform_image');
         if(typeof(waveformImageElement) == 'undefined') {
@@ -48,8 +34,7 @@ var WaveformPanel = Panel.extend({
             throw new Error('playheadContainerElement not found');
         }
         this.playheadContainerElement = playheadContainerElement;
-
-        _.bindAll(this, "render");
+        
     },
     
     /**
