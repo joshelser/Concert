@@ -149,9 +149,16 @@ var OrganizePage = LoggedInPage.extend({
         /* Load the audio segment's file into the audio player */
         this._load_audio_file(selectedAudioSegment.get('audioFile'), function(me, selectedAudioSegment) {
             return function() {
-                /* when complete, notify panels */
+                /* when complete, notify panels.  They will notify their 
+                highlighters */
                 me.overviewPanel.audio_segment_selected(selectedAudioSegment);
                 me.detailPanel.audio_segment_selected(selectedAudioSegment);
+                
+                /* Start audio loop */
+                me.start_audio_loop(
+                    selectedAudioSegment.get('beginning'),
+                    selectedAudioSegment.get('end')
+                );
             };
         }(this, selectedAudioSegment))
         

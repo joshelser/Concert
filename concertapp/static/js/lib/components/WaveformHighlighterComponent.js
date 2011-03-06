@@ -117,7 +117,8 @@ var WaveformHighlighterComponent = Component.extend({
     continueDrag: function(x) {
         this.lastDragEndX = x;
         
-        this.draw_highlight();
+        /* Draw highlight */
+        this.draw_highlight_px(this.lastDragStartX, this.lastDragEndX);
     }, 
     
     /**
@@ -147,24 +148,44 @@ var WaveformHighlighterComponent = Component.extend({
         
     }, 
     
-    draw_highlight: function() {
-        var start = this.lastDragStartX;
-        var end = this.lastDragEndX;
-        
-        /* If the drag is left to right */
-        if(start < end) {
+    /**
+     *  Called when a highlight is to be drawn on the waveform by pixels.  Takes
+     *  two arguments, each of which are x-coordinates relative to the highlight
+     *  container.  The order doesn't matter.
+     *
+     *  @param  {Number}    x    -  One side of the highlight
+     *  @param  {Number}    y    -  The other side.
+     **/
+    draw_highlight_px: function(x, y) {
+        /* If the values are left to right */
+        if(x < y) {
             this.highlight.css({
-                left: start+'px', 
-                width: (end-start)+'px' 
+                left: x+'px', 
+                width: (y-x)+'px' 
             });
         }
         /* If the drag is from right to left */
-        else if(start > end) {
+        else if(x > y) {
             this.highlight.css({
-                left: end+'px', 
-                width: (start-end)+'px'
+                left: y+'px', 
+                width: (x-y)+'px'
             });
-        }
+        }        
+    }, 
+    
+    /**
+     *  Called when a highlight is to be drawn on the waveform, but we only have
+     *  time information.  Takes two arguments, one for each side of the highlight.
+     *
+     *  @param  {Number}    t1  -   One side of the highlight
+     *  @param  {Number}    t2    - The other side.
+     **/
+    draw_highlight_sec: function(t1, t2) {
+        var duration = this.audioFileDuration;
+        
+        var x = (t1/duration)*(duration*10);
+        var y = (t2/duration)*(duration*10);
+        this.draw_highlight_px(x, y);
     }, 
     
     /**
@@ -188,9 +209,19 @@ var WaveformHighlighterComponent = Component.extend({
      **/
     audio_segment_selected: function(selectedAudioSegment) {
         var audioFileDuration = selectedAudioSegment.get('audioFile').get('duration');
+        this.audioFileDuration = audioFileDuration;
         
         /* Set width of highlight container element */
         this.el.css('width', audioFileDuration*10+'px');
+        
+        /* Draw highlight for this segment */
+        this.draw_highlight_sec(
+            selectedAudioSegment.get('beginning'),
+            selectedAudioSegment.get('end')
+        );
+        
+        /* show highlight */
+        this.enable();
     }, 
     
     /**
