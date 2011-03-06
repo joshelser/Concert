@@ -71,7 +71,10 @@ OrganizePageModelManager.prototype._loadData = function() {
 };
 
 /**
- *  Use this when files are to be selected on the user interface
+ *  Use this when files are to be selected on the user interface.
+ *  
+ *  @param  {Array}    params.files    -    The selected audio files
+ *  @param  {Array}    params.segments    - The selected audio segments.
  **/
 OrganizePageModelManager.prototype.select_audio = function(params) {
     var files = params.files;

@@ -25,6 +25,16 @@ var DetailWaveformPanel = WaveformPanel.extend({
         }
         this.topLeftFileTemplate = topLeftFileTemplate;
         
+        /* template for top left when a segment is selected */
+        var topLeftSegmentTemplate = $('#detail_waveform_top_left_segment_template');
+        if(typeof(topLeftSegmentTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_left_segment_template\') is undefined');
+        }
+        else if(topLeftSegmentTemplate.length == 0) {
+            throw new Error('topLeftSegmentTemplate not found');
+        }
+        this.topLeftSegmentTemplate = topLeftSegmentTemplate;
+        
         /* The container for the top left content */
         var topLeftContainer = $('#detail_waveform_panel_top_left');
         if(typeof(topLeftContainer) == 'undefined') {
@@ -44,6 +54,16 @@ var DetailWaveformPanel = WaveformPanel.extend({
             throw new Error('topRightFileTemplate not found');
         }
         this.topRightFileTemplate = topRightFileTemplate;
+        
+        /* template for top right of panel when segment is selected */
+        var topRightSegmentTemplate = $('#detail_waveform_top_right_segment_template');
+        if(typeof(topRightSegmentTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_right_segment_template\') is undefined');
+        }
+        else if(topRightSegmentTemplate.length == 0) {
+            throw new Error('topRightSegmentTemplate not found');
+        }
+        this.topRightSegmentTemplate = topRightSegmentTemplate;
         
         /* The container for the top right content */
         var topRightContainer = $('#detail_waveform_panel_top_right');
@@ -124,7 +144,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
             
     },
     /**
-     *  Called from parent class when an audio file has been selected on the UI.
+     *  Called from page when an audio file has been selected.
+     *
+     *  @param  {AudioFile}    selectedAudioFile    -   The selected file.
      **/
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
@@ -154,16 +176,25 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
         /* Load the waveform viewer with the audio files' waveform image */
         this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
-        
-        this.playheadComponent.reset();
     }, 
     
     /**
-     *  Called when audio segment has been selected on the UI.
+     *  Called from page when audio segment has been selected.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - The selected segment.
      **/
     audio_segment_selected: function(selectedAudioSegment) {
-        /* Select this segment's audio file */
-        this.audio_file_selected(selectedAudioSegment.get('audioFile'));
+        WaveformPanel.prototype.audio_segment_selected.call(this, selectedAudioSegment);
+        
+        var selectedAudioSegmentJSON = selectedAudioSegment.toJSON();
+        
+        this.topLeftContainer.html(
+            this.topLeftSegmentTemplate.tmpl(selectedAudioSegmentJSON)
+        );
+
+        this.topRightContainer.html(
+            this.topRightSegmentTemplate.tmpl(selectedAudioSegmentJSON)
+        );
     }, 
     
     /**
@@ -172,12 +203,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
-    new_waveform_highlight: function(startTime, endTime) {
+    waveform_highlighted: function(startTime, endTime) {
         if (this.playhead_in_view()) {
             this.autoscrollBool = true;
         }
         
-        this.page.new_waveform_highlight(startTime, endTime);
+        this.page.waveform_highlighted(startTime, endTime);
     }, 
     
     /**

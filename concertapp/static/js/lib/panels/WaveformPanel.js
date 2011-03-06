@@ -53,18 +53,22 @@ var WaveformPanel = Panel.extend({
     },
     
     /**
-     *  Called when an audio file is selected so we can notify widgets.
+     *  Called from page when an audio file is selected.
+     *
+     *  @param  {AudioFile}    selectedAudioFile    -   The selected file
      **/
     audio_file_selected: function(selectedAudioFile) {
         this.playheadComponent.audio_file_selected(selectedAudioFile);
+        this.playheadComponent.reset();
     },
     
     /**
-     *  Called when an audio segment is selected so we can notify widgets.
+     *  Called from page when an audio segment is selected.
      *
      *  @param  {AudioSegment}    selectedAudioSegment    - The selected segment
      **/
     audio_segment_selected: function(selectedAudioSegment) {
         this.playheadComponent.audio_segment_selected(selectedAudioSegment);
+        this.playheadComponent.reset();
     }, 
 });

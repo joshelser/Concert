@@ -24,14 +24,13 @@ var OverviewWaveformPanel = WaveformPanel.extend({
     }, 
     
     /**
-     *  Called when an audio file is selected.
+     *  Called from page when an audio file is selected.
      *
      *  @param  {AudioFile}    selectedAudioFile    -   The audio file instance
      **/
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
-        this.playheadComponent.reset();
         
     }, 
 })

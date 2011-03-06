@@ -76,7 +76,7 @@ var ManageAdminCollectionWidget = Widget.extend({
         'click .delete_collection': 'delete_collection'
     },
     /**
-     *  This is called when the user first clicks the delete button.  Let controller
+     *  This is called when the user first clicks the delete button.  Let page
      *  handle it.
      **/
     delete_collection: function() {

@@ -48,7 +48,7 @@ CreateNewCollectionButton.prototype.init = function(params) {
  *  create a new collection.
  **/
 CreateNewCollectionButton.prototype.click = function() {
-   /* Call corresponding method on controller */
+   /* Call corresponding method on page */
    this.panel.page.createNewCollection(this.newCollectionName);   
    /* reset form */
    this.panel.resetForm();

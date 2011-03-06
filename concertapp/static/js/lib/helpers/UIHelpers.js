@@ -75,3 +75,37 @@ function get_event_x(e) {
     return e.pageX-$(e.currentTarget).offset().left;
 }
 
+/**
+ *  sec_to_timecode
+ *  This function will convert between an amount of seconds, and a timecode value.
+ *
+ *  @param  {Number}    seconds -   The amount of seconds to convert.
+ *  @return {String}    hh:mm:ss    -   Formatted timecode string.
+ **/
+function seconds_to_timecode(seconds)
+{
+    if(seconds < 0) {
+        throw new Error('sec_to_timecode: Error: Seconds cannot be negative.');
+    }
+    
+    var hours = Math.floor(seconds/3600);
+    var rem = seconds % 3600;
+    var minutes = Math.floor(rem/60);
+    var seconds = Math.floor(rem%60);
+    /* pad zeros */
+    if(hours < 10)
+    {
+        hours = '0'+hours;
+    }
+    if(minutes < 10)
+    {
+        minutes = '0'+minutes;
+    }
+    if(seconds < 10)
+    {
+        /* pad to beginning */
+        seconds = '0'+seconds;
+    }
+    
+    return hours+':'+minutes+':'+seconds;
+}

@@ -39,7 +39,7 @@ var CollectionSearchResultWidget = Widget.extend({
      **/
     joinCollection: function() {
         /* TODO: This is a bit confusing because the widget is calling the 
-        modelManager directly.  The controller should probably intervene here. */
+        modelManager directly.  The page should probably intervene here. */
         com.concertsoundorganizer.modelManager.request_to_join(this.model);
     }, 
     showCollectionInfo: function() {

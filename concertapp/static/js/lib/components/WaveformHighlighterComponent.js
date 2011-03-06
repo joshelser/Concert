@@ -143,7 +143,7 @@ var WaveformHighlighterComponent = Component.extend({
         var endTime = Math.max(dragStartX, dragEndX)/10;
         
         /* Tell panel about highlight */
-        this.panel.new_waveform_highlight(startTime, endTime);
+        this.panel.waveform_highlighted(startTime, endTime);
         
     }, 
     

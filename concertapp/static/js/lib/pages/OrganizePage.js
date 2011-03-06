@@ -218,7 +218,7 @@ var OrganizePage = LoggedInPage.extend({
      *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
-    new_waveform_highlight: function(startTime, endTime) {
+    waveform_highlighted: function(startTime, endTime) {
         /* Start audio loop */
         this.start_audio_loop(startTime, endTime);
         

@@ -44,14 +44,14 @@ var CollectionRequestWidget = Widget.extend({
     }, 
     /**
      *  This is called when the user clicks the deny request button.  Throw to
-     *  controller.
+     *  page.
      **/
     denyRequestConfirm: function() {
         this.panel.page.denyRequestWithConfirm(this.model);
     },
     /**
      *  This is called when the user clicks the accept request button.  Throw
-     *  to controller.
+     *  to page.
      **/
     approveRequestConfirm: function() {
         this.panel.page.approveRequestWithConfirm(this.model);
