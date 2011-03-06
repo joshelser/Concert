@@ -16,9 +16,14 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
     
     /**
      *  Overriding this method allows for each collection to be aware of the master
-     *  list of model instances, so no duplicate instances are ever created.
+     *  list of model instances, so no duplicate instances are ever created.  We
+     *  can also save our o2m relationship if options.save is set.
+     *
+     *  @param  {Boolean}    options.save    -  Save relation?
+     *  @param  {Function}    options.error    -    Error callback
      **/
     _add : function(model, options) {
+        options || (options = {});
         
         var seenInstances = com.concertsoundorganizer.modelManager.seenInstances[this.model.prototype.name];
 
@@ -44,7 +49,26 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
             }   
         }
 
-        return Backbone.Collection.prototype._add.call(this, model, options);
+        model = Backbone.Collection.prototype._add.call(this, model, options);
+        
+        if(options.save) {
+            /* We are 'creating' our relationship (in our modified REST
+            implementation) */
+            var method = 'create';
+            options = com.concertsoundorganizer.helpers.wrapError(options);
+            options.error = com.concertsoundorganizer.helpers.backboneWrapError(
+                options.error, null, options
+            );
+            
+            /* This will be the related URL.  For example, when adding a tag
+            to an audio segment's list of tags, the url should be something like
+            "/api/1/audiosegment/1/tag/2/" */
+            options.url = this.relatedModel.url()+model.url({noBase:true});
+            
+            /* we POST to this URL with no other data */
+            (this.sync || Backbone.sync)(method, null, options);
+            
+        }
     },
     
     /**

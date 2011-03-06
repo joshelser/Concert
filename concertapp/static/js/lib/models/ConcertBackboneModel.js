@@ -55,7 +55,7 @@ var ConcertBackboneModel = Backbone.Model.extend({
                             models, 
                             /* Send in self incase collection requires it */
                             {
-                                relatedModel: this, 
+                                relatedModel: this
                             }
                         );
                         
@@ -66,7 +66,12 @@ var ConcertBackboneModel = Backbone.Model.extend({
                     }
                     else if(models.length == 0){
                         /* Set it to an empty set in case we want to add requests */
-                        attributes[oneToMany.attr] = new oneToMany.collectionType;
+                        attributes[oneToMany.attr] = new oneToMany.collectionType(
+                            null,
+                            {
+                                relatedModel: this 
+                            }
+                        );
                     }
                     else {
                         throw new Error('Do not know how to handle object');
@@ -77,7 +82,12 @@ var ConcertBackboneModel = Backbone.Model.extend({
                     set yet */
                 else if(!models && !this.get(oneToMany.attr)) {
                     /* Set it to an empty set in case we want to add requests */
-                    attributes[oneToMany.attr] = new oneToMany.collectionType;
+                    attributes[oneToMany.attr] = new oneToMany.collectionType(
+                        null,
+                        {
+                            relatedModel: this 
+                        }
+                    );
                 }            
                 
             }
