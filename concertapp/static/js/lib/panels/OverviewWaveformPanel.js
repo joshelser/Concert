@@ -31,6 +31,16 @@ var OverviewWaveformPanel = WaveformPanel.extend({
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
         this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
+    }, 
+    
+    /**
+     *  Called from page when audio segment is selected.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - The audio segment
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        WaveformPanel.prototype.audio_segment_selected.call(this, selectedAudioSegment);
         
+        this.waveformImageElement.attr('src', selectedAudioSegment.get('audioFile').get('overviewWaveform'));
     }, 
 })
