@@ -12,7 +12,7 @@ import os, hashlib, tempfile, audiotools, tempfile
 
 from concertapp.models  import *
 
-from concertapp.audio import audioFormats, audioHelpers
+from concertapp.audio import audioHelpers
 from concertapp.audio.waveform import *
 from concertapp.settings import MEDIA_ROOT, LOGIN_REDIRECT_URL
 
@@ -79,32 +79,32 @@ def upload_audio(request):
         f = request.FILES['audio']        
 
 
-        # The collection that this audio object is to be associated with.
+        # The collection that this audioFile object is to be associated with.
         try:
             col = Collection.objects.get(id = request.POST['collection_id'])
         except ObjectDoesNotExist, e:
             raise Exception('Invalid collection chosen.')
         
-        #   new audio object
-        audio = Audio(uploader = user, collection=col)
+        #   new audioFile object
+        audioFile = AudioFile(uploader = user, collection=col)
 
         try:
-            #   initialize audio object (this will take a while as we have to encode)
-            audio.save(f)
+            #   initialize audioFile object (this will take a while as we have to encode)
+            audioFile.save(f)
         except audiotools.UnsupportedFile, e:
-            # Delete audio object that was partially created.
-            audio.delete()
+            # Delete audioFile object that was partially created.
+            audioFile.delete()
             raise Exception('Unsupported file type.')
         except audiotools.PCMReaderError, e:
-            # Delete audio object that was partially created.
-            audio.delete()
+            # Delete audioFile object that was partially created.
+            audioFile.delete()
             raise Exception('Error reading file.')
         except IOError, e:
-            # Delete audio object that was partially created.
-            audio.delete()
+            # Delete audioFile object that was partially created.
+            audioFile.delete()
             raise Exception('An error occured while file handling: '+str(e))
         except Exception, e:
-            audio.delete()
+            audioFile.delete()
             raise Exception(str(e))
 
         return HttpResponse(status = 200)

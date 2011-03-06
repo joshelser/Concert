@@ -1,5 +1,5 @@
 #from django.contrib.auth.models import Group, User
-from concertapp.models import Audio, GroupAdmin
+from concertapp.models import AudioFile, GroupAdmin
 from django import forms
 from django.forms import ModelForm, AudioSegment, Comment, User, Group
 

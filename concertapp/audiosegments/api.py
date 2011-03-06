@@ -2,6 +2,7 @@ from concertapp.lib.api import NestedResource, ConcertAuthorization, DjangoAuthe
 from concertapp.models import *
 from concertapp.users.api import *
 from concertapp.audio.api import AudioFileResource
+from concertapp.tags.api import TagResource
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
@@ -27,7 +28,7 @@ class AudioSegmentAuthorization(ConcertAuthorization):
             #   If there is an object to authorize
             if object:
                 #   Make sure that the person modifying is in the collection that the audiosegment belongs to.
-                return (request.user in object.audio.collection.users.all())
+                return (request.user in object.audioFile.collection.users.all())
             else:
                 #   TODO: This currently is always the case (tastypie issues)
                 return True
@@ -37,25 +38,20 @@ class AudioSegmentAuthorization(ConcertAuthorization):
 
 class AudioSegmentResource(NestedResource):
     creator = fields.ForeignKey(UserResource, 'creator', full=True) 
-<<<<<<< HEAD
-    audio = fields.ForeignKey(AudioResource, 'audio', full=True)
-    tags = fields.ToManyField("concertapp.tags.api.TagResource","tags", null = True)
-=======
     audioFile = fields.ForeignKey(AudioFileResource, 'audioFile', full=True)
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb
+    tags = fields.ManyToManyField(TagResource, 'tags', full=True)
 
     class Meta:
         authentication = DjangoAuthentication()
         authorization = AudioSegmentAuthorization()
         queryset = AudioSegment.objects.all()
-<<<<<<< HEAD
         
         filtering = {
             "tags": ALL
             }
 
         nested = 'tags'
-=======
+
 
 ###
 #   A resource for audio segments from a single collection
@@ -76,4 +72,3 @@ class CollectionAudioSegmentResource(AudioSegmentResource):
             raise Exception('You must call set_collection on this resource first')
             
         return super(CollectionAudioSegmentResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb

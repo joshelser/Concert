@@ -1,9 +1,0 @@
-<ul id = "links">
-  <li><a href = "/">Home</a></li>
-  <li><a href = "/admin">Admin</a></li>
-  {% if user.is_authenticated %}
-    <li><a href = "/users/logout">Log Out, {{user.username}}</a></li>
-  {% else %}
-    <li><a href = "/users/login">Log In</a></li>
-  {% endif %}
-</ul>

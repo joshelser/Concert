@@ -51,4 +51,22 @@ class TagResource(NestedResource):
         nested = 'segments'
         
 
-
+###
+#   Tags for a specific collection.
+###
+class CollectionTagResource(TagResource):
+    class Meta(TagResource.Meta):
+        collection = None
+        
+    def set_collection(self, collection):
+        self._meta.collection = collection
+    
+    ###
+    #   Return only tag objects for this collection.
+    ###
+    def apply_authorization_limits(self, request, object_list):
+        if not self._meta.collection:
+            raise Exception('Must call set_collection before using this resource')
+            
+        return super(CollectionTagResource, self).apply_authorization_limits(request, object_list.filter(collection=self._meta.collection))
+    

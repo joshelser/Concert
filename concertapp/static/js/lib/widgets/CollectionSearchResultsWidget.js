@@ -22,13 +22,7 @@ var CollectionSearchResultsWidget = Widget.extend({
             throw new Error('resultTemplate not found');
         }
         this.resultTemplate = resultTemplate;
-        
-        var createNewTemplate = $('#create_join_create_new_template');
-        if(typeof(createNewTemplate) == 'undefined' || createNewTemplate.length == 0) {
-            throw new Error('createNewTemplate not found');
-        }
-        this.createNewTemplate = createNewTemplate;
-        
+                
         var searchResults = params.searchResults;
         if(typeof(searchResults) == 'undefined') {
             throw new Error('params.searchResults is undefined');
@@ -53,23 +47,6 @@ var CollectionSearchResultsWidget = Widget.extend({
         
         var currentTerm = this.panel.currentTerm;
         var exact = this.panel.exactResult;
-        
-        /* There was no exact match, so we can create this collection */
-        if(!exact && currentTerm != '') {
-            /* "create new" button */
-            var createNewElement = this.createNewTemplate.tmpl({
-                term: currentTerm, 
-            });
-            
-            var createNewButton = new CreateNewCollectionButton({
-                container: createNewElement, 
-                newCollectionName: currentTerm,
-                panel: this.panel,  
-            });
-            
-            /* Put in search results area */
-            frag.appendChild(createNewElement.get(0));
-        }
         
         /* If there were search results */
         if(collections.length) {

@@ -42,16 +42,22 @@ var ConcertBackboneModel = Backbone.Model.extend({
         
         if(attributes && oneToManyAttributes) {
             for(var i = 0, il = oneToManyAttributes.length; i < il; i++) {
-                var manyToMany = oneToManyAttributes[i];
+                var oneToMany = oneToManyAttributes[i];
                 
-                var models = attributes[manyToMany.attr];
+                var models = attributes[oneToMany.attr];
                 /* If we're trying to set the related model and it is not
                     a collection */
                 if(models && !(models instanceof Backbone.Collection)) {
                     /* It is either a list of strings or objects, or empty list */
                     if(models[0] && typeof(models[0]) == 'object') {
                         /* Create new collection of request objects */
-                        attributes[manyToMany.attr] = new manyToMany.collectionType(models);
+                        attributes[oneToMany.attr] = new oneToMany.collectionType(
+                            models, 
+                            /* Send in self incase collection requires it */
+                            {
+                                relatedModel: this
+                            }
+                        );
                         
                     }
                     else if(models[0] && typeof(models[0]) == 'string') {
@@ -60,7 +66,12 @@ var ConcertBackboneModel = Backbone.Model.extend({
                     }
                     else if(models.length == 0){
                         /* Set it to an empty set in case we want to add requests */
-                        attributes[manyToMany.attr] = new manyToMany.collectionType;
+                        attributes[oneToMany.attr] = new oneToMany.collectionType(
+                            null,
+                            {
+                                relatedModel: this 
+                            }
+                        );
                     }
                     else {
                         throw new Error('Do not know how to handle object');
@@ -69,9 +80,14 @@ var ConcertBackboneModel = Backbone.Model.extend({
                 }
                 /*  Requests member is not being set now, and it hasn't been 
                     set yet */
-                else if(!models && !this.get(manyToMany.attr)) {
+                else if(!models && !this.get(oneToMany.attr)) {
                     /* Set it to an empty set in case we want to add requests */
-                    attributes[manyToMany.attr] = new manyToMany.collectionType;
+                    attributes[oneToMany.attr] = new oneToMany.collectionType(
+                        null,
+                        {
+                            relatedModel: this 
+                        }
+                    );
                 }            
                 
             }
@@ -128,21 +144,34 @@ var ConcertBackboneModel = Backbone.Model.extend({
     /**
      *  Display modal error to user when error occurs.
      **/
-     save : function(attrs, options) {
-         var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
-         
-         return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
-     },
-     
-     url: function() {
-         var base = this.base_url;
-         var id = this.get('id');
-         if(id) {
-             return base+id+'/';
-         }
-         else {
-             return base;
-         }
-     },
-    
+    save : function(attrs, options) {
+        var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
+
+        return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
+    },
+
+    /**
+     *  Uses the 'static' name attribute of the model to create the url.  If the
+     *  model has an id it is appended onto the url.
+     *
+     *  @param  {Boolean}    options.noBase    -    Return url without prefix
+     **/
+    url: function(options) {
+        options || (options = {});
+        
+        var url = '/api/1/'
+        if(options.noBase) {
+            url = '';
+        }
+        
+        url += this.name+'/';
+        var id = this.get('id');
+        if(id) {
+            return url+id+'/';
+        }
+        else {
+            return url;
+        }
+    },
+
 });

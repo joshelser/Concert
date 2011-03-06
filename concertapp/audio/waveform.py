@@ -220,15 +220,9 @@ class WaveformImage(object):
         self.previous_x, self.previous_y = None, None
  
         colors = [
-                    (255,102,102),
-                    (255,51,51),
-                    
-                    (255,4,4),
+                    (255,255,255),
                  ]
- 
-        # this line gets the old "screaming" colors back...
-        # colors = [self.color_from_value(value/29.0) for value in range(0,30)]
- 
+  
         self.color_lookup = interpolate_colors(colors)
         self.pix = self.image.load()
  
@@ -289,6 +283,7 @@ class WaveformImage(object):
         a = 25
         for x in range(self.image_width):
             self.pix[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pix[x, self.image_height/2]))
+            
 
         alpha = self.image.split()[0]
         self.image = self.image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)

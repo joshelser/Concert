@@ -18,6 +18,7 @@ LoggedInModelManager.prototype = new ModelManager();
 LoggedInModelManager.prototype.init = function(params) {
     ModelManager.prototype.init.call(this, params);
     
+    
     var dataToLoad = this._dataToLoad;
     
     /* Get data for user */
@@ -39,22 +40,25 @@ LoggedInModelManager.prototype.init = function(params) {
     this.userMemberCollections = new CollectionSet;
     
     /* Any page that has collections represented will require a master list of collections we have seen */
-    this.seenInstances['Collection'] = new CollectionSet;
+    this.seenInstances['collection'] = new CollectionSet;
 
 
     /* Master list of requests */
-    this.seenInstances['Request'] = new RequestSet;
+    this.seenInstances['request'] = new RequestSet;
 
 
     /* We will need to maintain a list of users that we have seen */
-    this.seenInstances['User'] = new UserSet;
+    this.seenInstances['user'] = new UserSet;
     
     
     /* Audio objects that we have seen */
-    this.seenInstances['AudioFile'] = new AudioFileSet;
+    this.seenInstances['audiofile'] = new AudioFileSet;
     
     /* Audio segments that we have seen */
-    this.seenInstances['AudioSegment'] = new AudioSegmentSet;
+    this.seenInstances['audiosegment'] = new AudioSegmentSet;
+    
+    /* Tags that we have seen */
+    this.seenInstances['tag'] = new TagSet;
     
     /* We will keep a reference to the current user */
     this.user = new User;
@@ -65,7 +69,7 @@ LoggedInModelManager.prototype.init = function(params) {
  *  Here we will create all of the Backbone objects that are needed from data that
  *  was loaded initially.
  **/
-LoggedInModelManager.prototype.loadData = function() {
+LoggedInModelManager.prototype._loadData = function() {
     
     var dataToLoad = this._dataToLoad;
     
@@ -74,7 +78,7 @@ LoggedInModelManager.prototype.loadData = function() {
      **/
     var user = this.user;
     user.set(dataToLoad['userData']);
-    this.seenInstances['User'].add(user);
+    this.seenInstances['user'].add(user);
     /* done with user data */
     dataToLoad['userData'] = null;
     
@@ -83,5 +87,6 @@ LoggedInModelManager.prototype.loadData = function() {
      **/
     var userMemberCollections = this.userMemberCollections;
     userMemberCollections.refresh(dataToLoad['userMemberCollectionsData']);
+    dataToLoad['userMemberCollectionsData'] = null;
     
 };

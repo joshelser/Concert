@@ -62,6 +62,8 @@ var ManageAdminCollectionWidget = Widget.extend({
                     template: template
                 });
                 
+                console.log(req);
+                
                 frag.appendChild(widget.el);
             };
         }(this, this.collectionRequestWidgetTemplate, frag));
@@ -74,34 +76,10 @@ var ManageAdminCollectionWidget = Widget.extend({
         'click .delete_collection': 'delete_collection'
     },
     /**
-     *  This is called when the user first clicks the delete button.
+     *  This is called when the user first clicks the delete button.  Let page
+     *  handle it.
      **/
     delete_collection: function() {
-        /* First confirm with the user that this is what they would like to do */
-        /* TODO: Remove this text */
-        com.concertsoundorganizer.notifier.confirm({
-            title: 'Are you sure?', 
-            content: 'Are you sure you want to delete '+this.model.get('name')+'<br />All associated audio will be removed from Concert.',
-            confirmCallback: function(me) {
-                return function() {
-                    me.really_delete_collection();
-                }
-            }(this)
-        })
-    }, 
-    /**
-     *  This is called when the user confirms the deletion.
-     **/
-    really_delete_collection: function() {
-        this.model.destroy({
-            success: function(model, response) {
-            },
-            error: function(model, response) {
-                com.concertsoundorganizer.notifier.alert({
-                    title: 'Error', 
-                    content: 'An Error occurred: '+response.responseText, 
-                })
-            }, 
-        });
+        this.panel.page.deleteCollectionWithConfirm(this.model);
     }, 
 });

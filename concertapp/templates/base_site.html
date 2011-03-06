@@ -9,11 +9,12 @@ The base template for all pages.  All page templates will use this.
 {% load extra_template_tags %}
 {% load panels %}
 
-<!DOCTYPE>
+<!DOCTYPE html>
 
 <html>
   <head>
     <title>Concert</title>
+    <link rel="icon" type="image/png" href="/graphics/logo.png" />
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
     <link rel="stylesheet" type="text/css" href="/css/panels.css">
     <link rel="stylehseet" type="text/css" href="/css/pages.css">
@@ -27,9 +28,13 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/vendor/jquery-ui-1.8.5.custom.min.js"></script>
     <script src="/js/lib/vendor/modernizr-1.6.min.js"></script>
     <script src="/js/lib/vendor/jquery.form.js"></script>
+    <script src="/js/lib/vendor/jquery.imagesloaded.js"></script>
     <script src="/js/lib/vendor/underscore-min.js"></script>
     <script src="/js/lib/vendor/json2.js"></script>
     <script src="/js/lib/vendor/backbone.js"></script>
+    <script src="/js/lib/vendor/gury.js"></script>
+    <script src="/js/lib/vendor/jquery.easing.1.3.js"></script>
+    <script src="/js/lib/vendor/jquery.scroll-startstop.events.js"></script>
     
     {# Helpers #}
     <script src="/js/lib/helpers/AnimatedDots.js"></script>
@@ -44,6 +49,7 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/models/Request.js"></script>
     <script src="/js/lib/models/AudioFile.js"></script>
     <script src="/js/lib/models/AudioSegment.js"></script>
+    <script src="/js/lib/models/Tag.js"></script>
     
     
     {# Modal notification framework #}
@@ -83,6 +89,17 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/widgets/FileWidget.js"></script>
     <script src="/js/lib/widgets/SegmentWidget.js"></script>
     <script src="/js/lib/widgets/CollectionInfoWidget.js"></script>
+    <script src="/js/lib/widgets/ManageCollectionWidget.js"></script>
+    
+    {# Components #}
+    <script src="/js/lib/components/Component.js"></script>
+    <script src="/js/lib/components/DetailWaveformTimecodeComponent.js"></script>
+    <script src="/js/lib/components/WaveformPlayheadComponent.js"></script>
+    <script src="/js/lib/components/OverviewWaveformPlayheadComponent.js"></script>
+    <script src="/js/lib/components/DetailWaveformPlayheadComponent.js"></script>
+    <script src="/js/lib/components/WaveformHighlighterComponent.js"></script>
+    <script src="/js/lib/components/DetailWaveformHighlighterComponent.js"></script>
+    
 
     {# Panels #}
     <script src="/js/lib/panels/Panel.js"></script>
@@ -93,9 +110,11 @@ The base template for all pages.  All page templates will use this.
     <script src="/js/lib/panels/ManageMemberCollectionsPanel.js"></script>
     <script src="/js/lib/panels/ManageRequestsPanel.js"></script>
     <script src="/js/lib/panels/UploadPanel.js"></script>
+    <script src="/js/lib/panels/WaveformPanel.js"></script>
     <script src="/js/lib/panels/OverviewWaveformPanel.js"></script>
-    <script src="/js/lib/panels/AudioListPanel.js"></script>
     <script src="/js/lib/panels/DetailWaveformPanel.js"></script>
+    <script src="/js/lib/panels/AudioListPanel.js"></script>
+    <script src="/js/lib/panels/ManageCollectionsPanel.js"></script>
     
     {# Pages #}
     <script src="/js/lib/pages/Page.js"></script>

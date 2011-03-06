@@ -144,6 +144,8 @@ class MemberCollectionResource(CollectionResource):
         #   the collection is to be retrieved.
         user = None
         
+        request = None
+        
     def set_user(self, user):
         self._meta.user = user
         
@@ -156,13 +158,34 @@ class MemberCollectionResource(CollectionResource):
             user = self._meta.user
         else:
             user = request.user
-        
-        
+            
+        if not self._meta.request:
+            self._meta.request = request
+
         # Here we ignore the incomming argument, and only send forth the
         # collections that the user is a member of.
         object_list = super(MemberCollectionResource, self).apply_authorization_limits(request, user.collections.all())
         
         return object_list
+    
+    ###
+    #   Here, before the object is sent for serialization we will add the 
+    #   requests objects for each collection that our user is a member of.
+    ###
+    def full_dehydrate(self, obj):
+
+        dehydrated = super(MemberCollectionResource, self).full_dehydrate(obj)
+        
+        # If the user is the administrator of this collection
+        if(self._meta.user == obj.admin):
+            # Get all requests for this collection
+            r = CollectionRequestResource()
+            r.set_collection(obj)
+            # Add requests to bundle
+            dehydrated.data['requests'] = r.as_dict(self._meta.request)
+
+        return dehydrated
+    
         
 ###
 #   This resource is for collections which the user is a member, but is not the

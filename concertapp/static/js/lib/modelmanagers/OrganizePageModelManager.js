@@ -46,20 +46,33 @@ OrganizePageModelManager.prototype.init = function(params) {
     }
     dataToLoad.segmentData = segmentData;
     
+    /**
+     *  Raw tag data
+     **/
+    var tagData = params.tags;
+    if(typeof(tagData) == 'undefined') {
+        throw new Error('params.tags is undefined');
+    }
+    dataToLoad.tagData = tagData;
+    
     /* Here we will hold all of the audio segments for this collection for the
     same reason as above */
     this.collectionAudioSegments = new AudioSegmentSet;
     
+    /* Here are all of the tags for this collection */
+    this.collectionTags = new TagSet;
+
     /* Here we will store the audio segments and files that are selected (from the
     audio list panel).  Currently only one segment/file can be selected at once, so 
     the total cardinality of these sets will be 1. */
     this.selectedAudioSegments = new AudioSegmentSet;
     this.selectedAudioFiles = new AudioFileSet;
     
+    
 };
 
-OrganizePageModelManager.prototype.loadData = function() {
-    LoggedInModelManager.prototype.loadData.call(this);
+OrganizePageModelManager.prototype._loadData = function() {
+    LoggedInModelManager.prototype._loadData.call(this);
     
     var dataToLoad = this._dataToLoad;
     
@@ -68,10 +81,16 @@ OrganizePageModelManager.prototype.loadData = function() {
     
     this.collectionAudioSegments.refresh(dataToLoad.segmentData);
     dataToLoad.segmentData = null;
+    
+    this.collectionTags.refresh(dataToLoad.tagData);
+    dataToLoad.tagData = null;
 };
 
 /**
- *  Use this when files are to be selected on the user interface
+ *  Use this when files are to be selected on the user interface.
+ *  
+ *  @param  {Array}    params.files    -    The selected audio files
+ *  @param  {Array}    params.segments    - The selected audio segments.
  **/
 OrganizePageModelManager.prototype.select_audio = function(params) {
     var files = params.files;
@@ -85,7 +104,7 @@ OrganizePageModelManager.prototype.select_audio = function(params) {
     }
     
     /* remove previously selected segments and select new ones */
-    this.selectedAudioSegments.refresh(segments, {silent: true});
+    this.selectedAudioSegments.refresh(segments);
     /* Remove previously selected files and select new ones */
     this.selectedAudioFiles.refresh(files);
 };

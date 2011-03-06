@@ -20,7 +20,7 @@ LinkLargeIconButton.prototype.init = function(params) {
 
     /* Get data-href attribute from container.  This will define where the page 
         redirects to */
-    var href = this.container.attr('data-href');
+    var href = this.container.data('href');
     if(typeof(href) == 'undefined') {
         throw new Error('Element #'+container.attr('id')+'\'s data-href attribute is undefined');
     }

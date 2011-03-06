@@ -8,26 +8,50 @@
 {% block panel_content %}
 <div id="global_options_panel_left">
   <h1>Concert</h1>
-  <div id="logout_info">
-      {{user.username}}
-      <a href="/logout">Logout</a>
-  </div>
+ 
   <!--<h2>{{ page_name }}</h2>-->
 </div>
 
 <div id="global_options_panel_middle">
-  <label for="collection_selector">Collections:</label>
-  <select id="collection_selector" class="collection_selector">
-  </select>
 </div>
 
 <div id="global_options_panel_right">
+ 
   
+ <!-- Temporary Commenting Out Buttons 
   {% large_icon_button 'Dashboard' 'dashboard' '/dashboard/' '' 'global_options_panel_button' %}
   
   {% large_icon_button 'Settings' 'settings' '/collections/' 'Manage collections, connect with friends' 'global_options_panel_button' %}
   
   {% large_icon_button 'Upload Audio' 'upload' '/audio/upload' 'Upload audio to a collection' 'global_options_panel_button' %}
-  
+  -->
+  <div id="global_menu">
+    <ul>
+    	<li>
+    		<a href="/logout">logout ({{user.username}})</a>
+    	</li>
+    	<li>
+    		<a href="/audio/upload">upload</a>
+    	</li> 
+  		<li>
+  			<a href="/collections">settings</a>
+  		</li>
+      <li> 
+      	<a href="/#">collections &darr;</a>
+      	<!--<label for="collection_selector"></label>-->
+      </li>
+      <li>
+      	<a href="/dashboard">dashboard</a>
+      </li>
+       <li> 
+      	<select id="collection_selector" class="collection_selector">
+      		{# Collection options will be injected here #}
+      	</select>
+      </li>
+  	</ul>
+  </div>
+  <div id="logout_info">
+  	
+  </div>
 </div>
 {% endblock %}

@@ -16,7 +16,6 @@ var Widget = Backbone.View.extend({
      *  The widget is not inserted into the DOM in this class.  That is for whoever
      *  is instantiating the widget to take care of.
      *
-     *  @constructor
      *  @param  params.template        jQuery tmpl object   -   THe template.
      *  @param  params.panel        Panel object that we belong to.  
      **/    
@@ -48,6 +47,9 @@ var Widget = Backbone.View.extend({
         if(template) {
             /* render new widget */
             var newel = template.tmpl(this.model.toJSON());
+            if(newel.length != 1) {
+                throw new Error('widgets must have a single containing element');
+            }
             var el = this.el;
             
             /* If this element is currently in the DOM */

@@ -1,4 +1,4 @@
-from concertapp.models import Audio
+from concertapp.models import AudioFile
 #from django import forms
 from django.forms import ModelForm
 
@@ -8,5 +8,5 @@ from django.forms import ModelForm
 ##
 class UploadFileForm(ModelForm):
     class Meta:
-        model = Audio
-        fields = ('wavfile')
+        model = AudioFile
+        fields = ('wav')

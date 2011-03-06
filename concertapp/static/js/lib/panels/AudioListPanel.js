@@ -10,9 +10,6 @@
  *  @extends    Panel
  **/
 var AudioListPanel = Panel.extend({
-    /**
-     *  @constructor
-     **/
     initialize: function() {
         Panel.prototype.initialize.call(this);
         
@@ -64,6 +61,7 @@ var AudioListPanel = Panel.extend({
         /* temporary frag for dom additions */
         var frag = document.createDocumentFragment();
         
+        /* Put each file in list */
         this.files.each(function(fileWidgetTemplate, panel, frag) {
             return function(obj) {
                 /* Create a file widget */
@@ -77,8 +75,23 @@ var AudioListPanel = Panel.extend({
             };
         }(this.fileWidgetTemplate, this, frag));
         
+        /* Put each segment in list */
+        this.segments.each(function(segmentWidgetTemplate, panel, frag) {
+            return function(obj) {
+                /* Create segment widget */
+                var widget = new SegmentWidget({
+                    template: segmentWidgetTemplate,
+                    model: obj,
+                    panel: panel, 
+                });
+                
+                frag.appendChild(widget.el);
+            };
+        }(this.segmentWidgetTemplate, this, frag));
+        
+        
         /* update panel */
-        this.contents.empty().append(frag);
+        this.contents.html(frag);
         
         
     }, 

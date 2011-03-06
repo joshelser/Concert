@@ -220,10 +220,10 @@ function load_waveform(segmentID) {
 **/
 function load_audio(audioID, segmentID, callBackFunction) {
     
-    var audiotype = com.concertsoundorganizer.compatibility.audiotype;
+    var audioType = com.concertsoundorganizer.compatibility.audioType;
     /* Load audio element into audio container */
     $.ajax({
-        url: '/audio/'+audioID+'/audiosrc/'+audiotype,
+        url: '/audio/'+audioID+'/audiosrc/'+audioType,
         success: function(data, textStatus) {
             if(textStatus == 'success') {
                 /* Clear audio loop */

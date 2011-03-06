@@ -7,110 +7,261 @@
 /**
  *  Panel that displays larger waveform on organize page.
  *  @class
- *  @extends    Panel
+ *  @extends    WaveformPanel
  **/
-var DetailWaveformPanel = Panel.extend({
-    
-    /**
-     *  @constructor
-     **/
+var DetailWaveformPanel = WaveformPanel.extend({    
     initialize: function() {
-        Panel.prototype.initialize.call(this);
+        WaveformPanel.prototype.initialize.call(this);
 
         var params = this.options;
         
-        /* The template for the top left of the panel */
-        var topLeftFileTemplate = $('#detail_waveform_top_left_file_template');
-        if(typeof(topLeftFileTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_left_file_template\') is undefined');
-        }
-        else if(topLeftFileTemplate.length == 0) {
-            throw new Error('topLeftFileTemplate not found');
-        }
-        this.topLeftFileTemplate = topLeftFileTemplate;
         
-        /* The container for the top left content */
-        var topLeftContainer = $('#detail_waveform_panel_top_left');
-        if(typeof(topLeftContainer) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_top_left\') is undefined');
+        /* The template for the top of the panel when a file is selected */
+        var topFileTemplate = $('#detail_waveform_top_file_template');
+        if(typeof(topFileTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_file_template\') is undefined');
         }
-        else if(topLeftContainer.length == 0) {
-            throw new Error('topLeftContainer not found');
+        else if(topFileTemplate.length == 0) {
+            throw new Error('topFileTemplate not found');
         }
-        this.topLeftContainer = topLeftContainer;
+        this.topFileTemplate = topFileTemplate;
         
-        /* The template for the top right of the panel */
-        var topRightFileTemplate = $('#detail_waveform_top_right_file_template');
-        if(typeof(topRightFileTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_right_file_template\') is undefined');
+        /* Template for top of panel when segment is selected */
+        var topSegmentTemplate = $('#detail_waveform_top_segment_template');
+        if(typeof(topSegmentTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_segment_template\') is undefined');
         }
-        else if(topRightFileTemplate.length == 0) {
-            throw new Error('topRightFileTemplate not found');
+        else if(topSegmentTemplate.length == 0) {
+            throw new Error('topSegmentTemplate not found');
         }
-        this.topRightFileTemplate = topRightFileTemplate;
+        this.topSegmentTemplate = topSegmentTemplate;
         
-        /* The container for the top right content */
-        var topRightContainer = $('#detail_waveform_panel_top_right');
-        if(typeof(topRightContainer) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_top_right\') is undefined');
+        /* The container for the top of the panel */
+        var topContainer = $('#detail_waveform_panel_top');
+        if(typeof(topContainer) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_top\') is undefined');
         }
-        else if(topRightContainer.length == 0) {
-            throw new Error('topRightContainer not found');
+        else if(topContainer.length == 0) {
+            throw new Error('topContainer not found');
         }
-        this.topRightContainer = topRightContainer;
+        this.topContainer = topContainer;
         
-        /* The model manager's selected files */
-        var selectedAudioFiles = params.selectedAudioFiles;
-        if(typeof(selectedAudioFiles) == 'undefined') {
-            throw new Error('params.selectedAudioFiles is undefined');
+        
+        var timecodeContainerElement = $('#detail_waveform_panel_timecode');
+        if(typeof(timecodeContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_timecode\') is undefined');
         }
-        this.selectedAudioFiles = selectedAudioFiles;
-        
-        /* The model manager's selected audio segments */
-        var selectedAudioSegments = params.selectedAudioSegments;
-        if(typeof(selectedAudioSegments) == 'undefined') {
-            throw new Error('params.selectedAudioSegments is undefined');
+        else if(timecodeContainerElement.length == 0) {
+            throw new Error('timecodeContainerElement not found');
         }
-        this.selectedAudioSegments = selectedAudioSegments;
+        this.timecodeContainerElement = timecodeContainerElement;
         
-
-        _.bindAll(this, "render");
-        selectedAudioSegments.bind('refresh', this.render);
-        selectedAudioSegments.bind('add', this.render);
-        selectedAudioSegments.bind('remove', this.render);
-        selectedAudioFiles.bind('refresh', this.render);
-        selectedAudioFiles.bind('add', this.render);
-        selectedAudioFiles.bind('remove', this.render);
-    },
-
-    render: function() {
-        Panel.prototype.render.call(this);
+        /* Instantiate widget for timecode */
+        var timecodeComponent = new DetailWaveformTimecodeComponent({
+            el: timecodeContainerElement, 
+            panel: this, 
+            audio: this.page.audio
+        });
+        this.timecodeComponent = timecodeComponent;
         
-        var selectedAudioFiles = this.selectedAudioFiles;
-        var selectedAudioSegments = this.selectedAudioSegments;
+        /* Instantiate component for playhead */
+        var playheadComponent = new DetailWaveformPlayheadComponent({
+            el: this.playheadContainerElement,
+            panel: this,
+            audio: this.page.audio
+        });
+        this.playheadComponent = playheadComponent;
         
-        /* If there was an audio segment selected */
-        if(selectedAudioSegments.length == 1 && selectedAudioFiles.length == 0) {
-            throw new Error('Not yet implemented selecting audio segment');
+        
+        var highlightContainerElement = $('#detail_waveform_panel_highlight_container');
+        if(typeof(highlightContainerElement) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_highlight_container\') is undefined');
         }
-        else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
-            /* Load the top left content with our audio file */
-            this.topLeftContainer.html(
-                this.topLeftFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
-            );
+        else if(highlightContainerElement.length == 0) {
+            throw new Error('highlightContainerElement not found');
+        }
+        this.highlightContainerElement = highlightContainerElement;
+        
+        /* a highlighter component so we can highlight things */
+        var highlighter = new DetailWaveformHighlighterComponent({
+            el: highlightContainerElement, 
+            panel: this, 
+        });
+        this.highlighter = highlighter;
+        
+        var waveformView = $('#detail_waveform_panel_view');
+        if(typeof(waveformView) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_view) is undefined');
+        }
+        else if(waveformView.length == 0) {
+            throw new Error('waveformView not found');
+        }
+        this.waveformView = waveformView;
+        
+        var autoscrollBool = true;
+        this.autoscrollBool = autoscrollBool;
+        
+        this.waveformView.bind('scrollstart', function(me) {
+            return function() {
+                me.handle_scroll();
+            };
+        }(this));
+        
+        this.waveformView.bind('scrollstop', function(me) {
+            return function() {
+                me.handle_scroll_stop();
+            }
+        }(this));
             
-            /*Load the top right content with our audio file */
-            this.topRightContainer.html(
-                this.topRightFileTemplate.tmpl(selectedAudioFiles.first().toJSON())
-            );
+    },
+    /**
+     *  Called from page when an audio file has been selected.
+     *
+     *  @param  {AudioFile}    selectedAudioFile    -   The selected file.
+     **/
+    audio_file_selected: function(selectedAudioFile) {
+        WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
+        
+        /* Load top content with audio file information */
+        this.topContainer.html(
+            this.topFileTemplate.tmpl(selectedAudioFile.toJSON())
+        );
+        
+        /* Load waveform image */
+        this._load_waveform_image(selectedAudioFile.get('detailWaveform'), function(me, selectedAudioFile) {
+            /* and when done */
+            return function() {
+                /* Draw timecode */
+                me.timecodeComponent.audio_file_selected(selectedAudioFile);
+                
+                /* Set up highlighter */
+                me.highlighter.audio_file_selected(selectedAudioFile);
+            };            
+        }(this, selectedAudioFile));
+    }, 
+    
+    /**
+     *  Called from page when audio segment has been selected.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - The selected segment.
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        WaveformPanel.prototype.audio_segment_selected.call(this, selectedAudioSegment);
+        
+        /* Load top of panel with audio segment information */
+        this.topContainer.html(
+            this.topSegmentTemplate.tmpl(selectedAudioSegment.toJSON())
+        );
+        
+        
+        /* Load waveform image */
+        this._load_waveform_image(
+            selectedAudioSegment.get('audioFile').get('detailWaveform'),
+            function(me, selectedAudioSegment) {
+                return function() {
+                    /* Draw timecode */
+                    me.timecodeComponent.audio_segment_selected(selectedAudioSegment);
+                    
+                    me.highlighter.audio_segment_selected(selectedAudioSegment);
+                };
+            }(this, selectedAudioSegment)
+        );
+        
+    }, 
+    
+    /**
+     *  Called from internal when waveform image is to be loaded.
+     *
+     *  @param  {String}    src    -    The url of the waveform image.
+     *  @param  {Function}    callback  -   to be executed after waveform loads.
+     **/
+    _load_waveform_image: function(src, callback) {
+        var waveformImageElement = this.waveformImageElement;
+        
+        /* When waveform image has loaded, execute callback */
+        waveformImageElement.imagesLoaded(callback);
+        
+        /* Load the waveform viewer with the audio files' waveform image */
+        waveformImageElement.attr('src', src);
+        
+    }, 
+    
+    /**
+     *  Called from highlight when an area of the waveform is highlighted.
+     *
+     *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
+     *  @param  {Number}    endTime    -    The time of the highlight end.
+     **/
+    waveform_highlighted: function(startTime, endTime) {
+        if (this.playhead_in_view()) {
+            this.autoscrollBool = true;
         }
-        else if(selectedAudioFiles.length && selectedAudioSegments.length){
-            throw Error('Not yet implemented multiple selection')            
+        
+        this.page.waveform_highlighted(startTime, endTime);
+    }, 
+    
+    /**
+     *  Called from highlight when it has been cleared.
+     **/
+    waveform_highlight_cleared: function() {
+        this.page.waveform_highlight_cleared();
+    }, 
+    
+    /**
+     *  Determines if the playhead is in the current waveform view
+     **/
+    playhead_in_view: function() {
+        if (((this.waveformView.scrollLeft()) <= this.playheadComponent.position()) && 
+        ((this.waveformView.scrollLeft() + 815) >= this.playheadComponent.position())) {
+            return true;
         }
         else {
-            throw Error('Not yet implemented when nothing is selected')
+            return false;
         }
+    },
+    
+    /**
+     *  if the playhead is at the end of the view && AUTOSCROLLING ON 
+     *  scroll to position of playhead
+     **/
+    playhead_moved: function(leftPx) {            
+        if (this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft()) ) {
+            this.autoscroll(leftPx);
+        }
+
+    }, 
+    
+    /**
+     *  Handles playhead behavior on scroll
+     **/
+    handle_scroll: function() {
+        this.autoscrollBool = false;
+    }, 
+
+    /**
+    *  Handles playhead behavior on a scroll stop
+    **/    
+    handle_scroll_stop: function() {
+        if (!this.autoscrollBool && this.playhead_in_view()) {
+            this.autoscrollBool = true;
+        }
+        else {
+            this.autoscrollBool = false;
+        }
+    }, 
         
-        return this;
-    }
+    /**
+     *  moves the waveform view to leftPx
+     **/
+    autoscroll: function(leftPx) {
+        this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
+    },
+    
+    /**
+     *  Called from page when waveform highlight should be cleared.
+     **/
+    clear_waveform_highlight: function() {
+        this.highlighter.disable();
+    }, 
+    
 });

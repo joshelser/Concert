@@ -1,13 +1,18 @@
 /*
 *  Panels
 */
+
+/* FONT IMPORT */
+@font-face {
+  font-family: "GeosansLight";
+  src: url(/fonts/GeosansLight.ttf) format("truetype");
+}
+
 /* This is a panel on the UI, used for many things. */
 div.panel {
     /* default panel values */
     position: relative;
     min-height: 60px;
-    margin-left: 30px;
-    margin-right: 30px;
 }
 
 /* This is the div that shows a loading notification on each panel */
@@ -42,7 +47,7 @@ div.panel_loader_enabled {
 *  http://www.w3.org/TR/css3-box/#types
 */
 div#global_options_panel {
-    width: 900px;
+    width: 960px;
     -webkit-box-orient: horizontal;
     display: -webkit-box;
     margin-top: 20px;
@@ -50,28 +55,32 @@ div#global_options_panel {
 }
 
 div#global_options_panel_contents {
-    width: 900px;
+    width: 100%;
     -webkit-box-orient: horizontal;
     display: -webkit-box;
 }
 
 div#global_options_panel_left {
-    width: 300px;
+    width: 320px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-box-pack: start;
 }
 
 div#global_options_panel_left h1 {
-    font-family: "Geosans Light", "Helvetica", Verdana, Arial, sans-serif;
+    font-family: "GeosansLight", "Helvetica", Verdana, Arial, sans-serif;
     letter-spacing: 1.25em;
     font-size: 1.5em;
     font-weight: normal;
     text-transform: lowercase;
     display: -webkit-box;
     -webkit-box-flex: 1;
+    padding-top: 25px;
+    padding-left: 32px;
+    background: url(/graphics/logo.png) left no-repeat;
 }
 
+/* NOT IN USE AT THE MOMENT
 div#global_options_panel_left div#logout_info {
     text-transform: uppercase;
     font-weight: bold;
@@ -83,21 +92,43 @@ div#global_options_panel_left div#logout_info {
     -webkit-box-align: baseline;
 }
 
+
 div#global_options_panel_left div#logout_info a{
     margin-left: 1em;
 }
 
 div#global_options_panel_middle {
     text-align: center;
-    width: 300px;
-}
+    width: 320px;
+}*/
 
 div#global_options_panel_right {
-    width: 300px;
+	width: 640px;
     -webkit-box-pack: end;
     /* Contents (buttons) will also be horizontally spread using the box model */
     -webkit-box-orient: horizontal;
     display: -webkit-box;
+}
+
+div#global_menu ul{
+	float: right;
+	padding-top: 29px;
+}
+
+div#global_menu li{
+	float: right;
+	padding-left: 20px;
+	list-style: none;
+	font-size: 10px;
+	font-family: Helvetica, sans-serif;
+	text-transform: capitalize;
+}
+
+div#global_menu a:link, a:hover, a:visited{
+	color: #282833;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform:uppercase;
 }
 
 div.global_options_panel_button {
@@ -133,19 +164,33 @@ div#overview_waveform_panel_bottom {
     height: 20px;
 }
 
+div #overview_waveform_panel_playhead {
+    height: 58px;
+}
+
+div.playhead {
+  background-color: #FF0000;
+  color: #FF0000;
+  width: 1px;
+  z-index: 300;
+  position: absolute;
+  
+}
+
 /*Detail Waveform Panel */
 div#detail_waveform_panel {
     width: 900px;
-    height: 340px;
+    height: 355px;
     margin-bottom: 20px;
     display: -webkit-box;
 }
 
 div#detail_waveform_panel_contents {
     width: 900px;
-    height: 340px;
+/*    height: 340px;*/
     -webkit-box-orient: vertical;
     display: -webkit-box;
+    background-color: #f8f8fa;
 }
 
 div#detail_waveform_panel_top {
@@ -173,37 +218,41 @@ div#detail_waveform_panel_top_right {
 
 div#detail_waveform_panel_middle {
     width: 900px;
-    height: 200px;
+    height: 260px;
     -webkit-box-orient: horizontal;
     display: -webkit-box;
 }
 
-div#detail_waveform_panel_buf_left {
-    background-color: #f8f8fa;
+div.detail_waveform_panel_buf {
     width: 10px;
-    height: 120px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    height: 100%;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+div#detail_waveform_panel_buf_left {
+}
+
+div#detail_waveform_panel_buf_right {
+    /* Because the view element is absolute */
+    margin-left: 818px;
 }
 
 div#detail_waveform_panel_view {
     background-color: #2e2e35;
     color: #f8f8fa;
     width: 818px;
-    height: 198px;
+    height: 253px;
     border: 1px solid white;
+    
+    position: absolute;
+    /* Do not allow waveform to overflow window */
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
-div#detail_waveform_panel_buf_right {
-    background-color: #f8f8fa;
-    width: 10px;
-    height: 120px;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-left: 15px;
-    padding-right: 15px;
+div #detail_waveform_panel_playhead {
+    height: 253px;
 }
 
 div#detail_waveform_panel_bottom {
@@ -222,9 +271,58 @@ div#detail_waveform_panel_tags {
     border: 1px solid white;
 }
 
+div#detail_waveform_panel_waveform_timecode_playhead {
+    position: absolute;
+}
+
+div#detail_waveform_panel_waveform_container {
+
+}
+
+div#detail_waveform_panel_timecode {
+    height: 40px;
+    background-color: gray;
+
+    position: absolute;
+    top: 200px;
+    z-index: 200;
+}
+
 div#audiolist_panel_contents {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+}
+
+/**
+ *  Waveform highlight
+ **/
+div.highlight_container {
+  z-index: 300;
+  position: absolute;
+}
+div.highlight {
+  height: 100%;
+  position: relative;
+  background-color: white;
+  opacity: 0.5;
+}
+
+/* Initially a highlight will be disabled */
+div.highlight.disabled {
+  visibility: hidden;
+}
+
+div#detail_waveform_panel_highlight_container {
+  height: 253px;
+}
+
+/**
+ *  Waveform images
+ **/
+img.waveform_image {
+    display: block;
+    z-index: 100;
+    position: absolute;
 }
 
 div.file_widget {
@@ -253,7 +351,8 @@ div#create_join_panel, div#manage_admin_collections_panel, div#manage_member_col
 }
 
 div#create_join_input_container {
-    align: center;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
 }
 
 span.tags {

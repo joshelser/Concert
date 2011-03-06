@@ -4,8 +4,9 @@
 
 import os
 import audiotools
+import wave
 
-from waveform import *
+from waveform import create_png
 
 # The permissions (chmod) for new files that are created
 NEW_FILE_PERMISSIONS = 0755
@@ -110,8 +111,37 @@ def toOgg(inputFilePath, outputFilePath):
 def toMp3(inputFilePath, outputFilePath):
     mp3 = audiotools.MP3Audio.from_pcm(outputFilePath,
         audiotools.open(inputFilePath).to_pcm())
-    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)    
-    
-    
-    
-    
+    os.chmod(outputFilePath, NEW_FILE_PERMISSIONS)
+
+
+## Gets the length, in seconds, of a wave file
+#
+# @param self Class object
+#
+# @return Number of seconds
+def getLength(waveFilePath):
+    waveFile = wave.open(waveFilePath, 'r')
+    length = waveFile.getnframes() / waveFile.getframerate()
+    waveFile.close()
+
+    return length
+
+## Generates the waveform image from a WAV file
+#
+# @param self Wav object
+# @param imageFilePath The name of the file to write to
+# @param imageWidth Width of image in pixels
+# @param imageHeight Height of image in pixels
+# @param channels The number of channels to generate images for. 0 chooses all channels
+# @param fft_size Optional
+# @param f_max Optional 
+# @param f_min Optional
+#
+def generateWaveform(waveFilePath, imageFilePath, imageWidth, imageHeight, channels=None, fft_size=2048, f_max=22050, f_min=10):
+    # Determine channels if unknown
+    if not channels:
+        src = wave.open(waveFilePath, 'rb')
+        channels = src.getnchannels()
+        src.close()
+
+    create_png(waveFilePath, imageFilePath, imageWidth, imageHeight, channels, fft_size, f_max, f_min);
