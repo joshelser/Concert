@@ -20,6 +20,7 @@ from concertapp.decorators import user_is_member_and_collection_exists
 
 from concertapp.audio.api import *
 from concertapp.audiosegments.api import *
+from concertapp.tags.api import *
 
 
 ###
@@ -41,10 +42,14 @@ def organize_collection(request, collection_id, col, user):
     
     segmentResource = CollectionAudioSegmentResource()
     segmentResource.set_collection(col)
+    
+    tagsResource = CollectionTagResource()
+    tagsResource.set_collection(col)
         
     data = {
         'files': audioResource.as_dict(request), 
         'segments': segmentResource.as_dict(request),
+        'tags': tagsResource.as_dict(request), 
     }
     
     return TemplateResponse(request, 'organize/organize_collection.html', {

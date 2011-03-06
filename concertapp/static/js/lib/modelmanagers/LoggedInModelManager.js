@@ -57,6 +57,9 @@ LoggedInModelManager.prototype.init = function(params) {
     /* Audio segments that we have seen */
     this.seenInstances['audiosegment'] = new AudioSegmentSet;
     
+    /* Tags that we have seen */
+    this.seenInstances['tag'] = new TagSet;
+    
     /* We will keep a reference to the current user */
     this.user = new User;
     

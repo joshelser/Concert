@@ -340,13 +340,13 @@ class Tag(models.Model):
     segments = models.ManyToManyField('AudioSegment', related_name = "tags", editable = 'False')
     collection = models.ForeignKey('Collection')
     name = models.CharField(max_length = 100)
-    time = models.DateTimeField(auto_now_add = True)
+#    time = models.DateTimeField(auto_now_add = True)
     creator = models.ForeignKey(User)
 
     def __unicode__(self):
         return self.name
 
-    def save(self):        
+    def save(self):
         # to ensure that the tag is unique, we call a full_clean on this model
         # instance, which will call clean(self) bellow
         self.full_clean()

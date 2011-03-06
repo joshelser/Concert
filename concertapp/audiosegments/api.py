@@ -2,6 +2,7 @@ from concertapp.lib.api import *
 from concertapp.models import *
 from concertapp.users.api import *
 from concertapp.audio.api import AudioFileResource
+from concertapp.tags.api import TagResource
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from tastypie import fields
@@ -34,6 +35,7 @@ class AudioSegmentAuthorization(ConcertAuthorization):
 class AudioSegmentResource(MyResource):
     creator = fields.ForeignKey(UserResource, 'creator', full=True) 
     audioFile = fields.ForeignKey(AudioFileResource, 'audioFile', full=True)
+    tags = fields.ManyToManyField(TagResource, 'tags', full=True)
 
     class Meta:
         authentication = DjangoAuthentication()

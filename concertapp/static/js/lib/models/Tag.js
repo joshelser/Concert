@@ -15,9 +15,23 @@ var Tag = ConcertBackboneModel.extend({
         return [
             {
                 attr: 'creator', 
-                model: User 
+                model: User
+            },
+            {
+                attr: 'collection', 
+                model: Collection 
             }
         ];
     },
     name: 'tag', 
-})
+});
+
+/**
+ *  A set of tag objects.
+ *
+ *  @class
+ *  @extends    ConcertBackboneCollection
+ **/
+var TagSet = ConcertBackboneCollection.extend({
+    model: Tag
+});

@@ -46,15 +46,28 @@ OrganizePageModelManager.prototype.init = function(params) {
     }
     dataToLoad.segmentData = segmentData;
     
+    /**
+     *  Raw tag data
+     **/
+    var tagData = params.tags;
+    if(typeof(tagData) == 'undefined') {
+        throw new Error('params.tags is undefined');
+    }
+    dataToLoad.tagData = tagData;
+    
     /* Here we will hold all of the audio segments for this collection for the
     same reason as above */
     this.collectionAudioSegments = new AudioSegmentSet;
     
+    /* Here are all of the tags for this collection */
+    this.collectionTags = new TagSet;
+
     /* Here we will store the audio segments and files that are selected (from the
     audio list panel).  Currently only one segment/file can be selected at once, so 
     the total cardinality of these sets will be 1. */
     this.selectedAudioSegments = new AudioSegmentSet;
     this.selectedAudioFiles = new AudioFileSet;
+    
     
 };
 
@@ -68,6 +81,9 @@ OrganizePageModelManager.prototype._loadData = function() {
     
     this.collectionAudioSegments.refresh(dataToLoad.segmentData);
     dataToLoad.segmentData = null;
+    
+    this.collectionTags.refresh(dataToLoad.tagData);
+    dataToLoad.tagData = null;
 };
 
 /**

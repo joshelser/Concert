@@ -10,6 +10,14 @@
  *  @extends    ConcertBackboneModel
  **/
 var AudioSegment = ConcertBackboneModel.extend({
+    oneToManyAttributes: function() {
+        return [
+            {
+                attr: 'tags', 
+                collectionType: TagSet, 
+            }
+        ];
+    }, 
     foreignKeyAttributes: function() {
         return [
             {
