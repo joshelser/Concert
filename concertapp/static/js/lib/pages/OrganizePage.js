@@ -77,58 +77,83 @@ var OrganizePage = LoggedInPage.extend({
     /**
      *  When a user selects some audio from the audio list.
      *
-     *  @param  {Object}    params    - The audio files and segments that were
-     *  selected.
+     *  @param  {Array}     params.files    -   The files selected.
+     *  @param  {Array}     params.segments -   The selected segments
      **/
     select_audio: function(params) {
-        /* Right now just delegate to model manager */
+        /* Tell model manager so we can maintain list of instances */
         this.modelManager.select_audio(params);
         
+        /* Pause audio if it is currently playing */
         this.pause();
         
+        /* Determine what audio was selected */
         var files = params.files;
         var segments = params.segments;
         files || (files = []);
         segments || (segments = []);
         
-        if(files.length && segments.length) {
-            throw new Error('Not implemented multiple selection.');
+        /* If one segment was selected */
+        if(segments.length == 1) {
+            /* Selecting an audio segment */
+            this.select_audio_segment(segments[0]);
         }
+        /* If one file was selected */
         else if(files.length == 1) {
             /* Selecting a file */
             this.select_audio_file(files[0]);
         }
-        else if(segments.length == 1) {
-            /* Selecting an audio segment */
-            this.select_audio_segment(segments[0]);
+        /* If files and segments were selected */
+        else if(files.length && segments.length) {
+            throw new Error('Not implemented multiple selection.');
+        }
+        /* If more than one file was selected */
+        else if(files.length > 1) {
+            throw new Error('Not implemented selecting multiple files');
+        }
+        /* If more than one segment was selected */
+        else if(segments.length > 1) {
+            throw new Error('Not implemented selecting multiple segments');
         }
         else {
-            throw new Error('Not implemented.');
+            throw new Error('Invalid parameters for select_audio');
         }
     }, 
     
     /**
      *  When a user has selected a single audio file.
      *
-     *  @param  {AudioFile}    audioFile    -   The AudioFile model instance
+     *  @param  {AudioFile}    selectedAudioFile    -   The AudioFile that was
+     *  selected.
      **/
-    select_audio_file: function(audioFile) {
-        this._load_audio_file(audioFile, function() {});
+    select_audio_file: function(selectedAudioFile) {
+        /* This is where loading notification should be */
+        
+        /* Load audio file */
+        this._load_audio_file(selectedAudioFile, function(me, selectedAudioFile) {
+            /* when complete, notify panel */
+            return function(){
+                me.overviewPanel.audio_file_selected(selectedAudioFile);
+                me.detailPanel.audio_file_selected(selectedAudioFile);
+            };
+        }(this, selectedAudioFile));
     },
     
     /**
      *  When a user has selected a single audio segment
      *
-     *  @param  {AudioSegment}    audioSegment    - The AudioSegment selected.
+     *  @param  {AudioSegment}    selectedAudioSegment    - The AudioSegment 
+     *  that was selected.
      **/
-    select_audio_segment: function(audioSegment) {
+    select_audio_segment: function(selectedAudioSegment) {
         /* Load the audio segment's file into the audio player */
-        this._load_audio_file(audioSegment.get('audioFile'), function(me) {
+        this._load_audio_file(selectedAudioSegment.get('audioFile'), function(me, selectedAudioSegment) {
             return function() {
-                /* when complete, highlight segment */
-                me.
+                /* when complete, notify panels */
+                me.overviewPanel.audio_segment_selected(selectedAudioSegment);
+                me.detailPanel.audio_segment_selected(selectedAudioSegment);
             };
-        }(this))
+        }(this, selectedAudioSegment))
         
     }, 
     

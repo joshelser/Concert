@@ -85,7 +85,7 @@ OrganizePageModelManager.prototype.select_audio = function(params) {
     }
     
     /* remove previously selected segments and select new ones */
-    this.selectedAudioSegments.refresh(segments, {silent: true});
+    this.selectedAudioSegments.refresh(segments);
     /* Remove previously selected files and select new ones */
     this.selectedAudioFiles.refresh(files);
 };

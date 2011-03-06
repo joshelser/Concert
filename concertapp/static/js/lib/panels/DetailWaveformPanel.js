@@ -191,8 +191,8 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  Determines if the playhead is in the current waveform view
      **/
     playhead_in_view: function() {
-        if (((this.waveformView.scrollLeft()) <= this.playheadWidget.position()) && 
-        ((this.waveformView.scrollLeft() + 815) >= this.playheadWidget.position())) {
+        if (((this.waveformView.scrollLeft()) <= this.playheadComponent.position()) && 
+        ((this.waveformView.scrollLeft() + 815) >= this.playheadComponent.position())) {
             return true;
         }
         else {

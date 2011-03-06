@@ -50,35 +50,6 @@ var WaveformPanel = Panel.extend({
         this.playheadContainerElement = playheadContainerElement;
 
         _.bindAll(this, "render");
-        selectedAudioSegments.bind('refresh', this.render);
-        selectedAudioSegments.bind('add', this.render);
-        selectedAudioSegments.bind('remove', this.render);
-        selectedAudioFiles.bind('refresh', this.render);
-        selectedAudioFiles.bind('add', this.render);
-        selectedAudioFiles.bind('remove', this.render);
-    },
-
-    render: function() {
-        Panel.prototype.render.call(this);
-        
-        var selectedAudioFiles = this.selectedAudioFiles;
-        var selectedAudioSegments = this.selectedAudioSegments;
-        
-        /* If there was an audio segment selected */
-        if(selectedAudioSegments.length == 1 && selectedAudioFiles.length == 0) {
-            this.audio_segment_selected(selectedAudioSegments.first());
-        }
-        else if(selectedAudioFiles.length == 1 && selectedAudioSegments.length == 0) {
-            this.audio_file_selected(selectedAudioFiles.first());
-        }
-        else if(selectedAudioFiles.length && selectedAudioSegments.length){
-            throw Error('Not yet implemented multiple selection');
-        }
-        else {
-            throw Error('Not yet implemented when nothing is selected');
-        }
-        
-        return this;
     },
     
     /**
