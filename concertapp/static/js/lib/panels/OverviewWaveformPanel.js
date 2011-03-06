@@ -21,6 +21,28 @@ var OverviewWaveformPanel = WaveformPanel.extend({
             audio: this.page.audio
         });
         this.playheadComponent = playheadComponent;
+        
+        var highlighterContainerElement = $('#overview_waveform_panel_highlight_container');
+        if(typeof(highlighterContainerElement) == 'undefined') {
+            throw new Error('$(\'#overview_waveform_panel_highlight_container\') is undefined');
+        }
+        else if(highlighterContainerElement.length == 0) {
+            throw new Error('highlighterContainerElement not found');
+        }
+        this.highlighterContainerElement = highlighterContainerElement;
+        
+        /* Highlighter */
+        var highlighter = new OverviewWaveformHighlighterComponent({
+            el: highlighterContainerElement, 
+            panel: this 
+        });
+        this.highlighter = highlighter;
+
+        $("#overview_waveform_panel_top").bind('click', function(me) {
+            return function(e) {
+                me.handle_click(get_event_x(e));
+            };
+        }(this));
     }, 
     
     /**
@@ -30,7 +52,15 @@ var OverviewWaveformPanel = WaveformPanel.extend({
      **/
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
-        this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
+        
+        this._load_waveform_image(
+            selectedAudioFile.get('overviewWaveform'),
+            function(me, selectedAudioFile) {
+                return function() {
+                    me.highlighter.audio_file_selected(selectedAudioFile);
+                }
+            }(this, selectedAudioFile)
+        );
     }, 
     
     /**
@@ -43,4 +73,24 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         
         this.waveformImageElement.attr('src', selectedAudioSegment.get('audioFile').get('overviewWaveform'));
     }, 
+    
+    /**
+     *  The resolution of the waveform image (in pixels per second)
+     **/
+    get_resolution: function() {
+        /* Width of image is currently always 898 */
+        var width = 898;
+        
+        /* current duration of audio file */
+        var duration = this.audioFileDuration;
+        
+        return width/duration;
+    },
+
+    handle_click: function(left) {
+        //update audio's currentTime to location clicked
+        var seconds = left/this.get_resolution();
+        this.page.move_audio(seconds);
+    }, 
+    
 })

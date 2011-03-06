@@ -112,7 +112,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
                 me.handle_scroll_stop();
             }
         }(this));
-            
+        
+        this.waveformView.bind('click', function(me) {
+            return function(e) {
+                me.handle_click(get_event_x(e));
+            };
+        }(this));            
     },
     /**
      *  Called from page when an audio file has been selected.
@@ -169,22 +174,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
     }, 
     
-    /**
-     *  Called from internal when waveform image is to be loaded.
-     *
-     *  @param  {String}    src    -    The url of the waveform image.
-     *  @param  {Function}    callback  -   to be executed after waveform loads.
-     **/
-    _load_waveform_image: function(src, callback) {
-        var waveformImageElement = this.waveformImageElement;
-        
-        /* When waveform image has loaded, execute callback */
-        waveformImageElement.imagesLoaded(callback);
-        
-        /* Load the waveform viewer with the audio files' waveform image */
-        waveformImageElement.attr('src', src);
-        
-    }, 
     
     /**
      *  Called from highlight when an area of the waveform is highlighted.
@@ -193,19 +182,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
     waveform_highlighted: function(startTime, endTime) {
-        if (this.playhead_in_view()) {
-            this.autoscrollBool = true;
-        }
+        this.autoscrollBool = true;
         
-        this.page.waveform_highlighted(startTime, endTime);
+        /* Tell page about our highlight */
+        this.page.waveform_highlighted(startTime, endTime, this);
     }, 
     
-    /**
-     *  Called from highlight when it has been cleared.
-     **/
-    waveform_highlight_cleared: function() {
-        this.page.waveform_highlight_cleared();
-    }, 
     
     /**
      *  Determines if the playhead is in the current waveform view
@@ -224,8 +206,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  if the playhead is at the end of the view && AUTOSCROLLING ON 
      *  scroll to position of playhead
      **/
-    playhead_moved: function(leftPx) {            
-        if (this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft()) ) {
+    playhead_moved: function(leftPx) {        
+        if ((this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft())) ||
+            (this.autoscrollBool && leftPx < this.waveformView.scrollLeft())) {
             this.autoscroll(leftPx);
         }
 
@@ -257,11 +240,18 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
     },
     
-    /**
-     *  Called from page when waveform highlight should be cleared.
-     **/
-    clear_waveform_highlight: function() {
-        this.highlighter.disable();
+    
+    handle_click: function(left) {
+        //update audio's currentTime to location clicked
+        var leftPx = left + this.waveformView.scrollLeft();
+        var seconds = leftPx/10;
+        this.page.move_audio(seconds);
     }, 
     
+    /**
+     *  The resolution of the waveform image (in pixels/second)
+     **/
+    get_resolution: function() {
+        return 10;
+    }, 
 });

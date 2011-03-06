@@ -315,6 +315,9 @@ div.highlight.disabled {
 div#detail_waveform_panel_highlight_container {
   height: 253px;
 }
+div#overview_waveform_panel_highlight_container {
+    height: 58px;
+}
 
 /**
  *  Waveform images

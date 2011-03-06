@@ -209,23 +209,52 @@ var OrganizePage = LoggedInPage.extend({
         this.audio.pause();
     },
     
+    
+    
     /**
-     *  This is called when an area of the waveform was highlighted by the user.
+     *  This is called from a panel when an area of the waveform was highlighted by 
+     *  the user.
      *
      *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
      *  @param  {Number}    endTime    -    The time of the highlight end.
+     *  @param  {Panel}    panel    -   The panel that triggered the highlight
      **/
-    waveform_highlighted: function(startTime, endTime) {
+    waveform_highlighted: function(startTime, endTime, panel) {
         /* Start audio loop */
         this.start_audio_loop(startTime, endTime);
         
+        /* If this highlight was from the detail panel */
+        if(panel instanceof DetailWaveformPanel) {
+            /* Tell overview panel */
+            this.overviewPanel.highlight_waveform(startTime, endTime);
+        }
+        else if(panel instanceof OverviewWaveformPanel) {
+            /* Tell detail panel */
+            this.detailPanel.highlight_waveform(startTime, endTime);
+        }
+        else {
+            throw new Error('Panel argument is invalid.');
+        }
     },
     
     /**
      *  This is called when a waveform is cleared.
+     *
+     *  @param  {Panel}    panel    -   The panel that cleared the highlight.
      **/
-    waveform_highlight_cleared: function() {
+    waveform_highlight_cleared: function(panel) {
         this.clear_audio_loop();
+        
+        if(panel instanceof DetailWaveformPanel) {
+            /* Tell overview panel */
+            this.overviewPanel.clear_waveform_highlight();
+        }
+        else if(panel instanceof OverviewWaveformPanel) {
+            this.detailPanel.clear_waveform_highlight();
+        }
+        else {
+            throw new Error('Panel argument is invalid')
+        }
     }, 
     
     /**
@@ -233,7 +262,7 @@ var OrganizePage = LoggedInPage.extend({
      **/
     clear_waveform_highlight: function() {
         this.detailPanel.clear_waveform_highlight();
-        //this.overviewPanel.clear_waveform_highlight();
+        this.overviewPanel.clear_waveform_highlight();
     }, 
     
     /**
@@ -274,4 +303,7 @@ var OrganizePage = LoggedInPage.extend({
         $(this.audio).unbind('timeupdate', this.audioLoopTimeUpdateCallback);
     }, 
     
+    move_audio: function(seconds) {
+        this.audio.currentTime = seconds;
+    }, 
 });

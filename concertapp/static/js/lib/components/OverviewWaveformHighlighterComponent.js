@@ -1,5 +1,5 @@
 /**
- *  @file       DetailWaveformHighlighterComponent.js
+ *  @file       OverviewWaveformHighlighterComponent.js
  *
  *  @author     Colin Sullivan <colinsul [at] gmail.com>
  **/
@@ -9,5 +9,5 @@
  *  @class
  *  @extends    WaveformHighlighterComponent
  **/
-var DetailWaveformHighlighterComponent = WaveformHighlighterComponent.extend({
+var OverviewWaveformHighlighterComponent = WaveformHighlighterComponent.extend({
 });
