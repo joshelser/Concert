@@ -206,8 +206,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  if the playhead is at the end of the view && AUTOSCROLLING ON 
      *  scroll to position of playhead
      **/
-    playhead_moved: function(leftPx) {            
-        if (this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft()) ) {
+    playhead_moved: function(leftPx) {        
+        if ((this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft())) ||
+            (this.autoscrollBool && leftPx < this.waveformView.scrollLeft())) {
             this.autoscroll(leftPx);
         }
 

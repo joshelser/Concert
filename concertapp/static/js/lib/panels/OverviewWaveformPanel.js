@@ -37,6 +37,12 @@ var OverviewWaveformPanel = WaveformPanel.extend({
             panel: this 
         });
         this.highlighter = highlighter;
+
+        $("#overview_waveform_panel_top").bind('click', function(me) {
+            return function(e) {
+                me.handle_click(get_event_x(e));
+            };
+        }(this));
     }, 
     
     /**
@@ -79,6 +85,12 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         var duration = this.audioFileDuration;
         
         return width/duration;
+    },
+
+    handle_click: function(left) {
+        //update audio's currentTime to location clicked
+        var seconds = left/this.get_resolution();
+        this.page.move_audio(seconds);
     }, 
     
 })
