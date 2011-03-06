@@ -144,7 +144,8 @@ var OrganizePage = LoggedInPage.extend({
     
     play: function() {
         this.audio.play();
-                
+        this.detailPanel.autoscrollBool = true;
+        
         var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
             return function() {                
                 detailPlayheadWidget.animate();

@@ -19,10 +19,8 @@ var DetailWaveformPlayheadComponent = WaveformPlayheadComponent.extend({
      *  moves the playhead to the left the currentTime * 10
      **/
     animate: function() {
-        var leftPx = this.audio.currentTime * this.pxPerSecond
-        if ((leftPx % 815) <= 5) {
-            this.panel.scroll_to_time(leftPx);
-        }
+        var leftPx = this.audio.currentTime * this.pxPerSecond        
+        this.panel.playhead_moved(leftPx);
         this.el.css('left', leftPx);
     },
 });
