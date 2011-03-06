@@ -112,7 +112,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
                 me.handle_scroll_stop();
             }
         }(this));
-            
+        
+        this.waveformView.bind('click', function(me) {
+            return function(e) {
+                me.handle_click(get_event_x(e));
+            };
+        }(this));            
     },
     /**
      *  Called from page when an audio file has been selected.
@@ -177,9 +182,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
     waveform_highlighted: function(startTime, endTime) {
-        if (this.playhead_in_view()) {
-            this.autoscrollBool = true;
-        }
+        this.autoscrollBool = true;
         
         /* Tell page about our highlight */
         this.page.waveform_highlighted(startTime, endTime, this);
@@ -236,5 +239,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
     },
     
+    
+    handle_click: function(left) {
+        //update audio's currentTime to location clicked
+        var leftPx = left + this.waveformView.scrollLeft();
+        var seconds = leftPx/10;
+        this.page.move_audio(seconds);
+    }, 
     
 });

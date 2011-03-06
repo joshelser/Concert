@@ -28,13 +28,14 @@ var WaveformPlayheadComponent = Component.extend({
         this.fileDuration = null;
         
         /* As the audio plays, animate playhead */
-        $(audio).bind('timeupdate', function(me) {
+//        $(audio).bind('timeupdate', function(me) {
+        setInterval(function(me){
             return function() {
                 /* TODO: inefficient really, we already have access to currentTime
                 here */
                 me.animate();
             };
-        }(this));
+        }(this), 200);
     },
 
     /**
