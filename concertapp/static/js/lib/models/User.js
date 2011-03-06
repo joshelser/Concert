@@ -35,14 +35,3 @@ var User = ConcertBackboneModel.extend({
 var UserSet = ConcertBackboneCollection.extend({
     model: User
 });
-
-
-/**
- *  A set of user objects for a specific collection.
- *  @class
- *  @extends    UserSet
- **/
-var CollectionUserSet = UserSet.extend({
-    url: 'value', 
-});
-

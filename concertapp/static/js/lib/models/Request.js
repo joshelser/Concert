@@ -33,7 +33,8 @@ var Request = ConcertBackboneModel.extend({
             return base;
         }
     },
-    name: 'Request', 
+    name: 'Request',
+    apiName: 'request', 
     /**
      *  When a user would like to revoke the request to join a collection.
      **/
