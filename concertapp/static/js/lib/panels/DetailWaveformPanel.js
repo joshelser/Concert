@@ -112,7 +112,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
                 me.handle_scroll_stop();
             }
         }(this));
-            
+        
+        this.waveformView.bind('click', function(me) {
+            return function(e) {
+                me.handle_click(get_event_x(e));
+            };
+        }(this));            
     },
     /**
      *  Called from page when an audio file has been selected.
@@ -260,6 +265,13 @@ var DetailWaveformPanel = WaveformPanel.extend({
      **/
     clear_waveform_highlight: function() {
         this.highlighter.disable();
+    }, 
+    
+    handle_click: function(left) {
+        //update audio's currentTime to location clicked
+        var leftPx = left + this.waveformView.scrollLeft();
+        var seconds = leftPx/10;
+        this.page.move_audio(seconds);
     }, 
     
 });

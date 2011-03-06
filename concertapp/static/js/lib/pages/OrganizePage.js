@@ -274,4 +274,7 @@ var OrganizePage = LoggedInPage.extend({
         $(this.audio).unbind('timeupdate', this.audioLoopTimeUpdateCallback);
     }, 
     
+    move_audio: function(seconds) {
+        this.audio.currentTime = seconds;
+    }, 
 });
