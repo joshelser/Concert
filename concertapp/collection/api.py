@@ -2,26 +2,19 @@
 #   This file contains the REST API functionality relating to collections.
 ###
 
-
-from tastypie.resources import ModelResource, Resource
-from tastypie import fields
-from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.authentication import Authentication, BasicAuthentication
-
-from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
-from tastypie.http import *
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.conf.urls.defaults import *
-
-from urlparse import parse_qs
-
+from concertapp.lib.api import MyResource, ConcertAuthorization, DjangoAuthentication
 from concertapp.models import *
-from django.contrib.auth.models import User
-
-from concertapp.lib.api import *
-
 from concertapp.users.api import *
+from django.conf.urls.defaults import *
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from tastypie import fields
+from tastypie.authentication import Authentication, BasicAuthentication
+from tastypie.authorization import DjangoAuthorization, Authorization
+from tastypie.http import *
+from tastypie.resources import ModelResource, Resource
+from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
+from urlparse import parse_qs
 
         
 

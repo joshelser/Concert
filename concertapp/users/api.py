@@ -6,7 +6,7 @@ from tastypie.resources import ModelResource
 from concertapp.models import *
 from django.contrib.auth.models import User
 
-from concertapp.collection.api import *
+from concertapp.lib.api import MyResource
 
 class UserResource(MyResource):
     class Meta:

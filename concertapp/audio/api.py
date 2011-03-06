@@ -1,4 +1,4 @@
-from concertapp.lib.api import *
+from concertapp.lib.api import ConcertAuthorization, MyResource,DjangoAuthentication
 from concertapp.models import Audio
 from concertapp.users.api import *
 from concertapp.collection.api import CollectionResource

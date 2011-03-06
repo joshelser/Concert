@@ -2,6 +2,7 @@ from concertapp.models import *
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
 from tastypie import fields
 from tastypie.authentication import Authentication, BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
@@ -182,21 +183,33 @@ class NestedResource(MyResource):
         in this case, it is assumed that the resource is being created new, and therefore the nested resoruce
         can just be injected in as a related object, since theres no chance of it overwritting anything.
         '''
-        
-        nested_object = get_object_or_404(self.get_nested_obj_type(),pk=kwargs['nested_pk'])
+        # not sure why the proper HttpResponse isn't propogated automaticall
+        # could be because this is tastypie and not django...
+        try:
+            nested_object = get_object_or_404(self.get_nested_obj_type(),pk=kwargs['nested_pk'])
+        except Http404:
+            response = HttpResponse()
+            response.status_code = 404
+            return response
 
         deserialized = self.deserialize(request, request.raw_post_data, format=request.META.get('CONTENT_TYPE', 'application/json'))
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized))
-        self.is_valid(bundle, request)
         updated_bundle = self.obj_create(bundle, request=request)
+        self.is_valid(bundle, request)
 
-        django_related_field = getattr(updated_bundle.obj,self._meta.nested)
+        django_related_field = getattr(bundle.obj,self._meta.nested)
         django_related_field.add(nested_object)     
 
-        return HttpCreated(location=self.get_resource_uri(updated_bundle))
+        return HttpCreated(location=self.get_resource_uri(bundle.obj))
     
+    def nested_delete_detail(self, request, **kwargs):
+        return self.nested_detail('delete', request, **kwargs)
 
     def nested_post_detail(self, request, **kwargs):
+        return self.nested_detail('post', request, **kwargs)
+
+
+    def nested_detail(self, function, request, **kwargs):
         '''
         the view function thats going to handle POST requests to nested resource where the non-nested resource
         already exists.
@@ -207,20 +220,34 @@ class NestedResource(MyResource):
         in this case, this function should only create the relationship between the two items.  Nothing should be specified in the POST
         arguments
         '''
+        
+        # not sure why the proper HttpResponse isn't propogated automaticall
+        # could be because this is tastypie and not django...
+        try:
+            nested_item = get_object_or_404(self.get_nested_obj_type(), pk = kwargs['nested_pk'])
+            non_nested_item = get_object_or_404(self._meta.object_class, pk = kwargs['pk'])        
+        except Http404:
+            response = HttpResponse()
+            response.status_code = 404
+            return response
 
-        nested_item = get_object_or_404(self.get_nested_obj_type(), pk = kwargs['nested_pk'])
-        non_nested_item = get_object_or_404(self._meta.object_class, pk = kwargs['pk'])        
         try:
             non_nested_related_field = getattr(non_nested_item, self._meta.nested)
         except AttributeError, e:
             Exception("Couldn't find attribute %s on %s. Make sure the resource's field name matches the django model's name." % (self._meta.nested, str(type(non_nested_item)))) 
             
-        non_nested_related_field.add(nested_item)
-        return HttpCreated(location=self.get_resource_uri(non_nested_item))  
+        if function == 'post':
+            non_nested_related_field.add(nested_item)
+            return HttpCreated(location=self.get_resource_uri(non_nested_item))  
+        elif function == 'delete':
+            non_nested_related_field.remove(nested_item)
+            return HttpAccepted()        
+        
+        raise Exception("Unknown function: %s" % function)
         
 
     def remove_api_resource_names(self, url_dict):
-        kwargs_subset = super(TagResource, self).remove_api_resource_names(url_dict)
+        kwargs_subset = super(NestedResource, self).remove_api_resource_names(url_dict)
         
         for key in ['nested_pk', 'nested_resource_name']:
             try:
@@ -231,6 +258,15 @@ class NestedResource(MyResource):
         return kwargs_subset    
  
 
+    def base_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_list'), name="api_dispatch_list"),
+            url(r"^(?P<resource_name>%s)/schema%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_schema'), name="api_get_schema"),
+            url(r"^(?P<resource_name>%s)/set/(?P<pk_list>\w[\w;-]*)/$" % self._meta.resource_name, self.wrap_view('get_multiple'), name="api_get_multiple"),
+            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w-]*)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+        ]
+    
+    
     def override_urls(self):
         try:
             nested_field_name = getattr(self._meta,'nested')
@@ -244,9 +280,9 @@ class NestedResource(MyResource):
         override_urls = []
         
         override_urls.extend([
-                url(r"^nested/(?P<nested_resource_name>%s)/(?P<nested_pk>\w[\w-]*?)/(?P<resource_name>%s)/(?P<pk>\w[\w-]*?)%s$" % (nested_resource_name, self._meta.resource_name, trailing_slash()), 
+                url(r"^(?P<nested_resource_name>%s)/(?P<nested_pk>\w[\w-]*?)/(?P<resource_name>%s)/(?P<pk>\w[\w-]*?)%s$" % (nested_resource_name, self._meta.resource_name, trailing_slash()), 
                     self.wrap_view('nested_dispatch_detail')),
-                url(r"^nested/(?P<nested_resource_name>%s)/(?P<nested_pk>\w[\w-]*?)/(?P<resource_name>%s)%s$" % (nested_resource_name, self._meta.resource_name, trailing_slash()), 
+                url(r"^(?P<nested_resource_name>%s)/(?P<nested_pk>\w[\w-]*?)/(?P<resource_name>%s)%s$" % (nested_resource_name, self._meta.resource_name, trailing_slash()), 
                     self.wrap_view('nested_dispatch_list'))
                 ])
         

@@ -1,9 +1,9 @@
+from concertapp.audio.api import AudioResource
+from concertapp.audiosegments.api import AudioSegmentResource
 from concertapp.collection.api import CollectionResource, RequestResource 
 from concertapp.event.api import *
-from concertapp.audio.api import AudioResource
 from concertapp.tags.api import TagResource
 from concertapp.users.api import UserResource
-from concertapp.audiosegments.api import AudioSegmentResource
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
@@ -17,6 +17,8 @@ api1.register(CollectionResource())
 api1.register(UserResource())
 api1.register(RequestResource())
 api1.register(TagResource())
+tag_resource = TagResource()
+audio_seg_resource = AudioSegmentResource()
 api1.register(AudioResource())
 api1.register(AudioSegmentResource())
 
@@ -27,6 +29,10 @@ api1.register(RequestJoinCollectionEventResource())
 admin.autodiscover()
 
 urlpatterns = patterns('',
+
+
+                      # (r'^api/1/audiosegment/(?P<segment_id>\w+)/', include(tag_resource.urls)),
+                      # (r"^api/1/tag/(?P<tag_id>\d+)/",include(audio_seg_resource.urls)),
 
     # The default page is the dashboard
     url(r'^$', redirect_to, {'url': '/dashboard/'}),

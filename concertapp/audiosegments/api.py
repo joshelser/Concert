@@ -1,4 +1,4 @@
-from concertapp.lib.api import *
+from concertapp.lib.api import NestedResource, ConcertAuthorization, DjangoAuthentication
 from concertapp.models import *
 from concertapp.users.api import *
 from concertapp.audio.api import AudioResource
@@ -35,7 +35,7 @@ class AudioSegmentAuthorization(ConcertAuthorization):
             return False
 
 
-class AudioSegmentResource(MyResource):
+class AudioSegmentResource(NestedResource):
     creator = fields.ForeignKey(UserResource, 'creator', full=True) 
     audio = fields.ForeignKey(AudioResource, 'audio', full=True)
     tags = fields.ToManyField("concertapp.tags.api.TagResource","tags", null = True)
@@ -48,6 +48,8 @@ class AudioSegmentResource(MyResource):
         filtering = {
             "tags": ALL
             }
+
+        nested = 'tags'
 '''
     def dispatch(self, request_type, request, **kwargs):
         if 'nested_pk' in kwargs:
