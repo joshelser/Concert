@@ -82,6 +82,10 @@ var OrganizePage = LoggedInPage.extend({
         
         /* Pause audio if it is currently playing */
         this.pause();
+        /* Clear any highlights/loops */
+        this.clear_audio_loop();
+        this.clear_waveform_highlight();
+        
         
         /* Determine what audio was selected */
         var files = params.files;
@@ -222,6 +226,14 @@ var OrganizePage = LoggedInPage.extend({
      **/
     waveform_highlight_cleared: function() {
         this.clear_audio_loop();
+    }, 
+    
+    /**
+     *  This is called when a waveform should be cleared.
+     **/
+    clear_waveform_highlight: function() {
+        this.detailPanel.clear_waveform_highlight();
+        //this.overviewPanel.clear_waveform_highlight();
     }, 
     
     /**

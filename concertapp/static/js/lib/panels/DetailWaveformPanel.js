@@ -255,5 +255,13 @@ var DetailWaveformPanel = WaveformPanel.extend({
      **/
     autoscroll: function(leftPx) {
         this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
-    }
+    },
+    
+    /**
+     *  Called from page when waveform highlight should be cleared.
+     **/
+    clear_waveform_highlight: function() {
+        this.highlighter.disable();
+    }, 
+    
 });

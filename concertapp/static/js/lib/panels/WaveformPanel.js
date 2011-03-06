@@ -56,4 +56,5 @@ var WaveformPanel = Panel.extend({
         this.playheadComponent.audio_segment_selected(selectedAudioSegment);
         this.playheadComponent.reset();
     }, 
+    
 });
