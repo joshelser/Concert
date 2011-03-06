@@ -21,6 +21,22 @@ var OverviewWaveformPanel = WaveformPanel.extend({
             audio: this.page.audio
         });
         this.playheadComponent = playheadComponent;
+        
+        var highlighterContainerElement = $('#overview_waveform_panel_highlight_container');
+        if(typeof(highlighterContainerElement) == 'undefined') {
+            throw new Error('$(\'#overview_waveform_panel_highlight_container\') is undefined');
+        }
+        else if(highlighterContainerElement.length == 0) {
+            throw new Error('highlighterContainerElement not found');
+        }
+        this.highlighterContainerElement = highlighterContainerElement;
+        
+        /* Highlighter */
+        var highlighter = new OverviewWaveformHighlighterComponent({
+            el: highlighterContainerElement, 
+            panel: this 
+        });
+        this.highlighter = highlighter;
     }, 
     
     /**
@@ -30,7 +46,15 @@ var OverviewWaveformPanel = WaveformPanel.extend({
      **/
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
-        this.waveformImageElement.attr('src', selectedAudioFile.get('overviewWaveform'));
+        
+        this._load_waveform_image(
+            selectedAudioFile.get('overviewWaveform'),
+            function(me, selectedAudioFile) {
+                return function() {
+                    me.highlighter.audio_file_selected(selectedAudioFile);
+                }
+            }(this, selectedAudioFile)
+        );
     }, 
     
     /**

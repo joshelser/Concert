@@ -169,22 +169,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
     }, 
     
-    /**
-     *  Called from internal when waveform image is to be loaded.
-     *
-     *  @param  {String}    src    -    The url of the waveform image.
-     *  @param  {Function}    callback  -   to be executed after waveform loads.
-     **/
-    _load_waveform_image: function(src, callback) {
-        var waveformImageElement = this.waveformImageElement;
-        
-        /* When waveform image has loaded, execute callback */
-        waveformImageElement.imagesLoaded(callback);
-        
-        /* Load the waveform viewer with the audio files' waveform image */
-        waveformImageElement.attr('src', src);
-        
-    }, 
     
     /**
      *  Called from highlight when an area of the waveform is highlighted.
@@ -197,7 +181,8 @@ var DetailWaveformPanel = WaveformPanel.extend({
             this.autoscrollBool = true;
         }
         
-        this.page.waveform_highlighted(startTime, endTime);
+        /* Tell page about our highlight */
+        this.page.waveform_highlighted(startTime, endTime, this);
     }, 
     
     /**
@@ -257,11 +242,5 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
     },
     
-    /**
-     *  Called from page when waveform highlight should be cleared.
-     **/
-    clear_waveform_highlight: function() {
-        this.highlighter.disable();
-    }, 
     
 });

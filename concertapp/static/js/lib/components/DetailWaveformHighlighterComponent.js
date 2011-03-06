@@ -10,9 +10,7 @@
  *  @extends    WaveformHighlighterComponent
  **/
 var DetailWaveformHighlighterComponent = WaveformHighlighterComponent.extend({
-    _initializeElements: function() {
-        WaveformHighlighterComponent.prototype._initializeElements.call(this);
-        
-
+    get_resolution: function() {
+        return 10;
     }, 
 });
