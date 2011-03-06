@@ -57,12 +57,12 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeContainerElement = timecodeContainerElement;
         
         /* Instantiate widget for timecode */
-        var timecodeWidget = new DetailWaveformTimecodeComponent({
+        var timecodeComponent = new DetailWaveformTimecodeComponent({
             el: timecodeContainerElement, 
             panel: this, 
             audio: this.page.audio
         });
-        this.timecodeWidget = timecodeWidget;
+        this.timecodeComponent = timecodeComponent;
         
         /* Instantiate component for playhead */
         var playheadComponent = new DetailWaveformPlayheadComponent({
@@ -127,21 +127,17 @@ var DetailWaveformPanel = WaveformPanel.extend({
             this.topFileTemplate.tmpl(selectedAudioFile.toJSON())
         );
         
-        var waveformImageElement = this.waveformImageElement;
-        
-        /* When waveform image has loaded */
-        waveformImageElement.imagesLoaded(function(me, selectedAudioFile) {
+        /* Load waveform image */
+        this._load_waveform_image(selectedAudioFile.get('detailWaveform'), function(me, selectedAudioFile) {
+            /* and when done */
             return function() {
                 /* Draw timecode */
-                me.timecodeWidget.render();
+                me.timecodeComponent.audio_file_selected(selectedAudioFile);
                 
                 /* Set up highlighter */
                 me.highlighter.audio_file_selected(selectedAudioFile);
             };            
         }(this, selectedAudioFile));
-        
-        /* Load the waveform viewer with the audio files' waveform image */
-        this.waveformImageElement.attr('src', selectedAudioFile.get('detailWaveform'));        
     }, 
     
     /**
@@ -156,6 +152,38 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.topContainer.html(
             this.topSegmentTemplate.tmpl(selectedAudioSegment.toJSON())
         );
+        
+        
+        /* Load waveform image */
+        this._load_waveform_image(
+            selectedAudioSegment.get('audioFile').get('detailWaveform'),
+            function(me, selectedAudioSegment) {
+                return function() {
+                    /* Draw timecode */
+                    me.timecodeComponent.audio_segment_selected(selectedAudioSegment);
+                    
+                    me.highlighter.audio_segment_selected(selectedAudioSegment);
+                };
+            }(this, selectedAudioSegment)
+        );
+        
+    }, 
+    
+    /**
+     *  Called from internal when waveform image is to be loaded.
+     *
+     *  @param  {String}    src    -    The url of the waveform image.
+     *  @param  {Function}    callback  -   to be executed after waveform loads.
+     **/
+    _load_waveform_image: function(src, callback) {
+        var waveformImageElement = this.waveformImageElement;
+        
+        /* When waveform image has loaded, execute callback */
+        waveformImageElement.imagesLoaded(callback);
+        
+        /* Load the waveform viewer with the audio files' waveform image */
+        waveformImageElement.attr('src', src);
+        
     }, 
     
     /**

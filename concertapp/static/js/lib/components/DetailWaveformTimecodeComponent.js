@@ -22,26 +22,51 @@ var DetailWaveformTimecodeComponent = Component.extend({
         }
         this.audio = audio;
         
-        _.bindAll(this, "render");
+        /* The duration of the currently selected audio file (or segment parent) */
+        this.fileDuration = null;
     },
-
+    
+    /**
+     *  Called from panel when audio file was selected.
+     *
+     *  @param  {AudioFile}    selectedAudioFile    -   selected audio file
+     **/
+    audio_file_selected: function(selectedAudioFile) {
+        /* Save duration of audio */
+        this.fileDuration = selectedAudioFile.get('duration');
+        
+        /* render */
+        this.render();
+        
+    }, 
+    
+    /**
+     *  Called from panel when audio segment was selected.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - selected segment
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        /* Save duration of audio file associated with this segment */
+        this.fileDuration = selectedAudioSegment.get('audioFile').get('duration');
+        
+        /* Render */
+        this.render();
+    }, 
+    
+    /**
+     *  Called internally when timecode is to be redrawn.
+     **/
     render: function() {
         Component.prototype.render.call(this);
         var el = this.el;
-        
-        /** TODO: Remove all this stuff once we refactor the selected audio files */
-        if(this.panel.page.modelManager.selectedAudioFiles.length == 0) {
-            return false;
-        }
-        
-        /* Duration of audio */
-        var duration = this.panel.page.modelManager.selectedAudioFiles.first().get('duration');
         
         /* Pixels per second currently is 10 because we only have one zoom level */
         var pxPerSecond = 10;
         
         /* Clear canvas */
         this.el.empty();
+        
+        var duration = this.fileDuration;
         
         /* Draw timecode with canvas */
         $g().size(pxPerSecond*duration, el.height())
@@ -90,7 +115,6 @@ var DetailWaveformTimecodeComponent = Component.extend({
                 };
             }(pxPerSecond, duration))
             .place(el).draw();
-        
         
         
         return this;

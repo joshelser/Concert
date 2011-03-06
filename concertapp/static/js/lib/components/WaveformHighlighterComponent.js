@@ -182,6 +182,18 @@ var WaveformHighlighterComponent = Component.extend({
     }, 
     
     /**
+     *  When an audio segment has been selected.  Called from panel.
+     *
+     *  @param  {AudioSegment}    selectedAudioSegment    - The segment obj.
+     **/
+    audio_segment_selected: function(selectedAudioSegment) {
+        var audioFileDuration = selectedAudioSegment.get('audioFile').get('duration');
+        
+        /* Set width of highlight container element */
+        this.el.css('width', audioFileDuration*10+'px');
+    }, 
+    
+    /**
      *  When this highlight is being used.  Make sure it is visible on UI.
      **/
     enable: function() {
