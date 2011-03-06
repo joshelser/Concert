@@ -1,6 +1,7 @@
 from django.core.context_processors import csrf
 from concertapp.collection.api import MemberCollectionResource
 from django.utils import simplejson
+from concertapp.users.api import UserResource
 
 
 ###

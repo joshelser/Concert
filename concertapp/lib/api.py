@@ -1,8 +1,8 @@
 from concertapp.models import *
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404
 from tastypie import fields
 from tastypie.authentication import Authentication, BasicAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
@@ -10,13 +10,7 @@ from tastypie.bundle import Bundle
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import NotFound, BadRequest, InvalidFilterError, HydrationError, InvalidSortError, ImmediateHttpResponse
 from tastypie.http import *
-<<<<<<< HEAD
 from tastypie.resources import ModelResource, Resource, convert_post_to_put
-=======
-from tastypie.resources import ModelResource, Resource
-from tastypie import fields
-from django.conf.urls.defaults import *
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb
 from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
 import sys
 
@@ -36,7 +30,7 @@ class ConcertAuthorization(Authorization):
         #   request.user
         if not hasattr(request, 'user'):
             return False
-            
+        
         return True
 
 ###
@@ -86,7 +80,7 @@ class MyResource(ModelResource):
                 data = attr
                 
             return data
-            
+        
         # For each of our objects, get dict as mentioned above.
         objsDicts = [get_recursive_bundle_data(bundle) for bundle in objsBundles]
 
@@ -98,19 +92,19 @@ class MyResource(ModelResource):
     ###
     def post_list(self, request, **kwargs):
         deserialized = self.deserialize(request,
-            request.raw_post_data,
-            format=request.META.get('CONTENT_TYPE',
-            'application/json')
-        )
+                                        request.raw_post_data,
+                                        format=request.META.get('CONTENT_TYPE',
+                                                                'application/json')
+                                        )
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized))
         self.is_valid(bundle, request)
         updated_bundle = self.obj_create(bundle, request=request)
         resp = self.create_response(request,
-            self.full_dehydrate(updated_bundle.obj)
-        )
+                                    self.full_dehydrate(updated_bundle.obj)
+                                    )
         resp['location'] = self.get_resource_uri(updated_bundle)
         resp.code = 201
-<<<<<<< HEAD
+
         return resp                              
 
 
@@ -123,13 +117,13 @@ class NestedResource(MyResource):
     def nested_dispatch_list(self, request, **kwargs):
         if "nested_pk" not in kwargs:
             raise Exception('Nested resource views need to be provided with a nested pk (primary key) in order to function')
-
+        
         return self.nested_dispatch('list', request, **kwargs)
 
     def nested_dispatch_detail(self, request, **kwargs):
         if "nested_pk" not in kwargs:
             raise Exception('Nested resource views need to be provided with a nested pk (primary key) in order to function')
-
+        
         return self.nested_dispatch('detail', request, **kwargs)
     
     def nested_dispatch(self, request_type, request, **kwargs):
@@ -161,7 +155,7 @@ class NestedResource(MyResource):
         # prevents Django from freaking out.
         if not isinstance(response, HttpResponse):
             return HttpAccepted()
-
+        
         return response
 
 
@@ -175,18 +169,18 @@ class NestedResource(MyResource):
         field_django_class = field_class._meta.object_class
         
         return field_django_class
-         
-        
+    
+    
     def nested_post_list(self, request, **kwargs):
         '''
         the view function thats going to handle POST requests to nested resources where the non-nested resource 
         (the latter of the two specified in the URL) is left as a list.
-
+        
         e.g.,
         POSTing to a resource like this /api/nested_resource/nested_pk/resource
-
+        
         note the lack of a primary key for the <italic>regular</italic> resource.
-
+        
         in this case, it is assumed that the resource is being created new, and therefore the nested resoruce
         can just be injected in as a related object, since theres no chance of it overwritting anything.
         '''
@@ -198,32 +192,32 @@ class NestedResource(MyResource):
             response = HttpResponse()
             response.status_code = 404
             return response
-
+        
         deserialized = self.deserialize(request, request.raw_post_data, format=request.META.get('CONTENT_TYPE', 'application/json'))
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized))
         updated_bundle = self.obj_create(bundle, request=request)
         self.is_valid(bundle, request)
-
+        
         django_related_field = getattr(bundle.obj,self._meta.nested)
         django_related_field.add(nested_object)     
-
+        
         return HttpCreated(location=self.get_resource_uri(bundle.obj))
     
     def nested_delete_detail(self, request, **kwargs):
         return self.nested_detail('delete', request, **kwargs)
-
+    
     def nested_post_detail(self, request, **kwargs):
         return self.nested_detail('post', request, **kwargs)
-
+    
 
     def nested_detail(self, function, request, **kwargs):
         '''
         the view function thats going to handle POST requests to nested resource where the non-nested resource
         already exists.
-
+        
         e.g., 
         POSTing to a resource who's url looks like htis /api/nested_resource/nested_pk/resource/pk
-
+        
         in this case, this function should only create the relationship between the two items.  Nothing should be specified in the POST
         arguments
         '''
@@ -237,7 +231,7 @@ class NestedResource(MyResource):
             response = HttpResponse()
             response.status_code = 404
             return response
-
+        
         try:
             non_nested_related_field = getattr(non_nested_item, self._meta.nested)
         except AttributeError, e:
@@ -249,9 +243,9 @@ class NestedResource(MyResource):
         elif function == 'delete':
             non_nested_related_field.remove(nested_item)
             return HttpAccepted()        
-        
+            
         raise Exception("Unknown function: %s" % function)
-        
+    
 
     def remove_api_resource_names(self, url_dict):
         kwargs_subset = super(NestedResource, self).remove_api_resource_names(url_dict)
@@ -263,15 +257,15 @@ class NestedResource(MyResource):
                 pass
         
         return kwargs_subset    
- 
-
+    
+    
     def base_urls(self):
         return [
             url(r"^(?P<resource_name>%s)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_list'), name="api_dispatch_list"),
             url(r"^(?P<resource_name>%s)/schema%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_schema'), name="api_get_schema"),
             url(r"^(?P<resource_name>%s)/set/(?P<pk_list>\w[\w;-]*)/$" % self._meta.resource_name, self.wrap_view('get_multiple'), name="api_get_multiple"),
             url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w-]*)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
-        ]
+            ]
     
     
     def override_urls(self):
@@ -294,30 +288,3 @@ class NestedResource(MyResource):
                 ])
         
         return override_urls
-=======
-        return resp        
-        
-    ###
-    #   This helps us with nested resources.
-    #   source: https://gist.github.com/809993
-    ###                      
-    def override_urls(self):
-        urls = []
-
-        for name, field in self.fields.items():
-            if isinstance(field, fields.ToManyField):
-                # instantiate the sub resource
-                #subresource = field.to_class()
-
-                resource = r"^(?P<resource_name>{resource_name})/(?P<{related_name}>.+)/{related_resource}/$".format(
-                    resource_name=self._meta.resource_name, 
-                    related_name=field.related_name,
-                    related_resource=field.attribute,
-                    )
-                resource = url(resource, field.to_class().wrap_view('dispatch_list'), name="api_dispatch_detail")
-                urls.append(resource)
-                
-                # Need to do something like this?
-#                urls.append((r'^(?P<resource_name>'+self._meta.resource_name+')/', include(subresource.urls)))
-        return urls
->>>>>>> 1435921a4f08cf919125c29614bb0c4d2eb3e2eb

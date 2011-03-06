@@ -1,7 +1,5 @@
 from concertapp.lib.api import ConcertAuthorization, MyResource,DjangoAuthentication
 from concertapp.models import AudioFile
-from concertapp.users.api import *
-from concertapp.collection.api import CollectionResource
 from django.conf.urls.defaults import *
 from django.contrib.auth.models import User
 from tastypie import fields
@@ -30,8 +28,8 @@ class AudioFileAuthorization(ConcertAuthorization):
 
 class AudioFileResource(MyResource):
     name = fields.CharField('name')
-    uploader = fields.ForeignKey(UserResource, 'uploader', full=True)
-    collection = fields.ForeignKey(CollectionResource, "collection")
+    uploader = fields.ForeignKey('concertapp.users.api.UserResource', 'uploader', full=True)
+    collection = fields.ForeignKey('concertapp.collection.api.CollectionResource', "collection")
     detailWaveform = fields.FileField('detailWaveform')
     overviewWaveform = fields.FileField('overviewWaveform')
     mp3 = fields.FileField('mp3')

@@ -191,7 +191,7 @@ class AudioSegment(models.Model):
     creator = models.ForeignKey(User)
     collection = models.ForeignKey('Collection')
 
-    def save(self,*args, **kwargs):
+    def save(self, *args, **kwargs):
         self.full_clean()
 
         new = False
