@@ -247,4 +247,10 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.page.move_audio(seconds);
     }, 
     
+    /**
+     *  The resolution of the waveform image (in pixels/second)
+     **/
+    get_resolution: function() {
+        return 10;
+    }, 
 });

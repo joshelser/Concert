@@ -35,6 +35,9 @@ var WaveformPanel = Panel.extend({
         }
         this.playheadContainerElement = playheadContainerElement;
         
+        /* The duration of the last selected audio file (or segment parent) */
+        this.audioFileDuration = null;
+        
     },
     
     /**
@@ -43,6 +46,7 @@ var WaveformPanel = Panel.extend({
      *  @param  {AudioFile}    selectedAudioFile    -   The selected file
      **/
     audio_file_selected: function(selectedAudioFile) {
+        this.audioFileDuration = selectedAudioFile.get('duration');
         this.playheadComponent.audio_file_selected(selectedAudioFile);
         this.playheadComponent.reset();
     },
@@ -53,6 +57,7 @@ var WaveformPanel = Panel.extend({
      *  @param  {AudioSegment}    selectedAudioSegment    - The selected segment
      **/
     audio_segment_selected: function(selectedAudioSegment) {
+        this.audioFileDuration = selectedAudioSegment.get('audioFile').get('duration');
         this.playheadComponent.audio_segment_selected(selectedAudioSegment);
         this.playheadComponent.reset();
     }, 

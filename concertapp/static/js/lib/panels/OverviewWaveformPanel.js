@@ -67,4 +67,18 @@ var OverviewWaveformPanel = WaveformPanel.extend({
         
         this.waveformImageElement.attr('src', selectedAudioSegment.get('audioFile').get('overviewWaveform'));
     }, 
+    
+    /**
+     *  The resolution of the waveform image (in pixels per second)
+     **/
+    get_resolution: function() {
+        /* Width of image is currently always 898 */
+        var width = 898;
+        
+        /* current duration of audio file */
+        var duration = this.audioFileDuration;
+        
+        return width/duration;
+    }, 
+    
 })

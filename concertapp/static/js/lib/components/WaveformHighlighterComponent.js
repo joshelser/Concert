@@ -140,7 +140,7 @@ var WaveformHighlighterComponent = Component.extend({
             /* Don't do anything */
             return;
         }
-        var pxPerSecond = this.get_resolution();
+        var pxPerSecond = this.panel.get_resolution();
         var startTime = Math.min(dragStartX, dragEndX)/pxPerSecond;
         var endTime = Math.max(dragStartX, dragEndX)/pxPerSecond;
         
@@ -183,7 +183,7 @@ var WaveformHighlighterComponent = Component.extend({
      **/
     draw_highlight_sec: function(t1, t2) {
         var duration = this.audioFileDuration;
-        var pxPerSecond = this.get_resolution();
+        var pxPerSecond = this.panel.get_resolution();
         var x = (t1/duration)*(duration*pxPerSecond);
         var y = (t2/duration)*(duration*pxPerSecond);
         this.draw_highlight_px(x, y);
@@ -200,7 +200,7 @@ var WaveformHighlighterComponent = Component.extend({
         this.audioFileDuration = audioFileDuration;
         
         /* Set width of highlight container element properly */
-        this.el.css('width', audioFileDuration*this.get_resolution()+'px');
+        this.el.css('width', audioFileDuration*this.panel.get_resolution()+'px');
     }, 
     
     /**
@@ -213,7 +213,7 @@ var WaveformHighlighterComponent = Component.extend({
         this.audioFileDuration = audioFileDuration;
         
         /* Set width of highlight container element */
-        this.el.css('width', audioFileDuration*this.get_resolution()+'px');
+        this.el.css('width', audioFileDuration*this.panel.get_resolution()+'px');
         
         /* Draw highlight for this segment */
         this.draw_highlight_sec(

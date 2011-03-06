@@ -10,7 +10,4 @@
  *  @extends    WaveformHighlighterComponent
  **/
 var DetailWaveformHighlighterComponent = WaveformHighlighterComponent.extend({
-    get_resolution: function() {
-        return 10;
-    }, 
 });
