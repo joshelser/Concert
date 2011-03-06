@@ -60,25 +60,6 @@ Backbone.sync = function(method, model, options) {
         params.data = JSON.stringify(data);
     }
 
-    // For older servers, emulate JSON by encoding the request into an HTML-form.
-    if (Backbone.emulateJSON) {
-        params.contentType = 'application/x-www-form-urlencoded';
-        params.processData = true;
-        params.data        = params.data ? {model : params.data} : {};
-    }
-
-    // For older servers, emulate HTTP by mimicking the HTTP method with `_method`
-    // And an `X-HTTP-Method-Override` header.
-    if (Backbone.emulateHTTP) {
-        if (type === 'PUT' || type === 'DELETE') {
-            if (Backbone.emulateJSON) params.data._method = type;
-            params.type = 'POST';
-            params.beforeSend = function(xhr) {
-                xhr.setRequestHeader('X-HTTP-Method-Override', type);
-            };
-        }
-    }
-
     // Make the request.
     $.ajax(params);
 };
@@ -86,49 +67,62 @@ Backbone.sync = function(method, model, options) {
 /**
  *  Helps to display error to user.
  **/
- com.concertsoundorganizer.helpers.wrapError = function(options) {
-     if(options){
-         /* Get error messsage provided from caller */
-         var error_message = options.error_message;        
+com.concertsoundorganizer.helpers.wrapError = function(options) {
+    if(options){
+        /* Get error messsage provided from caller */
+        var error_message = options.error_message;        
+    }
+    else {
+        options = {};
+    }
+
+    if(typeof(error_message) == 'undefined') {
+        var error_message = 'An error has occurred';
+    }
+
+    /* Wrap error callback */
+    options.error = function(error_message, callback) {
+        return function(model, resp) {
+            var responseText = resp.responseText;
+            if(resp && responseText != '') {
+                resp = JSON.parse(responseText);                 
+            }
+            else {
+                resp = {};
+            }
+
+            if(resp.error_message) {
+                error_message += ': '+resp.error_message;
+            }
+            else {
+                error_message += '.';
+            }
+
+            /* display error to the user */
+            com.concertsoundorganizer.notifier.alert({
+                title: 'Error', 
+                content: error_message
+            });
+
+            if(callback) {
+                callback();
+            }
+        }
+
+    }(error_message, options.error_callback);
+
+    return options;
+};
+
+/**
+ *  Another error wrapper, this is a clone of the backbone one.
+ **/
+com.concertsoundorganizer.helpers.backboneWrapError = function(onError, model, options) {
+   return function(resp) {
+     if (onError) {
+       onError(model, resp, options);
+     } else {
+       model.trigger('error', model, resp, options);
      }
-     else {
-         options = {};
-     }
-
-     if(typeof(error_message) == 'undefined') {
-         var error_message = 'An error has occurred';
-     }
-
-     /* Wrap error callback */
-     options.error = function(error_message, callback) {
-         return function(model, resp) {
-             var responseText = resp.responseText;
-             if(resp && responseText != '') {
-                 resp = JSON.parse(responseText);                 
-             }
-             else {
-                 resp = {};
-             }
-             
-             if(resp.error_message) {
-                 error_message += ': '+resp.error_message;
-             }
-             else {
-                 error_message += '.';
-             }
-
-             /* display error to the user */
-             com.concertsoundorganizer.notifier.alert({
-                 title: 'Error', 
-                 content: error_message
-             });
-
-             if(callback) {
-                 callback();
-             }
-         }
-
-         }(error_message, options.error_callback);
-
-         return options;
-     }
+   };
+ };

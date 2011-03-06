@@ -10,6 +10,10 @@
  **/
 var ConcertBackboneCollection = Backbone.Collection.extend({
     
+    initialize: function(models, options) {
+        this.relatedModel = options.relatedModel;
+    }, 
+    
     /**
      *  Overriding this method allows for each collection to be aware of the master
      *  list of model instances, so no duplicate instances are ever created.
@@ -44,12 +48,30 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
     },
     
     /**
-     *  Display modal error to user when error occurs.
+     *  Override internal remove method to allow to save our o2m relationship.
+     *
+     *  @param  {Boolean}    options.save    -  Wether or not to save this relation.
+     *  @param  {Function}    options.error    -    Error callback.
      **/
-     save : function(attrs, options) {
-         var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
-         
-         return Backbone.Collection.prototype.save.call(this, attrs, wrapErrorHelper(options));
-     }
+    _remove : function(model, options) {
+        options || (options = {});
+
+        model = Backbone.Collection.prototype._remove.call(this, model, options);
+
+        if(options.save) {
+            var method = 'delete';
+            var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
+            options = wrapErrorHelper(options);
+
+            options.url = this.relatedModel.url()+this.model.prototype.apiName+'/'+model.get('id')+'/';
+            
+            options.error = com.concertsoundorganizer.helpers.backboneWrapError(options.error, null, options);
+
+            (this.sync || Backbone.sync)(method, null, options);
+        }
+
+    },
+     
+     
     
 });

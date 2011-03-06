@@ -18,7 +18,7 @@ var Collection = ConcertBackboneModel.extend({
             },
             {
                 attr: 'users', 
-                collectionType: UserSet
+                collectionType: CollectionUserSet
             }
         ];
     },
@@ -49,21 +49,22 @@ var Collection = ConcertBackboneModel.extend({
         var modelManager = com.concertsoundorganizer.modelManager;
         var user = modelManager.user;
         var userMemberCollections = modelManager.userMemberCollections;
-        /* Remove user */
-        this.get('users').remove(user);
-        /* Remove collection from memberCollections */
-        userMemberCollections.remove(this);
-        
-        this.save(null, {
-            error_message: 'An error occured while leaving the collection', 
+        /* Remove user and save */
+        this.get('users').remove(user, {
+            error_message: 'An error occurred while leaving the collection',
             error_callback: function(me, userMemberCollections, removedUser) {
                 return function() {
                     me.get('users').add(removedUser);
                     userMemberCollections.add(me);
                 };
-            }(this, userMemberCollections, user), 
+            }(this, userMemberCollections, user),
+            save: true
         });
-    }
+        /* Remove collection from memberCollections */
+        userMemberCollections.remove(this);
+        
+    },
+    
 });
 
 
