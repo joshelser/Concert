@@ -2,7 +2,7 @@
 #   This file contains the REST API functionality relating to collections.
 ###
 
-from concertapp.lib.api import MyResource, ConcertAuthorization, DjangoAuthentication
+from concertapp.lib.api import NestedResource, ConcertAuthorization, DjangoAuthentication
 from concertapp.models import *
 from concertapp.users.api import *
 from django.conf.urls.defaults import *
@@ -15,7 +15,7 @@ from tastypie.http import *
 from tastypie.resources import ModelResource, Resource
 from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
 from urlparse import parse_qs
-
+from tastypie.constants import ALL
         
 
 
@@ -73,9 +73,9 @@ class RequestAuthorization(ConcertAuthorization):
 ###
 #   This is the resource that is used for a collection.
 ###
-class CollectionResource(MyResource):
+class CollectionResource(NestedResource):
     
-    users = fields.ManyToManyField(UserResource, 'users', full=True)
+    users = fields.ManyToManyField(UserResource, 'users', full=True, null = True)
     admin = fields.ForeignKey(UserResource, 'admin', full=True)
     
     class Meta:
@@ -88,9 +88,11 @@ class CollectionResource(MyResource):
         search_term = None
         
         filtering = {
+            'users': ALL,
             'name': ('contains','icontains',)
-        }
-        
+            }
+
+        nested = 'users'
     
     ###
     #   Used to set the current search term from the outside.  This should not 

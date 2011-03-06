@@ -50,39 +50,3 @@ class AudioSegmentResource(NestedResource):
             }
 
         nested = 'tags'
-'''
-    def dispatch(self, request_type, request, **kwargs):
-        if 'nested_pk' in kwargs:
-            nested_pk = kwargs.pop('nested_pk')
-            kwargs['tags'] = get_object_or_404(Tag, pk=nested_pk)
-
-        return super(AudioSegmentResource, self).dispatch(request_type, request, **kwargs)
-
-
-    def obj_create(self, bundle, request=None, **kwargs):
-        new_bundle = super(AudioSegmentResource, self).obj_create(bundle, request, **kwargs)
-        
-        if request.META['PATH_INFO'] and re.search('tag/\d+/+.+', request.META['PATH_INFO']):
-            match = re.search('tag/(\d+)/+.+', request.META['PATH_INFO'])
-            tag_id = match.group(1)
-            tag = Tag.objects.get(pk = tag_id)
-            new_bundle.obj.tags.add(tag)
-            
-        return new_bundle
-
-    def obj_update(self, bundle, request=None, **kwargs):
-        # Todo: much...
-        return super(AudioSegmentResource, self).obj_update(bundle, request, **kwargs)
-     
-
-    def override_urls(self):
-        override_urls = []
-
-        override_urls.append(
-            url(r"^(?P<resource_name>%s)/(?P<pk>\w[\w-]*?)/(?P<nested_resource_name>%s)/(?P<nested_pk>\w[\w/-]*?)%s$" % (self._meta.resource_name, 'tag', trailing_slash()), 
-             self.wrap_view('dispatch_detail'))
-            )
-        
-        return override_urls
-
-'''

@@ -244,10 +244,6 @@ class APITestCase(DjangoTestCase):
         
         
     def testNestedTags(self):
-        '''
-        TODO: EVERYTHING
-        '''
-
         # login as collection administrator
         resp = self.client.login(username='test_user', password='test_user')
         
@@ -289,7 +285,7 @@ class APITestCase(DjangoTestCase):
 
 
         
-        # lets try and create a new tag and link it simultaneously
+        # lets try and create a newaudiosegment  and link it simultaneously
         #
         # to do the above, we post to a uri that only specifies the nested resources' primary key 
         # (the first mentioned resource in the uri) and then provide a JSON object for the (regular, primary) resource
@@ -316,4 +312,56 @@ class APITestCase(DjangoTestCase):
 
 
 
+    def testNestedUsers(self):
+        # login as collection administrator
+        resp = self.client.login(username='test_user', password='test_user')
         
+        # create a collection
+        resp = self.client.post(os.path.join(self.api_prefix, "collection/"), 
+                                data = '{"name":"newest_col","admin":"/api/1/user/1/"}',
+                                content_type = 'application/json')
+        self.assertEqual(resp.status_code, 200) #make sure API created tag
+        try:
+            the_col = Collection.objects.get(name = "newest_col")
+        except Tag.DoesNotExist:
+            self.fail("Collection wasn't created")
+
+        # create a user
+        User(username="adam_g_2").save()
+        the_user = User.objects.get(username="adam_g_2")
+
+        
+        # at this point there exists a new user and a new collection. lets link them
+        #
+        # this tests the method by which you specify both the nested and non-nested resources primary 
+        # keys in the uri, post to that uri, and the link happens automatically.
+        resp = self.client.post(os.path.join(self.api_prefix,'user/%s/collection/%s/' % (the_user.pk, the_col.pk)))
+        self.assertEqual(resp.status_code, 201)
+        self.assertIn(the_user, the_col.users.all())
+
+
+        
+        # lets try and create a new collection and link it to a user simultaneously
+        #
+        # to do the above, we post to a uri that only specifies the nested resources' primary key 
+        # (the first mentioned resource in the uri) and then provide a JSON object for the (regular, primary) resource
+        resp = self.client.post(os.path.join(self.api_prefix,'user/%s/collection/' % the_user.pk),
+                                data = '{"name":"newest_collection_evar","admin":"/api/1/user/1/"}',
+                                content_type = 'application/json')
+        self.assertEqual(resp.status_code, 201)
+        try:
+            the_col_2 = Collection.objects.get(name = "newest_collection_evar")
+        except Collection.DoesNotExist:
+            self.fail("Colleciton didn't get created")
+        self.assertIn(the_user, the_col_2.users.all())
+
+
+        # try and delete the relationship between two items
+        resp = self.client.delete(os.path.join(self.api_prefix,'user/%s/collection/%s/' % (the_user.pk, the_col_2.pk)))
+        self.assertEqual(resp.status_code, 204)
+        try:
+            the_col_2 = Collection.objects.get(name = "newest_collection_evar")
+        except Collection.DoesNotExist:
+            self.fail("Collection got deleted, when only the relationship between the tag and audiosegment should've been")
+        self.assertNotIn(the_user, the_col_2.users.all())
+        self.assertIn(the_user,the_col.users.all())
