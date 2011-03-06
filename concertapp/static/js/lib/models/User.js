@@ -10,22 +10,7 @@
  *  @extends    Backbone.Model
  **/ 
 var User = ConcertBackboneModel.extend({
-    initialize: function() {
-        
-    }, 
-    
-    url: function() {
-        var id = this.get('id');
-        var base = '/api/1/user/';
-        if(id) {
-            return base+id+'/';
-        }
-        else {
-            return base;
-        }
-    },
-    name: 'User', 
-    apiName: 'user' 
+    name: 'user' 
 });
 
 /**

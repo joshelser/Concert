@@ -63,13 +63,12 @@ var ConcertBackboneCollection = Backbone.Collection.extend({
             var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
             options = wrapErrorHelper(options);
 
-            options.url = this.relatedModel.url()+this.model.prototype.apiName+'/'+model.get('id')+'/';
-            
+            options.url = this.relatedModel.url()+model.url({noBase:true});
+
             options.error = com.concertsoundorganizer.helpers.backboneWrapError(options.error, null, options);
 
             (this.sync || Backbone.sync)(method, null, options);
         }
-
     },
      
      

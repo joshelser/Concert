@@ -40,22 +40,22 @@ LoggedInModelManager.prototype.init = function(params) {
     this.userMemberCollections = new CollectionSet;
     
     /* Any page that has collections represented will require a master list of collections we have seen */
-    this.seenInstances['Collection'] = new CollectionSet;
+    this.seenInstances['collection'] = new CollectionSet;
 
 
     /* Master list of requests */
-    this.seenInstances['Request'] = new RequestSet;
+    this.seenInstances['request'] = new RequestSet;
 
 
     /* We will need to maintain a list of users that we have seen */
-    this.seenInstances['User'] = new UserSet;
+    this.seenInstances['user'] = new UserSet;
     
     
     /* Audio objects that we have seen */
-    this.seenInstances['AudioFile'] = new AudioFileSet;
+    this.seenInstances['audiofile'] = new AudioFileSet;
     
     /* Audio segments that we have seen */
-    this.seenInstances['AudioSegment'] = new AudioSegmentSet;
+    this.seenInstances['audiosegment'] = new AudioSegmentSet;
     
     /* We will keep a reference to the current user */
     this.user = new User;
@@ -75,7 +75,7 @@ LoggedInModelManager.prototype._loadData = function() {
      **/
     var user = this.user;
     user.set(dataToLoad['userData']);
-    this.seenInstances['User'].add(user);
+    this.seenInstances['user'].add(user);
     /* done with user data */
     dataToLoad['userData'] = null;
     

@@ -18,7 +18,7 @@ var Collection = ConcertBackboneModel.extend({
             },
             {
                 attr: 'users', 
-                collectionType: CollectionUserSet
+                collectionType: UserSet
             }
         ];
     },
@@ -30,9 +30,7 @@ var Collection = ConcertBackboneModel.extend({
             }
         ]
     },
-    base_url: '/api/1/collection/',
-    name: 'Collection',
-    apiName: 'collection', 
+    name: 'collection',
     /**
      *  When a user wants to join a collection.
      **/

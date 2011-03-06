@@ -22,9 +22,7 @@ var AudioFile = ConcertBackboneModel.extend({
             }
         ];
     }, 
-    base_url: '/api/1/audiofile/', 
-    name: 'AudioFile', 
-    apiName: 'audiofile', 
+    name: 'audiofile', 
 });
 
 /**

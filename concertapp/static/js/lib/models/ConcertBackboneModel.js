@@ -134,21 +134,34 @@ var ConcertBackboneModel = Backbone.Model.extend({
     /**
      *  Display modal error to user when error occurs.
      **/
-     save : function(attrs, options) {
-         var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
-         
-         return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
-     },
-     
-     url: function() {
-         var base = this.base_url;
-         var id = this.get('id');
-         if(id) {
-             return base+id+'/';
-         }
-         else {
-             return base;
-         }
-     },
-    
+    save : function(attrs, options) {
+        var wrapErrorHelper = com.concertsoundorganizer.helpers.wrapError;
+
+        return Backbone.Model.prototype.save.call(this, attrs, wrapErrorHelper(options));
+    },
+
+    /**
+     *  Uses the 'static' name attribute of the model to create the url.  If the
+     *  model has an id it is appended onto the url.
+     *
+     *  @param  {Boolean}    options.noBase    -    Return url without prefix
+     **/
+    url: function(options) {
+        options || (options = {});
+        
+        var url = '/api/1/'
+        if(options.noBase) {
+            url = '';
+        }
+        
+        url += this.name+'/';
+        var id = this.get('id');
+        if(id) {
+            return url+id+'/';
+        }
+        else {
+            return url;
+        }
+    },
+
 });

@@ -26,9 +26,7 @@ var AudioSegment = ConcertBackboneModel.extend({
             }
         ];
     }, 
-    base_url: '/api/1/audiosegment/', 
-    name: 'AudioSegment'
-    apiName: 'audiosegment', 
+    name: 'audiosegment', 
 });
 
 /**

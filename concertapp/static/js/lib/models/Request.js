@@ -23,18 +23,7 @@ var Request = ConcertBackboneModel.extend({
             }
         ];
     },
-    url: function() {
-        var base = '/api/1/request/';
-        var id = this.get('id');
-        if(id) {
-            return base+id+'/';
-        }
-        else {
-            return base;
-        }
-    },
-    name: 'Request',
-    apiName: 'request', 
+    name: 'request',
     /**
      *  When a user would like to revoke the request to join a collection.
      **/
