@@ -74,7 +74,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.timecodeWidget = timecodeWidget;
         
         /* Instantiate component for playhead */
-        var playheadComponent = new WaveformPlayheadComponent({
+        var playheadComponent = new DetailWaveformPlayheadComponent({
             el: this.playheadContainerElement,
             panel: this,
             audio: this.page.audio
@@ -98,6 +98,30 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         this.highlighter = highlighter;
         
+        var waveformView = $('#detail_waveform_panel_view');
+        if(typeof(waveformView) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_view) is undefined');
+        }
+        else if(waveformView.length == 0) {
+            throw new Error('waveformView not found');
+        }
+        this.waveformView = waveformView;
+        
+        var autoscrollBool = true;
+        this.autoscrollBool = autoscrollBool;
+        
+        this.waveformView.bind('scrollstart', function(me) {
+            return function() {
+                me.handle_scroll();
+            };
+        }(this));
+        
+        this.waveformView.bind('scrollstop', function(me) {
+            return function() {
+                me.handle_scroll_stop();
+            }
+        }(this));
+            
     },
     /**
      *  Called from parent class when an audio file has been selected on the UI.
@@ -149,6 +173,10 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
     new_waveform_highlight: function(startTime, endTime) {
+        if (this.playhead_in_view()) {
+            this.autoscrollBool = true;
+        }
+        
         this.page.new_waveform_highlight(startTime, endTime);
     }, 
     
@@ -158,4 +186,54 @@ var DetailWaveformPanel = WaveformPanel.extend({
     waveform_highlight_cleared: function() {
         this.page.waveform_highlight_cleared();
     }, 
+    
+    /**
+     *  Determines if the playhead is in the current waveform view
+     **/
+    playhead_in_view: function() {
+        if (((this.waveformView.scrollLeft()) <= this.playheadWidget.position()) && 
+        ((this.waveformView.scrollLeft() + 815) >= this.playheadWidget.position())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+    
+    /**
+     *  if the playhead is at the end of the view && AUTOSCROLLING ON 
+     *  scroll to position of playhead
+     **/
+    playhead_moved: function(leftPx) {            
+        if (this.autoscrollBool && leftPx >= (815 + this.waveformView.scrollLeft()) ) {
+            this.autoscroll(leftPx);
+        }
+
+    }, 
+    
+    /**
+     *  Handles playhead behavior on scroll
+     **/
+    handle_scroll: function() {
+        this.autoscrollBool = false;
+    }, 
+
+    /**
+    *  Handles playhead behavior on a scroll stop
+    **/    
+    handle_scroll_stop: function() {
+        if (!this.autoscrollBool && this.playhead_in_view()) {
+            this.autoscrollBool = true;
+        }
+        else {
+            this.autoscrollBool = false;
+        }
+    }, 
+        
+    /**
+     *  moves the waveform view to leftPx
+     **/
+    autoscroll: function(leftPx) {
+        this.waveformView.animate({scrollLeft: leftPx}, 600, "easeOutExpo");
+    }
 });

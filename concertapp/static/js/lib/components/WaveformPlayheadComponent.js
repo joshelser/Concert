@@ -1,7 +1,7 @@
 /**
  *  @file       WaveformPlayheadComponent.js
  *  
- *  @author     Amy Wieliczka <amywieliczka [at] gmail.com>
+ *  @author     amy wieliczka <amywieliczka [at] gmail.com>
  **/
  
 /**
@@ -65,5 +65,9 @@ var WaveformPlayheadComponent = Component.extend({
     
     reset: function() {
         this.el.css('left', '0px');
-    }
+    },
+    
+    position: function() {
+        return this.el.position().left;
+    },
 });

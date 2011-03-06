@@ -158,7 +158,7 @@ var OrganizePage = LoggedInPage.extend({
     play_pause: function() {
         /* Get HTML5 audio object */
         var audio = this.audio;
-        
+            
         if(audio.paused) {
             this.play();
         }
@@ -169,13 +169,16 @@ var OrganizePage = LoggedInPage.extend({
     
     play: function() {
         this.audio.play();
+        this.detailPanel.autoscrollBool = true;
+        
         var playheadInterval = setInterval(function(detailPlayheadWidget, overviewPlayheadWidget) {
-            return function() {
+            return function() {                
                 detailPlayheadWidget.animate();
                 overviewPlayheadWidget.animate();
             };
         }(this.detailPanel.playheadComponent, this.overviewPanel.playheadComponent), 
             com.concertsoundorganizer.animation.speed);
+            
         this.playheadInterval = playheadInterval;
     },
     

@@ -74,7 +74,7 @@ CollectionsPageModelManager.prototype.create_new_collection = function(name) {
     });
     
     /* Add to collections */
-    this.userAdminCollections.add(newCollection);
+//    this.userAdminCollections.add(newCollection); - we no longer hvae userAdminCollections
     this.userMemberCollections.add(newCollection);
     
 
