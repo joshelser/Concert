@@ -90,4 +90,23 @@ var WaveformPanel = Panel.extend({
         
     }, 
     
+    /**
+     *  Called from highlight when it has been cleared.
+     **/
+    waveform_highlight_cleared: function() {
+        this.page.waveform_highlight_cleared(this);
+    }, 
+    
+    /**
+     *  Called from highlight when an area of the waveform is highlighted.
+     *
+     *  @param  {Number}    startTime    -  The time (in seconds) of highlight start
+     *  @param  {Number}    endTime    -    The time of the highlight end.
+     **/
+    waveform_highlighted: function(startTime, endTime) {
+        /* Tell page about our highlight */
+        this.page.waveform_highlighted(startTime, endTime, this);
+    }, 
+    
+    
 });

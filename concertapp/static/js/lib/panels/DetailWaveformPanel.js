@@ -185,12 +185,6 @@ var DetailWaveformPanel = WaveformPanel.extend({
         this.page.waveform_highlighted(startTime, endTime, this);
     }, 
     
-    /**
-     *  Called from highlight when it has been cleared.
-     **/
-    waveform_highlight_cleared: function() {
-        this.page.waveform_highlight_cleared();
-    }, 
     
     /**
      *  Determines if the playhead is in the current waveform view

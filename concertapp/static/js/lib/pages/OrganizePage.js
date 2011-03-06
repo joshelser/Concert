@@ -239,9 +239,22 @@ var OrganizePage = LoggedInPage.extend({
     
     /**
      *  This is called when a waveform is cleared.
+     *
+     *  @param  {Panel}    panel    -   The panel that cleared the highlight.
      **/
-    waveform_highlight_cleared: function() {
+    waveform_highlight_cleared: function(panel) {
         this.clear_audio_loop();
+        
+        if(panel instanceof DetailWaveformPanel) {
+            /* Tell overview panel */
+            this.overviewPanel.clear_waveform_highlight();
+        }
+        else if(panel instanceof OverviewWaveformPanel) {
+            this.detailPanel.clear_waveform_highlight();
+        }
+        else {
+            throw new Error('Panel argument is invalid')
+        }
     }, 
     
     /**
