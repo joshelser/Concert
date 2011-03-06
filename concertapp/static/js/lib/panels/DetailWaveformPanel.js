@@ -193,9 +193,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
      *  @param  {Number}    endTime    -    The time of the highlight end.
      **/
     waveform_highlighted: function(startTime, endTime) {
-        if (this.playhead_in_view()) {
-            this.autoscrollBool = true;
-        }
+        this.autoscrollBool = true;
         
         this.page.waveform_highlighted(startTime, endTime);
     }, 
