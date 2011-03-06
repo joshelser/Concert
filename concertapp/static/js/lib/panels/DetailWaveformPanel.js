@@ -15,65 +15,36 @@ var DetailWaveformPanel = WaveformPanel.extend({
 
         var params = this.options;
         
-        /* The template for the top left of the panel */
-        var topLeftFileTemplate = $('#detail_waveform_top_left_file_template');
-        if(typeof(topLeftFileTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_left_file_template\') is undefined');
-        }
-        else if(topLeftFileTemplate.length == 0) {
-            throw new Error('topLeftFileTemplate not found');
-        }
-        this.topLeftFileTemplate = topLeftFileTemplate;
         
-        /* template for top left when a segment is selected */
-        var topLeftSegmentTemplate = $('#detail_waveform_top_left_segment_template');
-        if(typeof(topLeftSegmentTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_left_segment_template\') is undefined');
+        /* The template for the top of the panel when a file is selected */
+        var topFileTemplate = $('#detail_waveform_top_file_template');
+        if(typeof(topFileTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_file_template\') is undefined');
         }
-        else if(topLeftSegmentTemplate.length == 0) {
-            throw new Error('topLeftSegmentTemplate not found');
+        else if(topFileTemplate.length == 0) {
+            throw new Error('topFileTemplate not found');
         }
-        this.topLeftSegmentTemplate = topLeftSegmentTemplate;
+        this.topFileTemplate = topFileTemplate;
         
-        /* The container for the top left content */
-        var topLeftContainer = $('#detail_waveform_panel_top_left');
-        if(typeof(topLeftContainer) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_top_left\') is undefined');
+        /* Template for top of panel when segment is selected */
+        var topSegmentTemplate = $('#detail_waveform_top_segment_template');
+        if(typeof(topSegmentTemplate) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_top_segment_template\') is undefined');
         }
-        else if(topLeftContainer.length == 0) {
-            throw new Error('topLeftContainer not found');
+        else if(topSegmentTemplate.length == 0) {
+            throw new Error('topSegmentTemplate not found');
         }
-        this.topLeftContainer = topLeftContainer;
+        this.topSegmentTemplate = topSegmentTemplate;
         
-        /* The template for the top right of the panel */
-        var topRightFileTemplate = $('#detail_waveform_top_right_file_template');
-        if(typeof(topRightFileTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_right_file_template\') is undefined');
+        /* The container for the top of the panel */
+        var topContainer = $('#detail_waveform_panel_top');
+        if(typeof(topContainer) == 'undefined') {
+            throw new Error('$(\'#detail_waveform_panel_top\') is undefined');
         }
-        else if(topRightFileTemplate.length == 0) {
-            throw new Error('topRightFileTemplate not found');
+        else if(topContainer.length == 0) {
+            throw new Error('topContainer not found');
         }
-        this.topRightFileTemplate = topRightFileTemplate;
-        
-        /* template for top right of panel when segment is selected */
-        var topRightSegmentTemplate = $('#detail_waveform_top_right_segment_template');
-        if(typeof(topRightSegmentTemplate) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_top_right_segment_template\') is undefined');
-        }
-        else if(topRightSegmentTemplate.length == 0) {
-            throw new Error('topRightSegmentTemplate not found');
-        }
-        this.topRightSegmentTemplate = topRightSegmentTemplate;
-        
-        /* The container for the top right content */
-        var topRightContainer = $('#detail_waveform_panel_top_right');
-        if(typeof(topRightContainer) == 'undefined') {
-            throw new Error('$(\'#detail_waveform_panel_top_right\') is undefined');
-        }
-        else if(topRightContainer.length == 0) {
-            throw new Error('topRightContainer not found');
-        }
-        this.topRightContainer = topRightContainer;
+        this.topContainer = topContainer;
         
         
         var timecodeContainerElement = $('#detail_waveform_panel_timecode');
@@ -150,15 +121,10 @@ var DetailWaveformPanel = WaveformPanel.extend({
      **/
     audio_file_selected: function(selectedAudioFile) {
         WaveformPanel.prototype.audio_file_selected.call(this, selectedAudioFile);
-        var selectedAudioFileJSON = selectedAudioFile.toJSON();
-        /* Load the top left content with our audio file */
-        this.topLeftContainer.html(
-            this.topLeftFileTemplate.tmpl(selectedAudioFileJSON)
-        );
         
-        /* Load the top right content with our audio file */
-        this.topRightContainer.html(
-            this.topRightFileTemplate.tmpl(selectedAudioFileJSON)
+        /* Load top content with audio file information */
+        this.topContainer.html(
+            this.topFileTemplate.tmpl(selectedAudioFile.toJSON())
         );
         
         var waveformImageElement = this.waveformImageElement;
@@ -186,14 +152,9 @@ var DetailWaveformPanel = WaveformPanel.extend({
     audio_segment_selected: function(selectedAudioSegment) {
         WaveformPanel.prototype.audio_segment_selected.call(this, selectedAudioSegment);
         
-        var selectedAudioSegmentJSON = selectedAudioSegment.toJSON();
-        
-        this.topLeftContainer.html(
-            this.topLeftSegmentTemplate.tmpl(selectedAudioSegmentJSON)
-        );
-
-        this.topRightContainer.html(
-            this.topRightSegmentTemplate.tmpl(selectedAudioSegmentJSON)
+        /* Load top of panel with audio segment information */
+        this.topContainer.html(
+            this.topSegmentTemplate.tmpl(selectedAudioSegment.toJSON())
         );
     }, 
     

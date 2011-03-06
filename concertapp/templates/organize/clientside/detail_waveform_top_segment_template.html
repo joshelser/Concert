@@ -1,0 +1,10 @@
+{% load extra_template_tags %}
+
+{% verbatim %}
+<div id="detail_waveform_panel_top_left" class="detail_waveform_panel_top_left">
+    <b>${name}</b> created by <b>${creator.get("username")}</b>
+</div>
+<div id="detail_waveform_panel_top_right" class="detail_waveform_panel_top_right">
+    <b>${seconds_to_timecode(end-beginning)}</b> of <b>${audioFile.get("name")}</b>
+</div>
+{% endverbatim %}
