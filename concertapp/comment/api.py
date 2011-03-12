@@ -15,7 +15,7 @@ from tastypie.http import *
 class CommentResource(MyResource):
     comment = fields.CharField('comment')
     author = fields.ForeignKey('concertapp.users.api.UserResource', 'author', full=True)
-    time = fields.DateTimeField()
+    time = fields.DateTimeField('time')
     
     class Meta:
         authentication = DjangoAuthentication()
