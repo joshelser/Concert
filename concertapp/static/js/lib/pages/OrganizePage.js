@@ -179,7 +179,7 @@ var OrganizePage = LoggedInPage.extend({
         
         
         /* The proper audio source for this browser */
-        var audiosrc = audioFile.get(this.audioType);
+        var audiosrc = audioFile.get_audio_src(this.audioType);
         
         this.audio.src = audiosrc;
         

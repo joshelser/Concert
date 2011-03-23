@@ -140,7 +140,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         });
         
         /* Load waveform image */
-        this._load_waveform_image(selectedAudioFile.get('detailWaveform'), function(me, selectedAudioFile) {
+        this._load_waveform_image(selectedAudioFile.get_waveform_src(10), function(me, selectedAudioFile) {
             /* and when done */
             return function() {
                 /* Draw timecode */
@@ -175,7 +175,7 @@ var DetailWaveformPanel = WaveformPanel.extend({
         
         /* Load waveform image */
         this._load_waveform_image(
-            selectedAudioSegment.get('audioFile').get('detailWaveform'),
+            selectedAudioSegment.get('audioFile').get_waveform_src(10),
             function(me, selectedAudioSegment) {
                 return function() {
                     /* Draw timecode */

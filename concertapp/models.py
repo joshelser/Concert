@@ -453,8 +453,12 @@ class SegmentComment(Comment):
     
 
 class AudioFile(models.Model):
-    DETAIL_WAVEFORM_LOCATION = 'images/detail/'
-    OVERVIEW_WAVEFORM_LOCATION = 'images/overview/'
+    # The zoom levels (px per second) for images that will be created.  A directory
+    # for each of these numbers should exist in the MEDIA_ROOT/waveforms/ directory
+    ZOOM_LEVELS = [10]
+    # The height of each waveform image
+    WAVEFORM_IMAGE_HEIGHT = 198
+    WAVEFORM_LOCATION = 'waveforms/'
     AUDIO_LOCATION = 'audio/'
     name = models.CharField(max_length = 100)
     uploader = models.ForeignKey(User)
@@ -462,8 +466,6 @@ class AudioFile(models.Model):
     wav = models.FileField(upload_to = AUDIO_LOCATION, null = True)
     ogg = models.FileField(upload_to = AUDIO_LOCATION)
     mp3 = models.FileField(upload_to = AUDIO_LOCATION)
-    detailWaveform = models.ImageField(upload_to = DETAIL_WAVEFORM_LOCATION)
-    overviewWaveform = models.ImageField(upload_to = OVERVIEW_WAVEFORM_LOCATION)
     # The duration of the audio file.  Default is 0
     duration = models.DecimalField(max_digits = 8, decimal_places = 2, default=0)
 
@@ -567,15 +569,15 @@ class AudioFile(models.Model):
             #self.mp3.delete(save=False)
             os.unlink(self.mp3.name)
 
-        # Remove viewer
-        if(self.overviewWaveform and os.path.exists(self.overviewWaveform.name)):
-            #self.overviewWaveform.delete(save=False)
-            os.unlink(self.overviewWaveform.name)
-
-        # Remove editor image
-        if(self.detailWaveform and os.path.exists(self.detailWaveform.name)):
-            #self.detailWaveform.delete(save=False)
-            os.unlink(self.detailWaveform.name)
+        # For each zoom level
+        for zoomLevel in AudioFile.ZOOM_LEVELS:
+            # Path to waveform image for this zoom level
+            waveformPath = self._get_waveform_path(zoomLevel)
+            # If image exists at this zoom level
+            if(os.path.exists(waveformPath)):
+                # Remove it
+                os.unlink(waveformPath)
+            
 
         # Get all segments who have this audio object as its parent
         segments = AudioSegment.objects.filter(audioFile = self)
@@ -592,6 +594,17 @@ class AudioFile(models.Model):
         if(self.id):
             super(AudioFile, self).delete()
 
+    ###
+    #   Return a path to a waveform image for this AudioFile object at a given
+    #   zoom level.
+    #   
+    #   @param  {Number}    zoomLevel    -  The given zoom level.
+    ###
+    def _get_waveform_path(self, zoomLevel):
+        return os.path.join(
+            MEDIA_ROOT, AudioFile.WAVEFORM_LOCATION, str(zoomLevel), str(self.id)+'.png'
+        )
+
     ##
     # Generate all the waveforms for this audio object.  
     #
@@ -604,20 +617,19 @@ class AudioFile(models.Model):
         idString = str(self.id)
         
         # Get length of audio (samples)
-        length = audioHelpers.getLength(wavPathAbsolute)
-        
+        length = audioHelpers.getLength(wavPathAbsolute)        
 
-        # Path to the image for the waveform overview (relative to MEDIA_ROOT)
-        overviewImgPath = self.overviewWaveform.field.upload_to + idString + '.png'
-        
-        # Generate image
-        audioHelpers.generateWaveform(wavPathAbsolute, os.path.join(MEDIA_ROOT, overviewImgPath), 898, 58)
-
-        # Name of the image for the waveform editor (large waveform image)
-        detailImgPath = self.detailWaveform.field.upload_to + idString + '.png'
-        audioHelpers.generateWaveform(wavPathAbsolute, os.path.join(MEDIA_ROOT, detailImgPath), 10 * length, 198)
-
-        # Save the path relative to the media_dir
-        self.overviewWaveform = overviewImgPath
-        self.detailWaveform = detailImgPath
-
+        # For each zoom level
+        for zoomLevel in AudioFile.ZOOM_LEVELS:
+            # Path to the image for the waveform at this zoom level
+            waveformPath = self._get_waveform_path(zoomLevel)
+            audioHelpers.generateWaveform(
+                # from this wave file
+                wavPathAbsolute, 
+                # put waveform here
+                waveformPath, 
+                # At zoomLevel px per second (width)
+                zoomLevel * length, 
+                # Height
+                AudioFile.WAVEFORM_IMAGE_HEIGHT
+            )
