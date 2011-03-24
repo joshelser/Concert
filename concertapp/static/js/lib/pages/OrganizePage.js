@@ -59,8 +59,8 @@ var OrganizePage = LoggedInPage.extend({
         /* When the space button is pressed, pause/play our audio */
         $(window).bind('keydown', function(me) {
             return function(e) {
-                
-                if(e.keyCode == 32) {
+                /* If this was a space, not from an input element */
+                if(e.keyCode == 32 && !$(e.srcElement).is('input')) {
                     e.preventDefault();
                     e.stopPropagation();
                     
