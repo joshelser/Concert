@@ -7,6 +7,7 @@
 /**
  *  This contains general stuff that needs to take place for any widget on the UI.
  *	@class
+ *  @extends    Backbone.View
  **/
 var Widget = Backbone.View.extend({
 
@@ -19,7 +20,7 @@ var Widget = Backbone.View.extend({
      *  @param  {jQuery tmpl object}    params.template -   The template.
      *  @param  {Panel}                 params.panel    -   Panel that we belong to.  
      **/    
-    initialize: function() {
+    initialize: function(params) {
         var params = this.options;
         
         var template = params.template;
