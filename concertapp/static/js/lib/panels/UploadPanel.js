@@ -165,8 +165,8 @@ var UploadPanel = Panel.extend({
      *  creating a new UploadingFileWidget, and moving the inputElement into the
      *  widget.
      *
-     *  @param  fileChooser        jQuery HTMLInputElement - the <input> element that 
-     *                              the user used to select this file.
+     *  @param  {jQuery HTMLInputElement}   fileChooser - the <input> element that 
+     *                                      the user used to select this file.
      **/
     addFile: function(fileChooser) {
         /* The index for the current file */

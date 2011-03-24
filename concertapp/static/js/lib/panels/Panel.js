@@ -14,10 +14,12 @@
 var Panel = Backbone.View.extend({
     
     /**
-     *  @param  params.container        jQuery object - container for panel  
-     *  @param  params.page             Page - the page that this panel belongs to
-     *  @param  params.loading          Boolean -   Wether or not this panel is         
-     *                                  initially to display a loading notification.
+     *  @param  {jQuery HTMLElement}    params.container - container for panel  
+     *  @param  {Page}                  params.page - the page that this panel 
+     *                                  belongs to
+     *  @param  {Boolean}               params.loading -   Wether or not this panel
+     *                                  is initially to display a loading 
+     *                                  notification.
      **/
     initialize: function() {
         var params = this.options;

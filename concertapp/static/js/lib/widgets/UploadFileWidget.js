@@ -11,8 +11,8 @@
  **/
 var UploadFileWidget = Widget.extend({
     /**
-     *  @param  fileChooser         jQuery HTMLInputElement - that was used to select
-     *                                  this file.
+     *  @param  {jQuery HTMLInputElement}   fileChooser - that was used to select
+     *                                      this file.
      **/
     initialize: function() {
         Widget.prototype.initialize.call(this);
