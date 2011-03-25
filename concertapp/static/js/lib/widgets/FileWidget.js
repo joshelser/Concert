@@ -14,13 +14,7 @@ var FileWidget = AudioListWidget.extend(
 	/**
 	 *	@scope	FileWidget.prototype
 	 **/
-
-	/**	@scope	FileWidget.prototype **/
-
-	/**	@scope	FileWidget.prototype **/
-
-	/**	@scope	FileWidget.prototype **/
-
+{
     initialize: function() {
         AudioListWidget.prototype.initialize.call(this);
 

@@ -13,13 +13,7 @@ var CollectionInfoWidget = Widget.extend(
 	/**
 	 *	@scope	CollectionInfoWidget.prototype
 	 **/
-
-	/**	@scope	CollectionInfoWidget.prototype **/
-
-	/**	@scope	CollectionInfoWidget.prototype **/
-
-	/**	@scope	CollectionInfoWidget.prototype **/
-
+{
     initialize: function() {
         
     }, 

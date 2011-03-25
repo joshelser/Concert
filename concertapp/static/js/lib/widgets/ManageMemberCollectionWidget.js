@@ -16,14 +16,7 @@ var ManageMemberCollectionWidget = Widget.extend(
 	/**
 	 *	@scope	ManageMemberCollectionWidget.prototype
 	 **/
-
-	/**	@scope	ManageMemberCollectionWidget.prototype **/
-
-	/**	@scope	ManageMemberCollectionWidget.prototype **/
-
-	/**	@scope	ManageMemberCollectionWidget.prototype **/
-
-    
+{
     initialize: function() {
         Widget.prototype.initialize.call(this);
 
