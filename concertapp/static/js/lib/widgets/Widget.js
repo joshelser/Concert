@@ -8,6 +8,9 @@
  *  This contains general stuff that needs to take place for any widget on the UI.
  *	@class
  *  @extends    Backbone.View
+ *
+ *  @param  {jQuery tmpl object}    template    Template element for this widget
+ *  @param  {Panel}                 panel       Panel containing this widget
  **/
 var Widget = Backbone.View.extend(
 	/**
@@ -18,11 +21,8 @@ var Widget = Backbone.View.extend(
      *  Create the DOM elements associated with this widget using a template.  
      *  The widget is not inserted into the DOM in this class.  That is for whoever
      *  is instantiating the widget to take care of.
-     *
-     *  @param  {jQuery tmpl object}    params.template -   The template.
-     *  @param  {Panel}                 params.panel    -   Panel that we belong to.  
      **/    
-    initialize: function(params) {
+    initialize: function() {
         var params = this.options;
         
         var template = params.template;
@@ -32,12 +32,18 @@ var Widget = Backbone.View.extend(
         else if(typeof(template) != 'undefined' && template.length == 0) {
             throw new Error('template not found');
         }
+        /**
+         *  Template for this widget.
+         **/
         this.template = template;
 
         var panel = params.panel;
         if(typeof(panel) == 'undefined') {
             throw new Error('params.panel is undefined');
         }
+        /**
+         *  The panel that this widget belongs to.
+         **/
         this.panel = panel;
 
         _.bindAll(this, "render");
