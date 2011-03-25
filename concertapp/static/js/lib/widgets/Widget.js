@@ -14,8 +14,6 @@ var Widget = Backbone.View.extend(
 	 *	@scope	Widget.prototype
 	 **/
 {
-
-
     /**
      *  Create the DOM elements associated with this widget using a template.  
      *  The widget is not inserted into the DOM in this class.  That is for whoever

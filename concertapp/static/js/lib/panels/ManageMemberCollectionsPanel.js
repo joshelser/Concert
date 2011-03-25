@@ -15,14 +15,7 @@ var ManageMemberCollectionsPanel = ManageTablePanel.extend(
 	/**
 	 *	@scope	ManageMemberCollectionsPanel.prototype
 	 **/
-
-	/**	@scope	ManageMemberCollectionsPanel.prototype **/
-
-	/**	@scope	ManageMemberCollectionsPanel.prototype **/
-
-	/**	@scope	ManageMemberCollectionsPanel.prototype **/
-
-    
+{
     initialize: function() {
         ManageTablePanel.prototype.initialize.call(this);
 

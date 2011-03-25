@@ -14,14 +14,7 @@ var CollectionSearchResultsWidget = Widget.extend(
 	/**
 	 *	@scope	CollectionSearchResultsWidget.prototype
 	 **/
-
-	/**	@scope	CollectionSearchResultsWidget.prototype **/
-
-	/**	@scope	CollectionSearchResultsWidget.prototype **/
-
-	/**	@scope	CollectionSearchResultsWidget.prototype **/
-
-    
+{
     initialize: function() {
         Widget.prototype.initialize.call(this);
 

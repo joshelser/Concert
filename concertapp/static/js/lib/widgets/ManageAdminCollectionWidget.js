@@ -13,14 +13,7 @@ var ManageAdminCollectionWidget = Widget.extend(
 	/**
 	 *	@scope	ManageAdminCollectionWidget.prototype
 	 **/
-
-	/**	@scope	ManageAdminCollectionWidget.prototype **/
-
-	/**	@scope	ManageAdminCollectionWidget.prototype **/
-
-	/**	@scope	ManageAdminCollectionWidget.prototype **/
-
-    
+{
     initialize: function() {
         Widget.prototype.initialize.call(this);
 

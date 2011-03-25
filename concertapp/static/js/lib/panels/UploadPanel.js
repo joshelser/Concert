@@ -12,13 +12,7 @@ var UploadPanel = Panel.extend(
 	/**
 	 *	@scope	UploadPanel.prototype
 	 **/
-
-	/**	@scope	UploadPanel.prototype **/
-
-	/**	@scope	UploadPanel.prototype **/
-
-	/**	@scope	UploadPanel.prototype **/
-    
+{
     initialize: function() {
         Panel.prototype.initialize.call(this);
 

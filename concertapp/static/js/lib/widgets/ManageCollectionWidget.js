@@ -16,14 +16,7 @@ var ManageCollectionWidget = Widget.extend(
 	/**
 	 *	@scope	ManageCollectionWidget.prototype
 	 **/
-
-	/**	@scope	ManageCollectionWidget.prototype **/
-
-	/**	@scope	ManageCollectionWidget.prototype **/
-
-	/**	@scope	ManageCollectionWidget.prototype **/
-
-    
+{
     initialize: function() {
         Widget.prototype.initialize.call(this);
 

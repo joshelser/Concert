@@ -14,13 +14,7 @@
 	/**
 	 *	@scope	ManageCollectionsPanel.prototype
 	 **/
-
-	/**	@scope	ManageCollectionsPanel.prototype **/
-
-	/**	@scope	ManageCollectionsPanel.prototype **/
-
-	/**	@scope	ManageCollectionsPanel.prototype **/
-
+{
      initialize: function() {
          Panel.prototype.initialize.call(this);
 

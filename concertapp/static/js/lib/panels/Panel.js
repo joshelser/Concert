@@ -15,14 +15,7 @@ var Panel = Backbone.View.extend(
 	/**
 	 *	@scope	Panel.prototype
 	 **/
-
-	/**	@scope	Panel.prototype **/
-
-	/**	@scope	Panel.prototype **/
-
-	/**	@scope	Panel.prototype **/
-
-    
+{
     /**
      *  @param  {jQuery HTMLElement}    params.container - container for panel  
      *  @param  {Page}                  params.page - the page that this panel 

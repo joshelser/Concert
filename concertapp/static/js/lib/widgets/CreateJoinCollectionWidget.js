@@ -12,14 +12,7 @@ var CreateJoinCollectionWidget = Widget.extend(
 	/**
 	 *	@scope	CreateJoinCollectionWidget.prototype
 	 **/
-
-	/**	@scope	CreateJoinCollectionWidget.prototype **/
-
-	/**	@scope	CreateJoinCollectionWidget.prototype **/
-
-	/**	@scope	CreateJoinCollectionWidget.prototype **/
-
-    
+{
     initialize: function() {
         Widget.prototype.initialize.call(this);
         

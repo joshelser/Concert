@@ -14,13 +14,7 @@ var OverviewWaveformPanel = WaveformPanel.extend(
 	/**
 	 *	@scope	OverviewWaveformPanel.prototype
 	 **/
-
-	/**	@scope	OverviewWaveformPanel.prototype **/
-
-	/**	@scope	OverviewWaveformPanel.prototype **/
-
-	/**	@scope	OverviewWaveformPanel.prototype **/
-
+{
     initialize: function() {
         WaveformPanel.prototype.initialize.call(this)
         

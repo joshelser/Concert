@@ -13,13 +13,7 @@ var UploadFileWidget = Widget.extend(
 	/**
 	 *	@scope	UploadFileWidget.prototype
 	 **/
-
-	/**	@scope	UploadFileWidget.prototype **/
-
-	/**	@scope	UploadFileWidget.prototype **/
-
-	/**	@scope	UploadFileWidget.prototype **/
-
+{
     /**
      *  @param  {jQuery HTMLInputElement}   fileChooser - that was used to select
      *                                      this file.
