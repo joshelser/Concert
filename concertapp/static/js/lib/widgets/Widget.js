@@ -9,7 +9,11 @@
  *	@class
  *  @extends    Backbone.View
  **/
-var Widget = Backbone.View.extend({
+var Widget = Backbone.View.extend(
+	/**
+	 *	@scope	Widget.prototype
+	 **/
+{
 
 
     /**

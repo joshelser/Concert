@@ -9,7 +9,17 @@
  *  @class
  *  @extends    Widget
  **/
-var ManageRequestWidget = Widget.extend({
+var ManageRequestWidget = Widget.extend(
+	/**
+	 *	@scope	ManageRequestWidget.prototype
+	 **/
+
+	/**	@scope	ManageRequestWidget.prototype **/
+
+	/**	@scope	ManageRequestWidget.prototype **/
+
+	/**	@scope	ManageRequestWidget.prototype **/
+
     
     initialize: function() {
         Widget.prototype.initialize.call(this);

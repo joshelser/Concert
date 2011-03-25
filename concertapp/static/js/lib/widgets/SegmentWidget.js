@@ -9,7 +9,17 @@
  *	@class
  *  @extends    AudioListWidget
  **/
-var SegmentWidget = AudioListWidget.extend({
+var SegmentWidget = AudioListWidget.extend(
+	/**
+	 *	@scope	SegmentWidget.prototype
+	 **/
+
+	/**	@scope	SegmentWidget.prototype **/
+
+	/**	@scope	SegmentWidget.prototype **/
+
+	/**	@scope	SegmentWidget.prototype **/
+
     initialize: function() {
         AudioListWidget.prototype.initialize.call(this);
         

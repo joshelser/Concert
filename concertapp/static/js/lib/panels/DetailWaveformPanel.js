@@ -9,7 +9,11 @@
  *  @class
  *  @extends    WaveformPanel
  **/
-var DetailWaveformPanel = WaveformPanel.extend({    
+var DetailWaveformPanel = WaveformPanel.extend(
+	/**
+	 *	@scope	DetailWaveformPanel.prototype
+	 **/
+{    
     initialize: function() {
         WaveformPanel.prototype.initialize.call(this);
 

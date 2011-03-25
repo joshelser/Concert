@@ -9,7 +9,11 @@
  *	@class
  *  @extends    LoggedInPage
  **/
-var OrganizePage = LoggedInPage.extend({
+var OrganizePage = LoggedInPage.extend(
+	/**
+	 *	@scope	OrganizePage.prototype
+	 **/
+{
     
     _initializeModelManager: function(params) {
         return new OrganizePageModelManager(params);

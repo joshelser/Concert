@@ -11,7 +11,17 @@
  *  Panel is meant to be an abstract class.  It doesn't do much on its own.
  *  @class
  **/
-var Panel = Backbone.View.extend({
+var Panel = Backbone.View.extend(
+	/**
+	 *	@scope	Panel.prototype
+	 **/
+
+	/**	@scope	Panel.prototype **/
+
+	/**	@scope	Panel.prototype **/
+
+	/**	@scope	Panel.prototype **/
+
     
     /**
      *  @param  {jQuery HTMLElement}    params.container - container for panel  

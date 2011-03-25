@@ -10,7 +10,17 @@
  *  @class
  *  @extends Panel
  **/
-var ManageTablePanel = Panel.extend({
+var ManageTablePanel = Panel.extend(
+	/**
+	 *	@scope	ManageTablePanel.prototype
+	 **/
+
+	/**	@scope	ManageTablePanel.prototype **/
+
+	/**	@scope	ManageTablePanel.prototype **/
+
+	/**	@scope	ManageTablePanel.prototype **/
+
     initialize: function() {
         Panel.prototype.initialize.call(this);
         

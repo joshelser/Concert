@@ -10,7 +10,11 @@
  *  @extends    Component
  *  @throws     Highlight   -   When a section of the waveform is highlighted.
  **/
-var WaveformHighlighterComponent = Component.extend({
+var WaveformHighlighterComponent = Component.extend(
+	/**
+	 *	@scope	WaveformHighlighterComponent.prototype
+	 **/
+{
     initialize: function() {
         Component.prototype.initialize.call(this);
         

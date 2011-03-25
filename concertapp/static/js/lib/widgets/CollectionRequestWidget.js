@@ -10,7 +10,17 @@
  *  @class
  *  @extends    Widget
  **/
-var CollectionRequestWidget = Widget.extend({
+var CollectionRequestWidget = Widget.extend(
+	/**
+	 *	@scope	CollectionRequestWidget.prototype
+	 **/
+
+	/**	@scope	CollectionRequestWidget.prototype **/
+
+	/**	@scope	CollectionRequestWidget.prototype **/
+
+	/**	@scope	CollectionRequestWidget.prototype **/
+
     
     initialize: function() {
         Widget.prototype.initialize.call(this);

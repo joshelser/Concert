@@ -13,7 +13,11 @@
  *  @param  {UploadLinkLargeIconButton}     params.uploadButton
  *
  **/
-var GlobalOptionsPanel = Panel.extend({
+var GlobalOptionsPanel = Panel.extend(
+	/**
+	 *	@scope	GlobalOptionsPanel.prototype
+	 **/
+{
     initialize: function() {
         Panel.prototype.initialize.call(this);
 

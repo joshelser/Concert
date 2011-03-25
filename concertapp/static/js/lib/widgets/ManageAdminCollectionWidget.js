@@ -9,7 +9,17 @@
  *  @class
  *  @extends    Widget
  **/
-var ManageAdminCollectionWidget = Widget.extend({
+var ManageAdminCollectionWidget = Widget.extend(
+	/**
+	 *	@scope	ManageAdminCollectionWidget.prototype
+	 **/
+
+	/**	@scope	ManageAdminCollectionWidget.prototype **/
+
+	/**	@scope	ManageAdminCollectionWidget.prototype **/
+
+	/**	@scope	ManageAdminCollectionWidget.prototype **/
+
     
     initialize: function() {
         Widget.prototype.initialize.call(this);

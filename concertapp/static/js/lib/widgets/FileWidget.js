@@ -10,7 +10,17 @@
  *  @class
  *  @extends    AudioListWidget
  **/
-var FileWidget = AudioListWidget.extend({
+var FileWidget = AudioListWidget.extend(
+	/**
+	 *	@scope	FileWidget.prototype
+	 **/
+
+	/**	@scope	FileWidget.prototype **/
+
+	/**	@scope	FileWidget.prototype **/
+
+	/**	@scope	FileWidget.prototype **/
+
     initialize: function() {
         AudioListWidget.prototype.initialize.call(this);
 

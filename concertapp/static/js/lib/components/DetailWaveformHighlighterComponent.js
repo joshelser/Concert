@@ -9,5 +9,9 @@
  *  @class
  *  @extends    WaveformHighlighterComponent
  **/
-var DetailWaveformHighlighterComponent = WaveformHighlighterComponent.extend({
+var DetailWaveformHighlighterComponent = WaveformHighlighterComponent.extend(
+	/**
+	 *	@scope	DetailWaveformHighlighterComponent.prototype
+	 **/
+{
 });

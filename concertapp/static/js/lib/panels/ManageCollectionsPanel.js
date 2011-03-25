@@ -10,7 +10,17 @@
  *  @extends Panel
  **/
  
- var ManageCollectionsPanel = Panel.extend({
+ var ManageCollectionsPanel = Panel.extend(
+	/**
+	 *	@scope	ManageCollectionsPanel.prototype
+	 **/
+
+	/**	@scope	ManageCollectionsPanel.prototype **/
+
+	/**	@scope	ManageCollectionsPanel.prototype **/
+
+	/**	@scope	ManageCollectionsPanel.prototype **/
+
      initialize: function() {
          Panel.prototype.initialize.call(this);
 
