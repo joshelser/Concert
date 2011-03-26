@@ -1,8 +1,0 @@
-{% load extra_template_tags %}
-
-{% verbatim %}
-<option value="-1">Please select a collection</option>
-{{each(i, collection) collections}}
-    <option id="collection_option-${collection.id}" value="${collection.id}">${collection.name}</option>
-{{/each}}
-{% endverbatim %}
